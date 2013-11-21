@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
-	"os"
 
 	"go/ast"
 	"go/parser"
@@ -29,6 +28,76 @@ type env struct {
 	pkgs map[string] pkg
 }
 
+var (
+	f32 reflect.Type = reflect.TypeOf(float32(0))
+	f64 reflect.Type = reflect.TypeOf(float64(0))
+	c64 reflect.Type = reflect.TypeOf(complex64(0))
+	c128 reflect.Type = reflect.TypeOf(complex128(0))
+)
+
+// Builtin funcs receive Value bool pairs indicating if the corrosoponding value is typed
+// They must return a Value, a bool indicating if the value is typed, and an error
+// The returned Value must be valid
+var builtinFuncs = map[string] reflect.Value {
+	"complex": reflect.ValueOf(func(r, i reflect.Value, rt, it bool) (reflect.Value, bool, error) {
+		rr, rerr := assignableValue(r, f64, rt)
+		ii, ierr := assignableValue(i, f64, it)
+		if rerr == nil && ierr == nil {
+			return reflect.ValueOf(complex(rr.Float(), ii.Float())), true, nil
+		}
+
+		rr, rerr = assignableValue(r, f32, rt)
+		ii, ierr = assignableValue(i, f32, it)
+		if rerr == nil && ierr == nil {
+			return reflect.ValueOf(complex64(complex(rr.Float(), ii.Float()))), true, nil
+		}
+		return reflect.Zero(c128), false, ErrBadComplexArguments{r, i}
+	}),
+	"real": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+		if zz, err := assignableValue(z, c128, zt); err == nil {
+			return reflect.ValueOf(real(zz.Complex())), true, nil
+		} else if zz, err := assignableValue(z, c64, zt); err == nil {
+			return reflect.ValueOf(float32(real(zz.Complex()))), true, nil
+		} else {
+			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"real", z}
+		}
+	}),
+	"imag": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+		if zz, err := assignableValue(z, c128, zt); err == nil {
+			return reflect.ValueOf(imag(zz.Complex())), true, nil
+		} else if zz, err := assignableValue(z, c64, zt); err == nil {
+			return reflect.ValueOf(float32(imag(zz.Complex()))), true, nil
+		} else {
+			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
+		}
+	}),
+}
+
+var builtinTypes = map[string] reflect.Type{
+	"int8": reflect.TypeOf(int8(0)),
+	"int16": reflect.TypeOf(int16(0)),
+	"int32": reflect.TypeOf(int32(0)),
+	"int64": reflect.TypeOf(int64(0)),
+
+	"uint8": reflect.TypeOf(uint8(0)),
+	"uint16": reflect.TypeOf(uint16(0)),
+	"uint32": reflect.TypeOf(uint32(0)),
+	"uint64": reflect.TypeOf(uint64(0)),
+
+	"float32": reflect.TypeOf(float32(0)),
+	"float64": reflect.TypeOf(float64(0)),
+
+	"complex64": reflect.TypeOf(complex64(0)),
+	"complex128": reflect.TypeOf(complex128(0)),
+
+	"bool": reflect.TypeOf(bool(false)),
+	"byte": reflect.TypeOf(byte(0)),
+	"rune": reflect.TypeOf(rune('☃')),
+	"string": reflect.TypeOf(""),
+
+	"error": reflect.TypeOf(errors.New("")),
+}
+
 type ErrInvalidOperands struct {
 	x reflect.Value
 	op token.Token
@@ -38,6 +107,15 @@ type ErrInvalidOperands struct {
 type ErrBadFunArgument struct {
 	fun reflect.Value
 	index int
+	value reflect.Value
+}
+
+type ErrBadComplexArguments struct {
+	a, b reflect.Value
+}
+
+type ErrBadBuiltinArgument struct {
+	fun string
 	value reflect.Value
 }
 
@@ -67,7 +145,6 @@ func Run(vars, consts, funcs map[string] reflect.Value, types map[string] reflec
 		pkgs: map[string] pkg { "log": logPkg },
 	}
 
-	addBuiltinTypes(&env)
 	vals, typed, err := evalExpr(expr, &env)
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("(%v) %+v\n", typed, vals[0].Interface())
@@ -111,10 +188,12 @@ func evalType(expr ast.Expr, env *env) (reflect.Type, error) {
 	fmt.Printf("%T %+v\n", expr, expr)
 	switch node := expr.(type) {
 	case *ast.Ident:
-		if t, ok := env.types[node.Name]; !ok {
-			return t, errors.New("undefined type: " + node.Name)
-		} else {
+		if t, ok := env.types[node.Name]; ok {
 			return t, nil
+		} else if t, ok := builtinTypes[node.Name]; ok {
+			return t, nil
+		} else {
+			return t, errors.New("undefined type: " + node.Name)
 		}
 	case *ast.ArrayType:
 		return nil, errors.New("array types not implemented")
@@ -141,6 +220,8 @@ func evalIdentExpr(ident *ast.Ident, env *env) (reflect.Value, bool, error) {
 		return v, true, nil
 	} else if v, ok := env.funcs[name]; ok {
 		return v, true, nil
+	} else if v, ok := builtinFuncs[name]; ok {
+		return v, false, nil
 	} else if p, ok := env.pkgs[name]; ok {
 		return reflect.ValueOf(p), true, nil
 	} else {
@@ -266,12 +347,14 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 
 	var err error
 	var v, out []reflect.Value
-	if v, _, err = evalExpr(call.Fun, env); err != nil {
+	var typed bool
+	if v, typed, err = evalExpr(call.Fun, env); err != nil {
 		return []reflect.Value{}, false, err
 	}
 	if v[0].Kind() != reflect.Func {
 		return []reflect.Value{}, false, errors.New(fmt.Sprintf("Cannot call %v", v[0]))
 	}
+	builtin := !typed
 
 	// Special case handling doesn't play well with nil Args
 	ftype := v[0].Type()
@@ -306,9 +389,16 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 	}
 
 	// Parse args into a slice suitable for calling the function
-	in := make([]reflect.Value, ftype.NumIn())
-	intyped := make([]bool, ftype.NumIn())
-	if !ftype.IsVariadic() && len(call.Args) == ftype.NumIn() {
+	actualNumIn := ftype.NumIn()
+	if builtin {
+		// See builtinFuncs comment 
+		actualNumIn /= 2
+	}
+
+	in := make([]reflect.Value, actualNumIn)
+	intyped := make([]bool, actualNumIn)
+
+	if !ftype.IsVariadic() && len(call.Args) == actualNumIn {
 		for i := range in {
 			if len(args[i]) > 1 {
 				return []reflect.Value{}, false, ErrMultiInSingleContext{args[i]}
@@ -316,7 +406,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 			in[i] = args[i][0]
 			intyped[i] = atyped[i]
 		}
-	} else if ftype.IsVariadic() && ftype.NumIn()-1 <= len(call.Args) {
+	} else if ftype.IsVariadic() && actualNumIn-1 <= len(call.Args) {
 		var i int
 		for i = 0; i < len(in)-1; i += 1 {
 			if len(args[i]) > 1 {
@@ -335,7 +425,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 				return []reflect.Value{}, false, ErrBadFunArgument{v[0], i, in[i]}
 			}
 		} else if i <= len(call.Args) && call.Ellipsis == token.NoPos {
-			remainingArgs := len(call.Args) - ftype.NumIn() + 1
+			remainingArgs := len(call.Args) - actualNumIn + 1
 			in[i] = reflect.MakeSlice(ftype.In(i), remainingArgs, remainingArgs)
 
 			intyped[i] = true
@@ -356,10 +446,20 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 		return []reflect.Value{}, false, ErrWrongNumberOfArgs{v[0], len(call.Args)}
 	}
 
-	// Check argument types
-	for i := range in {
-		if in[i], err = assignableValue(in[i], ftype.In(i), intyped[i]); err != nil {
-			return []reflect.Value{}, false, ErrBadFunArgument{v[0], i, in[i]}
+	if builtin {
+		// Builtin functions take and return raw values as well as typing information
+		bin := make([]reflect.Value, len(in) * 2)
+		for i := range in {
+			bin[i] = reflect.ValueOf(in[i])
+			bin[i+len(in)] = reflect.ValueOf(intyped[i])
+		}
+		in = bin
+	} else {
+		// Check argument types
+		for i := range in {
+			if in[i], err = assignableValue(in[i], ftype.In(i), intyped[i]); err != nil {
+				return []reflect.Value{}, false, ErrBadFunArgument{v[0], i, in[i]}
+			}
 		}
 	}
 
@@ -368,7 +468,19 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *env) ([]reflect
 	} else {
 		out = v[0].Call(in)
 	}
-	return out, true, nil
+
+	if builtin {
+		otyped := out[1].Bool()
+		var err error = nil
+		if !out[2].IsNil() {
+			err = out[2].Interface().(error)
+		}
+		// Unwrap the Value of a Value
+		out = []reflect.Value{out[0].Interface().(reflect.Value)}
+		return out, otyped, err
+	} else {
+		return out, true, nil
+	}
 }
 
 func evalSelectorExpr(selector *ast.SelectorExpr, env *env) (reflect.Value, bool, error) {
@@ -427,7 +539,7 @@ func evalBinaryExpr(b *ast.BinaryExpr, env *env) (r reflect.Value, rtyped bool, 
 	// Rearrange x and y such that y is assignable to x, if possible
 	if xtyped && ytyped {
 		if x.Type().AssignableTo(y.Type()) {
-			x, y = y, x
+			x = x.Convert(y.Type())
 		} else if !y.Type().AssignableTo(x.Type()) {
 			return r, rtyped, ErrInvalidOperands{x, b.Op, y}
 		}
@@ -642,39 +754,6 @@ func promoteUntypedNumerals(x, y reflect.Value) (reflect.Value, reflect.Value) {
 	panic(fmt.Sprintf("runtime: bad untyped numeras %v and %v", x, y))
 }
 
-func addBuiltinTypes(env *env) *env {
-	env.types["int8"]  = reflect.TypeOf(int8(0))
-	env.types["int16"] = reflect.TypeOf(int16(0))
-	env.types["int32"] = reflect.TypeOf(int32(0))
-	env.types["int64"] = reflect.TypeOf(int64(0))
-
-	env.types["uint8"]  = reflect.TypeOf(uint8(0))
-	env.types["uint16"] = reflect.TypeOf(uint16(0))
-	env.types["uint32"] = reflect.TypeOf(uint32(0))
-	env.types["uint64"] = reflect.TypeOf(uint64(0))
-
-	env.types["float32"] = reflect.TypeOf(float32(0))
-	env.types["float64"] = reflect.TypeOf(float64(0))
-
-	env.types["complex64"]  = reflect.TypeOf(complex64(0))
-	env.types["complex128"] = reflect.TypeOf(complex128(0))
-
-	env.types["bool"]   = reflect.TypeOf(bool(false))
-	env.types["byte"]   = reflect.TypeOf(byte(0))
-	env.types["rune"]   = reflect.TypeOf(rune('☃'))
-	env.types["string"] = reflect.TypeOf("")
-
-	env.types["error"] = reflect.TypeOf(errors.New(""))
-
-	type Bob struct {
-		Alice uint32
-		Sam string
-	}
-	env.types["Bob"] = reflect.TypeOf(Bob{})
-	env.vars["stdout"] = reflect.ValueOf(&os.Stdout)
-
-	return env
-}
 
 func (err ErrInvalidOperands) Error() string {
 	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
@@ -682,6 +761,14 @@ func (err ErrInvalidOperands) Error() string {
 
 func (err ErrBadFunArgument) Error() string {
 	return fmt.Sprintf("invalid type (%v) for argument %d of %v", err.value.Type(), err.index, err.fun)
+}
+
+func (err ErrBadComplexArguments) Error() string {
+	return fmt.Sprintf("invalid operation: complex(%v, %v)", err.a, err.b)
+}
+
+func (err ErrBadBuiltinArgument) Error() string {
+	return fmt.Sprintf("invalid operation: %s(%v)", err.fun, err.value)
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {
