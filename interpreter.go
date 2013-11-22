@@ -11,7 +11,6 @@ import (
 	"go/parser"
 
 	rl "code.google.com/p/go-gnureadline"
-	//rl "github.com/sbinet/go-readline"
 )
 
 func Run(env *Env) {
@@ -27,7 +26,7 @@ func Run(env *Env) {
 
 		n := len(names)
 		top := sort.Search(n, func(i int) bool { return text <= names[i] })
-		bot := sort.Search(n, func(i int) bool { return i > top && !strings.HasPrefix(names[i], text) })
+		bot := sort.Search(n, func(i int) bool { return i >= top && !strings.HasPrefix(names[i], text) })
 
 		if bot == top {
 			return nil
