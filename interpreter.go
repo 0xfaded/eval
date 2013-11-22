@@ -86,6 +86,8 @@ func completions (env *Env) (names []string) {
 			names = append(names, completions(v)...)
 		}
 		prefix = ""
+	} else {
+		prefix += "."
 	}
 
 	for k := range env.Vars {
