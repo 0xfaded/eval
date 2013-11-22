@@ -2,6 +2,7 @@ package interactive
 
 import (
 	"testing"
+	"reflect"
 )
 
 func TestIntBinaryOps(t *testing.T) {
@@ -50,18 +51,15 @@ func TestComplexOps(t *testing.T) {
 	expectResult(t, "complex(1, 2) / complex(3, 4)", env, complex(1, 2) / complex(3, 4))
 }
 
-// << and >> ops behave diffently 
-func TestIntBinaryShiftOps(t *testing.T) {
-	env := makeEnv()
+func TestTypedBinaryOps(t *testing.T) {
 
-	expectResult(t, "1+2", env, int64(1)+2)
-	expectResult(t, "1-2", env, int64(1)-2)
-	expectResult(t, "2*3", env, int64(2)*3)
-	expectResult(t, "5/2", env, int64(5)/2)
-	expectResult(t, "5%2", env, int64(5)%2)
-	expectResult(t, "3&1", env, int64(3)&1)
-	expectResult(t, "2|1", env, int64(2)|1)
-	expectResult(t, "3^1", env, int64(3)^1)
-	expectResult(t, "3&^1", env, int64(3)&^1)
+	type Foo int
+
+	env := makeEnv()
+	env.Types["Foo"] = reflect.TypeOf(Foo(0))
+
+	expectResult(t, "Foo(1)+Foo(2)", env, Foo(1)+Foo(2))
+	expectResult(t, "1-Foo(2)", env, 1-Foo(2))
+	expectResult(t, "Foo(1)|2", env, Foo(1)|2)
 }
 
