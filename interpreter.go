@@ -99,7 +99,7 @@ func completions (env *Env) (names []string) {
 	}
 
 	for k := range env.Funcs {
-		names = append(names, k)
+		names = append(names, prefix + k)
 	}
 
 	for k, v := range env.Types {
