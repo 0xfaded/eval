@@ -5,6 +5,7 @@ package interactive
 import (
 	"testing"
 	"reflect"
+	"strings"
 
 	"go/parser"
 )
@@ -30,6 +31,17 @@ func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) 
 		if !reflect.DeepEqual(resultsi, expected) {
 			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, resultsi, expected)
 		}
+	}
+}
+
+func expectFail(t *testing.T, expr string, env *Env) {
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if _, _, err := evalExpr(e, env); err == nil {
+		t.Fatalf("Expected expression '%s' to fail", expr)
+	// Catch dogdy error messages which panic on format
+	} else if strings.Index(err.Error(), "(PANIC=") != -1 {
+		t.Fatalf("Expression '%s' failed as expected but error message panicked (%v)", expr, err)
 	}
 }
 

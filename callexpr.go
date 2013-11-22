@@ -64,6 +64,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 	args := make([][]reflect.Value, len(call.Args))
 	atyped := make([]bool, len(call.Args))
 
+	// Evaluate each arg
 	for i := range call.Args {
 		if args[i], atyped[i], err = evalExpr(call.Args[i], env); err != nil {
 			return []reflect.Value{}, false, err
@@ -150,8 +151,11 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 	} else {
 		// Check argument types
 		for i := range in {
-			if in[i], err = assignableValue(in[i], ftype.In(i), intyped[i]); err != nil {
+			var checked reflect.Value
+			if checked, err = assignableValue(in[i], ftype.In(i), intyped[i]); err != nil {
 				return []reflect.Value{}, false, ErrBadFunArgument{v[0], i, in[i]}
+			} else {
+				in[i] = checked
 			}
 		}
 	}
