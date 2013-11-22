@@ -55,7 +55,7 @@ func Run(env *Env) {
 		} else if vals, _, err := evalExpr(expr, env); err != nil {
 			fmt.Printf("%s\n", err)
 		} else if len(vals) == 0 {
-			fmt.Printf("void")
+			fmt.Printf("void\n")
 		} else if len(vals) == 1 {
 			fmt.Printf("%v\n", vals[0].Interface())
 		} else {
