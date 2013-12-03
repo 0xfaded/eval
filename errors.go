@@ -1,10 +1,16 @@
 package interactive
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 
 	"go/token"
+)
+
+var (
+	ErrArrayKey = errors.New("array index must be non-negative integer constant")
+	ErrMissingValue = errors.New("void used as value")
 )
 
 type ErrInvalidOperands struct {
@@ -12,7 +18,6 @@ type ErrInvalidOperands struct {
 	op token.Token
 	y reflect.Value
 }
-
 
 type ErrBadFunArgument struct {
 	fun reflect.Value
@@ -38,6 +43,10 @@ type ErrMultiInSingleContext struct {
 	vals []reflect.Value
 }
 
+type ErrArrayIndexOutOfBounds struct {
+	t reflect.Type
+	i uint64
+}
 
 func (err ErrInvalidOperands) Error() string {
 	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
@@ -75,4 +84,9 @@ func (err ErrMultiInSingleContext) Error() string {
 	}
 	return fmt.Sprintf("multiple-value (%s) in single value context", strvals)
 }
+
+func (err ErrArrayIndexOutOfBounds) Error() string {
+	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
+}
+
 
