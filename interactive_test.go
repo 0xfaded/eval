@@ -24,8 +24,8 @@ func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) 
 	} else if results, _, err := EvalExpr(e, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
-		resultsi := make([]interface{}, len(results))
-		for i, result := range results {
+		resultsi := make([]interface{}, len(*results))
+		for i, result := range *results {
 			resultsi[i] = result.Interface()
 		}
 		if !reflect.DeepEqual(resultsi, expected) {

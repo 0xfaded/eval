@@ -8,24 +8,31 @@ import (
 	"go/ast"
 )
 
-func EvalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
+func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *ast.Ident:
 		v, typed, err := evalIdentExpr(node, env)
-		return []reflect.Value{v}, typed, err
+		if v == nil {
+			return nil, false, nil
+		}
+		ret := []reflect.Value{*v}
+		return &ret, typed, err
 	case *ast.Ellipsis:
 	case *ast.BasicLit:
 		v, typed, err := evalBasicLit(node)
-		return []reflect.Value{v}, typed, err
+		return &[]reflect.Value{v}, typed, err
 	case *ast.FuncLit:
 	case *ast.CompositeLit:
 		v, typed, err := evalCompositeLit(node, env)
-		return []reflect.Value{v}, typed, err
+		return &[]reflect.Value{*v}, typed, err
 	case *ast.ParenExpr:
 		return EvalExpr(node.X, env)
 	case *ast.SelectorExpr:
 		v, typed, err := evalSelectorExpr(node, env)
-		return []reflect.Value{v}, typed, err
+		if v == nil {
+			return nil, typed, err
+		}
+		return &[]reflect.Value{*v}, typed, err
 	case *ast.IndexExpr:
 	case *ast.SliceExpr:
 	case *ast.TypeAssertExpr:
@@ -35,10 +42,10 @@ func EvalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
 	case *ast.UnaryExpr:
 	case *ast.BinaryExpr:
 		v, typed, err := evalBinaryExpr(node, env)
-		return []reflect.Value{v}, typed, err
+		return &[]reflect.Value{v}, typed, err
 	case *ast.KeyValueExpr:
 	}
-	return []reflect.Value{reflect.ValueOf("Alice")}, true, nil
+	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }
 
 func evalType(expr ast.Expr, env *Env) (reflect.Type, error) {
