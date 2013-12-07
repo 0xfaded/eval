@@ -8,7 +8,7 @@ import (
 )
 
 func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
-	var xx, yy []reflect.Value
+	var xx, yy *[]reflect.Value
 	var xtyped, ytyped bool
 	if xx, xtyped, err = EvalExpr(b.X, env); err != nil {
 		return reflect.Value{}, false, err
@@ -17,7 +17,7 @@ func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, 
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped || ytyped
-	x, y := xx[0], yy[0]
+	x, y := (*xx)[0], (*yy)[0]
 
 	// Rearrange x and y such that y is assignable to x, if possible
 	if xtyped && ytyped {
