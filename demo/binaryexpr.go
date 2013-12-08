@@ -42,7 +42,7 @@ func TestUintBinaryOps() {
 	expectResult("uint64(1)+2", env, uint64(1)+2)
 }
 
-func TestFloatBinaryOps() {
+func TestUnaryOps() {
 	env := makeEnv()
 
 	expectResult("-1.0", env, float64(-1.0))
@@ -50,11 +50,7 @@ func TestFloatBinaryOps() {
 
 func TestComplexOps() {
 	env := makeEnv()
-
 	expectResult("complex(1, 2) + complex(3, 4)", env, complex(1, 2) + complex(3, 4))
-	expectResult("complex(1, 2) - complex(3, 4)", env, complex(1, 2) - complex(3, 4))
-	expectResult("complex(1, 2) * complex(3, 4)", env, complex(1, 2) * complex(3, 4))
-	expectResult("complex(1, 2) / complex(3, 4)", env, complex(1, 2) / complex(3, 4))
 }
 
 func TestTypedBinaryOps() {
@@ -77,6 +73,6 @@ func TestNil() {
 
 func main() {
 	TestIntBinaryOps()
-	TestFloatBinaryOps()
+	TestUnaryOps()
 	TestTypedBinaryOps()
 }
