@@ -17,6 +17,7 @@ func TestIntBinaryOps(t *testing.T) {
 	expectResult(t, "2|1",   env, int64(2)|1)
 	expectResult(t, "3^1",   env, int64(3)^1)
 	expectResult(t, "3&^1",  env, int64(3)&^1)
+
 	expectResult(t, "3<1",   env, bool(3<1))
 	expectResult(t, "-1<3",  env, bool(-1<3))
 	expectResult(t, "3>1",   env, bool(3>1))
@@ -25,6 +26,9 @@ func TestIntBinaryOps(t *testing.T) {
 	expectResult(t, "-1==3", env, bool(1==3))
 	expectResult(t, "1!=1",  env, bool(1!=1))
 	expectResult(t, "1!=3",  env, bool(1!=3))
+
+	expectResult(t, "\"a\" + \"b\"",  env, "a" + "b")
+
 }
 
 func TestUintBinaryOps(t *testing.T) {
