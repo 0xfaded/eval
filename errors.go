@@ -48,6 +48,10 @@ type ErrArrayIndexOutOfBounds struct {
 	i uint64
 }
 
+type ErrNotCompiledWith struct {
+	typeName string
+}
+
 func (err ErrInvalidOperands) Error() string {
 	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
 }
@@ -89,4 +93,8 @@ func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
 }
 
+func (err ErrNotCompiledWith) Error() string {
+	return fmt.Sprintf("Environment has not been compiled with type (%s). Due to implementation, " +
+		"only types used by the exposed packages are available as anonymous types.", err.typeName)
+}
 

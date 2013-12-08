@@ -89,6 +89,25 @@ func TestCompositeSliceKeyValues(t *testing.T) {
 	expectResult(t, expr, env, expected)
 }
 
+func TestCompositeAnonArray(t *testing.T) {
+	env := makeEnv()
+
+	expected := [3]int { 1, 2 }
+	expr := "[3]int { 1, 2 }"
+
+	expectResult(t, expr, env, expected)
+}
+
+func TestCompositeAnonAnonArray(t *testing.T) {
+	env := makeEnv()
+
+	print("\n\n")
+	expected := [3][3]int { [3]int { 1, 2 }, [3]int { 3, 4 } }
+	expr := "[3][3]int { [3]int { 1, 2 }, [3]int { 3, 4 } }"
+
+	expectResult(t, expr, env, expected)
+}
+
 func TestCompositeStructValues(t *testing.T) {
 	type Alice struct {
 		Bob int

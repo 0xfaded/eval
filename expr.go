@@ -19,6 +19,7 @@ func evalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
 		return []reflect.Value{v}, typed, err
 	case *ast.FuncLit:
 	case *ast.CompositeLit:
+		fmt.Printf("liht: %+v\n", node)
 		v, typed, err := evalCompositeLit(node, env)
 		return []reflect.Value{v}, typed, err
 	case *ast.ParenExpr:
@@ -41,6 +42,8 @@ func evalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
 	return []reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }
 
+// the typed flag is false for anonymous types that may be promoted to named types
+// and slices which may be promoted to anonymous arrays by the runtime.
 func evalType(expr ast.Expr, env *Env) (reflect.Type, error) {
 	switch node := expr.(type) {
 	case *ast.Ident:
@@ -49,10 +52,20 @@ func evalType(expr ast.Expr, env *Env) (reflect.Type, error) {
 		} else if t, ok := builtinTypes[node.Name]; ok {
 			return t, nil
 		} else {
-			return t, errors.New("undefined type: " + node.Name)
+			return nil, errors.New("undefined type: " + node.Name)
 		}
 	case *ast.ArrayType:
-		return nil, errors.New("array types not implemented")
+		fmt.Printf("%+v %T mark\n", node, node)
+		if t, err := evalType(node.Elt, env); err != nil {
+			return nil, err
+		} else if node.Elt == nil {
+			return reflect.SliceOf(t), nil
+		} else if _, ok := node.Elt.(*ast.Ellipsis); ok {
+			return arrayOf(t, -1), nil
+		} else {
+			size, err := parseArrayKey(node.Len, env)
+			return arrayOf(t, int(size)), err
+		}
 	case *ast.StructType:
 		return nil, errors.New("struct types not implemented")
 	case *ast.FuncType:

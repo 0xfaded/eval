@@ -26,6 +26,14 @@ func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) 
 	} else {
 		resultsi := make([]interface{}, len(results))
 		for i, result := range results {
+			// Deal with wrapped values which can't be nicely handled by the runtime
+			if i < len(expected) {
+				t := reflect.TypeOf(expected[i])
+				v := results[i]
+				if unwrapped, err := unwrappedAssignableValue(v, t); err == nil {
+					result = unwrapped
+				}
+			}
 			resultsi[i] = result.Interface()
 		}
 		if !reflect.DeepEqual(resultsi, expected) {

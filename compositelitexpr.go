@@ -4,13 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strconv"
 
 	"go/ast"
-	"go/token"
 )
 
 func evalCompositeLit(lit *ast.CompositeLit, env *Env) (reflect.Value, bool, error) {
+	fmt.Printf("%+v\n", lit)
 	t, err := evalType(lit.Type, env)
 	if err != nil {
 		return reflect.Value{}, true, err
@@ -30,8 +29,9 @@ func evalCompositeLit(lit *ast.CompositeLit, env *Env) (reflect.Value, bool, err
 }
 
 func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *Env) (reflect.Value, bool, error) {
-
-	v := reflect.New(t).Elem()
+	fmt.Printf("makeAnon %v %T\n", t.Elem(), t.Elem())
+	v := makeAnonValue(t)
+	fmt.Printf("makeAnon %v %T\n", v, v)
 
 	var curKey uint64 = 0
 	var size uint64 = 0
@@ -42,17 +42,18 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 		for _, elt := range lit.Elts {
 			if kv, ok := elt.(*ast.KeyValueExpr); !ok {
 				size += 1
-			} else if k, ok := kv.Key.(*ast.BasicLit); !ok || k.Kind != token.INT {
-				return reflect.Value{}, false, ErrArrayKey
-
-			// The limit of 2^31 elements is infered from the go implementation
-			} else if i, err := strconv.ParseUint(k.Value, 0, 31); err != nil {
-				return reflect.Value{}, false, ErrArrayKey
+			} else if i, err := parseArrayKey(kv.Key, env); err != nil {
+				return reflect.Value{}, false, err
 			} else if !(i < size) {
 				size = i + 1
 			}
 		}
 		v.Set(reflect.MakeSlice(t, int(size), int(size)))
+	}
+
+	underlying := v
+	if arr, arrt := recoverArray(v); arr.IsValid() {
+		underlying = arr
 	}
 
 	for _, elt := range lit.Elts {
@@ -61,7 +62,7 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 			expr = elt
 		} else {
 			// We know this expression to be valid from above.
-			curKey, _ = strconv.ParseUint(kv.Key.(*ast.BasicLit).Value, 0, 31)
+			curKey, _ = parseArrayKey(kv.Key, env)
 			expr = kv.Value
 		}
 
@@ -69,7 +70,10 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 			return reflect.Value{}, false, ErrArrayIndexOutOfBounds{t, curKey}
 		}
 
-		elem := v.Index(int(curKey))
+		// If the underlying 
+		elem := underlying.Index(int(curKey))
+		elem = wrappedValue(elem, t.Elem())
+
 		if value, typed, err := evalExpr(expr, env); err != nil {
 			return reflect.Value{}, false, err
 		} else if len(value) == 0 {
@@ -77,6 +81,7 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 		} else if len(value) > 1 {
 			return reflect.Value{}, false, ErrMultiInSingleContext{value}
 		} else if err := setTypedValue(elem, value[0], typed); err != nil {
+			fmt.Printf("err %v %v %v %T %T%T\n", v, elem, value, v, elem, value)
 			return reflect.Value{}, false, err
 		}
 		curKey += 1
@@ -133,3 +138,18 @@ func evalCompositeLitStruct(t reflect.Type, lit *ast.CompositeLit, env *Env) (re
 	}
 	return v, true, nil
 }
+
+func parseArrayKey(expr ast.Expr, env *Env) (uint64, error) {
+	// XXX wrong, should only allow constant expressions
+	if v, typed, err := evalExpr(expr, env); err != nil || len(v) != 1 {
+		return 0, ErrArrayKey
+	} else if uintV, err := assignableValue(v[0], reflect.TypeOf(uint64(0)), typed); err != nil {
+		return 0, ErrArrayKey
+
+	} else if i := uintV.Uint(); int64(i) != int64(int(i)) {
+		return 0, ErrArrayKey
+	} else {
+		return i, nil
+	}
+}
+
