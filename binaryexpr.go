@@ -10,10 +10,10 @@ import (
 func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx, yy []reflect.Value
 	var xtyped, ytyped bool
-	if xx, xtyped, err = evalExpr(b.X, env); err != nil {
+	if xx, xtyped, err = EvalExpr(b.X, env); err != nil {
 		return reflect.Value{}, false, err
 	}
-	if yy, ytyped, err = evalExpr(b.Y, env); err != nil {
+	if yy, ytyped, err = EvalExpr(b.Y, env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped || ytyped
@@ -145,4 +145,3 @@ func evalBinaryStringExpr(x reflect.Value, op token.Token, y reflect.Value) (ref
 	}
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
-

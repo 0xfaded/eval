@@ -21,7 +21,7 @@ func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
 func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if results, _, err := evalExpr(e, env); err != nil {
+	} else if results, _, err := EvalExpr(e, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
 		resultsi := make([]interface{}, len(results))
@@ -37,7 +37,7 @@ func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) 
 func expectFail(t *testing.T, expr string, env *Env) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if _, _, err := evalExpr(e, env); err == nil {
+	} else if _, _, err := EvalExpr(e, env); err == nil {
 		t.Fatalf("Expected expression '%s' to fail", expr)
 	// Catch dogdy error messages which panic on format
 	} else if strings.Index(err.Error(), "(PANIC=") != -1 {

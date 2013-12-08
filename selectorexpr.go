@@ -11,7 +11,7 @@ import (
 func evalSelectorExpr(selector *ast.SelectorExpr, env *Env) (reflect.Value, bool, error) {
        var err error
        var x []reflect.Value
-       if x, _, err = evalExpr(selector.X, env); err != nil {
+       if x, _, err = EvalExpr(selector.X, env); err != nil {
                return reflect.Value{}, true, err
        }
        sel := selector.Sel.Name

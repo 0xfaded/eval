@@ -27,4 +27,3 @@ func evalBasicLit(lit *ast.BasicLit) (reflect.Value, bool, error) {
 		return reflect.Value{}, false, errors.New(fmt.Sprintf("BasicLit: Bad token type (%+v)", lit))
 	}
 }
-

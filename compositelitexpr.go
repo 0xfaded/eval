@@ -38,7 +38,7 @@ func evalCompositeLit(lit *ast.CompositeLit, env *Env) (reflect.Value, bool, err
 					return v, true, errors.New(fmt.Sprintf("Invalid key node %v %T", kv.Key, kv.Key))
 				} else if f := v.FieldByName(k.Name); !f.IsValid() {
 					return v, true, errors.New(t.Name() + " has no field " + k.Name)
-				} else if fv, ft, err := evalExpr(kv.Value, env); err != nil {
+				} else if fv, ft, err := EvalExpr(kv.Value, env); err != nil {
 					return v, true, err
 				} else {
 					field, value = f, fv[0]
@@ -51,7 +51,7 @@ func evalCompositeLit(lit *ast.CompositeLit, env *Env) (reflect.Value, bool, err
 					return v, true, errors.New("Too many elements for struct " + t.Name())
 				} else if _, ok := elt.(*ast.KeyValueExpr); ok {
 					return v, true, errors.New("Elements are either all key value pairs or not")
-				} else if fv, ft, err := evalExpr(elt, env); err != nil {
+				} else if fv, ft, err := EvalExpr(elt, env); err != nil {
 					return v, true, err
 				} else {
 					field, value = v.Field(i), fv[0]
@@ -72,4 +72,3 @@ func evalCompositeLit(lit *ast.CompositeLit, env *Env) (reflect.Value, bool, err
 
 	}
 }
-

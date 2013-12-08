@@ -25,4 +25,3 @@ func evalIdentExpr(ident *ast.Ident, env *Env) (reflect.Value, bool, error) {
 		return reflect.Value{}, false, errors.New(fmt.Sprintf("%s undefined", name))
 	}
 }
-

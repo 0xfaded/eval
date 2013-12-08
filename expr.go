@@ -8,7 +8,7 @@ import (
 	"go/ast"
 )
 
-func evalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
+func EvalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *ast.Ident:
 		v, typed, err := evalIdentExpr(node, env)
@@ -22,7 +22,7 @@ func evalExpr(expr ast.Expr, env *Env) ([]reflect.Value, bool, error) {
 		v, typed, err := evalCompositeLit(node, env)
 		return []reflect.Value{v}, typed, err
 	case *ast.ParenExpr:
-		return evalExpr(node.X, env)
+		return EvalExpr(node.X, env)
 	case *ast.SelectorExpr:
 		v, typed, err := evalSelectorExpr(node, env)
 		return []reflect.Value{v}, typed, err

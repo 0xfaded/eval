@@ -16,7 +16,7 @@ func evalCallExpr(call *ast.CallExpr, env *Env) ([]reflect.Value, bool, error) {
 		} else {
 			return []reflect.Value{v}, typed, nil
 		}
-	} else if fun, _, err := evalExpr(call.Fun, env); err == nil {
+	} else if fun, _, err := EvalExpr(call.Fun, env); err == nil {
 		return evalCallFunExpr(fun[0], call, env)
 	} else {
 		return []reflect.Value{}, false, err
@@ -29,7 +29,7 @@ func evalCallTypeExpr(t reflect.Type, call *ast.CallExpr, env *Env) (reflect.Val
 		return r, false, errors.New(fmt.Sprintf("missing argument to conversion to %v", t))
 	} else if len(call.Args) > 1 {
 		return r, false, errors.New(fmt.Sprintf("too many arguments to conversion to %v", t))
-	} else if arg, typed, err := evalExpr(call.Args[0], env); err != nil {
+	} else if arg, typed, err := EvalExpr(call.Args[0], env); err != nil {
 		return r, false, err
 	} else if cast, err := assignableValue(arg[0], t, typed); err != nil {
 		return r, false, err
@@ -42,7 +42,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 	var err error
 	var v, out []reflect.Value
 	var typed bool
-	if v, typed, err = evalExpr(call.Fun, env); err != nil {
+	if v, typed, err = EvalExpr(call.Fun, env); err != nil {
 		return []reflect.Value{}, false, err
 	}
 	if v[0].Kind() != reflect.Func {
@@ -66,7 +66,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 
 	// Evaluate each arg
 	for i := range call.Args {
-		if args[i], atyped[i], err = evalExpr(call.Args[i], env); err != nil {
+		if args[i], atyped[i], err = EvalExpr(call.Args[i], env); err != nil {
 			return []reflect.Value{}, false, err
 		}
 	}
@@ -86,7 +86,7 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 	// Parse args into a slice suitable for calling the function
 	actualNumIn := ftype.NumIn()
 	if builtin {
-		// See builtinFuncs comment 
+		// See builtinFuncs comment
 		actualNumIn /= 2
 	}
 
@@ -179,4 +179,3 @@ func evalCallFunExpr(fun reflect.Value, call *ast.CallExpr, env *Env) ([]reflect
 		return out, true, nil
 	}
 }
-
