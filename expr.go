@@ -40,10 +40,14 @@ func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return evalCallExpr(node, env)
 	case *ast.StarExpr:
 	case *ast.UnaryExpr:
+		v, typed, err := evalUnaryExpr(node, env)
+		return &[]reflect.Value{v}, typed, err
 	case *ast.BinaryExpr:
 		v, typed, err := evalBinaryExpr(node, env)
 		return &[]reflect.Value{v}, typed, err
 	case *ast.KeyValueExpr:
+	default:
+		return nil , false, errors.New("undefined type")
 	}
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }

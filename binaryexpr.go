@@ -63,6 +63,8 @@ func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, 
 func evalBinaryIntExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r int64
 	var err error
+	var b bool
+	is_bool := false
 
 	xx, yy := x.Int(), y.Int()
 	switch op {
@@ -75,15 +77,27 @@ func evalBinaryIntExpr(x reflect.Value, op token.Token, y reflect.Value) (reflec
 	case token.OR:  r = xx | yy
 	case token.XOR: r = xx ^ yy
 	case token.AND_NOT: r = xx &^ yy
+	case token.EQL: b = xx == yy; is_bool = true
+	case token.NEQ: b = xx != yy; is_bool = true
+	case token.LEQ: b = xx <= yy; is_bool = true
+	case token.GEQ: b = xx >= yy; is_bool = true
+    case token.LSS: b = xx < yy;  is_bool = true
+	case token.GTR: b = xx > yy;  is_bool = true
 	default: err = ErrInvalidOperands{x, op, y}
 	}
-	return reflect.ValueOf(r).Convert(x.Type()), err
+	if is_bool {
+		return reflect.ValueOf(b), err
+	} else {
+		return reflect.ValueOf(r).Convert(x.Type()), err
+	}
 }
 
 // Assumes y is assignable to x, panics otherwise
 func evalBinaryUintExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r uint64
+	var b bool
+	is_bool := false
 
 	xx, yy := x.Uint(), y.Uint()
 	switch op {
@@ -96,9 +110,19 @@ func evalBinaryUintExpr(x reflect.Value, op token.Token, y reflect.Value) (refle
 	case token.OR:  r = xx | yy
 	case token.XOR: r = xx ^ yy
 	case token.AND_NOT: r = xx &^ yy
+	case token.EQL: b = xx == yy; is_bool = true
+	case token.NEQ: b = xx != yy; is_bool = true
+	case token.LEQ: b = xx <= yy; is_bool = true
+	case token.GEQ: b = xx >= yy; is_bool = true
+    case token.LSS: b = xx < yy;  is_bool = true
+	case token.GTR: b = xx > yy;  is_bool = true
 	default: err = ErrInvalidOperands{x, op, y}
 	}
-	return reflect.ValueOf(r).Convert(x.Type()), err
+	if is_bool {
+		return reflect.ValueOf(b), err
+	} else {
+		return reflect.ValueOf(r).Convert(x.Type()), err
+	}
 }
 
 // Assumes y is assignable to x, panics otherwise
@@ -112,6 +136,9 @@ func evalBinaryFloatExpr(x reflect.Value, op token.Token, y reflect.Value) (refl
 	case token.SUB: r = xx - yy
 	case token.MUL: r = xx * yy
 	case token.QUO: r = xx / yy
+	// case token.EQL: b = xx == yy
+    // case token.LSS: b = xx < yy
+	// case token.GTR: b = xx > yy
 	default: err = ErrInvalidOperands{x, op, y}
 	}
 	return reflect.ValueOf(r).Convert(x.Type()), err

@@ -7,12 +7,16 @@ import (
 	"go/token"
 )
 
+type ErrInvalidOperand struct {
+	x reflect.Value
+	op token.Token
+}
+
 type ErrInvalidOperands struct {
 	x reflect.Value
 	op token.Token
 	y reflect.Value
 }
-
 
 type ErrBadFunArgument struct {
 	fun reflect.Value
@@ -38,6 +42,10 @@ type ErrMultiInSingleContext struct {
 	vals []reflect.Value
 }
 
+
+func (err ErrInvalidOperand) Error() string {
+	return fmt.Sprintf("invalid unary operation %v %v %v", err.x, err.op)
+}
 
 func (err ErrInvalidOperands) Error() string {
 	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
@@ -75,4 +83,3 @@ func (err ErrMultiInSingleContext) Error() string {
 	}
 	return fmt.Sprintf("multiple-value (%s) in single value context", strvals)
 }
-
