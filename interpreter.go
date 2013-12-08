@@ -40,8 +40,13 @@ func Run(env *Env, results *([]interface{})) {
 			fmt.Printf("void\n")
 		} else if len(*vals) == 1 {
 			value := (*vals)[0]
-			fmt.Printf("Kind = %v\n", value.Kind().String())
-			fmt.Printf("Results[%d] = %v\n", exprs, (value.Interface()))
+			kind := value.Kind().String()
+			fmt.Printf("Kind = %v\n", kind)
+			if kind == "string" {
+				fmt.Printf("Results[%d] = \"%v\"\n", exprs, (value.Interface()))
+			} else {
+				fmt.Printf("Results[%d] = %v\n", exprs, (value.Interface()))
+			}
 			exprs  += 1
 			*results = append(*results, (*vals)[0].Interface())
 		} else {

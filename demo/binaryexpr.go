@@ -33,7 +33,7 @@ func makeEnv() *interactive.Env {
 func TestIntBinaryOps() {
 	env := makeEnv()
 
-	expectResult("-1", env, int64(-1))
+	expectResult("\"a\" + \"b\"", env, "a" + "b")
 }
 
 func TestUintBinaryOps() {

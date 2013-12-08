@@ -167,7 +167,8 @@ func evalBinaryStringExpr(x reflect.Value, op token.Token, y reflect.Value) (ref
 
 	xx, yy := x.String(), y.String()
 	switch op {
-	case token.ADD: r = xx + yy
+	case token.ADD:
+		r = xx + yy
 	default: err = ErrInvalidOperands{x, op, y}
 	}
 	return reflect.ValueOf(r).Convert(x.Type()), err
