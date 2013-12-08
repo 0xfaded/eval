@@ -13,7 +13,7 @@ func readline(prompt string, in *bufio.Reader) (string, error) {
 	fmt.Printf(prompt)
 	line, err := in.ReadString('\n')
 	if err == nil {
-		line = strings.TrimRight(line, "r\n")
+		line = strings.TrimRight(line, "\r\n")
 	}
 	return line, err
 }
