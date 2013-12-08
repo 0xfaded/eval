@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"go/parser"
-	"github.com/rocky/ssa-interp/eval"
+	"github.com/rocky/go-interactive"
 )
 
 func expectResult(expr string, env *interactive.Env, expected interface{}) {

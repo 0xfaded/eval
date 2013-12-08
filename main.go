@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"os"
 
-	"github.com/rocky/ssa-interp/eval"
+	"github.com/rocky/go-interactive"
 )
 
 func main() {
