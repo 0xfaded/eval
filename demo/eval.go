@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"os"
 
-	"github.com/0xfaded/go-interactive"
+    "github.com/0xfaded/go-interactive"
 )
 
 func main() {

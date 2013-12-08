@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"go/parser"
     "github.com/0xfaded/go-interactive"
-	"github.com/rocky/go-interactive"
 	"github.com/rocky/ssa-interp/eval"
 )
 
