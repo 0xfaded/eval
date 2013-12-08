@@ -8,10 +8,10 @@ import (
 	"go/ast"
 )
 
-	//"github.com/sbinet/go-readline/pkg/readline"
 func evalIdentExpr(ident *ast.Ident, env *Env) (*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
+		// FIXME: Should this be done first or last?
 		return nil, false, nil
 	} else if v, ok := env.Vars[name]; ok {
 		elem := v.Elem()

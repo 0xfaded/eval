@@ -1,75 +1,74 @@
-// Copyright 2013 Rocky Bernstein.
-
 // +build ignore
 
 package main
 
 import (
+	"log"
+	"reflect"
 	"os"
-	"go/parser"
-	"code.google.com/p/go-gnureadline"
-	"code.google.com/p/go.tools/importer"
-	// "github.com/rocky/ssa-interp/gub"
-	// "code.google.com/p/go.tools/go/types"
-	// "code.google.com/p/go.tools/go/exact"
-	"go/ast"
-	"fmt"
+
+	"github.com/rocky/ssa-interp/eval"
 )
 
-func setup() (*importer.Importer, *importer.PackageInfo) {
-	test := `
-package main
-
-import "os"
-
-type testEntry struct {
-	src string
-    num int
-}
-
-var testTypes = []testEntry{ {"a", 1}, {"b", 2}}
-
 func main() {
-    intary := []int{1,2,3,4}
-    os.Exit(intary[2])
-}
-`
-	imp := importer.New(new(importer.Config)) // no Loader; uses GC importer
+	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
+	var consts map[string] reflect.Value = make(map[string] reflect.Value)
+	var funcs  map[string] reflect.Value = make(map[string] reflect.Value)
+	var types  map[string] reflect.Type  = make(map[string] reflect.Type)
+	{ var x log.Logger; types["Logger"] = reflect.TypeOf(x); }
+	// Constants arent properly implemented, hence the conversion to int64
+	consts["Ldate"] = reflect.ValueOf(int64(log.Ldate))
+	consts["Ltime"] = reflect.ValueOf(int64(log.Ltime))
+	consts["Lmicroseconds"] = reflect.ValueOf(int64(log.Lmicroseconds))
+	consts["Llongfile"] = reflect.ValueOf(int64(log.Llongfile))
+	consts["Lshortfile"] = reflect.ValueOf(int64(log.Lshortfile))
+	consts["LstdFlags"] = reflect.ValueOf(int64(log.LstdFlags))
+	funcs["SetOutput"] = reflect.ValueOf(log.SetOutput)
+	funcs["Println"] = reflect.ValueOf(log.Println)
+	funcs["Panicln"] = reflect.ValueOf(log.Panicln)
+	funcs["New"] = reflect.ValueOf(log.New)
+	funcs["Fatal"] = reflect.ValueOf(log.Fatal)
+	funcs["Flags"] = reflect.ValueOf(log.Flags)
+	funcs["SetFlags"] = reflect.ValueOf(log.SetFlags)
+	funcs["Print"] = reflect.ValueOf(log.Print)
+	funcs["Printf"] = reflect.ValueOf(log.Printf)
+	funcs["Panic"] = reflect.ValueOf(log.Panic)
+	funcs["Panicf"] = reflect.ValueOf(log.Panicf)
+	funcs["Prefix"] = reflect.ValueOf(log.Prefix)
+	funcs["SetPrefix"] = reflect.ValueOf(log.SetPrefix)
+	funcs["Fatalf"] = reflect.ValueOf(log.Fatalf)
+	funcs["Fatalln"] = reflect.ValueOf(log.Fatalln)
 
-	f, err := parser.ParseFile(imp.Fset, "<input>", test, parser.DeclarationErrors)
-	if err != nil {
-		fmt.Println("parse error: %s\n", err)
-		os.Exit(1)
+	type Alice struct {
+		Bob int
+		Secret string
 	}
 
-	info := imp.CreateSourcePackage("main", []*ast.File{f})
-	if info.Err != nil {
-		fmt.Println(info.Err.Error())
-		os.Exit(2)
+	var v2 []interface{} = make([] interface{}, 0, 10)
+	vars["Results"] = reflect.ValueOf(&v2)
+	env := interactive.Env {
+		Name:   ".",
+		Vars:   vars,
+		Consts: make(map[string] reflect.Value),
+		Funcs:  make(map[string] reflect.Value),
+		Types:  map[string] reflect.Type{ "Alice": reflect.TypeOf(Alice{}) },
+		Pkgs:   map[string] interactive.Pkg { "log": &interactive.Env {
+				Name:   "log",
+				Vars:   vars,
+				Consts: consts,
+				Funcs:  funcs,
+				Types:  types,
+				Pkgs:   make(map[string] interactive.Pkg),
+			}, "os": &interactive.Env {
+				Name:   "os",
+				Vars:   map[string] reflect.Value { "Stdout": reflect.ValueOf(&os.Stdout) },
+				Consts: make(map[string] reflect.Value),
+				Funcs:  make(map[string] reflect.Value),
+				Types:  make(map[string] reflect.Type),
+				Pkgs:   make(map[string] interactive.Pkg),
+			},
+		},
 	}
-	return imp, info
-}
 
-func main() {
-	imp, info := setup()
-	fmt.Println(*imp)
-	fmt.Println("==============================")
-	fmt.Println(*info)
-	fmt.Println(info.Scope)
-	var line string
-	var err error
-	for i:=1; err == nil && line != "quit"; i++ {
-		line, err = gnureadline.Readline(fmt.Sprintf("Enter something [%d]: ", i), true)
-		switch line {
-		case "quit":
-			break;
-		}
-		fmt.Printf("You typed: %s\n", line)
-		expr, err := parser.ParseExpr(line)
-		if err != nil {
-			fmt.Printf("Error parsing %s: %s\n", line, err.Error())
-			continue
-		}
-		ast.Print(nil, expr)
-     }
+	interactive.Run(&env, &v2)
 }

@@ -62,4 +62,3 @@ func TestTypedBinaryOps(t *testing.T) {
 	expectResult(t, "1-Foo(2)", env, 1-Foo(2))
 	expectResult(t, "Foo(1)|2", env, Foo(1)|2)
 }
-
