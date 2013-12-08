@@ -8,7 +8,7 @@ all: eval
 
 #: The front-end to the evaluator
 eval: lib
-	go build -o eval main.go
+	go build -o eval demo/eval.go
 
 #: The evaluator library
 lib:
