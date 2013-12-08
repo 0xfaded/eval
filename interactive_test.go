@@ -11,25 +11,38 @@ import (
 )
 
 func expectVoid(t *testing.T, expr string, env *Env) {
-	expectResults(t, expr, env, []interface{}{})
+	expectResults(t, expr, env, &[]interface{}{})
+}
+
+func expectNil(t *testing.T, expr string, env *Env) {
+	expectResults(t, expr, env, nil)
 }
 
 func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
-	expectResults(t, expr, env, []interface{}{expected})
+	expect2 := []interface{}{expected}
+	expectResults(t, expr, env, &expect2)
 }
 
-func expectResults(t *testing.T, expr string, env *Env, expected []interface{}) {
+func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{}) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if results, _, err := EvalExpr(e, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
+		if nil == results {
+			if expected != nil {
+				t.Fatalf("Expression '%s' is nil but expected '%+v'", expr, *expected)
+			}
+			return
+		} else if expected == nil {
+			t.Fatalf("Expression '%s'expected is '%+v', expected to be nil", expr, *results)
+		}
 		resultsi := make([]interface{}, len(*results))
 		for i, result := range *results {
 			resultsi[i] = result.Interface()
 		}
-		if !reflect.DeepEqual(resultsi, expected) {
-			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, resultsi, expected)
+		if !reflect.DeepEqual(resultsi, *expected) {
+			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, resultsi, *expected)
 		}
 	}
 }

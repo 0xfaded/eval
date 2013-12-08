@@ -13,7 +13,7 @@ func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 	case *ast.Ident:
 		v, typed, err := evalIdentExpr(node, env)
 		if v == nil {
-			return nil, false, nil
+			return nil, false, err
 		}
 		ret := []reflect.Value{*v}
 		return &ret, typed, err
