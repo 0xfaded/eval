@@ -1,10 +1,16 @@
 package interactive
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 
 	"go/token"
+)
+
+var (
+	ErrArrayKey = errors.New("array index must be non-negative integer constant")
+	ErrMissingValue = errors.New("void used as value")
 )
 
 type ErrInvalidOperand struct {
@@ -42,6 +48,10 @@ type ErrMultiInSingleContext struct {
 	vals []reflect.Value
 }
 
+type ErrArrayIndexOutOfBounds struct {
+	t reflect.Type
+	i uint64
+}
 
 func (err ErrInvalidOperand) Error() string {
 	return fmt.Sprintf("invalid unary operation %v %v %v", err.x, err.op)
@@ -82,4 +92,8 @@ func (err ErrMultiInSingleContext) Error() string {
 		}
 	}
 	return fmt.Sprintf("multiple-value (%s) in single value context", strvals)
+}
+
+func (err ErrArrayIndexOutOfBounds) Error() string {
+	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
 }
