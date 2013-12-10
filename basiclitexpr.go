@@ -12,6 +12,15 @@ import (
 
 func evalBasicLit(ctx *Ctx, lit *ast.BasicLit) (reflect.Value, bool, error) {
 	switch lit.Kind {
+	case token.CHAR:
+		if r, _, tail, err := strconv.UnquoteChar(lit.Value[1:len(lit.Value)-1], '\''); err != nil {
+			return reflect.Value{}, false, ErrBadBasicLit{at(ctx, lit)}
+		} else if tail != "" {
+			// parser.ParseExpr() should raise a syntax error before we get here.
+			panic("go-interactive: bad char lit " + lit.Value)
+		} else {
+			return reflect.ValueOf(r), false, nil
+		}
 	case token.STRING:
 		return reflect.ValueOf(lit.Value[1:len(lit.Value)-1]), true, nil
 	case token.INT:
