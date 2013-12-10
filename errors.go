@@ -13,6 +13,10 @@ var (
 	ErrArrayKey = errors.New("array index must be non-negative integer constant")
 )
 
+type ErrBadBasicLit struct {
+	ErrorContext
+}
+
 type ErrInvalidOperand struct {
 	x reflect.Value
 	op token.Token
@@ -59,9 +63,24 @@ type ErrArrayIndexOutOfBounds struct {
 	i uint64
 }
 
+type ErrInvalidIndexOperation struct {
+	ErrorContext
+	t reflect.Type
+}
+
+type ErrInvalidIndex struct {
+	ErrorContext
+	indexValue reflect.Value
+	containerType reflect.Type
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
+}
+
+func (err ErrBadBasicLit) Error() string {
+	return fmt.Sprintf("Bad literal %s", err.Source())
 }
 
 func (err ErrInvalidOperand) Error() string {
@@ -90,6 +109,44 @@ func (err ErrWrongNumberOfArgs) Error() string {
 		return fmt.Sprintf("not enouch args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
 	} else {
 		return fmt.Sprintf("too many args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
+	}
+}
+
+func (err ErrInvalidIndexOperation) Error() string {
+	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), err.t)
+}
+
+func (err ErrInvalidIndex) Error() string {
+	var ct string
+
+	switch err.containerType.Kind() {
+	//case reflect.Map:
+	case reflect.Array:
+		ct = "array"
+	case reflect.Slice:
+		ct = "slice"
+	case reflect.String:
+		ct = "string"
+	default:
+		panic("go-interactive error: ErrInvalidIndex requires indexable err.containerType")
+	}
+
+	switch err.indexValue.Type().Kind() {
+	case reflect.Int:
+		var reason string
+		i := int(err.indexValue.Int())
+		if err.containerType.Kind() == reflect.Array && i >= err.containerType.Len() {
+			reason = fmt.Sprintf("out of bounds for %d-element array", err.containerType.Len())
+
+		// TODO string errors for constant strings constant values are implemented
+		// out of bounds for 3-byte string
+		// } else if err.containerType.Kind == reflect.String && i > err.containerType.Len() {
+		} else {
+			reason = "index must be non-negative"
+		}
+		return fmt.Sprintf("invalid %s index %s (%s)", ct, err.Source(), reason)
+	default:
+		return fmt.Sprintf("non-integer %s index %s", ct, err.Source())
 	}
 }
 
