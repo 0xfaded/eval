@@ -8,7 +8,7 @@ import (
 	"go/ast"
 )
 
-func evalIdentExpr(ident *ast.Ident, env *Env) (*reflect.Value, bool, error) {
+func evalIdentExpr(ctx *Ctx, ident *ast.Ident, env *Env) (*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
 		// FIXME: Should this be done first or last?

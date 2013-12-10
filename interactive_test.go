@@ -3,9 +3,9 @@ package interactive
 // Utilities for other tests live here
 
 import (
+	"strings"
 	"testing"
 	"reflect"
-	"strings"
 
 	"go/parser"
 )
@@ -24,9 +24,10 @@ func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
 }
 
 func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{}) {
+	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if results, _, err := EvalExpr(e, env); err != nil {
+	} else if results, _, err := EvalExpr(ctx, e, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
 		if nil == results {
@@ -47,10 +48,24 @@ func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{})
 	}
 }
 
-func expectFail(t *testing.T, expr string, env *Env) {
+func expectError(t *testing.T, expr string, env *Env, errorString string) {
+	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if _, _, err := EvalExpr(e, env); err == nil {
+	} else if _, _, err := EvalExpr(ctx, e, env); err == nil {
+		t.Fatalf("Expected expression '%s' to fail", expr)
+	// Catch dogdy error messages which panic on format
+	} else if err.Error() != errorString {
+		t.Fatalf("Error `%s` != Expected `%s`", err.Error(), errorString)
+	}
+}
+
+// deprecated, use expectError
+func expectFail(t *testing.T, expr string, env *Env) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if _, _, err := EvalExpr(ctx, e, env); err == nil {
 		t.Fatalf("Expected expression '%s' to fail", expr)
 	// Catch dogdy error messages which panic on format
 	} else if strings.Index(err.Error(), "(PANIC=") != -1 {

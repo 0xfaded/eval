@@ -8,10 +8,10 @@ import (
 	"go/ast"
 )
 
-func evalSelectorExpr(selector *ast.SelectorExpr, env *Env) (*reflect.Value, bool, error) {
+func evalSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
-	if x, _, err = EvalExpr(selector.X, env); err != nil {
+	if x, _, err = EvalExpr(ctx, selector.X, env); err != nil {
 		return nil, true, err
 	}
 	sel   := selector.Sel.Name
@@ -21,7 +21,7 @@ func evalSelectorExpr(selector *ast.SelectorExpr, env *Env) (*reflect.Value, boo
 	if x0.Kind() == reflect.Ptr {
 		// Special case for handling packages
 		if x0.Type() == reflect.TypeOf(Pkg(nil)) {
-			return evalIdentExpr(selector.Sel, x0.Interface().(Pkg))
+			return evalIdentExpr(ctx, selector.Sel, x0.Interface().(Pkg))
 		} else if !x0.IsNil() && x0.Elem().Kind() == reflect.Struct {
 			x0 = x0.Elem()
 		}

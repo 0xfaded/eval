@@ -10,8 +10,8 @@ import (
 	"go/token"
 )
 
-func evalCompositeLit(lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
-	t, err := evalType(lit.Type, env)
+func evalCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+	t, err := evalType(ctx, lit.Type, env)
 	if err != nil {
 		return nil, true, err
 	}
@@ -19,15 +19,15 @@ func evalCompositeLit(lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, er
 	switch t.Kind() {
 	//case reflect.Map:
 	case reflect.Array, reflect.Slice:
-		return evalCompositeLitArrayOrSlice(t, lit, env)
+		return evalCompositeLitArrayOrSlice(ctx, t, lit, env)
 	case reflect.Struct:
-		return evalCompositeLitStruct(t, lit, env)
+		return evalCompositeLitStruct(ctx, t, lit, env)
 	default:
 		return nil, true, errors.New(fmt.Sprintf("invalid type for composite literal %s", t.Name()))
 	}
 }
 
-func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
 
 	v := reflect.New(t).Elem()
 
@@ -75,13 +75,11 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 
 		// Evaluate and set the element
 		elem := v.Index(int(curKey))
-		if value, typed, err := EvalExpr(expr, env); err != nil {
+		if values, typed, err := EvalExpr(ctx, expr, env); err != nil {
 			return nil, false, err
-		} else if len(*value) == 0 {
-			return nil, false, ErrMissingValue
-		} else if len(*value) > 1 {
-			return nil, false, ErrMultiInSingleContext{*value}
-		} else if err := setTypedValue(elem, (*value)[0], typed); err != nil {
+		} else if value, err := expectSingleValue(ctx, *values, elt); err != nil {
+			return nil, false, err
+		} else if err := setTypedValue(elem, value, typed); err != nil {
 			return nil, false, err
 		}
 		curKey += 1
@@ -89,7 +87,7 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *ast.CompositeLit, env *En
 	return &v, true, nil
 }
 
-func evalCompositeLitStruct(t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
 	vp := reflect.New(t)
 	v := vp.Elem()
 
@@ -110,7 +108,7 @@ func evalCompositeLitStruct(t reflect.Type, lit *ast.CompositeLit, env *Env) (*r
 			} else if f := v.FieldByName(k.Name); !f.IsValid() {
 				return &v, true, errors.New(t.Name() + " has no field " + k.Name)
 			} else {
-				fv, ft, err := EvalExpr(kv.Value, env)
+				fv, ft, err := EvalExpr(ctx, kv.Value, env)
 				if err != nil {
 					return &v, true, err
 				} else if fv == nil {
@@ -129,7 +127,7 @@ func evalCompositeLitStruct(t reflect.Type, lit *ast.CompositeLit, env *Env) (*r
 			} else if _, ok := elt.(*ast.KeyValueExpr); ok {
 				return &v, true, errors.New("Elements are either all key value pairs or not")
 			} else {
-				fv, ft, err := EvalExpr(elt, env)
+				fv, ft, err := EvalExpr(ctx, elt, env)
 				if err != nil {
 					return &v, true, err
 				} else if fv == nil {

@@ -7,10 +7,10 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(b *ast.UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
+func evalUnaryExpr(ctx *Ctx, b *ast.UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx *[]reflect.Value
 	var xtyped bool
-	if xx, xtyped, err = EvalExpr(b.X, env); err != nil {
+	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped
@@ -18,15 +18,15 @@ func evalUnaryExpr(b *ast.UnaryExpr, env *Env) (r reflect.Value, rtyped bool, er
 
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalUnaryIntExpr(x, b.Op)
+		r, err = evalUnaryIntExpr(ctx, x, b.Op)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalUnaryUintExpr(x, b.Op)
+		r, err = evalUnaryUintExpr(ctx, x, b.Op)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalUnaryFloatExpr(x, b.Op)
+		r, err = evalUnaryFloatExpr(ctx, x, b.Op)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalUnaryComplexExpr(x, b.Op)
+		r, err = evalUnaryComplexExpr(ctx, x, b.Op)
 	case reflect.String:
-		r, err = evalUnaryStringExpr(x, b.Op)
+		r, err = evalUnaryStringExpr(ctx, x, b.Op)
 	default:
 		err = ErrInvalidOperands{x, b.Op, x}
 	}
@@ -34,7 +34,7 @@ func evalUnaryExpr(b *ast.UnaryExpr, env *Env) (r reflect.Value, rtyped bool, er
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalUnaryIntExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var r int64
 	var err error
 	// var b bool
@@ -56,7 +56,7 @@ func evalUnaryIntExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalUnaryUintExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r uint64
 	var b bool
@@ -76,7 +76,7 @@ func evalUnaryUintExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalUnaryFloatExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r float64
 
@@ -90,7 +90,7 @@ func evalUnaryFloatExpr(x reflect.Value, op token.Token) (reflect.Value, error) 
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalUnaryComplexExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r complex128
 
@@ -102,7 +102,7 @@ func evalUnaryComplexExpr(x reflect.Value, op token.Token) (reflect.Value, error
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalUnaryStringExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r string
 

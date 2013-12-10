@@ -7,13 +7,13 @@ import (
 	"go/token"
 )
 
-func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
+func evalBinaryExpr(ctx *Ctx, b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx, yy *[]reflect.Value
 	var xtyped, ytyped bool
-	if xx, xtyped, err = EvalExpr(b.X, env); err != nil {
+	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {
 		return reflect.Value{}, false, err
 	}
-	if yy, ytyped, err = EvalExpr(b.Y, env); err != nil {
+	if yy, ytyped, err = EvalExpr(ctx, b.Y, env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped || ytyped
@@ -44,15 +44,15 @@ func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, 
 
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalBinaryIntExpr(x, b.Op, y)
+		r, err = evalBinaryIntExpr(ctx, x, b.Op, y)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalBinaryUintExpr(x, b.Op, y)
+		r, err = evalBinaryUintExpr(ctx, x, b.Op, y)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalBinaryFloatExpr(x, b.Op, y)
+		r, err = evalBinaryFloatExpr(ctx, x, b.Op, y)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalBinaryComplexExpr(x, b.Op, y)
+		r, err = evalBinaryComplexExpr(ctx, x, b.Op, y)
 	case reflect.String:
-		r, err = evalBinaryStringExpr(x, b.Op, y)
+		r, err = evalBinaryStringExpr(ctx, x, b.Op, y)
 	default:
 		err = ErrInvalidOperands{x, b.Op, y}
 	}
@@ -60,7 +60,7 @@ func evalBinaryExpr(b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, 
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalBinaryIntExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r int64
 	var err error
 	var b bool
@@ -93,7 +93,7 @@ func evalBinaryIntExpr(x reflect.Value, op token.Token, y reflect.Value) (reflec
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalBinaryUintExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r uint64
 	var b bool
@@ -126,7 +126,7 @@ func evalBinaryUintExpr(x reflect.Value, op token.Token, y reflect.Value) (refle
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalBinaryFloatExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r float64
 
@@ -145,7 +145,7 @@ func evalBinaryFloatExpr(x reflect.Value, op token.Token, y reflect.Value) (refl
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalBinaryComplexExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r complex128
 
@@ -161,7 +161,7 @@ func evalBinaryComplexExpr(x reflect.Value, op token.Token, y reflect.Value) (re
 }
 
 // Assumes y is assignable to x, panics otherwise
-func evalBinaryStringExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r string
 

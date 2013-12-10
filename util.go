@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+
+	"go/ast"
 )
 
 func assignableValue(x reflect.Value, to reflect.Type, xTyped bool) (reflect.Value, error) {
@@ -95,5 +97,15 @@ func promoteUntypedNumerals(x, y reflect.Value) (reflect.Value, reflect.Value) {
 		}
 	}
 	panic(fmt.Sprintf("runtime: bad untyped numeras %v and %v", x, y))
+}
+
+func expectSingleValue(ctx *Ctx, values []reflect.Value, srcExpr ast.Expr) (reflect.Value, error) {
+	if len(values) == 0 {
+		return reflect.Value{}, ErrMissingValue{at(ctx, srcExpr)}
+	} else if len(values) != 1 {
+		return reflect.Value{}, ErrMultiInSingleContext{at(ctx, srcExpr), values}
+	} else {
+		return values[0], nil
+	}
 }
 
