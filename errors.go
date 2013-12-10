@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"reflect"
 
+	"go/ast"
 	"go/token"
 )
 
 var (
 	ErrArrayKey = errors.New("array index must be non-negative integer constant")
-	ErrMissingValue = errors.New("void used as value")
 )
 
 type ErrInvalidOperand struct {
@@ -44,13 +44,24 @@ type ErrWrongNumberOfArgs struct {
 	numArgs int
 }
 
+
+type ErrMissingValue struct {
+	ErrorContext
+}
+
 type ErrMultiInSingleContext struct {
+	ErrorContext
 	vals []reflect.Value
 }
 
 type ErrArrayIndexOutOfBounds struct {
 	t reflect.Type
 	i uint64
+}
+
+type ErrorContext struct {
+	Input string
+	ast.Node
 }
 
 func (err ErrInvalidOperand) Error() string {
@@ -82,18 +93,22 @@ func (err ErrWrongNumberOfArgs) Error() string {
 	}
 }
 
+func (err ErrMissingValue) Error() string {
+	return fmt.Sprintf("%s used as value", err.ErrorContext.Source())
+}
+
 func (err ErrMultiInSingleContext) Error() string {
-	strvals := ""
-	for i, val := range err.vals {
-		if i == 0 {
-			strvals += fmt.Sprintf("%v", val)
-		} else {
-			strvals += fmt.Sprintf(", %v", val)
-		}
-	}
-	return fmt.Sprintf("multiple-value (%s) in single value context", strvals)
+	return fmt.Sprintf("multiple-value %s in single-value context", err.ErrorContext.Source())
 }
 
 func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
+}
+
+func at(ctx *Ctx, expr ast.Node) ErrorContext {
+	return ErrorContext{ctx.Input, expr}
+}
+
+func (errCtx ErrorContext) Source() string {
+	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
 }

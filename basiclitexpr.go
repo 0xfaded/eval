@@ -10,7 +10,7 @@ import (
 	"go/token"
 )
 
-func evalBasicLit(lit *ast.BasicLit) (reflect.Value, bool, error) {
+func evalBasicLit(ctx *Ctx, lit *ast.BasicLit) (reflect.Value, bool, error) {
 	switch lit.Kind {
 	case token.STRING:
 		return reflect.ValueOf(lit.Value[1:len(lit.Value)-1]), true, nil

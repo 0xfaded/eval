@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"reflect"
 	"go/parser"
-    "github.com/0xfaded/go-interactive"
-	"github.com/rocky/ssa-interp/eval"
+	"github.com/0xfaded/go-interactive"
 )
 
 func expectResult(expr string, env *interactive.Env, expected interface{}) {
+	ctx := &interactive.Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
-	} else if results, _, err := interactive.EvalExpr(e, env); err != nil {
+	} else if results, _, err := interactive.EvalExpr(ctx, e, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {

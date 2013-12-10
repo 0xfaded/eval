@@ -32,7 +32,7 @@ func Run(env *Env, results *([]interface{})) {
 		//line = "func() {" + line + "}"
 		if expr, err := parser.ParseExpr(line); err != nil {
 			fmt.Printf("parse error: %s\n", err)
-		} else if vals, _, err := EvalExpr(expr, env); err != nil {
+		} else if vals, _, err := EvalExpr(&Ctx{line}, expr, env); err != nil {
 			fmt.Printf("eval error: %s\n", err)
 		} else if vals == nil {
 			fmt.Printf("nil\n")

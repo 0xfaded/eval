@@ -8,10 +8,10 @@ import (
 	"go/ast"
 )
 
-func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
+func EvalExpr(ctx *Ctx, expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *ast.Ident:
-		v, typed, err := evalIdentExpr(node, env)
+		v, typed, err := evalIdentExpr(ctx, node, env)
 		if v == nil {
 			return nil, false, err
 		}
@@ -19,16 +19,16 @@ func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return &ret, typed, err
 	case *ast.Ellipsis:
 	case *ast.BasicLit:
-		v, typed, err := evalBasicLit(node)
+		v, typed, err := evalBasicLit(ctx, node)
 		return &[]reflect.Value{v}, typed, err
 	case *ast.FuncLit:
 	case *ast.CompositeLit:
-		v, typed, err := evalCompositeLit(node, env)
+		v, typed, err := evalCompositeLit(ctx, node, env)
 		return &[]reflect.Value{*v}, typed, err
 	case *ast.ParenExpr:
-		return EvalExpr(node.X, env)
+		return EvalExpr(ctx, node.X, env)
 	case *ast.SelectorExpr:
-		v, typed, err := evalSelectorExpr(node, env)
+		v, typed, err := evalSelectorExpr(ctx, node, env)
 		if v == nil {
 			return nil, typed, err
 		}
@@ -37,13 +37,13 @@ func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 	case *ast.SliceExpr:
 	case *ast.TypeAssertExpr:
 	case *ast.CallExpr:
-		return evalCallExpr(node, env)
+		return evalCallExpr(ctx, node, env)
 	case *ast.StarExpr:
 	case *ast.UnaryExpr:
-		v, typed, err := evalUnaryExpr(node, env)
+		v, typed, err := evalUnaryExpr(ctx, node, env)
 		return &[]reflect.Value{v}, typed, err
 	case *ast.BinaryExpr:
-		v, typed, err := evalBinaryExpr(node, env)
+		v, typed, err := evalBinaryExpr(ctx, node, env)
 		return &[]reflect.Value{v}, typed, err
 	case *ast.KeyValueExpr:
 	default:
@@ -52,7 +52,7 @@ func EvalExpr(expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }
 
-func evalType(expr ast.Expr, env *Env) (reflect.Type, error) {
+func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
 	switch node := expr.(type) {
 	case *ast.Ident:
 		if t, ok := env.Types[node.Name]; ok {
