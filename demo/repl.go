@@ -1,16 +1,90 @@
-// +build ignore
-
 package main
 
+// This is a simple REPL (read-eval-print loop) for GO.
+
+// The intent here is to show how more to use the library, rather than
+// be a full-featured REPL.
+//
+// A more complete REPL including command history, tab completion and
+// readline editing will be done as a separate package.
+//
+// My intent (rocky) was also to have something that I can debug in
+// the ssa-debugger tortoise/gub.sh. Right now that can't handle the
+// unsafe package, pointers, and calls to C code. So that let's out
+// go-gnureadline and lineedit.
 import (
+	"bufio"
+	"fmt"
+	"go/parser"
+	"io"
 	"log"
-	"reflect"
 	"os"
+	"reflect"
+	"strconv"
+	"strings"
 
 	"github.com/0xfaded/go-interactive"
 )
 
+// Simple replacement for GNU readline
+func readline(prompt string, in *bufio.Reader) (string, error) {
+	fmt.Printf(prompt)
+	line, err := in.ReadString('\n')
+	if err == nil {
+		line = strings.TrimRight(line, "\r\n")
+	}
+	return line, err
+}
+
+// The read-eval-print portion
+func REPL(env *interactive.Env, results *([]interface{})) {
+
+	var err error
+	exprs := 0
+	in := bufio.NewReader(os.Stdin)
+	line, err := readline("go> ", in)
+	for line != "quit" {
+		if err != nil {
+			if err == io.EOF { break }
+			panic(err)
+		}
+		//line = "func() {" + line + "}"
+		if expr, err := parser.ParseExpr(line); err != nil {
+			fmt.Printf("parse error: %s\n", err)
+		} else if vals, _, err := interactive.EvalExpr(&interactive.Ctx{line}, expr, env); err != nil {
+			fmt.Printf("eval error: %s\n", err)
+		} else if vals == nil {
+			fmt.Printf("nil\n")
+		} else if len(*vals) == 0 {
+			fmt.Printf("void\n")
+		} else if len(*vals) == 1 {
+			value := (*vals)[0]
+			kind := value.Kind().String()
+			fmt.Printf("Kind = %v\n", kind)
+			if kind == "string" {
+				fmt.Printf("Results[%d] = %s\n", exprs,
+					strconv.QuoteToASCII(value.String()))
+			} else {
+				fmt.Printf("Results[%d] = %v\n", exprs, (value.Interface()))
+			}
+			exprs  += 1
+			*results = append(*results, (*vals)[0].Interface())
+		} else {
+			sep := "("
+			for _, v := range *vals {
+				fmt.Printf("%s%v", sep, v.Interface())
+			}
+			fmt.Printf(")\n")
+		}
+
+		line, err = readline("go> ", in)
+	}
+	//WriteHistory("data/deleteme.history")
+	// rl.Rl_reset_terminal(term)
+}
+
 func main() {
+	// Set up the environment and then call REPL
 	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
 	var consts map[string] reflect.Value = make(map[string] reflect.Value)
 	var funcs  map[string] reflect.Value = make(map[string] reflect.Value)
@@ -70,5 +144,6 @@ func main() {
 		},
 	}
 
-	interactive.Run(&env, &v2)
+	// And just when you thought we'd never get around to it...
+	REPL(&env, &v2)
 }
