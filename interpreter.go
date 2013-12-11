@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 	"go/parser"
 )
@@ -43,7 +44,8 @@ func Run(env *Env, results *([]interface{})) {
 			kind := value.Kind().String()
 			fmt.Printf("Kind = %v\n", kind)
 			if kind == "string" {
-				fmt.Printf("Results[%d] = \"%v\"\n", exprs, (value.Interface()))
+				fmt.Printf("Results[%d] = %s\n", exprs,
+					strconv.QuoteToASCII(value.String()))
 			} else {
 				fmt.Printf("Results[%d] = %v\n", exprs, (value.Interface()))
 			}
