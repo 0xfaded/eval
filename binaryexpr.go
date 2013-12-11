@@ -3,11 +3,10 @@ package interactive
 import (
 	"reflect"
 
-	"go/ast"
 	"go/token"
 )
 
-func evalBinaryExpr(ctx *Ctx, b *ast.BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
+func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx, yy *[]reflect.Value
 	var xtyped, ytyped bool
 	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {

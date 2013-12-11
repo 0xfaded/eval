@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-
-	"go/ast"
 )
 
-func evalSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*reflect.Value, bool, error) {
+func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
 	if x, _, err = EvalExpr(ctx, selector.X, env); err != nil {
@@ -21,7 +19,8 @@ func evalSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*reflect.
 	if x0.Kind() == reflect.Ptr {
 		// Special case for handling packages
 		if x0.Type() == reflect.TypeOf(Pkg(nil)) {
-			return evalIdentExpr(ctx, selector.Sel, x0.Interface().(Pkg))
+			sel := &Ident{ Ident: selector.Sel }
+			return evalIdentExpr(ctx, sel, x0.Interface().(Pkg))
 		} else if !x0.IsNil() && x0.Elem().Kind() == reflect.Struct {
 			x0 = x0.Elem()
 		}

@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"go/ast"
 	"go/token"
 )
 
-func evalCallExpr(ctx *Ctx, call *ast.CallExpr, env *Env) (*[]reflect.Value, bool, error) {
+func evalCallExpr(ctx *Ctx, call *CallExpr, env *Env) (*[]reflect.Value, bool, error) {
 	if t, err := evalType(ctx, call.Fun, env); err == nil {
 		if v, typed, err := evalCallTypeExpr(ctx, t, call, env); err != nil {
 			return nil, false, err
@@ -24,7 +23,7 @@ func evalCallExpr(ctx *Ctx, call *ast.CallExpr, env *Env) (*[]reflect.Value, boo
 	}
 }
 
-func evalCallTypeExpr(ctx *Ctx, t reflect.Type, call *ast.CallExpr, env *Env) (reflect.Value, bool, error) {
+func evalCallTypeExpr(ctx *Ctx, t reflect.Type, call *CallExpr, env *Env) (reflect.Value, bool, error) {
 	var r reflect.Value
 	if call.Args == nil {
 		return r, false, errors.New(fmt.Sprintf("missing argument to conversion to %v", t))
@@ -39,7 +38,7 @@ func evalCallTypeExpr(ctx *Ctx, t reflect.Type, call *ast.CallExpr, env *Env) (r
 	}
 }
 
-func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *ast.CallExpr, env *Env) (*[]reflect.Value, bool, error) {
+func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]reflect.Value, bool, error) {
 	var err error
 	var v *[]reflect.Value
 	var typed bool
@@ -77,7 +76,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *ast.CallExpr, env *Env) 
 		}
 	}
 
-	_, firstArgIsFun := call.Args[0].(*ast.CallExpr)
+	_, firstArgIsFun := call.Args[0].(*CallExpr)
 	// Special case for f(g()), where g may return multiple values
 	wasSplat := false
 	if len(call.Args) == 1 && firstArgIsFun {
@@ -141,7 +140,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *ast.CallExpr, env *Env) 
 			// Call of form f(first, second, ...others)
 			arg := *(args[i])
 			// Assert this indeed is the ellipsis
-			_ = call.Args[i].(*ast.Ellipsis)
+			_ = call.Args[i].(*Ellipsis)
 			in[i], err = makeSliceWithValues(arg, ftype.In(i))
 			intyped[i] = true
 			if err != nil {

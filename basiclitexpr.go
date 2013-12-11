@@ -6,11 +6,10 @@ import (
 	"reflect"
 	"strconv"
 
-	"go/ast"
 	"go/token"
 )
 
-func evalBasicLit(ctx *Ctx, lit *ast.BasicLit) (reflect.Value, bool, error) {
+func evalBasicLit(ctx *Ctx, lit *BasicLit) (reflect.Value, bool, error) {
 	switch lit.Kind {
 	case token.CHAR:
 		if r, _, tail, err := strconv.UnquoteChar(lit.Value[1:len(lit.Value)-1], '\''); err != nil {
