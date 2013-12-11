@@ -80,6 +80,10 @@ type ErrInvalidBinaryOperation struct {
 	ErrorContext
 }
 
+type ErrInvalidUnaryOperation struct {
+	ErrorContext
+}
+
 type ErrBadConversion struct {
 	ErrorContext
 	target reflect.Type
@@ -88,6 +92,10 @@ type ErrBadConversion struct {
 type ErrTruncatedConstant struct {
 	ErrorContext
 	constant *BigComplex
+}
+
+type ErrIllegalConstantExpr struct {
+	ErrorContext
 }
 
 type ErrorContext struct {
@@ -178,7 +186,15 @@ func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
 }
 
+func (err ErrInvalidUnaryOperation) Error() string {
+	return "ErrInvalidUnaryOperation TODO"
+}
+
 func (err ErrInvalidBinaryOperation) Error() string {
+	return "ErrInvalidBinaryOperation TODO"
+}
+
+func (err ErrIllegalConstantExpr) Error() string {
 	return "ErrInvalidBinaryOperation TODO"
 }
 
