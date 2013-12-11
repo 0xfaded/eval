@@ -10,7 +10,7 @@ import (
 	"go/token"
 )
 
-func evalCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+func evalCompositeLit(ctx *Ctx, lit *CompositeLit, env *Env) (*reflect.Value, bool, error) {
 	t, err := evalType(ctx, lit.Type, env)
 	if err != nil {
 		return nil, true, err
@@ -27,7 +27,7 @@ func evalCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (*reflect.Value
 	}
 }
 
-func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *Env) (*reflect.Value, bool, error) {
 
 	v := reflect.New(t).Elem()
 
@@ -41,9 +41,9 @@ func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *ast.CompositeLi
 		// Elements without are placed one after the previous.
 		// For example, []int{1, 2:1, 1} -> [1, 0, 1, 1]
 		for _, elt := range lit.Elts {
-			if kv, ok := elt.(*ast.KeyValueExpr); !ok {
+			if kv, ok := elt.(*KeyValueExpr); !ok {
 				size += 1
-			} else if k, ok := kv.Key.(*ast.BasicLit); !ok || k.Kind != token.INT {
+			} else if k, ok := kv.Key.(*BasicLit); !ok || k.Kind != token.INT {
 				return nil, false, ErrArrayKey
 
 			// The limit of 2^31 elements is infered from the go implementation
@@ -61,11 +61,11 @@ func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *ast.CompositeLi
 	// Fill the array or slice, the reflect interface is identical for both
 	for _, elt := range lit.Elts {
 		var expr ast.Expr
-		if kv, ok := elt.(*ast.KeyValueExpr); !ok {
+		if kv, ok := elt.(*KeyValueExpr); !ok {
 			expr = elt
 		} else {
 			// We know this expression to be valid from above.
-			curKey, _ = strconv.ParseUint(kv.Key.(*ast.BasicLit).Value, 0, 31)
+			curKey, _ = strconv.ParseUint(kv.Key.(*BasicLit).Value, 0, 31)
 			expr = kv.Value
 		}
 
@@ -87,7 +87,7 @@ func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *ast.CompositeLi
 	return &v, true, nil
 }
 
-func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env *Env) (*reflect.Value, bool, error) {
+func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *Env) (*reflect.Value, bool, error) {
 	vp := reflect.New(t)
 	v := vp.Elem()
 
@@ -95,15 +95,15 @@ func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env
 		return &v, true, nil
 	}
 
-	_, pairs := lit.Elts[0].(*ast.KeyValueExpr)
+	_, pairs := lit.Elts[0].(*KeyValueExpr)
 	for i, elt := range lit.Elts {
 		var field, value *reflect.Value
 		var typed bool
 		var fname string
-		if kv, ok := elt.(*ast.KeyValueExpr); ok != pairs {
+		if kv, ok := elt.(*KeyValueExpr); ok != pairs {
 			return &v, true, errors.New("Elements are either all key value pairs or not")
 		} else if pairs {
-			if k, ok := kv.Key.(*ast.Ident); !ok {
+			if k, ok := kv.Key.(*Ident); !ok {
 				return &v, true, errors.New(fmt.Sprintf("Invalid key node %v %T", kv.Key, kv.Key))
 			} else if f := v.FieldByName(k.Name); !f.IsValid() {
 				return &v, true, errors.New(t.Name() + " has no field " + k.Name)
@@ -124,7 +124,7 @@ func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *ast.CompositeLit, env
 		} else {
 			if i >= v.NumField() {
 				return &v, true, errors.New("Too many elements for struct " + t.Name())
-			} else if _, ok := elt.(*ast.KeyValueExpr); ok {
+			} else if _, ok := elt.(*KeyValueExpr); ok {
 				return &v, true, errors.New("Elements are either all key value pairs or not")
 			} else {
 				fv, ft, err := EvalExpr(ctx, elt, env)

@@ -7,7 +7,7 @@ import (
 	"go/ast"
 )
 
-func evalIndexExpr(ctx *Ctx, index *ast.IndexExpr, env *Env) (*reflect.Value, bool, error) {
+func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) (*reflect.Value, bool, error) {
 	xs, _, err := EvalExpr(ctx, index.X, env)
 	if err != nil {
 		return nil, false, err

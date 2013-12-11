@@ -3,11 +3,10 @@ package interactive
 import (
 	"reflect"
 
-	"go/ast"
 	"go/token"
 )
 
-func evalUnaryExpr(ctx *Ctx, b *ast.UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
+func evalUnaryExpr(ctx *Ctx, b *UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx *[]reflect.Value
 	var xtyped bool
 	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {
