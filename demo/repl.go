@@ -1,5 +1,17 @@
 package main
 
+// This is a simple REPL (read-eval-print loop) for GO.
+
+// The intent here is to show how more to use the library, rather than
+// be a full-featured REPL.
+//
+// A more complete REPL including command history, tab completion and
+// readline editing will be done as a separate package.
+//
+// My intent (rocky) was also to have something that I can debug in
+// the ssa-debugger tortoise/gub.sh. Right now that can't handle the
+// unsafe package, pointers, and calls to C code. So that let's out
+// go-gnureadline and lineedit.
 import (
 	"bufio"
 	"fmt"
@@ -14,6 +26,7 @@ import (
 	"github.com/0xfaded/go-interactive"
 )
 
+// Simple replacement for GNU readline
 func readline(prompt string, in *bufio.Reader) (string, error) {
 	fmt.Printf(prompt)
 	line, err := in.ReadString('\n')
@@ -23,7 +36,8 @@ func readline(prompt string, in *bufio.Reader) (string, error) {
 	return line, err
 }
 
-func run(env *interactive.Env, results *([]interface{})) {
+// The read-eval-print portion
+func REPL(env *interactive.Env, results *([]interface{})) {
 
 	var err error
 	exprs := 0
@@ -70,6 +84,7 @@ func run(env *interactive.Env, results *([]interface{})) {
 }
 
 func main() {
+	// Set up the environment and then call REPL
 	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
 	var consts map[string] reflect.Value = make(map[string] reflect.Value)
 	var funcs  map[string] reflect.Value = make(map[string] reflect.Value)
@@ -129,5 +144,6 @@ func main() {
 		},
 	}
 
-	run(&env, &v2)
+	// And just when you thought we'd never get around to it...
+	REPL(&env, &v2)
 }

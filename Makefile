@@ -3,12 +3,12 @@
 
 .PHONY: all eval test check
 
-#: Same as eval
-all: eval
+#: Same as repl
+all: repl
 
-#: The front-end to the evaluator
-eval: lib
-	go build -o eval demo/eval.go
+#: The REPL front-end to the evaluator
+repl: lib
+	go build -o go-repl demo/repl.go
 
 #: The evaluator library
 lib:
