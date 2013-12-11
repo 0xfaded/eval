@@ -58,7 +58,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 // even if ErrTruncatedConst errors are present
 func evalConstBinaryExpr(ctx *Ctx, constExpr *BinaryExpr, promotedType ConstType) (constValue, []error) {
 	x := constExpr.X.(Expr).Const()
-	y := constExpr.X.(Expr).Const()
+	y := constExpr.Y.(Expr).Const()
 	switch promotedType.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 		xx := x.Interface().(*BigComplex)
@@ -95,8 +95,17 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 		if y.IsZero() {
 			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
 		}
-		return constValueOf(NewBigRune(0).Mul(x, y)), nil
-
+		return constValueOf(NewBigRune(0).Quo(x, y)), nil
+	case token.REM:
+		if y.IsZero() {
+			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
+		} else if !(x.IsInteger() && y.IsInteger()) {
+			return constValue{}, []error{ErrIllegalConstantExpr{at(ctx, constExpr)}}
+		} else {
+			z := NewBigRune(1)
+			z.Rat.Num().Rem(x.Num(), y.Num())
+			return constValueOf(z), nil
+		}
 	case token.AND, token.OR, token.XOR, token.AND_NOT:
 		var trunc bool
 		if xx, trunc = x.Integer(); trunc {
@@ -121,8 +130,10 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 
 	case token.EQL:
 		return constValueOf(x.Rat.Cmp(y.Rat) == 0 && x.Imag.Cmp(y.Imag) == 0), nil
+	case token.NEQ:
+		return constValueOf(x.Rat.Cmp(y.Rat) != 0 || x.Imag.Cmp(y.Imag) != 0), nil
 
-	case token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR:
+	case token.LEQ, token.GEQ, token.LSS, token.GTR:
 		var b bool
 		var trunc bool
 		if xx, trunc = x.Real(); trunc {
@@ -136,9 +147,9 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 		case token.NEQ:
 			b = cmp != 0
 		case token.LEQ:
-			b = cmp == 0 || cmp < 0
+			b = cmp <= 0
 		case token.GEQ:
-			b = cmp == 0 || cmp > 0
+			b = cmp >= 0
 		case token.LSS:
 			b = cmp < 0
 		case token.GTR:
