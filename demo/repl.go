@@ -130,10 +130,16 @@ func main() {
 		},
 	}
 
+	// Make this truly self-referential
+	global_vars["env"] = reflect.ValueOf(&env)
+
+
 	fmt.Printf(`=== A simple Go eval REPL ===
 
 Results of expression are stored in variable slice "results".
 Defined functions are: fmt.Println(), fmt.Printf().
+
+The environment is stored in global variable "env".
 
 Enter expressions to be evaluated at the "go>" prompt.
 
