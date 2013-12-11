@@ -48,14 +48,12 @@ type ErrWrongNumberOfArgs struct {
 	numArgs int
 }
 
-
 type ErrMissingValue struct {
 	ErrorContext
 }
 
 type ErrMultiInSingleContext struct {
 	ErrorContext
-	vals []reflect.Value
 }
 
 type ErrArrayIndexOutOfBounds struct {
@@ -72,6 +70,24 @@ type ErrInvalidIndex struct {
 	ErrorContext
 	indexValue reflect.Value
 	containerType reflect.Type
+}
+
+type ErrDivideByZero struct {
+	ErrorContext
+}
+
+type ErrInvalidBinaryOperation struct {
+	ErrorContext
+}
+
+type ErrBadConversion struct {
+	ErrorContext
+	target reflect.Type
+}
+
+type ErrTruncatedConstant struct {
+	ErrorContext
+	constant *BigComplex
 }
 
 type ErrorContext struct {
@@ -160,6 +176,26 @@ func (err ErrMultiInSingleContext) Error() string {
 
 func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
+}
+
+func (err ErrInvalidBinaryOperation) Error() string {
+	return "ErrInvalidBinaryOperation TODO"
+}
+
+func (err ErrDivideByZero) Error() string {
+	return "division by zero"
+}
+
+func (err ErrBadConversion) Error() string {
+	return "division by zero"
+}
+
+func (err ErrTruncatedConstant) Error() string {
+	if err.constant.IsReal() {
+		return fmt.Sprintf("constant %v truncated to integer", err.constant)
+	} else {
+		return fmt.Sprintf("constant %v truncated to real", err.constant)
+	}
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
