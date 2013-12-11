@@ -80,7 +80,7 @@ func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Valu
 	case token.NEQ: b = xx != yy; is_bool = true
 	case token.LEQ: b = xx <= yy; is_bool = true
 	case token.GEQ: b = xx >= yy; is_bool = true
-    case token.LSS: b = xx < yy;  is_bool = true
+	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default: err = ErrInvalidOperands{x, op, y}
 	}
@@ -113,7 +113,7 @@ func evalBinaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Val
 	case token.NEQ: b = xx != yy; is_bool = true
 	case token.LEQ: b = xx <= yy; is_bool = true
 	case token.GEQ: b = xx >= yy; is_bool = true
-    case token.LSS: b = xx < yy;  is_bool = true
+	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default: err = ErrInvalidOperands{x, op, y}
 	}
@@ -136,7 +136,7 @@ func evalBinaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Va
 	case token.MUL: r = xx * yy
 	case token.QUO: r = xx / yy
 	// case token.EQL: b = xx == yy
-    // case token.LSS: b = xx < yy
+	// case token.LSS: b = xx < yy
 	// case token.GTR: b = xx > yy
 	default: err = ErrInvalidOperands{x, op, y}
 	}
