@@ -11,7 +11,7 @@ type Expr interface {
 	ast.Expr
 
 	// The type of this expression if known. Certain expr types have special interpretations
-	// Constant expr: a value of nil implies the constant is untyped
+	// Constant expr: a ConstType will be returned if constant is untyped
 	// Ellipsis expr: a single reflect.Type represents the type of all unpacked values
 	KnownType() []reflect.Type
 
@@ -207,3 +207,9 @@ func (*FuncType) Const() reflect.Value       { return reflect.Value{} }
 func (*InterfaceType) Const() reflect.Value  { return reflect.Value{} }
 func (*MapType) Const() reflect.Value        { return reflect.Value{} }
 func (*ChanType) Const() reflect.Value       { return reflect.Value{} }
+
+// Does not assert that c is a valid const value type
+// Should be *BigComplex, bool, or string
+func constValueOf(i interface{}) constValue {
+	return constValue(reflect.ValueOf(i))
+}

@@ -103,7 +103,7 @@ func expectSingleValue(ctx *Ctx, values []reflect.Value, srcExpr ast.Expr) (refl
 	if len(values) == 0 {
 		return reflect.Value{}, ErrMissingValue{at(ctx, srcExpr)}
 	} else if len(values) != 1 {
-		return reflect.Value{}, ErrMultiInSingleContext{at(ctx, srcExpr), values}
+		return reflect.Value{}, ErrMultiInSingleContext{at(ctx, srcExpr)}
 	} else {
 		return values[0], nil
 	}
