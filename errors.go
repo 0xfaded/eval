@@ -86,12 +86,22 @@ type ErrInvalidUnaryOperation struct {
 
 type ErrBadConversion struct {
 	ErrorContext
-	target reflect.Type
+	to reflect.Type
+	from reflect.Type
+	v reflect.Value
 }
 
 type ErrTruncatedConstant struct {
 	ErrorContext
+	to ConstType
 	constant *BigComplex
+}
+
+type ErrOverflowedConstant struct {
+	ErrorContext
+	from ConstType
+	to reflect.Type
+	constant interface{}
 }
 
 type ErrIllegalConstantExpr struct {
@@ -212,6 +222,10 @@ func (err ErrTruncatedConstant) Error() string {
 	} else {
 		return fmt.Sprintf("constant %v truncated to real", err.constant)
 	}
+}
+
+func (err ErrOverflowedConstant) Error() string {
+	return "ErrOverflowedConstant TODO"
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
