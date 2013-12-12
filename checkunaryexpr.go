@@ -58,7 +58,7 @@ func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *BigComplex) (c
 	case token.ADD:
 		return constValueOf(x), nil
 	case token.SUB:
-		zero := NewBigRune(0)
+		zero := new(BigComplex)
 		return constValueOf(zero.Sub(zero, x)), nil
 	default:
 		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}

@@ -38,7 +38,8 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 		cy, oky := ty[0].(ConstType)
 		if ax.IsConst() && ay.IsConst() {
 			if okx && oky {
-				if promoted, err := promoteConsts(ctx, cx, cy, ay); err != nil {
+				vy := ax.Const()
+				if promoted, err := promoteConsts(ctx, cx, cy, ay, vy); err != nil {
 					errs = append(errs, err)
 					errs = append(errs, ErrInvalidBinaryOperation{at(ctx, binary)})
 				} else {
@@ -86,16 +87,16 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 
 	switch constExpr.Op {
 	case token.ADD:
-		return constValueOf(NewBigRune(0).Add(x, y)), nil
+		return constValueOf(new(BigComplex).Add(x, y)), nil
 	case token.SUB:
-		return constValueOf(NewBigRune(0).Sub(x, y)), nil
+		return constValueOf(new(BigComplex).Sub(x, y)), nil
 	case token.MUL:
-		return constValueOf(NewBigRune(0).Mul(x, y)), nil
+		return constValueOf(new(BigComplex).Mul(x, y)), nil
 	case token.QUO:
 		if y.IsZero() {
 			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
 		}
-		return constValueOf(NewBigRune(0).Quo(x, y)), nil
+		return constValueOf(new(BigComplex).Quo(x, y)), nil
 	case token.REM:
 		if y.IsZero() {
 			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
@@ -109,10 +110,10 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 	case token.AND, token.OR, token.XOR, token.AND_NOT:
 		var trunc bool
 		if xx, trunc = x.Integer(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), x})
+			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), ConstFloat, x})
 		}
 		if yy, trunc = y.Integer(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), y})
+			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), ConstFloat, y})
 		}
 
 		z := NewBigRune(1)
@@ -129,20 +130,20 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComple
 		return constValueOf(z), errs
 
 	case token.EQL:
-		return constValueOf(x.Rat.Cmp(y.Rat) == 0 && x.Imag.Cmp(y.Imag) == 0), nil
+		return constValueOf(x.Rat.Cmp(&y.Rat) == 0 && x.Imag.Cmp(&y.Imag) == 0), nil
 	case token.NEQ:
-		return constValueOf(x.Rat.Cmp(y.Rat) != 0 || x.Imag.Cmp(y.Imag) != 0), nil
+		return constValueOf(x.Rat.Cmp(&y.Rat) != 0 || x.Imag.Cmp(&y.Imag) != 0), nil
 
 	case token.LEQ, token.GEQ, token.LSS, token.GTR:
 		var b bool
 		var trunc bool
 		if xx, trunc = x.Real(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), x})
+			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), ConstFloat, x})
 		}
 		if yy, trunc = y.Real(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), y})
+			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), ConstFloat, y})
 		}
-		cmp := xx.Rat.Cmp(yy.Rat)
+		cmp := xx.Rat.Cmp(&yy.Rat)
 		switch constExpr.Op {
 		case token.NEQ:
 			b = cmp != 0
