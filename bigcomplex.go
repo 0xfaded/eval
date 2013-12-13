@@ -44,6 +44,33 @@ func NewBigRune(n rune) *BigComplex {
 	return z
 }
 
+func NewBigInt64(i int64) *BigComplex {
+	z := new(BigComplex)
+	z.Rat.Denom().SetInt64(1)
+	z.Num().SetInt64(i)
+	return z
+}
+
+func NewBigUint64(u uint64) *BigComplex {
+	z := new(BigComplex)
+	z.Rat.Denom().SetInt64(1)
+	z.Num().SetUint64(u)
+	return z
+}
+
+func NewBigFloat64(f float64) *BigComplex {
+	z := new(BigComplex)
+	z.Rat.SetFloat64(f)
+	return z
+}
+
+func NewBigComplex128(c complex128) *BigComplex {
+	z := new(BigComplex)
+	z.Rat.SetFloat64(real(c))
+	z.Imag.SetFloat64(imag(c))
+	return z
+}
+
 func (z *BigComplex) Add(x, y *BigComplex) *BigComplex {
 	z.Rat.Add(&x.Rat, &y.Rat)
 	z.Imag.Add(&x.Imag, &y.Imag)
@@ -186,10 +213,14 @@ func (z *BigComplex) IsReal() bool {
 	return z.Imag.Num().BitLen() == 0
 }
 
+func (z *BigComplex) Equals(other *BigComplex) bool {
+	return new(BigComplex).Sub(z, other).IsZero()
+}
+
 func (z *BigComplex) String() string {
 	s := z.Rat.FloatString(5)
 	if !z.IsReal() {
-		s += z.Imag.FloatString(5) + "i"
+		s += "+" + z.Imag.FloatString(5) + "i"
 	}
 	return s
 }
