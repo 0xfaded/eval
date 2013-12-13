@@ -110,6 +110,39 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 	}
 }
 
+func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if _, errs := checkExpr(ctx, e, env); errs != nil {
+		var i int
+		ok := true
+		for i = 0; i < len(errorString); i += 1 {
+			if i > len(errs) {
+				t.Logf("%d. Expected `%v` missing\n", i, errorString[i])
+				ok = false
+			} else if errorString[i] == errs[i].Error() {
+				t.Logf("%d. Expected `%v` == `%v`\n", i, errorString[i], errs[i])
+			} else {
+				t.Logf("%d. Expected `%v` != `%v`\n", i, errorString[i], errs[i])
+				ok = false
+			}
+		}
+		for ; i < len(errs); i += 1 {
+			t.Logf("%d. Unexpected `%v`\n", i, errs[i])
+			ok = false
+		}
+		if !ok {
+			t.Fatalf("Wrong check errors for expression '%s'", expr)
+		}
+	} else {
+		for i, s := range errorString {
+			t.Logf("%d. Expected `%v` missing\n", i, s)
+		}
+		t.Fatalf("Missing check errors for expression '%s'", expr )
+	}
+}
+
 func makeEnv() *Env {
 	return &Env {
 		Vars: make(map[string] reflect.Value),

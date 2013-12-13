@@ -218,9 +218,20 @@ func (z *BigComplex) Equals(other *BigComplex) bool {
 }
 
 func (z *BigComplex) String() string {
-	s := z.Rat.FloatString(5)
+	var s string
+	if z.Rat.IsInt() {
+		s += z.Rat.Num().String()
+	} else {
+		s += z.Rat.FloatString(5)
+	}
 	if !z.IsReal() {
-		s += "+" + z.Imag.FloatString(5) + "i"
+		s += "+"
+		if z.Imag.IsInt() {
+			s += z.Imag.Num().String()
+		} else {
+			s += z.Imag.FloatString(5)
+		}
+		s += "i"
 	}
 	return s
 }
