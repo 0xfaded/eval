@@ -34,6 +34,7 @@ type BadExpr struct {
 type Ident struct {
 	*ast.Ident
 	knownType
+	constValue
 }
 
 type Ellipsis struct {
@@ -173,7 +174,6 @@ func (*FuncLit) KnownType() []reflect.Type      { return nil }
 func (*KeyValueExpr) KnownType() []reflect.Type { return nil }
 
 func (*BadExpr) IsConst() bool        { return false }
-func (*Ident) IsConst() bool          { return false }
 func (*Ellipsis) IsConst() bool       { return false }
 func (*FuncLit) IsConst() bool        { return false }
 func (*CompositeLit) IsConst() bool   { return false }
@@ -191,7 +191,6 @@ func (*MapType) IsConst() bool        { return false }
 func (*ChanType) IsConst() bool       { return false }
 
 func (*BadExpr) Const() reflect.Value        { return reflect.Value{} }
-func (*Ident) Const() reflect.Value          { return reflect.Value{} }
 func (*Ellipsis) Const() reflect.Value       { return reflect.Value{} }
 func (*FuncLit) Const() reflect.Value        { return reflect.Value{} }
 func (*CompositeLit) Const() reflect.Value   { return reflect.Value{} }

@@ -81,6 +81,35 @@ func expectFail(t *testing.T, expr string, env *Env) {
 	}
 }
 
+func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType reflect.Type) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
+	} else if !aexpr.IsConst() {
+		t.Fatalf("Expression '%s' did not yield a const node(%+v)", expr, aexpr)
+	} else if expectedBigComplex, ok := expected.(*BigComplex); ok {
+		if actual, ok2 := aexpr.Const().Interface().(*BigComplex); !ok2 {
+			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, aexpr.Const(), expected)
+		} else if !actual.Equals(expectedBigComplex) {
+			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, actual, expected)
+		} else if len(aexpr.KnownType()) == 0 {
+			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
+		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, actual, expectedType)
+		}
+	} else {
+		if actual := aexpr.Const().Interface(); !reflect.DeepEqual(actual, expected) {
+			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, actual, expected)
+		} else if len(aexpr.KnownType()) == 0 {
+			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
+		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
+		}
+	}
+}
+
 func makeEnv() *Env {
 	return &Env {
 		Vars: make(map[string] reflect.Value),

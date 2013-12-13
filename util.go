@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"go/ast"
+	"go/token"
 )
 
 func assignableValue(x reflect.Value, to reflect.Type, xTyped bool) (reflect.Value, error) {
@@ -109,3 +110,11 @@ func expectSingleValue(ctx *Ctx, values []reflect.Value, srcExpr ast.Expr) (refl
 	}
 }
 
+func isBooleanOp(op token.Token) bool {
+	switch op {
+	case token.EQL, token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR, token.LAND, token.LOR:
+		return true
+	default:
+		return false
+	}
+}
