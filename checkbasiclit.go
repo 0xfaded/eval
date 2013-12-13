@@ -18,7 +18,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 			// parser.ParseExpr() should raise a syntax error before we get here.
 			panic("go-interactive: bad char lit " + lit.Value)
 		} else {
-			aexpr.constValue = constValueOf(NewBigRune(r))
+			aexpr.constValue = constValueOf(NewConstRune(r))
 			aexpr.knownType = knownType{ConstRune}
 			return aexpr, nil
 		}
@@ -31,7 +31,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 			return aexpr, nil
 		}
 	case token.INT:
-		if i, ok := NewBigInteger(lit.Value); !ok {
+		if i, ok := NewConstInteger(lit.Value); !ok {
 			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
 		} else {
 			aexpr.constValue = constValueOf(i)
@@ -39,7 +39,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 			return aexpr, nil
 		}
 	case token.FLOAT:
-		if f, ok := NewBigReal(lit.Value); !ok {
+		if f, ok := NewConstFloat(lit.Value); !ok {
 			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
 		} else {
 			aexpr.constValue = constValueOf(f)
@@ -47,7 +47,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 			return aexpr, nil
 		}
 	case token.IMAG:
-		if i, ok := NewBigImag(lit.Value); !ok {
+		if i, ok := NewConstImag(lit.Value); !ok {
 			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
 		} else {
 			aexpr.constValue = constValueOf(i)

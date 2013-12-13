@@ -6,6 +6,7 @@ import "reflect"
 // can annotate information needed for evaluating const expressions
 type ConstType interface {
 	reflect.Type
+	IsIntegral() bool
 }
 
 type ConstIntType struct { reflect.Type }
@@ -34,36 +35,20 @@ func (ConstStringType) String() string { return "string" }
 func (ConstNilType) String() string { return "<T>" }
 func (ConstBoolType) String() string { return "bool" }
 
+func (ConstIntType) IsIntegral() bool { return true }
+func (ConstRuneType) IsIntegral() bool { return true }
+func (ConstFloatType) IsIntegral() bool { return false }
+func (ConstComplexType) IsIntegral() bool { return false }
+func (ConstStringType) IsIntegral() bool { return false }
+func (ConstNilType) IsIntegral() bool { return false }
+func (ConstBoolType) IsIntegral() bool { return false }
+
 // Returns the ConstType of a binary, non-boolean, expression invalving const types of
 // x and y.
 func promoteConsts(ctx *Ctx, x, y ConstType, yexpr Expr, yval reflect.Value) (ConstType, error) {
 	switch x.(type) {
-	case ConstIntType:
-		switch y.(type) {
-		case ConstIntType:
-			return x, nil
-		case ConstRuneType, ConstFloatType, ConstComplexType:
-			return y, nil
-		}
-	case ConstRuneType:
-		switch y.(type) {
-		case ConstIntType, ConstRuneType:
-			return x, nil
-		case ConstFloatType, ConstComplexType:
-			return y, nil
-		}
-	case ConstFloatType:
-		switch y.(type) {
-		case ConstIntType, ConstRuneType, ConstFloatType:
-			return x, nil
-		case ConstComplexType:
-			return y, nil
-		}
-	case ConstComplexType:
-		switch y.(type) {
-		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return x, nil
-		}
+	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+		return promoteConstNumbers(x, y), nil
 	case ConstStringType:
 		if _, ok := y.(ConstStringType); ok {
 			return x, nil
@@ -80,6 +65,39 @@ func promoteConsts(ctx *Ctx, x, y ConstType, yexpr Expr, yval reflect.Value) (Co
 	return nil, ErrBadConversion{at(ctx, yexpr), y, x, yval}
 }
 
+// Can't fail, but panics if x or y are not Const(Int|Rune|Float|Complex)Type
+func promoteConstNumbers(x, y ConstType) ConstType {
+	switch x.(type) {
+	case ConstIntType:
+		switch y.(type) {
+		case ConstIntType:
+			return x
+		case ConstRuneType, ConstFloatType, ConstComplexType:
+			return y
+		}
+	case ConstRuneType:
+		switch y.(type) {
+		case ConstIntType, ConstRuneType:
+			return x
+		case ConstFloatType, ConstComplexType:
+			return y
+		}
+	case ConstFloatType:
+		switch y.(type) {
+		case ConstIntType, ConstRuneType, ConstFloatType:
+			return x
+		case ConstComplexType:
+			return y
+		}
+	case ConstComplexType:
+		switch y.(type) {
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			return x
+		}
+	}
+	panic("go-interactive: promoteConstNumbers called with non-numbers")
+}
+
 func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
 	v reflect.Value, errs []error) {
 
@@ -87,35 +105,35 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 
 	switch from.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		underlying := reflect.Value(c).Interface().(*BigComplex)
+		underlying := reflect.Value(c).Interface().(*ConstNumber)
 		switch to.Kind() {
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			var errs []error
-			i, truncation, overflow := underlying.Int(to.Bits())
+			i, truncation, overflow := underlying.Value.Int(to.Bits())
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
 			}
 			if overflow {
-				integer, _ := underlying.Integer()
+				integer, _ := underlying.Value.Integer()
 				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, integer})
 			}
 			v.SetInt(i)
 			return v, errs
 
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			u, truncation, overflow := underlying.Uint(to.Bits())
+			u, truncation, overflow := underlying.Value.Uint(to.Bits())
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
 			}
 			if overflow {
-				integer, _ := underlying.Integer()
+				integer, _ := underlying.Value.Integer()
 				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, integer})
 			}
 			v.SetUint(u)
 			return v, errs
 
 		case reflect.Float32, reflect.Float64:
-			f, truncation, _ := underlying.Float64()
+			f, truncation, _ := underlying.Value.Float64()
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
 			}
@@ -123,7 +141,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			return v, errs
 
 		case reflect.Complex64, reflect.Complex128:
-			cmplx, _ := underlying.Complex128()
+			cmplx, _ := underlying.Value.Complex128()
 			v.SetComplex(cmplx)
 			return v, errs
 		}

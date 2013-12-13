@@ -73,7 +73,9 @@ func expectUintOverflow(t *testing.T, bits int, c *BigComplex, expected uint64) 
 }
 
 func newBigInt(i string) *BigComplex {
-	if integer, ok := NewBigInteger(i); !ok {
+	integer := new(BigComplex)
+	integer.Re.Denom().SetInt64(1)
+	if _, ok := integer.Re.Num().SetString(i, 0); !ok {
 		panic("Invalid BigInt string '" + i + "'")
 	} else {
 		return integer
