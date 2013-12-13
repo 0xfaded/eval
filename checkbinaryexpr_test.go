@@ -22,29 +22,43 @@ import (
 func TestBasicCheckConstBinaryIntegerInteger(t *testing.T) {
 	env := makeEnv()
 
+	// Valid
 	expectConst(t, "5 + 2", env, NewBigInt64(5 + 2), ConstInt)
-	expectConst(t, "5 == 5", env, 5 == 5, ConstBool)
+	expectConst(t, "5 % 2", env, NewBigInt64(5 % 2), ConstInt)
+	expectConst(t, "5 & 2", env, NewBigInt64(5 & 2), ConstInt)
+	expectConst(t, "5 == 2", env, 5 == 2, ConstBool)
+	expectConst(t, "5 <= 2", env, 5 <= 2, ConstBool)
 }
 
 func TestBasicCheckConstBinaryIntegerRune(t *testing.T) {
 	env := makeEnv()
 
-	expectConst(t, "1 - 'a'", env, NewBigInt64(1 - 'a'), ConstRune)
+	// Valid
+	expectConst(t, "5 - 'a'", env, NewBigInt64(5 - 'a'), ConstRune)
+	expectConst(t, "5 % 'a'", env, NewBigInt64(5 % 'a'), ConstRune)
+	expectConst(t, "5 | 'a'", env, NewBigInt64(5 | 'a'), ConstRune)
 	expectConst(t, "5 != 'a'", env, 5 != 'a', ConstBool)
+	expectConst(t, "5 >= 'a'", env, 5 >= 'a', ConstBool)
 }
 
 func TestBasicCheckConstBinaryIntegerFloating(t *testing.T) {
 	env := makeEnv()
 
-	expectConst(t, "1 * 1.25", env, NewBigFloat64(1 * 1.25), ConstFloat)
-	expectConst(t, "1 < 1.25", env, 1 < 1.25, ConstBool)
+	// Valid
+	expectConst(t, "5 / 1.25", env, NewBigFloat64(5 / 1.25), ConstFloat)
+	expectConst(t, "5 != 1.5", env, 5 != 1.5, ConstBool)
+	expectConst(t, "5 < 1.5", env, 5 < 1.5, ConstBool)
+
+	// Invalid
+	expectCheckError(t, "5 % 1.0", env, "illegal constant expression: floating-point % operation")
+	expectCheckError(t, "5 | 1.0", env, "illegal constant expression: ideal | ideal")
 }
 
 func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectConst(t, "1 / 4i", env, NewBigComplex128(1 / 4i), ConstComplex)
-	expectConst(t, "1 == 1i", env, 1 == 1i, ConstBool)
+	expectConst(t, "5 * 1.25i", env, NewBigComplex128(5 * 1.25i), ConstComplex)
+	expectConst(t, "5 != 1.5i", env, 5 != 1.5i, ConstBool)
 }
 
 // rune op X tests
@@ -81,18 +95,21 @@ func TestBasicCheckConstBinaryFloatingInteger(t *testing.T) {
 	env := makeEnv()
 
 	expectConst(t, "1.5 + 2", env, NewBigFloat64(1.5 + 2), ConstFloat)
+	expectConst(t, "1.5 == 5", env, 1.5 == 5, ConstBool)
 }
 
 func TestBasicCheckConstBinaryFloatingRune(t *testing.T) {
 	env := makeEnv()
 
 	expectConst(t, "1.5 - 'a'", env, NewBigFloat64(1.5 - 'a'), ConstFloat)
+	expectConst(t, "1.5 == 'a'", env, 1.5 == 'a', ConstBool)
 }
 
 func TestBasicCheckConstBinaryFloatingFloating(t *testing.T) {
 	env := makeEnv()
 
 	expectConst(t, "2.5 * 1.25", env, NewBigFloat64(2.5 * 1.25), ConstFloat)
+	expectConst(t, "1.5 == 'a'", env, 1.5 == 'a', ConstBool)
 }
 
 func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
