@@ -4,94 +4,34 @@ import (
 	"math/big"
 )
 
-// Big complex behaves like a *big.Rat, but has an imaginary component
+// Big complex behaves like a *big.Re, but has an imaginary component
 // and separate implementation for + - * /
 type BigComplex struct {
-	big.Rat
-	Imag big.Rat
-}
-
-// Use with token.INT ast.BasicLit
-func NewBigInteger(i string) (*BigComplex, bool) {
-	z := new(BigComplex)
-	z.Rat.Denom().SetInt64(1)
-	_, ok := z.Num().SetString(i, 0)
-	return z, ok
-}
-
-// Use with token.FLOAT ast.BasicLit
-func NewBigReal(r string) (*BigComplex, bool) {
-	z := new(BigComplex)
-	_, ok := z.Rat.SetString(r)
-	return z, ok
-}
-
-// Use with token.IMAG ast.BasicLit
-func NewBigImag(i string) (*BigComplex, bool) {
-	z := new(BigComplex)
-	ok := i[len(i)-1] == 'i'
-	if ok {
-		_, ok = z.Imag.SetString(i[:len(i)-1])
-	}
-	return z, ok
-}
-
-// Use with token.CHAR ast.BasicLit
-func NewBigRune(n rune) *BigComplex {
-	z := new(BigComplex)
-	z.Rat.Denom().SetInt64(1)
-	z.Num().SetInt64(int64(n))
-	return z
-}
-
-func NewBigInt64(i int64) *BigComplex {
-	z := new(BigComplex)
-	z.Rat.Denom().SetInt64(1)
-	z.Num().SetInt64(i)
-	return z
-}
-
-func NewBigUint64(u uint64) *BigComplex {
-	z := new(BigComplex)
-	z.Rat.Denom().SetInt64(1)
-	z.Num().SetUint64(u)
-	return z
-}
-
-func NewBigFloat64(f float64) *BigComplex {
-	z := new(BigComplex)
-	z.Rat.SetFloat64(f)
-	return z
-}
-
-func NewBigComplex128(c complex128) *BigComplex {
-	z := new(BigComplex)
-	z.Rat.SetFloat64(real(c))
-	z.Imag.SetFloat64(imag(c))
-	return z
+	Re big.Rat
+	Im big.Rat
 }
 
 func (z *BigComplex) Add(x, y *BigComplex) *BigComplex {
-	z.Rat.Add(&x.Rat, &y.Rat)
-	z.Imag.Add(&x.Imag, &y.Imag)
+	z.Re.Add(&x.Re, &y.Re)
+	z.Im.Add(&x.Im, &y.Im)
 	return z
 }
 
 func (z *BigComplex) Sub(x, y *BigComplex) *BigComplex {
-	z.Rat.Sub(&x.Rat, &y.Rat)
-	z.Imag.Sub(&x.Imag, &y.Imag)
+	z.Re.Sub(&x.Re, &y.Re)
+	z.Im.Sub(&x.Im, &y.Im)
 	return z
 }
 
 func (z *BigComplex) Mul(x, y *BigComplex) *BigComplex {
-	r := new(big.Rat).Mul(&x.Rat, &y.Rat)
-	r.Sub(r, new(big.Rat).Mul(&x.Imag, &y.Imag))
+	re := new(big.Rat).Mul(&x.Re, &y.Re)
+	re.Sub(re, new(big.Rat).Mul(&x.Im, &y.Im))
 
-	i := new(big.Rat).Mul(&x.Rat, &y.Imag)
-	i.Add(i, new(big.Rat).Mul(&x.Imag, &y.Rat))
+	im := new(big.Rat).Mul(&x.Re, &y.Im)
+	im.Add(im, new(big.Rat).Mul(&x.Im, &y.Re))
 
-	z.Rat = *r
-	z.Imag = *i
+	z.Re = *re
+	z.Im = *im
 	return z
 }
 
@@ -100,26 +40,26 @@ func (z *BigComplex) Quo(x, y *BigComplex) *BigComplex {
 	// ---- = ----- + ----- i
 	// c+di   cc+dd   cc+dd
 
-	cc := new(big.Rat).Mul(&y.Rat, &y.Rat)
-	dd := new(big.Rat).Mul(&y.Imag, &y.Imag)
+	cc := new(big.Rat).Mul(&y.Re, &y.Re)
+	dd := new(big.Rat).Mul(&y.Im, &y.Im)
 	ccdd := new(big.Rat).Add(cc, dd)
 
-	ac := new(big.Rat).Mul(&x.Rat, &y.Rat)
-	ad := new(big.Rat).Mul(&x.Rat, &y.Imag)
-	bc := new(big.Rat).Mul(&x.Imag, &y.Rat)
-	bd := new(big.Rat).Mul(&x.Imag, &y.Imag)
+	ac := new(big.Rat).Mul(&x.Re, &y.Re)
+	ad := new(big.Rat).Mul(&x.Re, &y.Im)
+	bc := new(big.Rat).Mul(&x.Im, &y.Re)
+	bd := new(big.Rat).Mul(&x.Im, &y.Im)
 
-	z.Rat.Add(ac, bd)
-	z.Rat.Quo(&z.Rat, ccdd)
+	z.Re.Add(ac, bd)
+	z.Re.Quo(&z.Re, ccdd)
 
-	z.Imag.Sub(bc, ad)
-	z.Imag.Quo(&z.Imag, ccdd)
+	z.Im.Sub(bc, ad)
+	z.Im.Quo(&z.Im, ccdd)
 
 	return z
 }
 
 func (z *BigComplex) IsZero() bool {
-	return z.Rat.Num().BitLen() == 0 && z.Imag.Num().BitLen() == 0
+	return z.Re.Num().BitLen() == 0 && z.Im.Num().BitLen() == 0
 }
 
 // Return a representation of z truncated to be an int of length bits.
@@ -131,7 +71,7 @@ func (z *BigComplex) IsZero() bool {
 func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
-	num := integer.Num()
+	num := integer.Re.Num()
 
 	// Numerator must fit in bits - 1, with 1 bit left for sign
 	if overflow = num.BitLen() > bits - 1; overflow {
@@ -150,7 +90,7 @@ func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
-	num := integer.Num()
+	num := integer.Re.Num()
 
 	var mask uint64 = ^uint64(0) >> uint(64 - bits)
 	if overflow = num.BitLen() > bits; overflow {
@@ -170,15 +110,15 @@ func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 // and the conversion continues as usual. truncation will be true
 // exact will be true if the conversion was completed without loss of precision
 func (z *BigComplex) Float64() (f float64, truncation, exact bool) {
-	f, exact = z.Rat.Float64()
+	f, exact = z.Re.Float64()
 	return f, exact, !z.IsReal()
 }
 
 // Return a complex128 representation of z. 
 // exact will be true if the conversion was completed without loss of precision
 func (z *BigComplex) Complex128() (_ complex128, exact bool) {
-	r, re := z.Rat.Float64()
-	i, ie := z.Imag.Float64()
+	r, re := z.Re.Float64()
+	i, ie := z.Im.Float64()
 	return complex(r, i), re && ie
 }
 
@@ -189,8 +129,8 @@ func (z *BigComplex) Integer() (_ *BigComplex, truncation bool) {
 		return z, false
 	} else {
 		trunc := new(BigComplex)
-		trunc.SetInt(z.Num())
-		trunc.Num().Div(trunc.Num(), z.Denom())
+		trunc.Re.SetInt(z.Re.Num())
+		trunc.Re.Num().Div(trunc.Re.Num(), z.Re.Denom())
 		return trunc, true
 	}
 }
@@ -201,16 +141,16 @@ func (z *BigComplex) Real() (_ *BigComplex, truncation bool) {
 	if z.IsReal() {
 		return z, false
 	} else {
-		return &BigComplex{Rat: z.Rat}, true
+		return &BigComplex{Re: z.Re}, true
 	}
 }
 
 func (z *BigComplex) IsInteger() bool {
-	return z.Rat.IsInt() && z.Imag.Num().BitLen() == 0
+	return z.Re.IsInt() && z.Im.Num().BitLen() == 0
 }
 
 func (z *BigComplex) IsReal() bool {
-	return z.Imag.Num().BitLen() == 0
+	return z.Im.Num().BitLen() == 0
 }
 
 func (z *BigComplex) Equals(other *BigComplex) bool {
@@ -219,17 +159,17 @@ func (z *BigComplex) Equals(other *BigComplex) bool {
 
 func (z *BigComplex) String() string {
 	var s string
-	if z.Rat.IsInt() {
-		s += z.Rat.Num().String()
+	if z.Re.IsInt() {
+		s += z.Re.Num().String()
 	} else {
-		s += z.Rat.FloatString(5)
+		s += z.Re.FloatString(5)
 	}
 	if !z.IsReal() {
 		s += "+"
-		if z.Imag.IsInt() {
-			s += z.Imag.Num().String()
+		if z.Im.IsInt() {
+			s += z.Im.Num().String()
 		} else {
-			s += z.Imag.FloatString(5)
+			s += z.Im.FloatString(5)
 		}
 		s += "i"
 	}

@@ -81,7 +81,7 @@ func expectFail(t *testing.T, expr string, env *Env) {
 	}
 }
 
-func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType reflect.Type) {
+func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType ConstType) {
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
@@ -89,10 +89,10 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
 	} else if !aexpr.IsConst() {
 		t.Fatalf("Expression '%s' did not yield a const node(%+v)", expr, aexpr)
-	} else if expectedBigComplex, ok := expected.(*BigComplex); ok {
-		if actual, ok2 := aexpr.Const().Interface().(*BigComplex); !ok2 {
+	} else if expectedNumber, ok := expected.(*ConstNumber); ok {
+		if actual, ok2 := aexpr.Const().Interface().(*ConstNumber); !ok2 {
 			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, aexpr.Const(), expected)
-		} else if !actual.Equals(expectedBigComplex) {
+		} else if !actual.Value.Equals(&expectedNumber.Value) {
 			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, actual, expected)
 		} else if len(aexpr.KnownType()) == 0 {
 			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)

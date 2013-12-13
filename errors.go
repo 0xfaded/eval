@@ -94,7 +94,7 @@ type ErrBadConversion struct {
 type ErrTruncatedConstant struct {
 	ErrorContext
 	to ConstType
-	constant *BigComplex
+	constant *ConstNumber
 }
 
 type ErrOverflowedConstant struct {
@@ -102,10 +102,6 @@ type ErrOverflowedConstant struct {
 	from ConstType
 	to reflect.Type
 	constant interface{}
-}
-
-type ErrIllegalConstantExpr struct {
-	ErrorContext
 }
 
 type ErrorContext struct {
@@ -201,11 +197,12 @@ func (err ErrInvalidUnaryOperation) Error() string {
 }
 
 func (err ErrInvalidBinaryOperation) Error() string {
-	return "ErrInvalidBinaryOperation TODO"
-}
-
-func (err ErrIllegalConstantExpr) Error() string {
-	return "ErrInvalidBinaryOperation TODO"
+	binary := err.ErrorContext.Node.(*BinaryExpr)
+	if binary.Op == token.REM {
+		return "illegal constant expression: floating-point % operation"
+	} else {
+		return "illegal constant expression: ideal | ideal"
+	}
 }
 
 func (err ErrDivideByZero) Error() string {
@@ -217,10 +214,10 @@ func (err ErrBadConversion) Error() string {
 }
 
 func (err ErrTruncatedConstant) Error() string {
-	if err.constant.IsReal() {
-		return fmt.Sprintf("constant %v truncated to integer", err.constant)
-	} else {
+	if err.constant.Type == ConstComplex {
 		return fmt.Sprintf("constant %v truncated to real", err.constant)
+	} else {
+		return fmt.Sprintf("constant %v truncated to integer", err.constant)
 	}
 }
 

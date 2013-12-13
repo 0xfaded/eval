@@ -94,8 +94,8 @@ func evalConstUntypedBinaryExpr(ctx *Ctx, constExpr *BinaryExpr, promotedType Co
 	y := constExpr.Y.(Expr).Const()
 	switch promotedType.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		xx := x.Interface().(*BigComplex)
-		yy := y.Interface().(*BigComplex)
+		xx := x.Interface().(*ConstNumber)
+		yy := y.Interface().(*ConstNumber)
 		return evalConstBinaryNumericExpr(ctx, constExpr, xx, yy)
 	case ConstStringType:
 		xx := x.String()
@@ -112,70 +112,61 @@ func evalConstUntypedBinaryExpr(ctx *Ctx, constExpr *BinaryExpr, promotedType Co
 
 }
 
-func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *BigComplex) (constValue, []error) {
+func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *ConstNumber) (constValue, []error) {
 	var errs []error
-	var xx *BigComplex
-	var yy *BigComplex
 
 	switch constExpr.Op {
 	case token.ADD:
-		return constValueOf(new(BigComplex).Add(x, y)), nil
+		return constValueOf(new(ConstNumber).Add(x, y)), nil
 	case token.SUB:
-		return constValueOf(new(BigComplex).Sub(x, y)), nil
+		return constValueOf(new(ConstNumber).Sub(x, y)), nil
 	case token.MUL:
-		return constValueOf(new(BigComplex).Mul(x, y)), nil
+		return constValueOf(new(ConstNumber).Mul(x, y)), nil
 	case token.QUO:
-		if y.IsZero() {
+		if y.Value.IsZero() {
 			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
 		}
-		return constValueOf(new(BigComplex).Quo(x, y)), nil
+		return constValueOf(new(ConstNumber).Quo(x, y)), nil
 	case token.REM:
-		if y.IsZero() {
+		if y.Value.IsZero() {
 			return constValue{}, []error{ErrDivideByZero{at(ctx, constExpr.Y)}}
-		} else if !(x.IsInteger() && y.IsInteger()) {
-			return constValue{}, []error{ErrIllegalConstantExpr{at(ctx, constExpr)}}
+		} else if !(x.Type.IsIntegral() && y.Type.IsIntegral()) {
+			return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, constExpr)}}
 		} else {
-			z := NewBigRune(1)
-			z.Rat.Num().Rem(x.Num(), y.Num())
-			return constValueOf(z), nil
+			return constValueOf(new(ConstNumber).Rem(x, y)), nil
 		}
 	case token.AND, token.OR, token.XOR, token.AND_NOT:
-		var trunc bool
-		if xx, trunc = x.Integer(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), ConstFloat, x})
-		}
-		if yy, trunc = y.Integer(); trunc {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), ConstFloat, y})
+		if !(x.Type.IsIntegral() && y.Type.IsIntegral()) {
+			return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, constExpr)}}
 		}
 
-		z := NewBigRune(1)
 		switch constExpr.Op {
 		case token.AND:
-			z.Num().And(xx.Num(), yy.Num())
+			return constValueOf(new(ConstNumber).And(x, y)), nil
 		case token.OR:
-			z.Num().Or(xx.Num(), yy.Num())
+			return constValueOf(new(ConstNumber).Or(x, y)), nil
 		case token.XOR:
-			z.Num().Xor(xx.Num(), yy.Num())
+			return constValueOf(new(ConstNumber).Xor(x, y)), nil
 		case token.AND_NOT:
-			z.Num().AndNot(xx.Num(), yy.Num())
+			return constValueOf(new(ConstNumber).AndNot(x, y)), nil
+		default:
+			panic("go-interactive: impossible")
 		}
-		return constValueOf(z), errs
 
 	case token.EQL:
-		return constValueOf(x.Rat.Cmp(&y.Rat) == 0 && x.Imag.Cmp(&y.Imag) == 0), nil
+		return constValueOf(x.Value.Equals(&y.Value)), nil
 	case token.NEQ:
-		return constValueOf(x.Rat.Cmp(&y.Rat) != 0 || x.Imag.Cmp(&y.Imag) != 0), nil
+		return constValueOf(!x.Value.Equals(&y.Value)), nil
 
 	case token.LEQ, token.GEQ, token.LSS, token.GTR:
 		var b bool
-		var trunc bool
-		if xx, trunc = x.Real(); trunc {
+		if x.Type == ConstComplex {
 			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), ConstFloat, x})
 		}
-		if yy, trunc = y.Real(); trunc {
+		if y.Type == ConstComplex {
 			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), ConstFloat, y})
 		}
-		cmp := xx.Rat.Cmp(&yy.Rat)
+		cmp := x.Value.Re.Cmp(&y.Value.Re)
 		switch constExpr.Op {
 		case token.NEQ:
 			b = cmp != 0
@@ -237,29 +228,29 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 
 	switch xt.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		x := untypedExpr.Const().Interface().(*BigComplex)
-		var y *BigComplex
+		x := untypedExpr.Const().Interface().(*ConstNumber)
+		var y *ConstNumber
 		switch yt.Kind() {
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			y = NewBigInt64(typedExpr.Const().Int())
+			y = NewConstInt64(typedExpr.Const().Int())
 
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			y = NewBigUint64(typedExpr.Const().Uint())
+			y = NewConstUint64(typedExpr.Const().Uint())
 
 		case reflect.Float32, reflect.Float64:
-			y = NewBigFloat64(typedExpr.Const().Float())
+			y = NewConstFloat64(typedExpr.Const().Float())
 
 		case reflect.Complex64, reflect.Complex128:
-			y = NewBigComplex128(typedExpr.Const().Complex())
+			y = NewConstComplex128(typedExpr.Const().Complex())
 
 		default:
 			// This will result in a bad conversion error
-			_, errs := convertConstToTyped(ctx, xt, constValueOf(x), yt, untypedExpr)
+			_, errs := convertConstToTyped(ctx, x.Type, constValueOf(x), yt, untypedExpr)
 			return constValue{}, errs
 		}
 
 		z, errs := evalConstBinaryNumericExpr(ctx, expr, x, y)
-		r, moreErrs := convertConstToTyped(ctx, xt, z, yt, expr)
+		r, moreErrs := convertConstToTyped(ctx, x.Type, z, yt, expr)
 		errs = append(errs, moreErrs...)
 		return constValue(r), errs
 
@@ -268,7 +259,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 			xstring := untypedExpr.Const().String()
 			ystring := typedExpr.Const().String()
 			z, errs := evalConstBinaryStringExpr(ctx, expr, xstring, ystring)
-			r, moreErrs := convertConstToTyped(ctx, xt, z, yt, expr)
+			r, moreErrs := convertConstToTyped(ctx, ConstString, z, yt, expr)
 			errs = append(errs, moreErrs...)
 			return constValue(r), errs
 		}
@@ -278,7 +269,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 			xbool := untypedExpr.Const().Bool()
 			ybool := typedExpr.Const().Bool()
 			z, errs := evalConstBinaryBoolExpr(ctx, expr, xbool, ybool)
-			r, moreErrs := convertConstToTyped(ctx, xt, z, yt, expr)
+			r, moreErrs := convertConstToTyped(ctx, ConstBool, z, yt, expr)
 			errs = append(errs, moreErrs...)
 			return constValue(r), errs
 		}

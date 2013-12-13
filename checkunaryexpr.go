@@ -43,7 +43,7 @@ func evalConstUnaryExpr(ctx *Ctx, constExpr *UnaryExpr, resultType ConstType) (c
 	x := constExpr.X.(Expr).Const()
 	switch resultType.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		xx := x.Interface().(*BigComplex)
+		xx := x.Interface().(*ConstNumber)
 		return evalConstUnaryNumericExpr(ctx, constExpr, xx)
 	case ConstBoolType:
 		xx := x.Bool()
@@ -53,12 +53,12 @@ func evalConstUnaryExpr(ctx *Ctx, constExpr *UnaryExpr, resultType ConstType) (c
 	}
 }
 
-func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *BigComplex) (constValue, []error) {
+func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *ConstNumber) (constValue, []error) {
 	switch constExpr.Op {
 	case token.ADD:
 		return constValueOf(x), nil
 	case token.SUB:
-		zero := new(BigComplex)
+		zero := &ConstNumber{Type: x.Type}
 		return constValueOf(zero.Sub(zero, x)), nil
 	default:
 		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
