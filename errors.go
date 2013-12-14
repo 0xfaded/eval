@@ -198,11 +198,21 @@ func (err ErrInvalidUnaryOperation) Error() string {
 
 func (err ErrInvalidBinaryOperation) Error() string {
 	binary := err.ErrorContext.Node.(*BinaryExpr)
-	if binary.Op == token.REM {
-		return "illegal constant expression: floating-point % operation"
-	} else {
-		return "illegal constant expression: ideal | ideal"
+	x := binary.X.(Expr)
+	y := binary.Y.(Expr)
+
+	xn, xnok := x.Const().Interface().(*ConstNumber)
+	yn, ynok := y.Const().Interface().(*ConstNumber)
+	if xnok && ynok {
+		switch binary.Op {
+		case token.REM:
+			if xn.Type.IsReal() && yn.Type.IsReal() {
+				return "illegal constant expression: floating-point % operation"
+			}
+		}
+		return fmt.Sprintf("illegal constant expression: ideal %v ideal", binary.Op)
 	}
+	return "foo"
 }
 
 func (err ErrDivideByZero) Error() string {

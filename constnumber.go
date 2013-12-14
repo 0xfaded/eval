@@ -1,5 +1,7 @@
 package interactive
 
+import "strconv"
+
 type ConstNumber struct {
 	Value BigComplex
 	Type ConstType
@@ -69,6 +71,15 @@ func NewConstComplex128(c complex128) *ConstNumber {
 	return z
 }
 
+func (z *ConstNumber) String() string {
+	if z.Type == ConstRune && z.Value.Re.Num().BitLen() <= 32 {
+		r, _, _ := z.Value.Int(32)
+		return strconv.QuoteRune(rune(r))
+	} else {
+		return z.String()
+	}
+}
+
 // Add two ConstNumbers, promoting the type automatically.
 func (z *ConstNumber) Add(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
@@ -94,7 +105,7 @@ func (z *ConstNumber) Mul(x, y *ConstNumber) *ConstNumber {
 // both operands are of ConstInt, then integer division is performed.
 func (z *ConstNumber) Quo(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
-	if z.Type == ConstInt {
+	if z.Type.IsIntegral() {
 		z.Value.Re.Num().Div(x.Value.Re.Num(), y.Value.Re.Num())
 	} else {
 		z.Value.Quo(&x.Value, &y.Value)

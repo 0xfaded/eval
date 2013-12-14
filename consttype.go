@@ -7,6 +7,7 @@ import "reflect"
 type ConstType interface {
 	reflect.Type
 	IsIntegral() bool
+	IsReal() bool
 }
 
 type ConstIntType struct { reflect.Type }
@@ -42,6 +43,14 @@ func (ConstComplexType) IsIntegral() bool { return false }
 func (ConstStringType) IsIntegral() bool { return false }
 func (ConstNilType) IsIntegral() bool { return false }
 func (ConstBoolType) IsIntegral() bool { return false }
+
+func (ConstIntType) IsReal() bool { return true }
+func (ConstRuneType) IsReal() bool { return true }
+func (ConstFloatType) IsReal() bool { return true }
+func (ConstComplexType) IsReal() bool { return false }
+func (ConstStringType) IsReal() bool { return false }
+func (ConstNilType) IsReal() bool { return false }
+func (ConstBoolType) IsReal() bool { return false }
 
 // Returns the ConstType of a binary, non-boolean, expression invalving const types of
 // x and y.

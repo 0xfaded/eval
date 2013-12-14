@@ -160,11 +160,8 @@ func evalConstBinaryNumericExpr(ctx *Ctx, constExpr *BinaryExpr, x, y *ConstNumb
 
 	case token.LEQ, token.GEQ, token.LSS, token.GTR:
 		var b bool
-		if x.Type == ConstComplex {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.X), ConstFloat, x})
-		}
-		if y.Type == ConstComplex {
-			errs = append(errs, ErrTruncatedConstant{at(ctx, constExpr.Y), ConstFloat, y})
+		if !(x.Type.IsReal() && y.Type.IsReal()) {
+			return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, constExpr)}}
 		}
 		cmp := x.Value.Re.Cmp(&y.Value.Re)
 		switch constExpr.Op {
