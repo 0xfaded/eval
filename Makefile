@@ -1,7 +1,7 @@
 # Comments starting with #: below are remake GNU Makefile comments. See
 # https://github.com/rocky/remake/wiki/Rake-tasks-for-gnu-make
 
-.PHONY: all eval test check
+.PHONY: all eval test check gentests
 
 #: Same as repl
 all: repl
@@ -16,6 +16,10 @@ lib:
 
 #: Same as "check"
 test: check
+
+gentests:
+	make -C testgen
+
 
 #: Run all tests (quick and interpreter)
 check:
