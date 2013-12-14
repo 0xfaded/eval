@@ -1,6 +1,6 @@
 pkg/
 src/
-eval
+go-repl
 *.swp
 *.test
 *~
