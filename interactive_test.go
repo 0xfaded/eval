@@ -117,7 +117,7 @@ func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if _, errs := checkExpr(ctx, e, env); errs != nil {
 		var i int
-		out := ""
+		out := "\n"
 		ok := true
 		for i = 0; i < len(errorString); i += 1 {
 			if i > len(errs) {

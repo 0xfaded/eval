@@ -159,19 +159,26 @@ func (z *BigComplex) Equals(other *BigComplex) bool {
 
 func (z *BigComplex) String() string {
 	var s string
-	if z.Re.IsInt() {
-		s += z.Re.Num().String()
-	} else {
-		s += z.Re.FloatString(5)
+	if z.Re.Num().BitLen() != 0 {
+		if z.Re.IsInt() {
+			s += z.Re.Num().String()
+		} else {
+			s += z.Re.FloatString(5)
+		}
 	}
 	if !z.IsReal() {
-		s += "+"
+		if s != "" {
+			s += "+"
+		}
 		if z.Im.IsInt() {
 			s += z.Im.Num().String()
 		} else {
 			s += z.Im.FloatString(5)
 		}
 		s += "i"
+	}
+	if s == "" {
+		s = "0"
 	}
 	return s
 }

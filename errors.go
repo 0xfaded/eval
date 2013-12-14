@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 
 	"go/ast"
 	"go/token"
@@ -86,8 +87,8 @@ type ErrInvalidUnaryOperation struct {
 
 type ErrBadConversion struct {
 	ErrorContext
-	to reflect.Type
 	from reflect.Type
+	to reflect.Type
 	v reflect.Value
 }
 
@@ -211,8 +212,13 @@ func (err ErrInvalidBinaryOperation) Error() string {
 			}
 		}
 		return fmt.Sprintf("illegal constant expression: ideal %v ideal", binary.Op)
+	} else {
+		xq := quoteString(x.Const().Interface())
+		yq := quoteString(y.Const().Interface())
+		return fmt.Sprintf("invalid operation: %v %v %v (mismatched types %v and %v)",
+			xq, binary.Op, yq, x.KnownType()[0], y.KnownType()[0],
+		)
 	}
-	return "foo"
 }
 
 func (err ErrDivideByZero) Error() string {
@@ -220,7 +226,7 @@ func (err ErrDivideByZero) Error() string {
 }
 
 func (err ErrBadConversion) Error() string {
-	return "division by zero"
+	return fmt.Sprintf("cannot convert %v to type %v", quoteString(err.v.Interface()), err.to)
 }
 
 func (err ErrTruncatedConstant) Error() string {
@@ -241,4 +247,12 @@ func at(ctx *Ctx, expr ast.Node) ErrorContext {
 
 func (errCtx ErrorContext) Source() string {
 	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
+}
+
+func quoteString(i interface{}) interface{} {
+	if s, ok := i.(string); ok {
+		return strconv.Quote(s)
+	} else {
+		return i
+	}
 }

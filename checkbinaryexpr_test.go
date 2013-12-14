@@ -67,6 +67,84 @@ func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
 	expectCheckError(t, "5 & 1.5i", env, "illegal constant expression: ideal & ideal")
 }
 
+func TestBasicCheckConstBinaryIntegerBool(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "5 + true", env,
+		"cannot convert true to type int",
+		"invalid operation: 5 + true (mismatched types int and bool)",
+	)
+	expectCheckError(t, "5 % true", env,
+		"cannot convert true to type int",
+		"invalid operation: 5 % true (mismatched types int and bool)",
+	)
+	expectCheckError(t, "5 & true", env,
+		"cannot convert true to type int",
+		"invalid operation: 5 & true (mismatched types int and bool)",
+	)
+	expectCheckError(t, "5 == true", env,
+		"cannot convert true to type int",
+		"invalid operation: 5 == true (mismatched types int and bool)",
+	)
+	expectCheckError(t, "5 < true", env,
+		"cannot convert true to type int",
+		"invalid operation: 5 < true (mismatched types int and bool)",
+	)
+}
+
+func TestBasicCheckConstBinaryIntegerString(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, `5 + "abc"`, env,
+		`cannot convert "abc" to type int`,
+		`invalid operation: 5 + "abc" (mismatched types int and string)`,
+	)
+	expectCheckError(t, `5 % "abc"`, env,
+		`cannot convert "abc" to type int`,
+		`invalid operation: 5 % "abc" (mismatched types int and string)`,
+	)
+	expectCheckError(t, `5 & "abc"`, env,
+		`cannot convert "abc" to type int`,
+		`invalid operation: 5 & "abc" (mismatched types int and string)`,
+	)
+	expectCheckError(t, `5 == "abc"`, env,
+		`cannot convert "abc" to type int`,
+		`invalid operation: 5 == "abc" (mismatched types int and string)`,
+	)
+	expectCheckError(t, `5 < "abc"`, env,
+		`cannot convert "abc" to type int`,
+		`invalid operation: 5 < "abc" (mismatched types int and string)`,
+	)
+}
+
+func TestBasicCheckConstBinaryIntegerNil(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "5 + nil", env,
+		"cannot convert nil to type int",
+		"invalid operation: 5 + nil (mismatched types int and <T>)",
+	)
+	expectCheckError(t, "5 % nil", env,
+		"cannot convert nil to type int",
+		"invalid operation: 5 % nil (mismatched types int and <T>)",
+	)
+	expectCheckError(t, "5 & nil", env,
+		"cannot convert nil to type int",
+		"invalid operation: 5 & nil (mismatched types int and <T>)",
+	)
+	expectCheckError(t, "5 == nil", env,
+		"cannot convert nil to type int",
+		"invalid operation: 5 == nil (mismatched types int and <T>)",
+	)
+	expectCheckError(t, "5 < nil", env,
+		"cannot convert nil to type int",
+		"invalid operation: 5 < nil (mismatched types int and <T>)",
+	)
+}
+
 // rune op X tests
 func TestBasicCheckConstBinaryRuneInteger(t *testing.T) {
 	env := makeEnv()
@@ -113,6 +191,84 @@ func TestBasicCheckConstBinaryRuneComplex(t *testing.T) {
 	expectCheckError(t, "'d' > 1.5i", env, "illegal constant expression: ideal > ideal")
 	expectCheckError(t, "'d' % 1.0i", env, "illegal constant expression: ideal % ideal")
 	expectCheckError(t, "'d' ^ 1.0i", env, "illegal constant expression: ideal ^ ideal")
+}
+
+func TestBasicCheckConstBinaryRuneBool(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "'a' + true", env,
+		"cannot convert true to type rune",
+		"invalid operation: 'a' + true (mismatched types rune and bool)",
+	)
+	expectCheckError(t, "'a' % true", env,
+		"cannot convert true to type rune",
+		"invalid operation: 'a' % true (mismatched types rune and bool)",
+	)
+	expectCheckError(t, "'a' & true", env,
+		"cannot convert true to type rune",
+		"invalid operation: 'a' & true (mismatched types rune and bool)",
+	)
+	expectCheckError(t, "'a' == true", env,
+		"cannot convert true to type rune",
+		"invalid operation: 'a' == true (mismatched types rune and bool)",
+	)
+	expectCheckError(t, "'a' < true", env,
+		"cannot convert true to type rune",
+		"invalid operation: 'a' < true (mismatched types rune and bool)",
+	)
+}
+
+func TestBasicCheckConstBinaryRuneString(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, `'a' + "abc"`, env,
+		`cannot convert "abc" to type rune`,
+		`invalid operation: 'a' + "abc" (mismatched types rune and string)`,
+	)
+	expectCheckError(t, `'a' % "abc"`, env,
+		`cannot convert "abc" to type rune`,
+		`invalid operation: 'a' % "abc" (mismatched types rune and string)`,
+	)
+	expectCheckError(t, `'a' & "abc"`, env,
+		`cannot convert "abc" to type rune`,
+		`invalid operation: 'a' & "abc" (mismatched types rune and string)`,
+	)
+	expectCheckError(t, `'a' == "abc"`, env,
+		`cannot convert "abc" to type rune`,
+		`invalid operation: 'a' == "abc" (mismatched types rune and string)`,
+	)
+	expectCheckError(t, `'a' < "abc"`, env,
+		`cannot convert "abc" to type rune`,
+		`invalid operation: 'a' < "abc" (mismatched types rune and string)`,
+	)
+}
+
+func TestBasicCheckConstBinaryRuneNil(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "'a' + nil", env,
+		"cannot convert nil to type rune",
+		"invalid operation: 'a' + nil (mismatched types rune and <T>)",
+	)
+	expectCheckError(t, "'a' % nil", env,
+		"cannot convert nil to type rune",
+		"invalid operation: 'a' % nil (mismatched types rune and <T>)",
+	)
+	expectCheckError(t, "'a' & nil", env,
+		"cannot convert nil to type rune",
+		"invalid operation: 'a' & nil (mismatched types rune and <T>)",
+	)
+	expectCheckError(t, "'a' == nil", env,
+		"cannot convert nil to type rune",
+		"invalid operation: 'a' == nil (mismatched types rune and <T>)",
+	)
+	expectCheckError(t, "'a' < nil", env,
+		"cannot convert nil to type rune",
+		"invalid operation: 'a' < nil (mismatched types rune and <T>)",
+	)
 }
 
 // floating op X tests
@@ -168,7 +324,85 @@ func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
 	expectCheckError(t, "1.5 | 1.5i", env, "illegal constant expression: ideal | ideal")
 }
 
-// floating op X tests
+func TestBasicCheckConstBinaryFloatBool(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "1.0 + true", env,
+		"cannot convert true to type float64",
+		"invalid operation: 1 + true (mismatched types float64 and bool)",
+	)
+	expectCheckError(t, "1.0 % true", env,
+		"cannot convert true to type float64",
+		"invalid operation: 1 % true (mismatched types float64 and bool)",
+	)
+	expectCheckError(t, "1.0 & true", env,
+		"cannot convert true to type float64",
+		"invalid operation: 1 & true (mismatched types float64 and bool)",
+	)
+	expectCheckError(t, "1.0 == true", env,
+		"cannot convert true to type float64",
+		"invalid operation: 1 == true (mismatched types float64 and bool)",
+	)
+	expectCheckError(t, "1.0 < true", env,
+		"cannot convert true to type float64",
+		"invalid operation: 1 < true (mismatched types float64 and bool)",
+	)
+}
+
+func TestBasicCheckConstBinaryFloatString(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, `1.0 + "abc"`, env,
+		`cannot convert "abc" to type float64`,
+		`invalid operation: 1 + "abc" (mismatched types float64 and string)`,
+	)
+	expectCheckError(t, `1.0 % "abc"`, env,
+		`cannot convert "abc" to type float64`,
+		`invalid operation: 1 % "abc" (mismatched types float64 and string)`,
+	)
+	expectCheckError(t, `1.0 & "abc"`, env,
+		`cannot convert "abc" to type float64`,
+		`invalid operation: 1 & "abc" (mismatched types float64 and string)`,
+	)
+	expectCheckError(t, `1.0 == "abc"`, env,
+		`cannot convert "abc" to type float64`,
+		`invalid operation: 1 == "abc" (mismatched types float64 and string)`,
+	)
+	expectCheckError(t, `1.0 < "abc"`, env,
+		`cannot convert "abc" to type float64`,
+		`invalid operation: 1 < "abc" (mismatched types float64 and string)`,
+	)
+}
+
+func TestBasicCheckConstBinaryFloatNil(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "1.0 + nil", env,
+		"cannot convert nil to type float64",
+		"invalid operation: 1 + nil (mismatched types float64 and <T>)",
+	)
+	expectCheckError(t, "1.0 % nil", env,
+		"cannot convert nil to type float64",
+		"invalid operation: 1 % nil (mismatched types float64 and <T>)",
+	)
+	expectCheckError(t, "1.0 & nil", env,
+		"cannot convert nil to type float64",
+		"invalid operation: 1 & nil (mismatched types float64 and <T>)",
+	)
+	expectCheckError(t, "1.0 == nil", env,
+		"cannot convert nil to type float64",
+		"invalid operation: 1 == nil (mismatched types float64 and <T>)",
+	)
+	expectCheckError(t, "1.0 < nil", env,
+		"cannot convert nil to type float64",
+		"invalid operation: 1 < nil (mismatched types float64 and <T>)",
+	)
+}
+
+// complex op X tests
 func TestBasicCheckConstBinaryComplexInteger(t *testing.T) {
 	env := makeEnv()
 
@@ -194,7 +428,7 @@ func TestBasicCheckConstBinaryComplexRune(t *testing.T) {
 	expectCheckError(t, "2.5i | 'a'", env, "illegal constant expression: ideal | ideal")
 }
 
-func TestBasicCheckConstBinaryComplexFloating(t *testing.T) {
+func TestBasicCheckConstBinaryComplexComplexing(t *testing.T) {
 	env := makeEnv()
 
 	expectConst(t, "2.5i * 1.25", env, NewConstComplex128(2.5i * 1.25), ConstComplex)
@@ -216,6 +450,84 @@ func TestBasicCheckConstBinaryComplexComplex(t *testing.T) {
 	expectCheckError(t, "2.5i < 2i", env, "illegal constant expression: ideal < ideal")
 	expectCheckError(t, "2.5i % 2i", env, "illegal constant expression: ideal % ideal")
 	expectCheckError(t, "2.5i | 2i", env, "illegal constant expression: ideal | ideal")
+}
+
+func TestBasicCheckConstBinaryComplexBool(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "1.0i + true", env,
+		"cannot convert true to type complex128",
+		"invalid operation: 1i + true (mismatched types complex128 and bool)",
+	)
+	expectCheckError(t, "1.0i % true", env,
+		"cannot convert true to type complex128",
+		"invalid operation: 1i % true (mismatched types complex128 and bool)",
+	)
+	expectCheckError(t, "1.0i & true", env,
+		"cannot convert true to type complex128",
+		"invalid operation: 1i & true (mismatched types complex128 and bool)",
+	)
+	expectCheckError(t, "1.0i == true", env,
+		"cannot convert true to type complex128",
+		"invalid operation: 1i == true (mismatched types complex128 and bool)",
+	)
+	expectCheckError(t, "1.0i < true", env,
+		"cannot convert true to type complex128",
+		"invalid operation: 1i < true (mismatched types complex128 and bool)",
+	)
+}
+
+func TestBasicCheckConstBinaryComplexString(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, `1.0i + "abc"`, env,
+		`cannot convert "abc" to type complex128`,
+		`invalid operation: 1i + "abc" (mismatched types complex128 and string)`,
+	)
+	expectCheckError(t, `1.0i % "abc"`, env,
+		`cannot convert "abc" to type complex128`,
+		`invalid operation: 1i % "abc" (mismatched types complex128 and string)`,
+	)
+	expectCheckError(t, `1.0i & "abc"`, env,
+		`cannot convert "abc" to type complex128`,
+		`invalid operation: 1i & "abc" (mismatched types complex128 and string)`,
+	)
+	expectCheckError(t, `1.0i == "abc"`, env,
+		`cannot convert "abc" to type complex128`,
+		`invalid operation: 1i == "abc" (mismatched types complex128 and string)`,
+	)
+	expectCheckError(t, `1.0i < "abc"`, env,
+		`cannot convert "abc" to type complex128`,
+		`invalid operation: 1i < "abc" (mismatched types complex128 and string)`,
+	)
+}
+
+func TestBasicCheckConstBinaryComplexNil(t *testing.T) {
+	env := makeEnv()
+
+	// Invalid
+	expectCheckError(t, "1.0i + nil", env,
+		"cannot convert nil to type complex128",
+		"invalid operation: 1i + nil (mismatched types complex128 and <T>)",
+	)
+	expectCheckError(t, "1.0i % nil", env,
+		"cannot convert nil to type complex128",
+		"invalid operation: 1i % nil (mismatched types complex128 and <T>)",
+	)
+	expectCheckError(t, "1.0i & nil", env,
+		"cannot convert nil to type complex128",
+		"invalid operation: 1i & nil (mismatched types complex128 and <T>)",
+	)
+	expectCheckError(t, "1.0i == nil", env,
+		"cannot convert nil to type complex128",
+		"invalid operation: 1i == nil (mismatched types complex128 and <T>)",
+	)
+	expectCheckError(t, "1.0i < nil", env,
+		"cannot convert nil to type complex128",
+		"invalid operation: 1i < nil (mismatched types complex128 and <T>)",
+	)
 }
 
 // bool op X tests
