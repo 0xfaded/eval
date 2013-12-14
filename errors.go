@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 
 	"go/ast"
 	"go/token"
@@ -48,14 +49,12 @@ type ErrWrongNumberOfArgs struct {
 	numArgs int
 }
 
-
 type ErrMissingValue struct {
 	ErrorContext
 }
 
 type ErrMultiInSingleContext struct {
 	ErrorContext
-	vals []reflect.Value
 }
 
 type ErrArrayIndexOutOfBounds struct {
@@ -72,6 +71,38 @@ type ErrInvalidIndex struct {
 	ErrorContext
 	indexValue reflect.Value
 	containerType reflect.Type
+}
+
+type ErrDivideByZero struct {
+	ErrorContext
+}
+
+type ErrInvalidBinaryOperation struct {
+	ErrorContext
+}
+
+type ErrInvalidUnaryOperation struct {
+	ErrorContext
+}
+
+type ErrBadConversion struct {
+	ErrorContext
+	from reflect.Type
+	to reflect.Type
+	v reflect.Value
+}
+
+type ErrTruncatedConstant struct {
+	ErrorContext
+	to ConstType
+	constant *ConstNumber
+}
+
+type ErrOverflowedConstant struct {
+	ErrorContext
+	from ConstType
+	to reflect.Type
+	constant interface{}
 }
 
 type ErrorContext struct {
@@ -162,10 +193,66 @@ func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
 }
 
+func (err ErrInvalidUnaryOperation) Error() string {
+	return "ErrInvalidUnaryOperation TODO"
+}
+
+func (err ErrInvalidBinaryOperation) Error() string {
+	binary := err.ErrorContext.Node.(*BinaryExpr)
+	x := binary.X.(Expr)
+	y := binary.Y.(Expr)
+
+	xn, xnok := x.Const().Interface().(*ConstNumber)
+	yn, ynok := y.Const().Interface().(*ConstNumber)
+	if xnok && ynok {
+		switch binary.Op {
+		case token.REM:
+			if xn.Type.IsReal() && yn.Type.IsReal() {
+				return "illegal constant expression: floating-point % operation"
+			}
+		}
+		return fmt.Sprintf("illegal constant expression: ideal %v ideal", binary.Op)
+	} else {
+		xq := quoteString(x.Const().Interface())
+		yq := quoteString(y.Const().Interface())
+		return fmt.Sprintf("invalid operation: %v %v %v (mismatched types %v and %v)",
+			xq, binary.Op, yq, x.KnownType()[0], y.KnownType()[0],
+		)
+	}
+}
+
+func (err ErrDivideByZero) Error() string {
+	return "division by zero"
+}
+
+func (err ErrBadConversion) Error() string {
+	return fmt.Sprintf("cannot convert %v to type %v", quoteString(err.v.Interface()), err.to)
+}
+
+func (err ErrTruncatedConstant) Error() string {
+	if err.constant.Type == ConstComplex {
+		return fmt.Sprintf("constant %v truncated to real", err.constant)
+	} else {
+		return fmt.Sprintf("constant %v truncated to integer", err.constant)
+	}
+}
+
+func (err ErrOverflowedConstant) Error() string {
+	return "ErrOverflowedConstant TODO"
+}
+
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
 	return ErrorContext{ctx.Input, expr}
 }
 
 func (errCtx ErrorContext) Source() string {
 	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
+}
+
+func quoteString(i interface{}) interface{} {
+	if s, ok := i.(string); ok {
+		return strconv.Quote(s)
+	} else {
+		return i
+	}
 }

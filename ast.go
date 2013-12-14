@@ -11,7 +11,7 @@ type Expr interface {
 	ast.Expr
 
 	// The type of this expression if known. Certain expr types have special interpretations
-	// Constant expr: a value of nil implies the constant is untyped
+	// Constant expr: a ConstType will be returned if constant is untyped
 	// Ellipsis expr: a single reflect.Type represents the type of all unpacked values
 	KnownType() []reflect.Type
 
@@ -34,6 +34,7 @@ type BadExpr struct {
 type Ident struct {
 	*ast.Ident
 	knownType
+	constValue
 }
 
 type Ellipsis struct {
@@ -173,7 +174,6 @@ func (*FuncLit) KnownType() []reflect.Type      { return nil }
 func (*KeyValueExpr) KnownType() []reflect.Type { return nil }
 
 func (*BadExpr) IsConst() bool        { return false }
-func (*Ident) IsConst() bool          { return false }
 func (*Ellipsis) IsConst() bool       { return false }
 func (*FuncLit) IsConst() bool        { return false }
 func (*CompositeLit) IsConst() bool   { return false }
@@ -191,7 +191,6 @@ func (*MapType) IsConst() bool        { return false }
 func (*ChanType) IsConst() bool       { return false }
 
 func (*BadExpr) Const() reflect.Value        { return reflect.Value{} }
-func (*Ident) Const() reflect.Value          { return reflect.Value{} }
 func (*Ellipsis) Const() reflect.Value       { return reflect.Value{} }
 func (*FuncLit) Const() reflect.Value        { return reflect.Value{} }
 func (*CompositeLit) Const() reflect.Value   { return reflect.Value{} }
@@ -207,3 +206,9 @@ func (*FuncType) Const() reflect.Value       { return reflect.Value{} }
 func (*InterfaceType) Const() reflect.Value  { return reflect.Value{} }
 func (*MapType) Const() reflect.Value        { return reflect.Value{} }
 func (*ChanType) Const() reflect.Value       { return reflect.Value{} }
+
+// Does not assert that c is a valid const value type
+// Should be *BigComplex, bool, or string
+func constValueOf(i interface{}) constValue {
+	return constValue(reflect.ValueOf(i))
+}

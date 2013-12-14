@@ -3,6 +3,7 @@ package interactive
 // Utilities for other tests live here
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"reflect"
@@ -78,6 +79,69 @@ func expectFail(t *testing.T, expr string, env *Env) {
 	// Catch dogdy error messages which panic on format
 	} else if strings.Index(err.Error(), "(PANIC=") != -1 {
 		t.Fatalf("Expression '%s' failed as expected but error message panicked (%v)", expr, err)
+	}
+}
+
+func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType ConstType) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
+	} else if !aexpr.IsConst() {
+		t.Fatalf("Expression '%s' did not yield a const node(%+v)", expr, aexpr)
+	} else if expectedNumber, ok := expected.(*ConstNumber); ok {
+		if actual, ok2 := aexpr.Const().Interface().(*ConstNumber); !ok2 {
+			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, aexpr.Const(), expected)
+		} else if !actual.Value.Equals(&expectedNumber.Value) {
+			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, actual, expected)
+		} else if len(aexpr.KnownType()) == 0 {
+			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
+		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, actual, expectedType)
+		}
+	} else {
+		if actual := aexpr.Const().Interface(); !reflect.DeepEqual(actual, expected) {
+			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, actual, expected)
+		} else if len(aexpr.KnownType()) == 0 {
+			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
+		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
+		}
+	}
+}
+
+func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if _, errs := checkExpr(ctx, e, env); errs != nil {
+		var i int
+		out := "\n"
+		ok := true
+		for i = 0; i < len(errorString); i += 1 {
+			if i > len(errs) {
+				out += fmt.Sprintf("%d. Expected `%v` missing\n", i, errorString[i])
+				ok = false
+			} else if errorString[i] == errs[i].Error() {
+				out += fmt.Sprintf("%d. Expected `%v` == `%v`\n", i, errorString[i], errs[i])
+			} else {
+				out += fmt.Sprintf("%d. Expected `%v` != `%v`\n", i, errorString[i], errs[i])
+				ok = false
+			}
+		}
+		for ; i < len(errs); i += 1 {
+			out += fmt.Sprintf("%d. Unexpected `%v`\n", i, errs[i])
+			ok = false
+		}
+		if !ok {
+			t.Fatalf("%sWrong check errors for expression '%s'", out, expr)
+		}
+	} else {
+		for i, s := range errorString {
+			t.Logf("%d. Expected `%v` missing\n", i, s)
+		}
+		t.Fatalf("Missing check errors for expression '%s'", expr )
 	}
 }
 
