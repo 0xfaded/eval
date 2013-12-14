@@ -120,7 +120,7 @@ func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string
 		out := "\n"
 		ok := true
 		for i = 0; i < len(errorString); i += 1 {
-			if i > len(errs) {
+			if i >= len(errs) {
 				out += fmt.Sprintf("%d. Expected `%v` missing\n", i, errorString[i])
 				ok = false
 			} else if errorString[i] == errs[i].Error() {

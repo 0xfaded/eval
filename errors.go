@@ -202,8 +202,15 @@ func (err ErrInvalidBinaryOperation) Error() string {
 	x := binary.X.(Expr)
 	y := binary.Y.(Expr)
 
+	xt := x.KnownType()[0]
+	yt := y.KnownType()[0]
+
 	xn, xnok := x.Const().Interface().(*ConstNumber)
 	yn, ynok := y.Const().Interface().(*ConstNumber)
+
+	xq := quoteString(x.Const().Interface())
+	yq := quoteString(y.Const().Interface())
+
 	if xnok && ynok {
 		switch binary.Op {
 		case token.REM:
@@ -212,9 +219,17 @@ func (err ErrInvalidBinaryOperation) Error() string {
 			}
 		}
 		return fmt.Sprintf("illegal constant expression: ideal %v ideal", binary.Op)
+	} else if xt == yt {
+		// const nil value prints as <T>, as an operand we should print nil
+		var operandType interface{}
+		if xt == ConstNil {
+			operandType = "nil"
+		} else {
+			operandType = xt
+		}
+		return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
+			xq, binary.Op, yq, binary.Op, operandType)
 	} else {
-		xq := quoteString(x.Const().Interface())
-		yq := quoteString(y.Const().Interface())
 		return fmt.Sprintf("invalid operation: %v %v %v (mismatched types %v and %v)",
 			xq, binary.Op, yq, x.KnownType()[0], y.KnownType()[0],
 		)
