@@ -87,19 +87,12 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 			}
 		}
 	case ConstNilType:
-		print("yay\n")
 		switch y.(type) {
 		case ConstNilType:
-			print("nil\n")
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			print("num\n")
 			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
-		case ConstBoolType:
-			print("bool\n")
-			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval}}
 		default:
-			print("other\n")
 			return nil, []error{
 				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
 				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
@@ -109,15 +102,8 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		switch y.(type) {
 		case ConstBoolType:
 			return x, nil
-		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
-		case ConstNilType:
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType, ConstStringType, ConstNilType:
 			return nil, []error{ErrBadConversion{at(ctx, yexpr), y, x, yval}}
-		default:
-			return nil, []error{
-				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
-				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
-			}
 		}
 	}
 	panic("go-interactive: impossible")

@@ -187,6 +187,8 @@ func evalConstBinaryStringExpr(ctx *Ctx, constExpr *BinaryExpr, x, y string) (co
 	switch constExpr.Op {
 	case token.ADD:
 		return constValueOf(x + y), nil
+	case token.EQL:
+		return constValueOf(x == y), nil
 	case token.NEQ:
 		return constValueOf(x != y), nil
 	case token.LEQ:
