@@ -76,7 +76,7 @@ func (z *ConstNumber) String() string {
 		r, _, _ := z.Value.Int(32)
 		return strconv.QuoteRune(rune(r))
 	} else {
-		return z.String()
+		return z.Value.String()
 	}
 }
 

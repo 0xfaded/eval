@@ -9,7 +9,7 @@ func checkIdent(ctx *Ctx, ident *ast.Ident, env *Env) (*Ident, []error) {
 	aexpr := &Ident{Ident: ident}
 	switch aexpr.Name {
 	case "nil":
-		aexpr.constValue = constValueOf(nil)
+		aexpr.constValue = constValueOf(UntypedNil{})
 		aexpr.knownType = []reflect.Type{ConstNil}
 
 	case "true":

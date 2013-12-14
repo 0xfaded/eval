@@ -44,9 +44,10 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 	if xa.IsConst() && ya.IsConst() {
 		if xuntyped && yuntyped {
 			yv := ya.Const()
-			if promoted, err := promoteConsts(ctx, xc, yc, ya, yv); err != nil {
-				errs = append(errs, err)
-				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, binary)})
+			xv := xa.Const()
+			var promoted ConstType
+			if promoted, errs = promoteConsts(ctx, xc, yc, xa, ya, xv, yv); errs != nil {
+				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
 				if isBooleanOp(binary.Op) {
 					aexpr.knownType = []reflect.Type{ConstBool}

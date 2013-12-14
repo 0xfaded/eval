@@ -54,24 +54,73 @@ func (ConstBoolType) IsReal() bool { return false }
 
 // Returns the ConstType of a binary, non-boolean, expression invalving const types of
 // x and y.
-func promoteConsts(ctx *Ctx, x, y ConstType, yexpr Expr, yval reflect.Value) (ConstType, error) {
+// Errors match those produced by gc and are as follows:
+// If one type is a numeric type, and the other is not
+//	ErrBadConversion other -> numeric
+// If string and bool
+//	ErrBadConversion bool -> int
+//	ErrBadConversion string -> int
+// If nil and string
+//	ErrBadConversion nil -> int
+//	ErrBadConversion string -> int
+// If nil and bool
+//	ErrBadConversion nil -> bool
+//
+func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		return promoteConstNumbers(x, y), nil
+		switch y.(type) {
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			return promoteConstNumbers(x, y), nil
+		}
+		return nil, []error{ErrBadConversion{at(ctx, yexpr), y, x, yval}}
 	case ConstStringType:
-		if _, ok := y.(ConstStringType); ok {
+		switch y.(type) {
+		case ConstStringType:
 			return x, nil
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
+		default:
+			return nil, []error{
+				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
+				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
+			}
 		}
 	case ConstNilType:
-		if _, ok := y.(ConstNilType); ok {
+		print("yay\n")
+		switch y.(type) {
+		case ConstNilType:
+			print("nil\n")
 			return x, nil
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			print("num\n")
+			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
+		case ConstBoolType:
+			print("bool\n")
+			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval}}
+		default:
+			print("other\n")
+			return nil, []error{
+				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
+				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
+			}
 		}
 	case ConstBoolType:
-		if _, ok := y.(ConstBoolType); ok {
+		switch y.(type) {
+		case ConstBoolType:
 			return x, nil
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
+		case ConstNilType:
+			return nil, []error{ErrBadConversion{at(ctx, yexpr), y, x, yval}}
+		default:
+			return nil, []error{
+				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
+				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
+			}
 		}
 	}
-	return nil, ErrBadConversion{at(ctx, yexpr), y, x, yval}
+	panic("go-interactive: impossible")
 }
 
 // Can't fail, but panics if x or y are not Const(Int|Rune|Float|Complex)Type
