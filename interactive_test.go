@@ -3,6 +3,7 @@ package interactive
 // Utilities for other tests live here
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"reflect"
@@ -116,24 +117,25 @@ func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if _, errs := checkExpr(ctx, e, env); errs != nil {
 		var i int
+		out := ""
 		ok := true
 		for i = 0; i < len(errorString); i += 1 {
 			if i > len(errs) {
-				t.Logf("%d. Expected `%v` missing\n", i, errorString[i])
+				out += fmt.Sprintf("%d. Expected `%v` missing\n", i, errorString[i])
 				ok = false
 			} else if errorString[i] == errs[i].Error() {
-				t.Logf("%d. Expected `%v` == `%v`\n", i, errorString[i], errs[i])
+				out += fmt.Sprintf("%d. Expected `%v` == `%v`\n", i, errorString[i], errs[i])
 			} else {
-				t.Logf("%d. Expected `%v` != `%v`\n", i, errorString[i], errs[i])
+				out += fmt.Sprintf("%d. Expected `%v` != `%v`\n", i, errorString[i], errs[i])
 				ok = false
 			}
 		}
 		for ; i < len(errs); i += 1 {
-			t.Logf("%d. Unexpected `%v`\n", i, errs[i])
+			out += fmt.Sprintf("%d. Unexpected `%v`\n", i, errs[i])
 			ok = false
 		}
 		if !ok {
-			t.Fatalf("Wrong check errors for expression '%s'", expr)
+			t.Fatalf("%sWrong check errors for expression '%s'", out, expr)
 		}
 	} else {
 		for i, s := range errorString {
