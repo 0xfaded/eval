@@ -194,7 +194,23 @@ func (err ErrArrayIndexOutOfBounds) Error() string {
 }
 
 func (err ErrInvalidUnaryOperation) Error() string {
-	return "ErrInvalidUnaryOperation TODO"
+	unary := err.ErrorContext.Node.(*UnaryExpr)
+	x := unary.X.(Expr)
+	t := x.KnownType()[0]
+	switch t {
+	case ConstNil:
+		return fmt.Sprintf("invalid operation: %v nil", unary.Op)
+	case ConstBool:
+		return fmt.Sprintf("invalid operation: %v ideal bool", unary.Op)
+	case ConstString:
+		return fmt.Sprintf("invalid operation: %v ideal string", unary.Op)
+	default:
+		if unary.Op == token.XOR {
+			return fmt.Sprintf("illegal constant expression %v ideal", unary.Op)
+		} else {
+			return fmt.Sprintf("invalid operation: %v ideal", unary.Op)
+		}
+	}
 }
 
 func (err ErrInvalidBinaryOperation) Error() string {

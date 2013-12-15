@@ -46,6 +46,7 @@ func NewConstRune(n rune) *ConstNumber {
 
 func NewConstInt64(i int64) *ConstNumber {
 	z := new(ConstNumber)
+	z.Type = ConstInt
 	z.Value.Re.Denom().SetInt64(1)
 	z.Value.Re.Num().SetInt64(i)
 	return z
@@ -53,6 +54,7 @@ func NewConstInt64(i int64) *ConstNumber {
 
 func NewConstUint64(u uint64) *ConstNumber {
 	z := new(ConstNumber)
+	z.Type = ConstInt
 	z.Value.Re.Denom().SetInt64(1)
 	z.Value.Re.Num().SetUint64(u)
 	return z
@@ -60,12 +62,14 @@ func NewConstUint64(u uint64) *ConstNumber {
 
 func NewConstFloat64(f float64) *ConstNumber {
 	z := new(ConstNumber)
+	z.Type = ConstFloat
 	z.Value.Re.SetFloat64(f)
 	return z
 }
 
 func NewConstComplex128(c complex128) *ConstNumber {
 	z := new(ConstNumber)
+	z.Type = ConstComplex
 	z.Value.Re.SetFloat64(real(c))
 	z.Value.Im.SetFloat64(imag(c))
 	return z

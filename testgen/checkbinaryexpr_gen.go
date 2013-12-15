@@ -73,7 +73,6 @@ func (*Test) Dimensions() []testgen.Dimension {
 
 func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
 	vars := map[string] interface{} {
-		"Foo": "foo",
 		"Lhs": elts[0],
 		"Op": elts[1],
 		"Rhs": elts[2],

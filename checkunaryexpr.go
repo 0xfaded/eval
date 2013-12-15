@@ -30,6 +30,8 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (aexpr *UnaryExpr,
 				aexpr.constValue, moreErrs = evalConstUnaryExpr(ctx, aexpr, c)
 				if moreErrs != nil {
 					errs = append(errs, moreErrs...)
+				} else {
+					aexpr.knownType = t
 				}
 			}
 		}
@@ -60,9 +62,13 @@ func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *ConstNumber) (
 	case token.SUB:
 		zero := &ConstNumber{Type: x.Type}
 		return constValueOf(zero.Sub(zero, x)), nil
-	default:
-		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
+	case token.XOR:
+		if x.Type.IsIntegral() {
+			minusOne := NewConstInt64(-1)
+			return constValueOf(minusOne.Xor(minusOne, x)), nil
+		}
 	}
+	return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
 }
 
 func evalConstUnaryBoolExpr(ctx *Ctx, constExpr *UnaryExpr, x bool) (constValue, []error) {
