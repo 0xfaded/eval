@@ -12,7 +12,9 @@ func expectResult(expr string, env *interactive.Env, expected interface{}) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
-	} else if results, _, err := interactive.EvalExpr(ctx, e, env); err != nil {
+	} else if cexpr, errs := interactive.CheckExpr(ctx, e, env); len(errs) != 0 {
+		fmt.Printf("Error checking expression '%s' (%v)\n", expr, errs)
+	} else if results, _, err := interactive.EvalExpr(ctx, cexpr, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {
