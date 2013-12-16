@@ -8,7 +8,7 @@ func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (aexpr *S
 	aexpr = &SelectorExpr{SelectorExpr: selector}
 
 	var moreErrs []error
-	if aexpr.X, moreErrs = checkExpr(ctx, selector.X, env); moreErrs != nil {
+	if aexpr.X, moreErrs = CheckExpr(ctx, selector.X, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
 	return aexpr, errs

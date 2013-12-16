@@ -8,7 +8,7 @@ import (
 	"go/ast"
 )
 
-func checkExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
+func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	switch expr := expr.(type) {
 	case *ast.BadExpr:
 		return &BadExpr{BadExpr: expr}, nil

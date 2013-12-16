@@ -9,14 +9,14 @@ import (
 )
 
 func evalCallExpr(ctx *Ctx, call *CallExpr, env *Env) (*[]reflect.Value, bool, error) {
-	if t, err := evalType(ctx, call.Fun, env); err == nil {
+	if t, err := evalType(ctx, call.Fun.(Expr), env); err == nil {
 		if v, typed, err := evalCallTypeExpr(ctx, t, call, env); err != nil {
 			return nil, false, err
 		} else {
 			ret := []reflect.Value{v}
 			return &ret, typed, nil
 		}
-	} else if fun, _, err := EvalExpr(ctx, call.Fun, env); err == nil {
+	} else if fun, _, err := EvalExpr(ctx, call.Fun.(Expr), env); err == nil {
 		return evalCallFunExpr(ctx, (*fun)[0], call, env)
 	} else {
 		return nil, false, err
@@ -29,7 +29,7 @@ func evalCallTypeExpr(ctx *Ctx, t reflect.Type, call *CallExpr, env *Env) (refle
 		return r, false, errors.New(fmt.Sprintf("missing argument to conversion to %v", t))
 	} else if len(call.Args) > 1 {
 		return r, false, errors.New(fmt.Sprintf("too many arguments to conversion to %v", t))
-	} else if arg, typed, err := EvalExpr(ctx, call.Args[0], env); err != nil {
+	} else if arg, typed, err := EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
 		return r, false, err
 	} else if cast, err := assignableValue((*arg)[0], t, typed); err != nil {
 		return r, false, err
@@ -42,7 +42,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 	var err error
 	var v *[]reflect.Value
 	var typed bool
-	if v, typed, err = EvalExpr(ctx, call.Fun, env); v == nil {
+	if v, typed, err = EvalExpr(ctx, call.Fun.(Expr), env); v == nil {
 		return nil, false, nil
 	}
 	if err != nil {
@@ -70,7 +70,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 	// Evaluate each arg
 	for i := range call.Args {
 		var err error
-		args[i], atyped[i], err = EvalExpr(ctx, call.Args[i], env)
+		args[i], atyped[i], err = EvalExpr(ctx, call.Args[i].(Expr), env)
 		if err != nil {
 			return nil, false, err
 		}

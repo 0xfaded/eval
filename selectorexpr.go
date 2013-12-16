@@ -9,7 +9,7 @@ import (
 func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
-	if x, _, err = EvalExpr(ctx, selector.X, env); err != nil {
+	if x, _, err = EvalExpr(ctx, selector.X.(Expr), env); err != nil {
 		return nil, true, err
 	}
 	sel   := selector.Sel.Name

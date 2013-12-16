@@ -11,7 +11,7 @@ import (
 )
 
 func evalCompositeLit(ctx *Ctx, lit *CompositeLit, env *Env) (*reflect.Value, bool, error) {
-	t, err := evalType(ctx, lit.Type, env)
+	t, err := evalType(ctx, lit.Type.(Expr), env)
 	if err != nil {
 		return nil, true, err
 	}
@@ -75,7 +75,7 @@ func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *CompositeLit, e
 
 		// Evaluate and set the element
 		elem := v.Index(int(curKey))
-		if values, typed, err := EvalExpr(ctx, expr, env); err != nil {
+		if values, typed, err := EvalExpr(ctx, expr.(Expr), env); err != nil {
 			return nil, false, err
 		} else if value, err := expectSingleValue(ctx, *values, elt); err != nil {
 			return nil, false, err
@@ -108,7 +108,7 @@ func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *En
 			} else if f := v.FieldByName(k.Name); !f.IsValid() {
 				return &v, true, errors.New(t.Name() + " has no field " + k.Name)
 			} else {
-				fv, ft, err := EvalExpr(ctx, kv.Value, env)
+				fv, ft, err := EvalExpr(ctx, kv.Value.(Expr), env)
 				if err != nil {
 					return &v, true, err
 				} else if fv == nil {
@@ -127,7 +127,7 @@ func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *En
 			} else if _, ok := elt.(*KeyValueExpr); ok {
 				return &v, true, errors.New("Elements are either all key value pairs or not")
 			} else {
-				fv, ft, err := EvalExpr(ctx, elt, env)
+				fv, ft, err := EvalExpr(ctx, elt.(Expr), env)
 				if err != nil {
 					return &v, true, err
 				} else if fv == nil {

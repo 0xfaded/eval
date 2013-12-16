@@ -13,7 +13,7 @@ func checkCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (aexpr *Compos
 	}
 
 	for i := range lit.Elts {
-		if aexpr.Elts[i], moreErrs = checkExpr(ctx, lit.Elts[i], env); moreErrs != nil {
+		if aexpr.Elts[i], moreErrs = CheckExpr(ctx, lit.Elts[i], env); moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
 	}

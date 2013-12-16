@@ -8,10 +8,10 @@ func checkKeyValueExpr(ctx *Ctx, keyValue *ast.KeyValueExpr, env *Env) (aexpr *K
 	aexpr = &KeyValueExpr{KeyValueExpr: keyValue}
 
 	var moreErrs []error
-	if aexpr.Key, moreErrs = checkExpr(ctx, keyValue.Key, env); moreErrs != nil {
+	if aexpr.Key, moreErrs = CheckExpr(ctx, keyValue.Key, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	if aexpr.Value, moreErrs = checkExpr(ctx, keyValue.Value, env); moreErrs != nil {
+	if aexpr.Value, moreErrs = CheckExpr(ctx, keyValue.Value, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
 	return aexpr, errs

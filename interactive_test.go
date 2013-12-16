@@ -28,7 +28,7 @@ func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{})
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
 	} else if results, _, err := EvalExpr(ctx, aexpr, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
@@ -55,7 +55,7 @@ func expectError(t *testing.T, expr string, env *Env, errorString string) {
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
 		// TODO handle check errors
 		panic("No tests should fail here (yet)")
 	} else if _, _, err := EvalExpr(ctx, aexpr, env); err == nil {
@@ -71,7 +71,7 @@ func expectFail(t *testing.T, expr string, env *Env) {
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
 		// TODO handle check errors
 		panic("No tests should fail here (yet)")
 	} else if _, _, err := EvalExpr(ctx, aexpr, env); err == nil {
@@ -86,7 +86,7 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := checkExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
 	} else if !aexpr.IsConst() {
 		t.Fatalf("Expression '%s' did not yield a const node(%+v)", expr, aexpr)
@@ -115,7 +115,7 @@ func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if _, errs := checkExpr(ctx, e, env); errs != nil {
+	} else if _, errs := CheckExpr(ctx, e, env); errs != nil {
 		var i int
 		out := "\n"
 		ok := true
