@@ -8,10 +8,10 @@ func checkIndexExpr(ctx *Ctx, index *ast.IndexExpr, env *Env) (aexpr *IndexExpr,
 	aexpr = &IndexExpr{IndexExpr: index}
 
 	var moreErrs []error
-	if aexpr.X, moreErrs = checkExpr(ctx, index.X, env); moreErrs != nil {
+	if aexpr.X, moreErrs = CheckExpr(ctx, index.X, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	if aexpr.Index, moreErrs = checkExpr(ctx, index.Index, env); moreErrs != nil {
+	if aexpr.Index, moreErrs = CheckExpr(ctx, index.Index, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
 

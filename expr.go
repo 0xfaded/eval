@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-
-	"go/ast"
 )
 
-func EvalExpr(ctx *Ctx, expr ast.Expr, env *Env) (*[]reflect.Value, bool, error) {
+func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *Ident:
 		v, typed, err := evalIdentExpr(ctx, node, env)
@@ -26,7 +24,7 @@ func EvalExpr(ctx *Ctx, expr ast.Expr, env *Env) (*[]reflect.Value, bool, error)
 		v, typed, err := evalCompositeLit(ctx, node, env)
 		return &[]reflect.Value{*v}, typed, err
 	case *ParenExpr:
-		return EvalExpr(ctx, node.X, env)
+		return EvalExpr(ctx, node.X.(Expr), env)
 	case *SelectorExpr:
 		v, typed, err := evalSelectorExpr(ctx, node, env)
 		if v == nil {
@@ -58,7 +56,7 @@ func EvalExpr(ctx *Ctx, expr ast.Expr, env *Env) (*[]reflect.Value, bool, error)
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }
 
-func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
+func evalType(ctx *Ctx, expr Expr, env *Env) (reflect.Type, error) {
 	switch node := expr.(type) {
 	case *Ident:
 		if t, ok := env.Types[node.Name]; ok {

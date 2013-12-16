@@ -11,10 +11,10 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 	aexpr = &BinaryExpr{BinaryExpr: binary}
 
 	var moreErrs []error
-	if aexpr.X, moreErrs = checkExpr(ctx, binary.X, env); moreErrs != nil {
+	if aexpr.X, moreErrs = CheckExpr(ctx, binary.X, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	if aexpr.Y, moreErrs = checkExpr(ctx, binary.Y, env); moreErrs != nil {
+	if aexpr.Y, moreErrs = CheckExpr(ctx, binary.Y, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
 

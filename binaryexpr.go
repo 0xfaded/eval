@@ -9,10 +9,10 @@ import (
 func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx, yy *[]reflect.Value
 	var xtyped, ytyped bool
-	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {
+	if xx, xtyped, err = EvalExpr(ctx, b.X.(Expr), env); err != nil {
 		return reflect.Value{}, false, err
 	}
-	if yy, ytyped, err = EvalExpr(ctx, b.Y, env); err != nil {
+	if yy, ytyped, err = EvalExpr(ctx, b.Y.(Expr), env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped || ytyped

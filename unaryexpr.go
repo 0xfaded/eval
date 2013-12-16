@@ -9,7 +9,7 @@ import (
 func evalUnaryExpr(ctx *Ctx, b *UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
 	var xx *[]reflect.Value
 	var xtyped bool
-	if xx, xtyped, err = EvalExpr(ctx, b.X, env); err != nil {
+	if xx, xtyped, err = EvalExpr(ctx, b.X.(Expr), env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped

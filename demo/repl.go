@@ -47,10 +47,14 @@ func REPL(env *interactive.Env, results *([]interface{})) {
 			if err == io.EOF { break }
 			panic(err)
 		}
-		//line = "func() {" + line + "}"
+		ctx := &interactive.Ctx{line}
 		if expr, err := parser.ParseExpr(line); err != nil {
 			fmt.Printf("parse error: %s\n", err)
-		} else if vals, _, err := interactive.EvalExpr(&interactive.Ctx{line}, expr, env); err != nil {
+		} else if cexpr, errs := interactive.CheckExpr(ctx, expr, env); len(errs) != 0 {
+			for _, cerr := range errs {
+				fmt.Printf("%v\n", cerr)
+			}
+		} else if vals, _, err := interactive.EvalExpr(ctx, cexpr, env); err != nil {
 			fmt.Printf("eval error: %s\n", err)
 		} else if vals == nil {
 			fmt.Printf("nil\n")

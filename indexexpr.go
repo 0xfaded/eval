@@ -8,7 +8,7 @@ import (
 )
 
 func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) (*reflect.Value, bool, error) {
-	xs, _, err := EvalExpr(ctx, index.X, env)
+	xs, _, err := EvalExpr(ctx, index.X.(Expr), env)
 	if err != nil {
 		return nil, false, err
 	} else if xs == nil {
@@ -47,7 +47,7 @@ func evalIndexExprInt(ctx *Ctx, x reflect.Value, intExpr ast.Expr, env *Env) (*r
 }
 
 func evalIntIndex(ctx *Ctx, intExpr ast.Expr, env *Env, containerType reflect.Type) (int, error) {
-	if is, typed, err := EvalExpr(ctx, intExpr, env); err != nil {
+	if is, typed, err := EvalExpr(ctx, intExpr.(Expr), env); err != nil {
 		return -1, err
 	} else if is == nil {
 		// XXX temporary error until typed evaluation of nil

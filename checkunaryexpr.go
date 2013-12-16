@@ -9,7 +9,7 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (aexpr *UnaryExpr,
 	aexpr = &UnaryExpr{UnaryExpr: unary}
 
 	var moreErrs []error
-	if aexpr.X, moreErrs = checkExpr(ctx, unary.X, env); moreErrs != nil {
+	if aexpr.X, moreErrs = CheckExpr(ctx, unary.X, env); moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
 
