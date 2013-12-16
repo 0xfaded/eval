@@ -56,15 +56,15 @@ func (ConstBoolType) IsReal() bool { return false }
 // x and y.
 // Errors match those produced by gc and are as follows:
 // If one type is a numeric type, and the other is not
-//	ErrBadConversion other -> numeric
+//	ErrBadConstConversion other -> numeric
 // If string and bool
-//	ErrBadConversion bool -> int
-//	ErrBadConversion string -> int
+//	ErrBadConstConversion bool -> int
+//	ErrBadConstConversion string -> int
 // If nil and string
-//	ErrBadConversion nil -> int
-//	ErrBadConversion string -> int
+//	ErrBadConstConversion nil -> int
+//	ErrBadConstConversion string -> int
 // If nil and bool
-//	ErrBadConversion nil -> bool
+//	ErrBadConstConversion nil -> bool
 //
 func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
@@ -73,17 +73,17 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 			return promoteConstNumbers(x, y), nil
 		}
-		return nil, []error{ErrBadConversion{at(ctx, yexpr), y, x, yval}}
+		return nil, []error{ErrBadConstConversion{at(ctx, yexpr), y, x, yval}}
 	case ConstStringType:
 		switch y.(type) {
 		case ConstStringType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
+			return nil, []error{ErrBadConstConversion{at(ctx, xexpr), x, y, xval}}
 		default:
 			return nil, []error{
-				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
-				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
+				ErrBadConstConversion{at(ctx, xexpr), x, ConstInt, xval},
+				ErrBadConstConversion{at(ctx, yexpr), y, ConstInt, yval},
 			}
 		}
 	case ConstNilType:
@@ -91,11 +91,11 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		case ConstNilType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return nil, []error{ErrBadConversion{at(ctx, yexpr), x, y, xval}}
+			return nil, []error{ErrBadConstConversion{at(ctx, xexpr), x, y, xval}}
 		default:
 			return nil, []error{
-				ErrBadConversion{at(ctx, yexpr), x, ConstInt, xval},
-				ErrBadConversion{at(ctx, yexpr), y, ConstInt, yval},
+				ErrBadConstConversion{at(ctx, xexpr), x, ConstInt, xval},
+				ErrBadConstConversion{at(ctx, yexpr), y, ConstInt, yval},
 			}
 		}
 	case ConstBoolType:
@@ -103,7 +103,7 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		case ConstBoolType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType, ConstStringType, ConstNilType:
-			return nil, []error{ErrBadConversion{at(ctx, yexpr), y, x, yval}}
+			return nil, []error{ErrBadConstConversion{at(ctx, yexpr), y, x, yval}}
 		}
 	}
 	panic("go-interactive: impossible")
@@ -143,9 +143,9 @@ func promoteConstNumbers(x, y ConstType) ConstType {
 }
 
 func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
-	v reflect.Value, errs []error) {
+	constValue, []error) {
 
-	v = reflect.New(to).Elem()
+	v := hackedNew(to).Elem()
 
 	switch from.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
@@ -158,47 +158,70 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
 			}
 			if overflow {
-				integer, _ := underlying.Value.Integer()
-				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, integer})
+				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, underlying})
+			}
+			// For some reason, the erros produced are "complex -> int" then "complex -> real"
+			_, truncation = underlying.Value.Real()
+			if truncation {
+				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
 			}
 			v.SetInt(i)
-			return v, errs
+			return constValue(v), errs
 
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			var errs []error
 			u, truncation, overflow := underlying.Value.Uint(to.Bits())
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
 			}
 			if overflow {
-				integer, _ := underlying.Value.Integer()
-				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, integer})
+				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, underlying})
 			}
-			v.SetUint(u)
-			return v, errs
-
-		case reflect.Float32, reflect.Float64:
-			f, truncation, _ := underlying.Value.Float64()
+			// For some reason, the erros produced are "complex -> int" then "complex -> real"
+			_, truncation = underlying.Value.Real()
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
 			}
+			v.SetUint(u)
+			return constValue(v), errs
+
+		case reflect.Float32, reflect.Float64:
+			var errs []error
+			f, truncation, _ := underlying.Value.Float64()
+			if truncation {
+				errs = []error{ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying}}
+			}
 			v.SetFloat(f)
-			return v, errs
+			return constValue(v), errs
 
 		case reflect.Complex64, reflect.Complex128:
 			cmplx, _ := underlying.Value.Complex128()
 			v.SetComplex(cmplx)
-			return v, errs
+			return constValue(v), nil
+
+		// string(97) is legal, equivalent of string('a')
+		case reflect.String:
+			if from.IsIntegral() {
+				i, _, overflow := underlying.Value.Int(32)
+				if overflow {
+					err := ErrOverflowedConstant{at(ctx, expr), from, ConstString, underlying}
+					return constValue{}, []error{err}
+				}
+				v.SetString(string(i))
+				return constValue(v), nil
+			}
 		}
 	case ConstStringType:
-		// Check Kind == String ourselves, as reflect.Value.String() doesn't panic
-		// on non string values
-		if v.Type().Kind() != reflect.String {
-			panic("go-interactive: string constant has wrong underlying type")
+		if v.Type().Kind() == reflect.String {
+			v.SetString(reflect.Value(c).String())
+			return constValue(v), nil
 		}
-		v.SetString(reflect.Value(c).String())
 
 	case ConstBoolType:
-		v.SetBool(reflect.Value(c).Bool())
+		if to.Kind() == reflect.Bool {
+			v.SetBool(reflect.Value(c).Bool())
+			return constValue(v), nil
+		}
 
 	case ConstNilType:
 		// Unfortunately there is no reflect.Type.CanNil()
@@ -207,9 +230,10 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			reflect.Map, reflect.Ptr, reflect.Slice:
 
 			// v is already nil
-			return v, nil
+			return constValue(v), nil
 		}
 	}
-	return v, []error{ErrBadConversion{at(ctx, expr), from, to, reflect.Value(c)}}
+
+	return constValue{}, []error{ErrBadConstConversion{at(ctx, expr), from, to, reflect.Value(c)}}
 }
 

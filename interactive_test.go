@@ -82,7 +82,7 @@ func expectFail(t *testing.T, expr string, env *Env) {
 	}
 }
 
-func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType ConstType) {
+func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType reflect.Type) {
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
@@ -97,7 +97,7 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 			t.Fatalf("Expression '%s' yielded '%v', expected '%v'", expr, actual, expected)
 		} else if len(aexpr.KnownType()) == 0 {
 			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
-		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+		} else if actual := aexpr.KnownType()[0]; !typesEqual(expectedType, actual) {
 			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, actual, expectedType)
 		}
 	} else {
@@ -105,7 +105,7 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 			t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, actual, expected)
 		} else if len(aexpr.KnownType()) == 0 {
 			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
-		} else if actual := aexpr.KnownType()[0]; !reflect.DeepEqual(actual, expectedType) {
+		} else if actual := aexpr.KnownType()[0]; !typesEqual(expectedType, actual) {
 			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
 		}
 	}
@@ -143,6 +143,17 @@ func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string
 		}
 		t.Fatalf("Missing check errors for expression '%s'", expr )
 	}
+}
+
+func typesEqual(expected, actual reflect.Type) bool {
+	var unwrapped reflect.Type
+	switch t := actual.(type) {
+	case Rune:
+		unwrapped = t.Type
+	default:
+		unwrapped = actual
+	}
+	return reflect.DeepEqual(expected, unwrapped)
 }
 
 func makeEnv() *Env {

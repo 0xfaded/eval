@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strconv"
 
 	"go/ast"
 	"go/token"
@@ -44,9 +43,14 @@ type ErrBadBuiltinArgument struct {
 	value reflect.Value
 }
 
-type ErrWrongNumberOfArgs struct {
+// TODO remove when checker complete
+type ErrWrongNumberOfArgsOld struct {
 	fun reflect.Value
 	numArgs int
+}
+
+type ErrWrongNumberOfArgs struct {
+	ErrorContext
 }
 
 type ErrMissingValue struct {
@@ -92,6 +96,13 @@ type ErrBadConversion struct {
 	v reflect.Value
 }
 
+type ErrBadConstConversion struct {
+	ErrorContext
+	from reflect.Type
+	to reflect.Type
+	v reflect.Value
+}
+
 type ErrTruncatedConstant struct {
 	ErrorContext
 	to ConstType
@@ -102,7 +113,11 @@ type ErrOverflowedConstant struct {
 	ErrorContext
 	from ConstType
 	to reflect.Type
-	constant interface{}
+	constant *ConstNumber
+}
+
+type ErrUntypedNil struct {
+	ErrorContext
 }
 
 type ErrorContext struct {
@@ -134,7 +149,7 @@ func (err ErrBadBuiltinArgument) Error() string {
 	return fmt.Sprintf("invalid operation: %s(%v)", err.fun, err.value)
 }
 
-func (err ErrWrongNumberOfArgs) Error() string {
+func (err ErrWrongNumberOfArgsOld) Error() string {
 	expected := err.fun.Type().NumIn()
 	if err.numArgs < expected {
 		return fmt.Sprintf("not enouch args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
@@ -193,6 +208,19 @@ func (err ErrArrayIndexOutOfBounds) Error() string {
 	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
 }
 
+func (err ErrWrongNumberOfArgs) Error() string {
+	call := err.ErrorContext.Node.(*CallExpr)
+	if call.isTypeConversion {
+		to := call.KnownType()[0]
+		if call.Args == nil {
+			return fmt.Sprintf("missing argument to conversion to %v", to)
+		} else {
+			return fmt.Sprintf("too many arguments to conversion to %v", to)
+		}
+	}
+	return "TODO ErrWrongNumberOfArgs"
+}
+
 func (err ErrInvalidUnaryOperation) Error() string {
 	unary := err.ErrorContext.Node.(*UnaryExpr)
 	x := unary.X.(Expr)
@@ -227,6 +255,10 @@ func (err ErrInvalidBinaryOperation) Error() string {
 	xq := quoteString(x.Const().Interface())
 	yq := quoteString(y.Const().Interface())
 
+	// For whatever reason, gc errors don't show +0i in constant expressions
+	xq = drop0i(xq)
+	yq = drop0i(yq)
+
 	if xnok && ynok {
 		switch binary.Op {
 		case token.REM:
@@ -257,19 +289,41 @@ func (err ErrDivideByZero) Error() string {
 }
 
 func (err ErrBadConversion) Error() string {
-	return fmt.Sprintf("cannot convert %v to type %v", quoteString(err.v.Interface()), err.to)
+	return fmt.Sprintf("cannot convert %v (type %v) to type %v", err.Node.(Expr), err.from, err.to)
+}
+
+func (err ErrBadConstConversion) Error() string {
+	return fmt.Sprintf("cannot convert %v to type %v", err.Node.(Expr), err.to)
 }
 
 func (err ErrTruncatedConstant) Error() string {
-	if err.constant.Type == ConstComplex {
-		return fmt.Sprintf("constant %v truncated to real", err.constant)
-	} else {
+	if err.to.IsIntegral() {
 		return fmt.Sprintf("constant %v truncated to integer", err.constant)
+	} else {
+		return fmt.Sprintf("constant %v truncated to real", err.constant)
 	}
 }
 
 func (err ErrOverflowedConstant) Error() string {
-	return "ErrOverflowedConstant TODO"
+	switch err.to.(type) {
+	case ConstStringType:
+		return fmt.Sprintf("overflow in int -> string")
+	default:
+		var constant string
+
+		// Runes print their actual value in overflow errors
+		if err.constant.Type == ConstRune {
+			constant = err.constant.Value.Re.Num().String()
+		} else {
+			constant = err.constant.String()
+		}
+
+		return fmt.Sprintf("constant %v overflows %v", constant, err.to)
+	}
+}
+
+func (ErrUntypedNil) Error() string {
+	return "use of untyped nil"
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
@@ -280,10 +334,9 @@ func (errCtx ErrorContext) Source() string {
 	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
 }
 
-func quoteString(i interface{}) interface{} {
-	if s, ok := i.(string); ok {
-		return strconv.Quote(s)
-	} else {
-		return i
+func drop0i(i interface{}) interface{} {
+	if n, ok := i.(*ConstNumber); ok {
+		return n.StringShow0i(false)
 	}
+	return i
 }
