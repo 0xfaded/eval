@@ -224,7 +224,7 @@ func (badExpr *BadExpr) String() string {
 
 func (ident *Ident) String() string {
 	if ident.IsConst() {
-		return sprintConstValue(ident.Const())
+		return sprintConstValue(ident.KnownType()[0], ident.Const(), true)
 	}
 	return ident.Ident.String()
 }
@@ -233,7 +233,7 @@ func (ellipsis *Ellipsis) String() string { return "TODO  ellipsis.Ellipsis" }
 
 func (basicLit *BasicLit) String() string {
 	if basicLit.IsConst() {
-		return sprintConstValue(basicLit.Const())
+		return sprintConstValue(basicLit.KnownType()[0], basicLit.Const(), true)
 	}
 	return basicLit.Value
 }
@@ -243,7 +243,7 @@ func (compositeLit *CompositeLit) String() string { return "TODO  compositeLit.C
 
 func (parenExpr *ParenExpr) String() string {
 	if parenExpr.IsConst() {
-		return sprintConstValue(parenExpr.Const())
+		return sprintConstValue(parenExpr.KnownType()[0], parenExpr.Const(), true)
 	}
 	return skipSuperfluousParens(parenExpr).String()
 }
@@ -252,7 +252,14 @@ func (selectorExpr *SelectorExpr) String() string { return "TODO  selectorExpr.S
 func (indexExpr *IndexExpr) String() string { return "TODO  indexExpr.IndexExpr" }
 func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr" }
 func (typeAssertExpr *TypeAssertExpr) String() string { return "TODO  typeAssertExpr.TypeAssertExpr" }
-func (callExpr *CallExpr) String() string { return "TODO  callExpr.CallExpr" }
+
+func (callExpr *CallExpr) String() string {
+	if callExpr.IsConst() {
+		return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+	}
+	return "TODO  callExpr.CallExpr"
+}
+
 func (starExpr *StarExpr) String() string { return "TODO  starExpr.StarExpr" }
 
 func (unary *UnaryExpr) String() string {
@@ -264,7 +271,6 @@ func (binary *BinaryExpr) String() string {
 	left := simplifyBinaryChildExpr(binary, binary.X.(Expr))
 	right := simplifyBinaryChildExpr(binary, binary.Y.(Expr))
 
-	// Note that ast.BinaryExpr does not include a space between operands
 	return fmt.Sprintf("%v %v %v", left, binary.Op, right)
 }
 
@@ -278,8 +284,8 @@ func (chanType *ChanType) String() string { return "TODO  chanType.ChanType" }
 
 // Returns a printable interface{} which replaces constant expressions with their constants
 func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {
-	if expr.IsConst() {
-		return expr.Const().Interface()
+        if expr.IsConst() {
+		return sprintConstValue(expr.KnownType()[0], expr.Const(), true)
 	}
 	expr = skipSuperfluousParens(expr)
 	if p, ok := expr.(*ParenExpr); ok {
@@ -312,8 +318,41 @@ func skipSuperfluousParens(expr Expr) Expr {
 	return expr
 }
 
-func sprintConstValue(v reflect.Value) string {
-	return fmt.Sprint(quoteString(v.Interface()))
+func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) string {
+	i := v.Interface()
+	switch x := i.(type) {
+	case *ConstNumber:
+                if t == RuneType {
+                        r := *x
+                        r.Type = ConstInt
+		        return "rune(" + r.StringShow0i(false) + ")"
+                }
+		return x.StringShow0i(false)
+	case float32, float64:
+		return fmt.Sprintf("%.6g", x)
+	case complex64:
+		re := real(x)
+		im := imag(x)
+		if re == 0 && !showZeroComponents {
+			return fmt.Sprintf("%.6gi", im)
+		} else if im == 0 && !showZeroComponents {
+			return fmt.Sprintf("%.6g", re)
+		} else {
+			return fmt.Sprintf("(%.6g+%.6gi)", re, im)
+		}
+	case complex128:
+		re := real(x)
+		im := imag(x)
+		if re == 0 && !showZeroComponents {
+			return fmt.Sprintf("%.6gi", im)
+		} else if im == 0 && !showZeroComponents {
+			return fmt.Sprintf("%.6g", re)
+		} else {
+			return fmt.Sprintf("(%.6g+%.6gi)", re, im)
+		}
+	}
+
+	return fmt.Sprint(quoteString(i))
 }
 
 func quoteString(i interface{}) interface{} {
@@ -322,4 +361,8 @@ func quoteString(i interface{}) interface{} {
 	} else {
 		return i
 	}
+}
+
+func (c constValue) String() string {
+        return reflect.Value(c).String()
 }

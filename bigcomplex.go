@@ -129,10 +129,14 @@ func (z *BigComplex) Complex128() (_ complex128, exact bool) {
 
 // z.Integer() returns a representation of z, a *BigComplex, truncated
 // to be a integer value. The second return value is true if a
-// truncation occured.
+// truncation occured in the real component.
 func (z *BigComplex) Integer() (_ *BigComplex, truncation bool) {
 	if z.IsInteger() {
 		return z, false
+	} else if z.Re.IsInt() {
+		re := new(BigComplex)
+		re.Re.Set(&z.Re)
+		return re, false
 	} else {
 		trunc := new(BigComplex)
 		trunc.Re.SetInt(z.Re.Num())
@@ -169,12 +173,12 @@ func (z *BigComplex) String() string {
 
 func (z *BigComplex) StringShow0i(show0i bool) string {
 	var s string
-	if z.Re.Num().BitLen() != 0 {
+	if z.Re.Num().BitLen() != 0 || show0i {
 		if z.Re.IsInt() {
 			s += z.Re.Num().String()
 		} else {
 			f, _ := z.Re.Float64()
-			s += fmt.Sprintf("%g", f)
+			s += fmt.Sprintf("%.5g", f)
 		}
 	}
 	if !z.IsReal() || show0i {
@@ -185,7 +189,7 @@ func (z *BigComplex) StringShow0i(show0i bool) string {
 			s += z.Im.Num().String()
 		} else {
 			f, _ := z.Im.Float64()
-			s += fmt.Sprintf("%g", f)
+			s += fmt.Sprintf("%.5g", f)
 		}
 		s += "i"
 	}
