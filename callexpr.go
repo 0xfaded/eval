@@ -60,7 +60,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 			out := (*v)[0].Call([]reflect.Value{})
 			return &out, true, nil
 		} else {
-			return nil, false, ErrWrongNumberOfArgs{(*v)[0], 0}
+			return nil, false, ErrWrongNumberOfArgsOld{(*v)[0], 0}
 		}
 	}
 
@@ -163,10 +163,10 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 				}
 			}
 		} else {
-			return nil, false, ErrWrongNumberOfArgs{(*v)[0], len(call.Args)}
+			return nil, false, ErrWrongNumberOfArgsOld{(*v)[0], len(call.Args)}
 		}
 	} else {
-		return nil, false, ErrWrongNumberOfArgs{(*v)[0], len(call.Args)}
+		return nil, false, ErrWrongNumberOfArgsOld{(*v)[0], len(call.Args)}
 	}
 
 	if builtin {

@@ -71,7 +71,7 @@ var builtinTypes = map[string] reflect.Type{
 
 	"bool": reflect.TypeOf(bool(false)),
 	"byte": reflect.TypeOf(byte(0)),
-	"rune": reflect.TypeOf(rune('☃')),
+	"rune": RuneType,
 	"string": reflect.TypeOf(""),
 
 	"error": reflect.TypeOf(errors.New("")),

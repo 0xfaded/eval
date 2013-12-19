@@ -1,5 +1,6 @@
 package interactive
 
+/*
 import (
 	"testing"
 )
@@ -39,4 +40,5 @@ func TestBuiltinImag(t *testing.T) {
 	expectResult(t, "imag(complex(1, float32(2)))", env, imag(complex(1, float32(2))))
 	expectResult(t, "imag(complex(float32(1), float32(2)))", env, imag(complex(float32(1), float32(2))))
 }
+*/
 

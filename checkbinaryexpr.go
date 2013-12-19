@@ -250,7 +250,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 		}
 
 		z, errs := evalConstBinaryNumericExpr(ctx, expr, x, y)
-		r, moreErrs := convertConstToTyped(ctx, x.Type, z, yt, expr)
+		r, moreErrs := convertConstToTyped(ctx, x.Type, z, yt, untypedExpr)
 		errs = append(errs, moreErrs...)
 		return constValue(r), errs
 
@@ -259,7 +259,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 			xstring := untypedExpr.Const().String()
 			ystring := typedExpr.Const().String()
 			z, errs := evalConstBinaryStringExpr(ctx, expr, xstring, ystring)
-			r, moreErrs := convertConstToTyped(ctx, ConstString, z, yt, expr)
+			r, moreErrs := convertConstToTyped(ctx, ConstString, z, yt, untypedExpr)
 			errs = append(errs, moreErrs...)
 			return constValue(r), errs
 		}
@@ -269,7 +269,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, unty
 			xbool := untypedExpr.Const().Bool()
 			ybool := typedExpr.Const().Bool()
 			z, errs := evalConstBinaryBoolExpr(ctx, expr, xbool, ybool)
-			r, moreErrs := convertConstToTyped(ctx, ConstBool, z, yt, expr)
+			r, moreErrs := convertConstToTyped(ctx, ConstBool, z, yt, untypedExpr)
 			errs = append(errs, moreErrs...)
 			return constValue(r), errs
 		}

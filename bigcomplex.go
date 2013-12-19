@@ -1,6 +1,7 @@
 package interactive
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -71,14 +72,14 @@ func (z *BigComplex) IsZero() bool {
 func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
-	num := integer.Re.Num()
+	res := new(big.Int).Set(integer.Re.Num())
 
 	// Numerator must fit in bits - 1, with 1 bit left for sign
-	if overflow = num.BitLen() > bits - 1; overflow {
+	if overflow = res.BitLen() > bits - 1; overflow {
 		var mask uint64 = ^uint64(0) >> uint(64 - bits)
-		num.And(num, new(big.Int).SetUint64(mask))
+		res.And(res, new(big.Int).SetUint64(mask))
 	}
-	return num.Int64(), truncation, overflow
+	return res.Int64(), truncation, overflow
 }
 
 // Return a representation of z truncated to be a uint of length bits.
@@ -90,15 +91,16 @@ func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
-	num := integer.Re.Num()
+	res := new(big.Int).Set(integer.Re.Num())
 
 	var mask uint64 = ^uint64(0) >> uint(64 - bits)
-	if overflow = num.BitLen() > bits; overflow {
-		num.And(num, new(big.Int).SetUint64(mask))
+	if overflow = res.BitLen() > bits; overflow {
+		res.And(res, new(big.Int).SetUint64(mask))
+		res = new(big.Int).And(res, new(big.Int).SetUint64(mask))
 	}
 
-	r := num.Uint64()
-	if num.Sign() < 0 {
+	r := res.Uint64()
+	if res.Sign() < 0 {
 		overflow = true
 		r = (^r + 1) & mask
 	}
@@ -111,7 +113,7 @@ func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 // exact will be true if the conversion was completed without loss of precision
 func (z *BigComplex) Float64() (f float64, truncation, exact bool) {
 	f, exact = z.Re.Float64()
-	return f, exact, !z.IsReal()
+	return f, !z.IsReal(), exact
 }
 
 // Return a complex128 representation of z. 
@@ -158,22 +160,28 @@ func (z *BigComplex) Equals(other *BigComplex) bool {
 }
 
 func (z *BigComplex) String() string {
+	return z.StringShow0i(true)
+}
+
+func (z *BigComplex) StringShow0i(show0i bool) string {
 	var s string
 	if z.Re.Num().BitLen() != 0 {
 		if z.Re.IsInt() {
 			s += z.Re.Num().String()
 		} else {
-			s += z.Re.FloatString(5)
+			f, _ := z.Re.Float64()
+			s += fmt.Sprintf("%g", f)
 		}
 	}
-	if !z.IsReal() {
+	if !z.IsReal() || show0i {
 		if s != "" {
 			s += "+"
 		}
 		if z.Im.IsInt() {
 			s += z.Im.Num().String()
 		} else {
-			s += z.Im.FloatString(5)
+			f, _ := z.Im.Float64()
+			s += fmt.Sprintf("%g", f)
 		}
 		s += "i"
 	}

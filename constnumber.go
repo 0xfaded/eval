@@ -76,11 +76,17 @@ func NewConstComplex128(c complex128) *ConstNumber {
 }
 
 func (z *ConstNumber) String() string {
+	return z.StringShow0i(true)
+}
+
+func (z *ConstNumber) StringShow0i(show0i bool) string {
 	if z.Type == ConstRune && z.Value.Re.Num().BitLen() <= 32 {
 		r, _, _ := z.Value.Int(32)
-		return strconv.QuoteRune(rune(r))
+		return strconv.QuoteRuneToASCII(rune(r))
+	} else if z.Type == ConstComplex {
+		return z.Value.StringShow0i(show0i)
 	} else {
-		return z.Value.String()
+		return z.Value.StringShow0i(false)
 	}
 }
 
