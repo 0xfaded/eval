@@ -64,6 +64,8 @@ func REPL(env *interactive.Env, results *([]interface{})) {
 			value := (*vals)[0]
 			kind := value.Kind().String()
 			fmt.Printf("Kind = %v\n", kind)
+			typ  := value.Type().String()
+			if typ != kind { fmt.Printf("Type = %v\n", typ) }
 			if kind == "string" {
 				fmt.Printf("results[%d] = %s\n", exprs,
 					strconv.QuoteToASCII(value.String()))
