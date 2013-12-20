@@ -17,6 +17,7 @@ lib:
 #: Same as "check"
 test: check
 
+#: Automated generate of the massive number of type checking tests used
 gentests:
 	make -C testgen
 
