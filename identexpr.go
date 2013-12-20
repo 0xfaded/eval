@@ -6,7 +6,10 @@ import (
 	"reflect"
 )
 
-func evalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, error) {
+type EvalIdentExprFunc func(ctx *Ctx, ident *Ident, env *Env)  (
+	*reflect.Value, bool, error)
+
+func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
 		// FIXME: Should this be done first or last?
@@ -26,4 +29,14 @@ func evalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, erro
 	} else {
 		return nil, false, errors.New(fmt.Sprintf("%s undefined", name))
 	}
+}
+
+var evalIdentExprCallback EvalIdentExprFunc = EvalIdentExpr
+
+func SetEvalIdentExprCallback(callback EvalIdentExprFunc) {
+	evalIdentExprCallback = callback
+}
+
+func GetEvalIdentExprCallback() EvalIdentExprFunc {
+	return evalIdentExprCallback
 }

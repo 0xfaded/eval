@@ -9,7 +9,7 @@ import (
 func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *Ident:
-		v, typed, err := evalIdentExpr(ctx, node, env)
+		v, typed, err := evalIdentExprCallback(ctx, node, env)
 		if v == nil {
 			return nil, false, err
 		}

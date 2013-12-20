@@ -20,7 +20,7 @@ func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Valu
 		// Special case for handling packages
 		if x0.Type() == reflect.TypeOf(Pkg(nil)) {
 			sel := &Ident{ Ident: selector.Sel }
-			return evalIdentExpr(ctx, sel, x0.Interface().(Pkg))
+			return evalIdentExprCallback(ctx, sel, x0.Interface().(Pkg))
 		} else if !x0.IsNil() && x0.Elem().Kind() == reflect.Struct {
 			x0 = x0.Elem()
 		}
