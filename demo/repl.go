@@ -99,6 +99,7 @@ func main() {
 	// interactively
 	var results []interface{} = make([] interface{}, 0, 10)
 	global_vars["results"] = reflect.ValueOf(&results)
+	global_vars["arg0"] = reflect.ValueOf(os.Args[0])
 	// global_funcs["Result"] = reflect.ValueOf(
 	// 	func(i int) interface{} { return results[i] } )
 

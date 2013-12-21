@@ -9,14 +9,24 @@ import (
 type EvalIdentExprFunc func(ctx *Ctx, ident *Ident, env *Env)  (
 	*reflect.Value, bool, error)
 
+func DerefValue(v reflect.Value) reflect.Value {
+	switch v.Kind() {
+	case reflect.Interface, reflect.Ptr:
+		return v.Elem()
+	default:
+		return v
+	}
+}
+
+
 func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
 		// FIXME: Should this be done first or last?
 		return nil, false, nil
 	} else if v, ok := env.Vars[name]; ok {
-		elem := v.Elem()
-		return &elem, true, nil
+		v := DerefValue(v)
+		return &v, true, nil
 	} else if v, ok := env.Consts[name]; ok {
 		return &v, false, nil
 	} else if v, ok := env.Funcs[name]; ok {
