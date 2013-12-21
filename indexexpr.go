@@ -2,10 +2,24 @@ package interactive
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
-
 	"go/ast"
 )
+
+// Return error if i is a not valid index in v
+// nil is returned if it is valid.
+// It would be nicer if the reflect package provided a "CanIndex" method.
+func CannotIndex(v reflect.Value, i int) (err error) {
+	err = nil
+	defer func() {
+		if x := recover(); x != nil {
+			err = errors.New(fmt.Sprintf("%v", x))
+		}
+	}()
+	v.Index(i)
+	return err
+}
 
 func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) (*reflect.Value, bool, error) {
 	xs, _, err := EvalExpr(ctx, index.X.(Expr), env)
@@ -41,6 +55,9 @@ func evalIndexExprInt(ctx *Ctx, x reflect.Value, intExpr ast.Expr, env *Env) (*r
 	if i, err := evalIntIndex(ctx, intExpr, env, x.Type()); err != nil {
 		return nil, false, err
 	} else {
+		if err := CannotIndex(x, i); err != nil {
+			return nil, false, err
+		}
 		v := x.Index(i)
 		return &v, true, nil
 	}

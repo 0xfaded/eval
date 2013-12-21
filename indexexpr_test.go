@@ -185,3 +185,12 @@ func TestInvalidIndexSlicePtr(t *testing.T) {
 	expectError(t, expr, env, `invalid operation: a[1] (index of type *[]int)`)
 }
 
+func TestInvalidIndexArray(t *testing.T) {
+	a := []int{1,2}
+
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+
+	expr := "a[2]"
+	expectError(t, expr, env, `reflect: slice index out of range`)
+}
