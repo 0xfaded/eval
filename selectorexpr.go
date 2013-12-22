@@ -6,7 +6,10 @@ import (
 	"reflect"
 )
 
-func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
+type EvalSelectorExprFunc func(ctx *Ctx, selector *SelectorExpr, env *Env)  (
+	*reflect.Value, bool, error)
+
+func EvalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
 	if x, _, err = EvalExpr(ctx, selector.X.(Expr), env); err != nil {
@@ -47,4 +50,18 @@ func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Valu
 			xname, sel, xname, sel))
 		return nil, true, err
 	}
+}
+
+var evalSelectorExprCallback EvalSelectorExprFunc
+
+func init() {
+	evalSelectorExprCallback = EvalSelectorExpr
+}
+
+func SetEvalSelectorExprCallback(callback EvalSelectorExprFunc) {
+	evalSelectorExprCallback = callback
+}
+
+func GetEvalSelectorExprCallback() EvalSelectorExprFunc {
+	return evalSelectorExprCallback
 }

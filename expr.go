@@ -26,7 +26,7 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	case *ParenExpr:
 		return EvalExpr(ctx, node.X.(Expr), env)
 	case *SelectorExpr:
-		v, typed, err := evalSelectorExpr(ctx, node, env)
+		v, typed, err := evalSelectorExprCallback(ctx, node, env)
 		if v == nil {
 			return nil, typed, err
 		}
