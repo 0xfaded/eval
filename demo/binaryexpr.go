@@ -33,9 +33,10 @@ func makeEnv() *interactive.Env {
 	}
 }
 
-func TestIntBinaryOps() {
+func TestBinaryOps() {
 	env := makeEnv()
 
+	expectResult("\"a\" + \"b\" == \"ab\"", env, "a" + "b" == "ab")
 	expectResult("\"a\" + \"b\"", env, "a" + "b")
 }
 
@@ -75,7 +76,7 @@ func TestNil() {
 }
 
 func main() {
-	TestIntBinaryOps()
+	TestBinaryOps()
 	TestUnaryOps()
 	TestTypedBinaryOps()
 }

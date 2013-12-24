@@ -2,7 +2,6 @@ package interactive
 
 import (
 	"reflect"
-
 	"go/token"
 )
 
@@ -163,12 +162,23 @@ func evalBinaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.
 func evalBinaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r string
+	var b bool
+	is_bool := false
 
 	xx, yy := x.String(), y.String()
 	switch op {
-	case token.ADD:
-		r = xx + yy
+	case token.ADD:	r = xx + yy
+	case token.EQL: b = xx == yy; is_bool = true
+	case token.NEQ: b = xx != yy; is_bool = true
+	case token.LEQ: b = xx <= yy; is_bool = true
+	case token.GEQ: b = xx >= yy; is_bool = true
+	case token.LSS: b = xx < yy;  is_bool = true
+	case token.GTR: b = xx > yy;  is_bool = true
 	default: err = ErrInvalidOperands{x, op, y}
 	}
-	return reflect.ValueOf(r).Convert(x.Type()), err
+	if is_bool {
+		return reflect.ValueOf(b), err
+	} else {
+		return reflect.ValueOf(r).Convert(x.Type()), err
+	}
 }
