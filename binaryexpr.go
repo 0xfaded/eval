@@ -11,11 +11,17 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
 	if xx, xtyped, err = EvalExpr(ctx, b.X.(Expr), env); err != nil {
 		return reflect.Value{}, false, err
 	}
+
 	if yy, ytyped, err = EvalExpr(ctx, b.Y.(Expr), env); err != nil {
 		return reflect.Value{}, false, err
 	}
 	rtyped = xtyped || ytyped
 	x, y := (*xx)[0], (*yy)[0]
+
+	if userConversion != nil {
+		x, xtyped, err = userConversion(x, xtyped)
+		y, ytyped, err = userConversion(y, xtyped)
+	}
 
 	// Rearrange x and y such that y is assignable to x, if possible
 	if xtyped && ytyped {
