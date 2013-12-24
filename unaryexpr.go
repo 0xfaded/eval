@@ -15,6 +15,10 @@ func evalUnaryExpr(ctx *Ctx, b *UnaryExpr, env *Env) (r reflect.Value, rtyped bo
 	rtyped = xtyped
 	x := (*xx)[0]
 
+	if userConversion != nil {
+		x, xtyped, err = userConversion(x, xtyped)
+	}
+
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		r, err = evalUnaryIntExpr(ctx, x, b.Op)
