@@ -94,11 +94,15 @@ func REPL(env *interactive.Env, results *([]interface{})) {
 			exprs  += 1
 			*results = append(*results, (*vals)[0].Interface())
 		} else {
-			sep := "("
-			for _, v := range *vals {
-				fmt.Printf("%s%v", sep, v.Interface())
+			fmt.Printf("(")
+			size := len(*vals)
+			for i, v := range *vals {
+				fmt.Printf("%v", v.Interface())
+				if i < size-1 { fmt.Printf(", ") }
 			}
 			fmt.Printf(")\n")
+			exprs  += 1
+			*results = append(*results, (*vals))
 		}
 
 		line, err = readline("go> ", in)
