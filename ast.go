@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"fmt"
@@ -323,4 +323,3 @@ func quoteString(i interface{}) interface{} {
 		return i
 	}
 }
-

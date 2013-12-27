@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"testing"
@@ -116,4 +116,3 @@ func TestCompositeStructKeyValues(t *testing.T) {
 
 	expectResult(t, expr, env, expected)
 }
-

@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 // Utilities for other tests live here
 

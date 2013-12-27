@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"strconv"
@@ -58,4 +58,3 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 		return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
 	}
 }
-

@@ -51,7 +51,7 @@ To quit, enter: "quit" or Ctrl-D (EOF).
 }
 
 // The read-eval-print portion
-func REPL(env *interactive.Env, results *([]interface{})) {
+func REPL(env *eval.Env, results *([]interface{})) {
 
 	var err error
 	exprs := 0
@@ -62,14 +62,14 @@ func REPL(env *interactive.Env, results *([]interface{})) {
 			if err == io.EOF { break }
 			panic(err)
 		}
-		ctx := &interactive.Ctx{line}
+		ctx := &eval.Ctx{line}
 		if expr, err := parser.ParseExpr(line); err != nil {
 			fmt.Printf("parse error: %s\n", err)
-		} else if cexpr, errs := interactive.CheckExpr(ctx, expr, env); len(errs) != 0 {
+		} else if cexpr, errs := eval.CheckExpr(ctx, expr, env); len(errs) != 0 {
 			for _, cerr := range errs {
 				fmt.Printf("%v\n", cerr)
 			}
-		} else if vals, _, err := interactive.EvalExpr(ctx, cexpr, env); err != nil {
+		} else if vals, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
 			fmt.Printf("eval error: %s\n", err)
 		} else if vals == nil {
 			fmt.Printf("nil\n")
@@ -137,25 +137,25 @@ func main() {
 	// A. Stripped down package environment.  See
 	// http://github.com/rocky/go-fish for a more complete
 	// environment.
-	pkgs := map[string] interactive.Pkg {
-			"fmt": &interactive.Env {
+	pkgs := map[string] eval.Pkg {
+			"fmt": &eval.Env {
 				Name:   "fmt",
 				Vars:   vars,
 				Consts: consts,
 				Funcs:  fmt_funcs,
 				Types:  types,
-				Pkgs:   make(map[string] interactive.Pkg),
-			}, "os": &interactive.Env {
+				Pkgs:   make(map[string] eval.Pkg),
+			}, "os": &eval.Env {
 				Name:   "os",
 				Vars:   map[string] reflect.Value { "Stdout": reflect.ValueOf(&os.Stdout) },
 				Consts: make(map[string] reflect.Value),
 				Funcs:  make(map[string] reflect.Value),
 				Types:  make(map[string] reflect.Type),
-				Pkgs:   make(map[string] interactive.Pkg),
+				Pkgs:   make(map[string] eval.Pkg),
 			},
 		}
 
-	env := interactive.Env {
+	env := eval.Env {
 		Name:   ".",
 		Vars:   global_vars,
 		Consts: make(map[string] reflect.Value),

@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"reflect"
@@ -20,4 +20,3 @@ type Env struct {
 	// Packages
 	Pkgs map[string] Pkg
 }
-

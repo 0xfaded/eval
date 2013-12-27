@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import "reflect"
 
@@ -236,4 +236,3 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 
 	return constValue{}, []error{ErrBadConstConversion{at(ctx, expr), from, to, reflect.Value(c)}}
 }
-

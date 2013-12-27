@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"go/ast"
@@ -79,4 +79,3 @@ func evalConstUnaryBoolExpr(ctx *Ctx, constExpr *UnaryExpr, x bool) (constValue,
 		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
 	}
 }
-

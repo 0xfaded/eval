@@ -1,6 +1,5 @@
-package interactive
+package eval
 
 type Ctx struct {
 	Input string
 }
-

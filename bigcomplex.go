@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"fmt"
@@ -116,7 +116,7 @@ func (z *BigComplex) Float64() (f float64, truncation, exact bool) {
 	return f, !z.IsReal(), exact
 }
 
-// Return a complex128 representation of z. 
+// Return a complex128 representation of z.
 // exact will be true if the conversion was completed without loss of precision
 func (z *BigComplex) Complex128() (_ complex128, exact bool) {
 	r, re := z.Re.Float64()
@@ -190,4 +190,3 @@ func (z *BigComplex) StringShow0i(show0i bool) string {
 	}
 	return s
 }
-

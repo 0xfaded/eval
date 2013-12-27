@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"os"
@@ -85,4 +85,3 @@ func TestFuncCallWithMissingValue(t *testing.T) {
 
 	expectError(t, "g(1, f())", env, "f() used as value")
 }
-

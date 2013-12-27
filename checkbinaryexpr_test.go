@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"testing"
@@ -539,4 +539,3 @@ func TestBasicCheckConstBinaryBoolBool(t *testing.T) {
 	expectConst(t, "true == false", env, false, ConstBool)
 	expectConst(t, "true != false", env, true, ConstBool)
 }
-

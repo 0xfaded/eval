@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 type UntypedNil struct {}
 func (UntypedNil) String() string {

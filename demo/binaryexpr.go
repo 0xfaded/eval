@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"reflect"
 	"go/parser"
-	"github.com/0xfaded/go-interactive"
+	"github.com/0xfaded/eval"
 )
 
-func expectResult(expr string, env *interactive.Env, expected interface{}) {
-	ctx := &interactive.Ctx{expr}
+func expectResult(expr string, env *eval.Env, expected interface{}) {
+	ctx := &eval.Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
-	} else if cexpr, errs := interactive.CheckExpr(ctx, e, env); len(errs) != 0 {
+	} else if cexpr, errs := eval.CheckExpr(ctx, e, env); len(errs) != 0 {
 		fmt.Printf("Error checking expression '%s' (%v)\n", expr, errs)
-	} else if results, _, err := interactive.EvalExpr(ctx, cexpr, env); err != nil {
+	} else if results, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {
@@ -23,13 +23,13 @@ func expectResult(expr string, env *interactive.Env, expected interface{}) {
 	}
 }
 
-func makeEnv() *interactive.Env {
-	return &interactive.Env {
+func makeEnv() *eval.Env {
+	return &eval.Env {
 		Vars: make(map[string] reflect.Value),
 		Consts: make(map[string] reflect.Value),
 		Funcs: make(map[string] reflect.Value),
 		Types: make(map[string] reflect.Type),
-		Pkgs: make(map[string] interactive.Pkg),
+		Pkgs: make(map[string] eval.Pkg),
 	}
 }
 

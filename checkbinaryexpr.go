@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import (
 	"reflect"

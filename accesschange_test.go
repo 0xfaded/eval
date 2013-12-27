@@ -1,7 +1,7 @@
 // Tests replacing the default identifier selection lookup value mechanism with
 // our own custom versions.
 
-package interactive
+package eval
 
 import (
 	"testing"

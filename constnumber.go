@@ -1,4 +1,4 @@
-package interactive
+package eval
 
 import "strconv"
 
@@ -162,4 +162,3 @@ func (z *ConstNumber) AndNot(x, y *ConstNumber) *ConstNumber {
 	z.Value.Re.Num().AndNot(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
-
