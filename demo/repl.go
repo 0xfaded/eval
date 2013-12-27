@@ -22,7 +22,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/0xfaded/go-interactive"
+	"github.com/0xfaded/eval"
 )
 
 // Simple replacement for GNU readline
