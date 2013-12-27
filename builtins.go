@@ -6,14 +6,19 @@ import (
 )
 
 var (
+	intType reflect.Type = reflect.TypeOf(int(0))
 	f32 reflect.Type = reflect.TypeOf(float32(0))
 	f64 reflect.Type = reflect.TypeOf(float64(0))
 	c64 reflect.Type = reflect.TypeOf(complex64(0))
 	c128 reflect.Type = reflect.TypeOf(complex128(0))
 )
 
-// Builtin funcs receive Value bool pairs indicating if the corrosoponding value is typed
-// They must return a Value, a bool indicating if the value is typed, and an error
+// For each parameter in a builtin function, bool parameter is passed
+// indicating if the corresponding value is typed. The boolean(s) appear
+// after entire builtin parameter list.
+//
+// Builtin functions must return the builtin function reflect.Value, a
+// bool indicating if the return value is typed, and an error if there was one.
 // The returned Value must be valid
 var builtinFuncs = map[string] reflect.Value {
 	"complex": reflect.ValueOf(func(r, i reflect.Value, rt, it bool) (reflect.Value, bool, error) {
@@ -48,6 +53,19 @@ var builtinFuncs = map[string] reflect.Value {
 			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
 		}
 	}),
+	"len": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+		switch z.Kind() {
+		case reflect.Array, reflect.Chan, reflect.Map,
+			reflect.Slice, reflect.String:
+			return reflect.ValueOf(z.Len()), true, nil
+		default:
+			return reflect.Zero(intType), false, ErrBadBuiltinArgument{"len", z}
+		}
+	}),
+	"panic": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+		panic(z.Interface())
+		return reflect.ValueOf(nil), false, errors.New("Panic")
+	}),
 }
 
 var builtinTypes = map[string] reflect.Type{
@@ -76,4 +94,3 @@ var builtinTypes = map[string] reflect.Type{
 
 	"error": reflect.TypeOf(errors.New("")),
 }
-

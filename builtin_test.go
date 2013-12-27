@@ -1,7 +1,8 @@
 package interactive
 
-/*
+
 import (
+	"reflect"
 	"testing"
 )
 
@@ -40,5 +41,13 @@ func TestBuiltinImag(t *testing.T) {
 	expectResult(t, "imag(complex(1, float32(2)))", env, imag(complex(1, float32(2))))
 	expectResult(t, "imag(complex(float32(1), float32(2)))", env, imag(complex(float32(1), float32(2))))
 }
-*/
 
+func TestBuiltinLen(t *testing.T) {
+	env := makeEnv()
+	slice := []int {1, 2}
+	env.Vars["slice"] = reflect.ValueOf(&slice)
+
+	expectResult(t, "len(\"abc\")", env, len("abc"))
+	expectResult(t, "len(slice)", env, len(slice))
+	// FIXME: add tests for map, array and channel
+}
