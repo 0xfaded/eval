@@ -137,7 +137,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 			intyped[i] = atyped[i]
 		}
 		if i == len(args)-1 && call.Ellipsis != token.NoPos {
-			// Call of form f(first, second, ...others)
+			// Call is of form f(first, second, ...others)
 			arg := *(args[i])
 			// Assert this indeed is the ellipsis
 			_ = call.Args[i].(*Ellipsis)
@@ -147,7 +147,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 				return nil, false, ErrBadFunArgument{(*v)[0], i, in[i]}
 			}
 		} else if i <= len(args) && call.Ellipsis == token.NoPos {
-			// Call of form f(first, second, third, fourth and so on)
+			// Call is of form f(first, second, third, fourth and so on)
 			remainingArgs := len(args) - actualNumIn + 1
 			in[i] = reflect.MakeSlice(ftype.In(i), remainingArgs, remainingArgs)
 
@@ -156,10 +156,19 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 			for j := i; j < len(args); j += 1 {
 				if arg, err := expectSingleValue(ctx, *(args[j]), call.Args[j]); err != nil {
 					return nil, false, err
-				} else if arg, err := assignableValue(arg, etype, atyped[j]); err != nil {
-					return nil, false, ErrBadFunArgument{(*v)[0], j, arg}
 				} else {
-					in[i].Index(j-i).Set(arg)
+					if userConversion != nil {
+						var err error
+						arg, atyped[j], err = userConversion(arg, atyped[j])
+						if err != nil {
+							return nil, false, ErrBadFunArgument{(*v)[0], j, arg}
+						}
+					}
+					if arg, err := assignableValue(arg, etype, atyped[j]); err != nil {
+						return nil, false, ErrBadFunArgument{(*v)[0], j, arg}
+					} else {
+						in[i].Index(j-i).Set(arg)
+					}
 				}
 			}
 		} else {
@@ -180,6 +189,14 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 	} else {
 		// Check argument types
 		for i := range in {
+			if userConversion != nil {
+				var err error
+				in[i], intyped[i], err = userConversion(in[i], intyped[i])
+				if err != nil {
+					return nil, false, ErrBadFunArgument{(*v)[0], i, in[i]}
+				}
+			}
+
 			var checked reflect.Value
 			if checked, err = assignableValue(in[i], ftype.In(i), intyped[i]); err != nil {
 				return nil, false, ErrBadFunArgument{(*v)[0], i, in[i]}
