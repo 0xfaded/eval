@@ -1,17 +1,20 @@
-package main
-
-// This is a simple REPL (read-eval-print loop) for GO.
-
+// Example repl is a simple REPL (read-eval-print loop) for GO using
+// http://github.com/0xfaded/eval to the heavy lifting to implement
+// the eval() part.
+//
 // The intent here is to show how more to use the library, rather than
 // be a full-featured REPL.
 //
 // A more complete REPL including command history, tab completion and
-// readline editing will be done as a separate package.
+// readline editing is available as a separate package:
+// http://github.com/rocky/go-fish
 //
-// My intent (rocky) was also to have something that I can debug in
+// (rocky) My intent here is also to have something that I can debug in
 // the ssa-debugger tortoise/gub.sh. Right now that can't handle the
 // unsafe package, pointers, and calls to C code. So that let's out
 // go-gnureadline and lineedit.
+package main
+
 import (
 	"bufio"
 	"fmt"
@@ -50,7 +53,7 @@ To quit, enter: "quit" or Ctrl-D (EOF).
 
 }
 
-// The read-eval-print portion
+// REPL is the a read, eval, and print loop.
 func REPL(env *eval.Env, results *([]interface{})) {
 
 	var err error
@@ -72,9 +75,9 @@ func REPL(env *eval.Env, results *([]interface{})) {
 		} else if vals, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
 			fmt.Printf("eval error: %s\n", err)
 		} else if vals == nil {
-			fmt.Printf("nil\n")
+			fmt.Printf("Kind=nil\nnil\n")
 		} else if len(*vals) == 0 {
-			fmt.Printf("void\n")
+			fmt.Printf("Kind=Slice\nvoid\n")
 		} else if len(*vals) == 1 {
 			value := (*vals)[0]
 			kind := value.Kind().String()
@@ -94,13 +97,17 @@ func REPL(env *eval.Env, results *([]interface{})) {
 			exprs  += 1
 			*results = append(*results, (*vals)[0].Interface())
 		} else {
-			fmt.Printf("(")
+			fmt.Printf("Kind = Multi-Value\n")
 			size := len(*vals)
 			for i, v := range *vals {
-				fmt.Printf("%v", v.Interface())
+				if v.Interface() == nil {
+					fmt.Printf("nil")
+				} else {
+					fmt.Printf("%v", v.Interface())
+				}
 				if i < size-1 { fmt.Printf(", ") }
 			}
-			fmt.Printf(")\n")
+			fmt.Printf("\n")
 			exprs  += 1
 			*results = append(*results, (*vals))
 		}
