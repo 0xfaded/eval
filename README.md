@@ -10,7 +10,7 @@ Using
 
 Right now the basic dance is a 4-step process.
 
-* Create an evaluation environtment
+* Create an evaluation environment
 * Parse the expression using `go/parser`
 * type check the expression returned by the parser, and
 * evaluate the expression.
@@ -59,5 +59,6 @@ value. The *gub* debugger is an instance where this occurs.
 See Also
 --------
 
-* [What's left to do?](https://github.com/0xfaded/eval/What%27s-left-to-do%3F)* [go-fish](https://github.com/rocky/go-fish): an interactive read, eval, print loop which uses this to handle the *eval()* step.
+* [What's left to do?](https://github.com/0xfaded/eval/What%27s-left-to-do%3F)
+* [go-fish](https://github.com/rocky/go-fish): an interactive read, eval, print loop which uses this to handle the *eval()* step.
 * [gub debugger](https://gitub.com/rocky/ssa-interp): a debugger that uses this to handle interactive expression evalution
