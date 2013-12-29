@@ -2,8 +2,8 @@ package eval
 
 import "reflect"
 
-// Constant types, should not be used with the reflect package, but
-// can annotate information needed for evaluating const expressions
+// Type ConstType can annotate information needed for evaluating const
+// expressions. It should not be used with the reflect package.
 type ConstType interface {
 	reflect.Type
 	IsIntegral() bool
@@ -52,20 +52,23 @@ func (ConstStringType) IsReal() bool { return false }
 func (ConstNilType) IsReal() bool { return false }
 func (ConstBoolType) IsReal() bool { return false }
 
-// Returns the ConstType of a binary, non-boolean, expression invalving const types of
-// x and y.
-// Errors match those produced by gc and are as follows:
-// If one type is a numeric type, and the other is not
-//	ErrBadConstConversion other -> numeric
-// If string and bool
-//	ErrBadConstConversion bool -> int
-//	ErrBadConstConversion string -> int
-// If nil and string
-//	ErrBadConstConversion nil -> int
-//	ErrBadConstConversion string -> int
-// If nil and bool
-//	ErrBadConstConversion nil -> bool
+// promoteConsts returns the ConstType of a binary, a non-boolean,
+// expression involving const types of x and y.  Errors match those
+// produced by gc and are as follows:
 //
+// If one type is a numeric type, and the other is not:
+//     ErrBadConstConversion other -> numeric
+//
+// If one type is a string type and the other is a bool type:
+//     ErrBadConstConversion bool -> int
+//     ErrBadConstConversion string -> int
+//
+// If one value is nil and the other a string value:
+//     ErrBadConstConversion nil -> int
+//     ErrBadConstConversion string -> int
+//
+// If one value is nil and the other a bool value:
+//     ErrBadConstConversion nil -> bool
 func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
@@ -109,7 +112,8 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 	panic("go-interactive: impossible")
 }
 
-// Can't fail, but panics if x or y are not Const(Int|Rune|Float|Complex)Type
+// promoteConstNumbers can't fail, but panics if x or y are not
+// Const(Int|Rune|Float|Complex)Type
 func promoteConstNumbers(x, y ConstType) ConstType {
 	switch x.(type) {
 	case ConstIntType:

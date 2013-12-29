@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-// Big complex behaves like a *big.Re, but has an imaginary component
+// BigComplex behaves like a *big.Re, but has an imaginary component
 // and separate implementation for + - * /
 type BigComplex struct {
 	Re big.Rat
@@ -63,12 +63,12 @@ func (z *BigComplex) IsZero() bool {
 	return z.Re.Num().BitLen() == 0 && z.Im.Num().BitLen() == 0
 }
 
-// Return a representation of z truncated to be an int of length bits.
-// Valid values for bits are 8, 16, 32, 64. Result is otherwise undefined
-// If a truncation occurs, the decimal part is dropped and the conversion
-// continues as usual. truncation will be true
-// If an overflow occurs, the result is equivelant to a cast of the form
-// int32(x). overflow will be true.
+// z.Int() returns a representation of z, truncated to be an int of
+// length bits.  Valid values for bits are 8, 16, 32, 64. Result is
+// otherwise undefined If a truncation occurs, the decimal part is
+// dropped and the conversion continues as usual. truncation will be
+// true If an overflow occurs, the result is equivelant to a cast of
+// the form int32(x). overflow will be true.
 func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
@@ -82,12 +82,13 @@ func (z *BigComplex) Int(bits int) (_ int64, truncation, overflow bool) {
 	return res.Int64(), truncation, overflow
 }
 
-// Return a representation of z truncated to be a uint of length bits.
-// Valid values for bits are 0, 8, 16, 32, 64. Result is otherwise undefined
-// If a truncation occurs, the decimal part is dropped and the conversion
-// continues as usual. truncation will be true
-// If an overflow occurs, the result is equivelant to a cast of the form
-// uint32(x). overflow will be true.
+// z.Uint() returns a representation of z truncated to be a uint of
+// length bits.  Valid values for bits are 0, 8, 16, 32, 64. The
+// returned result is otherwise undefined. If a truncation occurs, the
+// decimal part is dropped and the conversion continues as
+// usual. Return values truncation and overflow will be true if an
+// overflow occurs. The result is equivelant to a cast of the form
+// uint32(x).
 func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 	var integer *BigComplex
 	integer, truncation = z.Integer()
@@ -107,25 +108,28 @@ func (z *BigComplex) Uint(bits int) (_ uint64, truncation, overflow bool) {
 	return r, truncation, overflow
 }
 
-// Return a representation of z truncated to a float64
-// If a truncation from a complex occurs, the imaginary part is dropped
-// and the conversion continues as usual. truncation will be true
-// exact will be true if the conversion was completed without loss of precision
+// z.Float64() returns a representation of z truncated to a float64 If
+// a truncation from a complex occurs. The imaginary part is dropped
+// and the conversion continues as usual. return value truncation will
+// be true exact will be true if the conversion was completed without
+// loss of precision.
 func (z *BigComplex) Float64() (f float64, truncation, exact bool) {
 	f, exact = z.Re.Float64()
 	return f, !z.IsReal(), exact
 }
 
-// Return a complex128 representation of z.
-// exact will be true if the conversion was completed without loss of precision
+// z.Complex128() returns a complex128 representation of z. Return value
+// exact will be true if the conversion was completed without loss of
+// precision.
 func (z *BigComplex) Complex128() (_ complex128, exact bool) {
 	r, re := z.Re.Float64()
 	i, ie := z.Im.Float64()
 	return complex(r, i), re && ie
 }
 
-// Return a representation of z truncated to be a integer value.
-// Second return is true if a truncation occured.
+// z.Integer() returns a representation of z, a *BigComplex, truncated
+// to be a integer value. The second return value is true if a
+// truncation occured.
 func (z *BigComplex) Integer() (_ *BigComplex, truncation bool) {
 	if z.IsInteger() {
 		return z, false
@@ -137,8 +141,8 @@ func (z *BigComplex) Integer() (_ *BigComplex, truncation bool) {
 	}
 }
 
-// Return a representation of z truncated to be a real value.
-// Second return is true if a truncation occured.
+// z.Real() returns a representation of z, truncated to a real
+// value. The second return valuie is true if a truncation occured.
 func (z *BigComplex) Real() (_ *BigComplex, truncation bool) {
 	if z.IsReal() {
 		return z, false

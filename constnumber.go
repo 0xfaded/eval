@@ -97,22 +97,25 @@ func (z *ConstNumber) Add(x, y *ConstNumber) *ConstNumber {
 	return z
 }
 
-// Sub two ConstNumbers, promoting the type automatically.
+// z.Sub() subtracts two ConstNumbers, promoting the type
+// automatically.
 func (z *ConstNumber) Sub(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Sub(&x.Value, &y.Value)
 	return z
 }
 
-// Mul two ConstNumbers, promoting the type automatically.
+// z.Mul multiplies two ConstNumbers, promoting the type
+// automatically.
 func (z *ConstNumber) Mul(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Mul(&x.Value, &y.Value)
 	return z
 }
 
-// Divide two ConstNumbers, promoting the type automatically. If
-// both operands are of ConstInt, then integer division is performed.
+// z.Quo divides two ConstNumbers, promoting the type
+// automatically. If both operands are of ConstInt, then integer
+// division is performed.
 func (z *ConstNumber) Quo(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	if z.Type.IsIntegral() {
@@ -123,40 +126,45 @@ func (z *ConstNumber) Quo(x, y *ConstNumber) *ConstNumber {
 	return z
 }
 
-// Compute remainder of two ConstNumbers, promoting the type automatically.
-// Result is undefined if both x and y are not integral types.
+// z.Rem computes remainder of two ConstNumbers, promoting the type
+// automatically. The result is undefined if both x and y are not
+// integral types.
 func (z *ConstNumber) Rem(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Re.Num().Rem(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
 
-// Compute and of two ConstNumbers, promoting the type automatically.
-// Result is undefined if both x and y are not integral types.
+// z.And compute logical "and" of two ConstNumbers, promoting the type
+// automatically.  The result is undefined if both x and y are not
+// integral types.
 func (z *ConstNumber) And(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Re.Num().And(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
 
-// Compute or of two ConstNumbers, promoting the type automatically.
-// Result is undefined if both x and y are not integral types.
+// z.Or computes the logical "o"r of two ConstNumbers, promoting the
+// type automatically. The result is undefined if both x and y are not
+// integral types.
 func (z *ConstNumber) Or(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Re.Num().Or(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
 
-// Compute xor of two ConstNumbers, promoting the type automatically.
-// Result is undefined if both x and y are not integral types.
+// z.Xor computes the exclusive "or" of two ConstNumbers, promoting
+// the type automatically. The result is undefined if both x and y are
+// not integral types.
 func (z *ConstNumber) Xor(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Re.Num().Xor(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
 
-// Compute and not of two ConstNumbers, promoting the type automatically.
-// Result is undefined if both x and y are not integral types.
+// z.AndNot computes "and not" of two ConstNumbers, promoting the type
+// automatically.  The result is undefined if both x and y are not
+// integral types.
 func (z *ConstNumber) AndNot(x, y *ConstNumber) *ConstNumber {
 	z.Type = promoteConstNumbers(x.Type, y.Type)
 	z.Value.Re.Num().AndNot(x.Value.Re.Num(), y.Value.Re.Num())
