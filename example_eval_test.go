@@ -50,5 +50,5 @@ func ExpectResult(expr string, expected interface{}) {
 }
 
 func Example() {
-	ExpectResult("\"A constant!\"!", constant1 + "!")
+	ExpectResult("\"A\" + \" constant!\"!", constant1+"!")
 }
