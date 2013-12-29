@@ -6,6 +6,12 @@ import (
 	"reflect"
 )
 
+// EvalExpr is the main function to call to evaluate an ast-parsed
+// expression, expr.  Parameter ctx contains a string representation
+// of expr. Parameter env, contains an evaluation environment from
+// which to get reflect.Values from. Note however that env can be
+// subverted somewhat by supplying callback hooks routines which
+// access variables and by supplying user-defined conversion routines.
 func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *Ident:

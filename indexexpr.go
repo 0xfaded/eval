@@ -7,7 +7,7 @@ import (
 	"go/ast"
 )
 
-// CannoitIndex returns error if i is a not valid index in v
+// CannotIndex returns error if i is a not valid index in v
 // nil is returned if it is valid.
 // It would be nicer if the reflect package provided a "CanIndex" method.
 func CannotIndex(v reflect.Value, i int) (err error) {
