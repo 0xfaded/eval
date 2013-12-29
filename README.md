@@ -48,7 +48,7 @@ A skeletal structure is below:
 	}
 ```
 
-See the programs in the [demo directory](https://github.com/0xfaded/eval/tree/master/demo) for full Go programs.
+The programs in the [repl.go](https://github.com/0xfaded/eval/tree/master/repl.go) is a full Go program showing this.
 
 Right now, values are retuned as a pointer to an array of
 *reflect.Value()* and *reflect.Values* are used as intermediate
