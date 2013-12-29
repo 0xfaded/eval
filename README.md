@@ -61,4 +61,4 @@ See Also
 
 * [What's left to do?](https://github.com/0xfaded/eval/What%27s-left-to-do%3F)
 * [go-fish](https://github.com/rocky/go-fish): an interactive read, eval, print loop which uses this to handle the *eval()* step.
-* [gub debugger](https://gitub.com/rocky/ssa-interp): a debugger that uses this to handle *eval* debugger command
+* [gub debugger](https://gitub.com/rocky/ssa-interp): a debugger that uses this to handle the *eval* debugger command
