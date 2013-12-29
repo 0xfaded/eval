@@ -53,15 +53,7 @@ var builtinFuncs = map[string] reflect.Value {
 			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
 		}
 	}),
-	"len": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-		switch z.Kind() {
-		case reflect.Array, reflect.Chan, reflect.Map,
-			reflect.Slice, reflect.String:
-			return reflect.ValueOf(z.Len()), true, nil
-		default:
-			return reflect.Zero(intType), false, ErrBadBuiltinArgument{"len", z}
-		}
-	}),
+	"len": reflect.ValueOf(builtinLen),
 	"panic": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
 		panic(z.Interface())
 		return reflect.ValueOf(nil), false, errors.New("Panic")
@@ -93,4 +85,14 @@ var builtinTypes = map[string] reflect.Type{
 	"string": reflect.TypeOf(""),
 
 	"error": reflect.TypeOf(errors.New("")),
+}
+
+func builtinLen(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+	switch z.Kind() {
+		case reflect.Array, reflect.Chan, reflect.Map,
+		reflect.Slice, reflect.String:
+		return reflect.ValueOf(z.Len()), true, nil
+	default:
+		return reflect.Zero(intType), false, ErrBadBuiltinArgument{"len", z}
+	}
 }
