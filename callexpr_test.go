@@ -85,3 +85,39 @@ func TestFuncCallWithMissingValue(t *testing.T) {
 
 	expectError(t, "g(1, f())", env, "f() used as value")
 }
+
+func TestEvalCallTypeExpr(t *testing.T) {
+	type MyInt int // A simple type to test
+
+	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
+	var consts map[string] reflect.Value = make(map[string] reflect.Value)
+	var funcs  map[string] reflect.Value = make(map[string] reflect.Value)
+	var types  map[string] reflect.Type  = make(map[string] reflect.Type)
+
+	pkgs := map[string] Pkg {
+			"bogus": &Env {
+				Name:   "bogus",
+				Vars:   vars,
+				Consts: consts,
+				Funcs:  funcs,
+				Types:  map[string] reflect.Type{
+					"MyInt": reflect.TypeOf(*new(MyInt))},
+				Pkgs:   make(map[string] Pkg),
+			},
+		}
+
+	env := Env {
+		Name:   ".",
+		Vars:   vars,
+		Consts: consts,
+		Funcs:  funcs,
+		Types:  types,
+		Pkgs:   pkgs,
+	}
+
+	expectResult(t, "bogus.MyInt(5)", &env, MyInt(5))
+	// FIXME the package below should be bogus, not eval!
+	expectError(t, "bogus.MyInt(\"abc\")", &env,
+		"Cannot convert abc to type eval.MyInt")
+
+}

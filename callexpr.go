@@ -50,8 +50,14 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 	}
 	obj := (*v)[0]
 	if obj.Kind() != reflect.Func {
-		// fmt.Printf("XXX obj typ is %v\n", obj)
-		return nil, false, errors.New(fmt.Sprintf("Cannot call %v", obj))
+		// Perhaps we have a type cast?
+		if typ, ok := obj.Interface().(reflect.Type); ok {
+			val, typed, err := evalCallTypeExpr(ctx, typ, call, env)
+			retval := []reflect.Value {val}
+			return &retval, typed, err
+		} else {
+			return nil, false, errors.New(fmt.Sprintf("Cannot call %v", obj))
+		}
 	}
 	builtin := !typed
 

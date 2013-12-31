@@ -142,7 +142,7 @@ func main() {
 	}
 
 	// And a simple type
-	type Myint int
+	type MyInt int
 
 	// A. Stripped down package environment.  See
 	// http://github.com/rocky/go-fish for a more complete
@@ -162,7 +162,7 @@ func main() {
 				Consts: make(map[string] reflect.Value),
 				Funcs:  make(map[string] reflect.Value),
 				Types:  map[string] reflect.Type{
-					"Myint": reflect.TypeOf(*new(Myint))},
+					"MyInt": reflect.TypeOf(*new(MyInt))},
 				Pkgs:   make(map[string] eval.Pkg),
 			},
 		}
