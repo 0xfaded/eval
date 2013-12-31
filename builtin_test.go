@@ -51,3 +51,14 @@ func TestBuiltinLen(t *testing.T) {
 	expectResult(t, "len(slice)", env, len(slice))
 	// FIXME: add tests for map, array and channel
 }
+
+func TestBuiltinCap(t *testing.T) {
+	env := makeEnv()
+	slice := []int {1, 2}
+	env.Vars["slice"] = reflect.ValueOf(&slice)
+
+	expectResult(t, "cap(slice)", env, cap(slice))
+	// FIXME: this is wrong. The type should be int, not int64 and
+	// reflects something wrong in the eval's type system.
+	expectError(t, "cap(5)", env, "invalid argument 5 (type int64) for cap")
+}

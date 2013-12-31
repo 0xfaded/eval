@@ -2,6 +2,7 @@ package eval
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 )
 
@@ -13,8 +14,8 @@ var (
 	c128 reflect.Type = reflect.TypeOf(complex128(0))
 )
 
-// For each parameter in a builtin function, bool parameter is passed
-// indicating if the corresponding value is typed. The boolean(s) appear
+// For each parameter in a builtin function, a bool parameter is passed
+// to indicate if the corresponding value is typed. The boolean(s) appear
 // after entire builtin parameter list.
 //
 // Builtin functions must return the builtin function reflect.Value, a
@@ -53,6 +54,7 @@ var builtinFuncs = map[string] reflect.Value {
 			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
 		}
 	}),
+	"cap": reflect.ValueOf(builtinCap),
 	"len": reflect.ValueOf(builtinLen),
 	"panic": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
 		panic(z.Interface())
@@ -87,10 +89,20 @@ var builtinTypes = map[string] reflect.Type{
 	"error": reflect.TypeOf(errors.New("")),
 }
 
+func builtinCap(v reflect.Value, vt bool) (reflect.Value, bool, error) {
+	switch v.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Slice:
+		return reflect.ValueOf(v.Cap()), true, nil
+	default:
+		return reflect.Zero(intType), false,
+		errors.New(fmt.Sprintf("invalid argument %v (type %v) for cap",
+			v.Interface(), v.Type()))
+	}
+}
+
 func builtinLen(z reflect.Value, zt bool) (reflect.Value, bool, error) {
 	switch z.Kind() {
-		case reflect.Array, reflect.Chan, reflect.Map,
-		reflect.Slice, reflect.String:
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
 		return reflect.ValueOf(z.Len()), true, nil
 	default:
 		return reflect.Zero(intType), false, ErrBadBuiltinArgument{"len", z}
