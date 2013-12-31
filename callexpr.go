@@ -48,8 +48,10 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 	if err != nil {
 		return nil, false, err
 	}
-	if (*v)[0].Kind() != reflect.Func {
-		return nil, false, errors.New(fmt.Sprintf("Cannot call %v", (*v)[0]))
+	obj := (*v)[0]
+	if obj.Kind() != reflect.Func {
+		// fmt.Printf("XXX obj typ is %v\n", obj)
+		return nil, false, errors.New(fmt.Sprintf("Cannot call %v", obj))
 	}
 	builtin := !typed
 

@@ -135,11 +135,14 @@ func main() {
 	fmt_funcs["Println"] = reflect.ValueOf(fmt.Println)
 	fmt_funcs["Printf"] = reflect.ValueOf(fmt.Printf)
 
-	// Just some structure for testing
+	// Just some type structure for testing
 	type Alice struct {
 		Bob int
 		Secret string
 	}
+
+	// And a simple type
+	type Myint int
 
 	// A. Stripped down package environment.  See
 	// http://github.com/rocky/go-fish for a more complete
@@ -154,10 +157,12 @@ func main() {
 				Pkgs:   make(map[string] eval.Pkg),
 			}, "os": &eval.Env {
 				Name:   "os",
-				Vars:   map[string] reflect.Value { "Stdout": reflect.ValueOf(&os.Stdout) },
+				Vars:   map[string] reflect.Value {
+					"Stdout": reflect.ValueOf(&os.Stdout) },
 				Consts: make(map[string] reflect.Value),
 				Funcs:  make(map[string] reflect.Value),
-				Types:  make(map[string] reflect.Type),
+				Types:  map[string] reflect.Type{
+					"Myint": reflect.TypeOf(*new(Myint))},
 				Pkgs:   make(map[string] eval.Pkg),
 			},
 		}

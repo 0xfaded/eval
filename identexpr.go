@@ -36,6 +36,10 @@ func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, erro
 	} else if p, ok := env.Pkgs[name]; ok {
 		val := reflect.ValueOf(p)
 		return &val, true, nil
+	} else if p, ok := env.Types[name]; ok {
+		val := reflect.ValueOf(p)
+		// fmt.Printf("XXX %v\n", val)
+		return &val, true, nil
 	} else {
 		return nil, false, errors.New(fmt.Sprintf("%s undefined", name))
 	}
