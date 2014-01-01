@@ -42,6 +42,17 @@ func TestBuiltinImag(t *testing.T) {
 	expectResult(t, "imag(complex(float32(1), float32(2)))", env, imag(complex(float32(1), float32(2))))
 }
 
+func TestBuiltinCap(t *testing.T) {
+	env := makeEnv()
+	slice := []int {1, 2}
+	env.Vars["slice"] = reflect.ValueOf(&slice)
+
+	expectResult(t, "cap(slice)", env, cap(slice))
+	// FIXME: this is wrong. The type should be int, not int64 and
+	// reflects something wrong in the eval's type system.
+	expectError(t, "cap(5)", env, "invalid argument 5 (type int64) for cap")
+}
+
 func TestBuiltinLen(t *testing.T) {
 	env := makeEnv()
 	slice := []int {1, 2}
@@ -52,13 +63,13 @@ func TestBuiltinLen(t *testing.T) {
 	// FIXME: add tests for map, array and channel
 }
 
-func TestBuiltinCap(t *testing.T) {
+func TestBuiltinNew(t *testing.T) {
 	env := makeEnv()
-	slice := []int {1, 2}
-	env.Vars["slice"] = reflect.ValueOf(&slice)
-
-	expectResult(t, "cap(slice)", env, cap(slice))
-	// FIXME: this is wrong. The type should be int, not int64 and
-	// reflects something wrong in the eval's type system.
-	expectError(t, "cap(5)", env, "invalid argument 5 (type int64) for cap")
+	expr := "new(int)"
+	results := getResults(t, expr, env)
+	returnKind := (*results)[0].Kind().String()
+	if  returnKind != "ptr" {
+		t.Fatalf("Error Expecting `%s' return Kind to be `ptr' is `%s`", expr, returnKind)
+	}
+	expectError(t, "new(5)", env, "new parameter is not a type")
 }

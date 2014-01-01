@@ -40,6 +40,9 @@ func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, erro
 		val := reflect.ValueOf(p)
 		// fmt.Printf("XXX %v\n", val)
 		return &val, true, nil
+	} else if p, ok := builtinTypes[name]; ok {
+		val := reflect.ValueOf(p)
+		return &val, false, nil
 	} else {
 		return nil, false, errors.New(fmt.Sprintf("%s undefined", name))
 	}

@@ -54,12 +54,10 @@ var builtinFuncs = map[string] reflect.Value {
 			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
 		}
 	}),
-	"cap": reflect.ValueOf(builtinCap),
-	"len": reflect.ValueOf(builtinLen),
-	"panic": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-		panic(z.Interface())
-		return reflect.ValueOf(nil), false, errors.New("Panic")
-	}),
+	"cap"  : reflect.ValueOf(builtinCap),
+	"len"  : reflect.ValueOf(builtinLen),
+	"new"  : reflect.ValueOf(builtinNew),
+	"panic": reflect.ValueOf(builtinPanic),
 }
 
 var builtinTypes = map[string] reflect.Type{
@@ -105,6 +103,22 @@ func builtinLen(z reflect.Value, zt bool) (reflect.Value, bool, error) {
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
 		return reflect.ValueOf(z.Len()), true, nil
 	default:
-		return reflect.Zero(intType), false, ErrBadBuiltinArgument{"len", z}
+		return reflect.ValueOf(nil), false, ErrBadBuiltinArgument{"len", z}
 	}
+}
+
+func builtinNew(rtyp reflect.Value, bt bool) (reflect.Value, bool, error) {
+	if typ, ok := rtyp.Interface().(reflect.Type); ok {
+		return reflect.New(typ), true, nil
+	} else {
+		return reflect.ValueOf(nil), false, errors.New("new parameter is not a type")
+	}
+}
+
+func builtinPanic(z reflect.Value, zt bool) (reflect.Value, bool, error) {
+	// FIXME: we want results relative to the evaluated environment rather
+	// than a panic inside the evaluator. We might use error, but panic's
+	// parameter isn't the same as error's?
+	panic(z.Interface())
+	return reflect.ValueOf(nil), false, errors.New("Panic")
 }
