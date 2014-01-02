@@ -1,11 +1,14 @@
 package eval
 
 import (
+	"reflect"
 	"testing"
 )
 
 func TestIntBinaryOps(t *testing.T) {
+	slice := []int {1, 2}
 	env := makeEnv()
+	env.Vars["slice"] = reflect.ValueOf(&slice)
 
 	expectResult(t, "1+2",   env, int64(1)+2)
 	expectResult(t, "1-2",   env, int64(1)-2)
@@ -24,7 +27,9 @@ func TestIntBinaryOps(t *testing.T) {
 	expectResult(t, "-1==1", env, bool(-1==1))
 	expectResult(t, "-1==3", env, bool(1==3))
 	expectResult(t, "1!=1",  env, bool(1!=1))
-	expectResult(t, "1!=3",  env, bool(1!=3))
+	expectResult(t, "slice[0]!=3",  env, bool(slice[0]!=3))
+	expectError(t, "slice[0]+int32(5)", env,
+		"invalid operation <int Value> + <int32 Value> (mismatched types int and int32)")
 
 	expectResult(t, "\"a\" + \"b\"",  env, "a" + "b")
 

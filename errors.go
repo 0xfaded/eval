@@ -22,6 +22,12 @@ type ErrInvalidOperand struct {
 	op token.Token
 }
 
+type ErrMismatchedTypes struct {
+	x reflect.Value
+	op token.Token
+	y reflect.Value
+}
+
 type ErrInvalidOperands struct {
 	x reflect.Value
 	op token.Token
@@ -135,6 +141,10 @@ func (err ErrInvalidOperand) Error() string {
 
 func (err ErrInvalidOperands) Error() string {
 	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
+}
+
+func (err ErrMismatchedTypes) Error() string {
+	return fmt.Sprintf("invalid operation %v %v %v (mismatched types %s and %s)", err.x, err.op, err.y, err.x.Kind(), err.y.Kind())
 }
 
 func (err ErrBadFunArgument) Error() string {

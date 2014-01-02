@@ -28,7 +28,7 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
 		if x.Type().AssignableTo(y.Type()) {
 			x = x.Convert(y.Type())
 		} else if !y.Type().AssignableTo(x.Type()) {
-			return r, rtyped, ErrInvalidOperands{x, b.Op, y}
+			return r, rtyped, ErrMismatchedTypes{x, b.Op, y}
 		}
 	} else if xtyped {
 		if !y.Type().ConvertibleTo(x.Type()) {
