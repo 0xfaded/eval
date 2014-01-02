@@ -152,7 +152,7 @@ func (err ErrBadBuiltinArgument) Error() string {
 func (err ErrWrongNumberOfArgsOld) Error() string {
 	expected := err.fun.Type().NumIn()
 	if err.numArgs < expected {
-		return fmt.Sprintf("not enouch args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
+		return fmt.Sprintf("not enough args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
 	} else {
 		return fmt.Sprintf("too many args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
 	}
