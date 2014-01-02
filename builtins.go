@@ -54,10 +54,11 @@ var builtinFuncs = map[string] reflect.Value {
 			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
 		}
 	}),
-	"cap"  : reflect.ValueOf(builtinCap),
-	"len"  : reflect.ValueOf(builtinLen),
-	"new"  : reflect.ValueOf(builtinNew),
-	"panic": reflect.ValueOf(builtinPanic),
+	"append": reflect.ValueOf(builtinAppend),
+	"cap"   : reflect.ValueOf(builtinCap),
+	"len"   : reflect.ValueOf(builtinLen),
+	"new"   : reflect.ValueOf(builtinNew),
+	"panic" : reflect.ValueOf(builtinPanic),
 }
 
 var builtinTypes = map[string] reflect.Type{
@@ -85,6 +86,23 @@ var builtinTypes = map[string] reflect.Type{
 	"string": reflect.TypeOf(""),
 
 	"error": reflect.TypeOf(errors.New("")),
+}
+
+// FIXME: the real append is variadic. We can only handle one arg.
+
+func builtinAppend(s, t reflect.Value, st, tt bool) (reflect.Value, bool, error) {
+	if s.Kind() != reflect.Slice {
+		return reflect.ValueOf(nil), true,
+		errors.New(fmt.Sprintf("first argument to append must be a slice; " +
+			"have %v", s.Type()))
+	}
+	stype, ttype := s.Type().Elem(), t.Type()
+	if !ttype.AssignableTo(stype) {
+		return reflect.ValueOf(nil), false,
+		errors.New(fmt.Sprintf("cannot use type %v as type %v in append",
+			ttype, stype))
+	}
+	return reflect.Append(s, t), true, nil
 }
 
 func builtinCap(v reflect.Value, vt bool) (reflect.Value, bool, error) {
