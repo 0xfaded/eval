@@ -60,5 +60,5 @@ See Also
 --------
 
 * [What's left to do?](https://github.com/0xfaded/eval/wiki/What's-left-to-do%3F)
-* [go-fish](https://github.com/rocky/go-fish): an interactive read, eval, print loop which uses this to handle the *eval()* step.
+* [go-fish](https://github.com/rocky/go-fish): an interactive read, eval, print loop which uses this to handle the *eval()* step. In that project, see the program *make_eval* for how to create a complete environment given an initial import.
 * [gub debugger](https://github.com/rocky/ssa-interp): a debugger that uses this to handle the *eval* debugger command
