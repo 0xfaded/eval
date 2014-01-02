@@ -150,6 +150,7 @@ func main() {
 	pkgs := map[string] eval.Pkg {
 			"fmt": &eval.Env {
 				Name:   "fmt",
+				Path:   "",
 				Vars:   vars,
 				Consts: consts,
 				Funcs:  fmt_funcs,
@@ -157,6 +158,7 @@ func main() {
 				Pkgs:   make(map[string] eval.Pkg),
 			}, "os": &eval.Env {
 				Name:   "os",
+				Path:   "",
 				Vars:   map[string] reflect.Value {
 					"Stdout": reflect.ValueOf(&os.Stdout) },
 				Consts: make(map[string] reflect.Value),
@@ -169,6 +171,7 @@ func main() {
 
 	env := eval.Env {
 		Name:   ".",
+		Path:   "",
 		Vars:   global_vars,
 		Consts: make(map[string] reflect.Value),
 		Funcs:  global_funcs,

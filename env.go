@@ -6,8 +6,10 @@ import (
 
 type Pkg *Env
 
+// A Environment used for evaluation
 type Env struct {
-	Name string
+	Name string  // e.g "fmt"
+	Path string  // e.g. "github.com/0xfaded/eval"
 
 	// Values
 	Vars map[string] reflect.Value
