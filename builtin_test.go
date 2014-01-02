@@ -42,6 +42,16 @@ func TestBuiltinImag(t *testing.T) {
 	expectResult(t, "imag(complex(float32(1), float32(2)))", env, imag(complex(float32(1), float32(2))))
 }
 
+func TestBuiltinAppend(t *testing.T) {
+	env := makeEnv()
+	slice := []string {"one", "two"}
+	env.Vars["slice"] = reflect.ValueOf(&slice)
+
+	expectResult(t, "append(slice, \"three\")", env, append(slice, "three"))
+	expectError(t, "append(slice, 5)", env,
+		"cannot use type int64 as type string in append")
+}
+
 func TestBuiltinCap(t *testing.T) {
 	env := makeEnv()
 	slice := []int {1, 2}
