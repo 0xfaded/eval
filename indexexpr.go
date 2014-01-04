@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"go/ast"
 )
 
@@ -14,7 +15,15 @@ func CannotIndex(v reflect.Value, i int) (err error) {
 	err = nil
 	defer func() {
 		if x := recover(); x != nil {
-			err = errors.New(fmt.Sprintf("%v", x))
+			mess := fmt.Sprintf("%v", x)
+			// Strip off "reflect: " from the beginning of an index
+			// error provided by the reflect package. This is the
+			// implementation of how we handle values and is of no
+			// concern to users of this package.
+			if strings.HasPrefix(mess, "reflect: ") {
+				mess = mess[len("reflect: "):len(mess)]
+			}
+			err = errors.New(mess)
 		}
 	}()
 	v.Index(i)

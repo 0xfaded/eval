@@ -192,5 +192,5 @@ func TestInvalidIndexArray(t *testing.T) {
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expr := "a[2]"
-	expectError(t, expr, env, `reflect: slice index out of range`)
+	expectError(t, expr, env, `slice index out of range`)
 }
