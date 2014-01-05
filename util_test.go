@@ -16,7 +16,7 @@ func TestFormatErrorPos(t *testing.T) {
 	source  := `split(os.Args ", )")`
 	errmsg  := `1:15: expected ')', found 'STRING' ", "`
 	results := FormatErrorPos(source, errmsg)
-	expect  := []string { source,  "-------------^" }
+	expect  := []string { source,  "--------------^" }
 	if !errorPosEqual(expect, results) {
 		t.Fatalf("Expected %v, got %v", expect, results)
 	}
@@ -25,5 +25,10 @@ func TestFormatErrorPos(t *testing.T) {
 	errmsg  = `1:1: string not terminated`
 	results = FormatErrorPos(source, errmsg)
 	expect  = []string { source,  "^" }
+
+	source  = "y("
+	errmsg  = `1:3: expected ')', found 'EOF'`
+	results = FormatErrorPos(source, errmsg)
+	expect  = []string { source,  "--^" }
 
 }

@@ -180,12 +180,12 @@ func FormatErrorPos(source, errmsg string) (cursored [] string) {
 		}
 		errLine := sourceLines[line-1]
 		cursored = append(cursored, errLine)
-		if column > len(errLine) || column < 1 {
+		if column-1 > len(errLine) || column < 1 {
 			return cursored
 		} else if column == 1 {
 			cursored = append(cursored, "^")
 		} else {
-			cursored = append(cursored, strings.Repeat("-", column-2) + "^")
+			cursored = append(cursored, strings.Repeat("-", column-1) + "^")
 		}
 	}
 	return cursored
