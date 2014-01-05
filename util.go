@@ -4,6 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"go/ast"
 	"go/token"
@@ -138,4 +141,52 @@ func isBooleanOp(op token.Token) bool {
 	default:
 		return false
 	}
+}
+
+// FIXME: should also match and handle just a line and no column
+var parseError = regexp.MustCompile(`^([0-9]+):([0-9]+): `)
+
+// FormatErrorPos formats source to show the position that a (parse)
+// error occurs. When this works, it returns a slice of one or two
+// strings: the source line with the error and if it can find a column
+// position under that, a line indicating the position where the error
+// occurred.
+//
+// For example, if we have:
+//		source := `split(os.Args ", )")`
+//		errmsg := "1:15: expected ')'"
+// then PrintErrPos(source, errmsg) returns:
+//  {
+//		`split(os.Args ", )")`,
+//		`-------------^`
+//  }
+//
+// If something is wrong parsing the error message or matching it with
+// the source, an empty slice is returned.
+func FormatErrorPos(source, errmsg string) (cursored [] string) {
+	matches := parseError.FindStringSubmatch(errmsg)
+	if len(matches) == 3 {
+		var err error
+		var line, column int
+		if line, err = strconv.Atoi(matches[1]); err != nil {
+			return cursored
+		}
+		if column, err = strconv.Atoi(matches[2]); err != nil {
+			return cursored
+		}
+		sourceLines := strings.Split(source, "\n")
+		if line > len(sourceLines) {
+			return cursored
+		}
+		errLine := sourceLines[line-1]
+		cursored = append(cursored, errLine)
+		if column > len(errLine) || column < 1 {
+			return cursored
+		} else if column == 1 {
+			cursored = append(cursored, "^")
+		} else {
+			cursored = append(cursored, strings.Repeat("-", column-2) + "^")
+		}
+	}
+	return cursored
 }

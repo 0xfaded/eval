@@ -66,6 +66,10 @@ func REPL(env *eval.Env, results *([]interface{})) {
 		}
 		ctx := &eval.Ctx{line}
 		if expr, err := parser.ParseExpr(line); err != nil {
+			if pair := eval.FormatErrorPos(line, err.Error()); len(pair) == 2 {
+				fmt.Println(pair[0])
+				fmt.Println(pair[1])
+			}
 			fmt.Printf("parse error: %s\n", err)
 		} else if cexpr, errs := eval.CheckExpr(ctx, expr, env); len(errs) != 0 {
 			for _, cerr := range errs {
@@ -88,7 +92,7 @@ func REPL(env *eval.Env, results *([]interface{})) {
 				fmt.Printf("Kind = Type = %v\n", kind)
 			}
 			fmt.Printf("results[%d] = %s\n", exprs, eval.Inspect(value))
-			exprs  += 1
+			exprs += 1
 			*results = append(*results, (*vals)[0].Interface())
 		} else {
 			fmt.Printf("Kind = Multi-Value\n")
@@ -98,7 +102,7 @@ func REPL(env *eval.Env, results *([]interface{})) {
 				if i < size-1 { fmt.Printf(", ") }
 			}
 			fmt.Printf("\n")
-			exprs  += 1
+			exprs += 1
 			*results = append(*results, (*vals))
 		}
 
