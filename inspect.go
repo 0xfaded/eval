@@ -27,7 +27,21 @@ func Inspect(val reflect.Value) string {
 		}
 		str += "}"
 		return str
+
+	case reflect.Struct:
+		str := "{"
+		n  := val.NumField()
+		for i := 0; i < n; i++ {
+			if i > 0 { str += " " }
+			name  := val.Type().Field(i).Name
+			field := val.Field(i)
+			str += fmt.Sprintf("%s: %s,", name, Inspect(field))
+		}
+		str += "}"
+		return str
 	}
+
+
 	// FIXME: add more Kinds as folks are annoyed with the output of
 	// the below:
 	return fmt.Sprintf("%v", val.Interface())

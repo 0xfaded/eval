@@ -22,6 +22,10 @@ type ErrInvalidOperand struct {
 	op token.Token
 }
 
+type ErrInvalidIndirect struct {
+	t reflect.Type
+}
+
 type ErrMismatchedTypes struct {
 	x reflect.Value
 	op token.Token
@@ -204,6 +208,10 @@ func (err ErrInvalidIndex) Error() string {
 	default:
 		return fmt.Sprintf("non-integer %s index %s", ct, err.Source())
 	}
+}
+
+func (err ErrInvalidIndirect) Error() string {
+	return fmt.Sprintf("invalid indirect (type %v)", err.t)
 }
 
 func (err ErrMissingValue) Error() string {

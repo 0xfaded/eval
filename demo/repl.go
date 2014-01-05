@@ -110,8 +110,24 @@ func REPL(env *eval.Env, results *([]interface{})) {
 	}
 }
 
-func main() {
-	// Set up the environment and then call REPL
+var results []interface{} = make([] interface{}, 0, 10)
+
+// Create an eval.Env environment to use in evaluation.
+// This is a bit ugly here, because we are rolling everything by hand, but
+// we want some sort of environment to show off in demo'ing.
+// The artifical environment we create here consists of
+//   fmt:
+//      fns: fmt.Println, fmt.Printf
+//   os:
+//      types: MyInt
+//      vars: Stdout, Args
+//   main:
+//      type Alice
+//      var  results, alice, aliceptr
+//
+// See make_env in github.com/rocky/go-fish for an automated way to
+// create more complete environment from a starting import.
+func makeBogusEnv() eval.Env {
 	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
 	var consts map[string] reflect.Value = make(map[string] reflect.Value)
 	var types  map[string] reflect.Type  = make(map[string] reflect.Type)
@@ -121,7 +137,6 @@ func main() {
 
 	// A place to store result values of expressions entered
 	// interactively
-	var results []interface{} = make([] interface{}, 0, 10)
 	global_vars["results"] = reflect.ValueOf(&results)
 
 	// What we have from the fmt package.
@@ -129,18 +144,23 @@ func main() {
 	fmt_funcs["Println"] = reflect.ValueOf(fmt.Println)
 	fmt_funcs["Printf"] = reflect.ValueOf(fmt.Printf)
 
-	// Just some type structure for testing
+	// Some "alice" things for testing
 	type Alice struct {
 		Bob int
 		Secret string
 	}
 
+	var alice = Alice{1, "shhh"}
+	alicePtr := &alice
+	global_vars["alice"]    = reflect.ValueOf(alice)
+	global_vars["alicePtr"] = reflect.ValueOf(alicePtr)
+
 	// And a simple type
 	type MyInt int
 
-	// A. Stripped down package environment.  See
-	// http://github.com/rocky/go-fish for a more complete
-	// environment.
+	// A stripped down package environment.  See
+	// http://github.com/rocky/go-fish and repl_imports.go for a more
+	// complete environment.
 	pkgs := map[string] eval.Pkg {
 			"fmt": &eval.Env {
 				Name:   "fmt",
@@ -173,12 +193,11 @@ func main() {
 		Types:  map[string] reflect.Type{ "Alice": reflect.TypeOf(Alice{}) },
 		Pkgs:   pkgs,
 	}
+	return env
+}
 
-	// Make this truly self-referential
-	global_vars["env"] = reflect.ValueOf(&env)
-
+func main() {
+	env := makeBogusEnv()
 	intro_text()
-
-	// And just when you thought we'd never get around to it...
 	REPL(&env, &results)
 }
