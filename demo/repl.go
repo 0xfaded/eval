@@ -22,7 +22,6 @@ import (
 	"io"
 	"os"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/0xfaded/eval"
@@ -88,23 +87,14 @@ func REPL(env *eval.Env, results *([]interface{})) {
 			} else {
 				fmt.Printf("Kind = Type = %v\n", kind)
 			}
-			if kind == "string" {
-				fmt.Printf("results[%d] = %s\n", exprs,
-					strconv.QuoteToASCII(value.String()))
-			} else {
-				fmt.Printf("results[%d] = %v\n", exprs, (value.Interface()))
-			}
+			fmt.Printf("results[%d] = %s\n", exprs, eval.Inspect(value))
 			exprs  += 1
 			*results = append(*results, (*vals)[0].Interface())
 		} else {
 			fmt.Printf("Kind = Multi-Value\n")
 			size := len(*vals)
 			for i, v := range *vals {
-				if v.Interface() == nil {
-					fmt.Printf("nil")
-				} else {
-					fmt.Printf("%v", v.Interface())
-				}
+				fmt.Printf("%s", eval.Inspect(v))
 				if i < size-1 { fmt.Printf(", ") }
 			}
 			fmt.Printf("\n")
