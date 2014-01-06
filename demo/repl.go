@@ -53,9 +53,15 @@ To quit, enter: "quit" or Ctrl-D (EOF).
 }
 
 // REPL is the a read, eval, and print loop.
-func REPL(env *eval.Env, results *([]interface{})) {
+func REPL(env *eval.Env) {
 
 	var err error
+
+	// A place to store result values of expressions entered
+	// interactively
+	var results *([]interface{})
+	env.Vars["results"] = reflect.ValueOf(&results)
+
 	exprs := 0
 	in := bufio.NewReader(os.Stdin)
 	line, err := readline("go> ", in)
@@ -114,8 +120,6 @@ func REPL(env *eval.Env, results *([]interface{})) {
 	}
 }
 
-var results []interface{} = make([] interface{}, 0, 10)
-
 // Create an eval.Env environment to use in evaluation.
 // This is a bit ugly here, because we are rolling everything by hand, but
 // we want some sort of environment to show off in demo'ing.
@@ -127,39 +131,20 @@ var results []interface{} = make([] interface{}, 0, 10)
 //      vars: Stdout, Args
 //   main:
 //      type Alice
-//      var  results, alice, aliceptr
+//      var  alice, aliceptr
+//
+// (REPL also adds var results to main)
 //
 // See make_env in github.com/rocky/go-fish for an automated way to
 // create more complete environment from a starting import.
 func makeBogusEnv() eval.Env {
-	var vars   map[string] reflect.Value = make(map[string] reflect.Value)
-	var consts map[string] reflect.Value = make(map[string] reflect.Value)
-	var types  map[string] reflect.Type  = make(map[string] reflect.Type)
 
-	var global_funcs map[string] reflect.Value = make(map[string] reflect.Value)
-	var global_vars map[string]  reflect.Value = make(map[string] reflect.Value)
-
-	// A place to store result values of expressions entered
-	// interactively
-	global_vars["results"] = reflect.ValueOf(&results)
-
-	// What we have from the fmt package.
+	// A copule of things from the fmt package.
 	var fmt_funcs    map[string] reflect.Value = make(map[string] reflect.Value)
 	fmt_funcs["Println"] = reflect.ValueOf(fmt.Println)
-	fmt_funcs["Printf"] = reflect.ValueOf(fmt.Printf)
+	fmt_funcs["Printf"]  = reflect.ValueOf(fmt.Printf)
 
-	// Some "alice" things for testing
-	type Alice struct {
-		Bob int
-		Secret string
-	}
-
-	var alice = Alice{1, "shhh"}
-	alicePtr := &alice
-	global_vars["alice"]    = reflect.ValueOf(&alice)
-	global_vars["alicePtr"] = reflect.ValueOf(&alicePtr)
-
-	// And a simple type
+	// A simple type for demo
 	type MyInt int
 
 	// A stripped down package environment.  See
@@ -169,10 +154,10 @@ func makeBogusEnv() eval.Env {
 			"fmt": &eval.Env {
 				Name:   "fmt",
 				Path:   "fmt",
-				Vars:   vars,
-				Consts: consts,
+				Vars:   make(map[string] reflect.Value),
+				Consts: make(map[string] reflect.Value),
 				Funcs:  fmt_funcs,
-				Types:  types,
+				Types : make(map[string] reflect.Type),
 				Pkgs:   make(map[string] eval.Pkg),
 			}, "os": &eval.Env {
 				Name:   "os",
@@ -188,20 +173,35 @@ func makeBogusEnv() eval.Env {
 			},
 		}
 
-	env := eval.Env {
+	mainEnv := eval.Env {
 		Name:   ".",
 		Path:   "",
-		Vars:   global_vars,
 		Consts: make(map[string] reflect.Value),
-		Funcs:  global_funcs,
-		Types:  map[string] reflect.Type{ "Alice": reflect.TypeOf(Alice{}) },
+		Funcs : make(map[string] reflect.Value),
+		Types : make(map[string] reflect.Type),
+		Vars  : make(map[string] reflect.Value),
 		Pkgs:   pkgs,
 	}
-	return env
+
+
+	// Some "alice" things for testing
+	type Alice struct {
+		Bob int
+		Secret string
+	}
+
+	alice    := Alice{1, "shhh"}
+	alicePtr := &alice
+
+	mainEnv.Vars["alice"]    = reflect.ValueOf(&alice)
+	mainEnv.Vars["alicePtr"] = reflect.ValueOf(&alicePtr)
+	mainEnv.Types["Alice"]   = reflect.TypeOf(Alice{})
+
+	return mainEnv
 }
 
 func main() {
 	env := makeBogusEnv()
 	intro_text()
-	REPL(&env, &results)
+	REPL(&env)
 }
