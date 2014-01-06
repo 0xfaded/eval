@@ -59,7 +59,7 @@ func REPL(env *eval.Env) {
 
 	// A place to store result values of expressions entered
 	// interactively
-	var results *([]interface{})
+	results := make([] interface{}, 0, 10)
 	env.Vars["results"] = reflect.ValueOf(&results)
 
 	exprs := 0
@@ -100,7 +100,7 @@ func REPL(env *eval.Env) {
 				}
 				fmt.Printf("results[%d] = %s\n", exprs, eval.Inspect(value))
 				exprs += 1
-				*results = append(*results, (*vals)[0].Interface())
+				results = append(results, (*vals)[0].Interface())
 			} else {
 				fmt.Printf("%s\n", value)
 			}
@@ -113,7 +113,7 @@ func REPL(env *eval.Env) {
 			}
 			fmt.Printf("\n")
 			exprs += 1
-			*results = append(*results, (*vals))
+			results = append(results, (*vals))
 		}
 
 		line, err = readline("go> ", in)
