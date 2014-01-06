@@ -7,7 +7,7 @@ import (
 )
 
 func evalStarExpr(ctx *Ctx, starExpr *StarExpr, env *Env) (*reflect.Value, bool, error) {
-	return nil, false, errors.New("Star expressions not done yet")
+	// return nil, false, errors.New("Star expressions not done yet")
 	var cexpr Expr
 	var errs []error
 	if cexpr, errs = CheckExpr(ctx, starExpr.X, env); len(errs) != 0 {

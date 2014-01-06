@@ -156,8 +156,8 @@ func makeBogusEnv() eval.Env {
 
 	var alice = Alice{1, "shhh"}
 	alicePtr := &alice
-	global_vars["alice"]    = reflect.ValueOf(alice)
-	global_vars["alicePtr"] = reflect.ValueOf(alicePtr)
+	global_vars["alice"]    = reflect.ValueOf(&alice)
+	global_vars["alicePtr"] = reflect.ValueOf(&alicePtr)
 
 	// And a simple type
 	type MyInt int
