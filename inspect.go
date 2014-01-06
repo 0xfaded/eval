@@ -39,6 +39,9 @@ func Inspect(val reflect.Value) string {
 		}
 		str += "}"
 		return str
+
+	case reflect.Ptr:
+		return "&" + Inspect(val.Elem())
 	}
 
 
