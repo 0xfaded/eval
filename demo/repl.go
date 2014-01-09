@@ -16,26 +16,14 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"go/parser"
-	"io"
 	"os"
 	"reflect"
-	"strings"
 
 	"github.com/0xfaded/eval"
+	"github.com/gobs/readline"
 )
-
-// Simple replacement for GNU readline
-func readline(prompt string, in *bufio.Reader) (string, error) {
-	fmt.Printf(prompt)
-	line, err := in.ReadString('\n')
-	if err == nil {
-		line = strings.TrimRight(line, "\r\n")
-	}
-	return line, err
-}
 
 func intro_text() {
 	fmt.Printf(`=== A simple Go eval REPL ===
@@ -55,21 +43,30 @@ To quit, enter: "quit" or Ctrl-D (EOF).
 // REPL is the a read, eval, and print loop.
 func REPL(env *eval.Env) {
 
-	var err error
-
 	// A place to store result values of expressions entered
 	// interactively
 	results := make([] interface{}, 0, 10)
 	env.Vars["results"] = reflect.ValueOf(&results)
 
 	exprs := 0
-	in := bufio.NewReader(os.Stdin)
-	line, err := readline("go> ", in)
-	for line != "quit" {
-		if err != nil {
-			if err == io.EOF { break }
-			panic(err)
+	prompt := "go> "
+
+	for {
+		result := readline.ReadLine(&prompt)
+		if result == nil {
+			// EOF
+			break
 		}
+
+		line := *result
+		if line == "quit" {
+			break
+		}
+
+		if line == "" {
+			continue
+		}
+
 		ctx := &eval.Ctx{line}
 		if expr, err := parser.ParseExpr(line); err != nil {
 			if pair := eval.FormatErrorPos(line, err.Error()); len(pair) == 2 {
@@ -116,7 +113,7 @@ func REPL(env *eval.Env) {
 			results = append(results, (*vals))
 		}
 
-		line, err = readline("go> ", in)
+		readline.AddHistory(line)
 	}
 }
 
