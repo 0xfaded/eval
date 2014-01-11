@@ -81,6 +81,11 @@ type ErrInvalidIndexOperation struct {
 	t reflect.Type
 }
 
+type ErrInvalidSliceType struct {
+	ErrorContext
+	t reflect.Type
+}
+
 type ErrInvalidIndex struct {
 	ErrorContext
 	indexValue reflect.Value
@@ -174,6 +179,10 @@ func (err ErrWrongNumberOfArgsOld) Error() string {
 
 func (err ErrInvalidIndexOperation) Error() string {
 	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), err.t)
+}
+
+func (err ErrInvalidSliceType) Error() string {
+	return fmt.Sprintf("cannot slice (type %v)", err.t)
 }
 
 func (err ErrInvalidIndex) Error() string {
