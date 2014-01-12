@@ -331,7 +331,13 @@ func (err ErrInvalidBinaryOperation) Error() string {
                         return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
                                 x, op, sprintConstValue(yt, reflect.Value(yy), false), op, xt)
 		}
-	}
+	} else {
+		if areTypesCompatible(xt, yt) && !isOpDefinedOn(op, xt) {
+                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
+                                x, op, y, op, xt)
+		}
+        }
+
         // This hack is again to do with the retyping, if half the expression is
         // typed, then the untyped half of the expression assumes its default type.
         var xi, yi interface{} = x, y
@@ -423,4 +429,9 @@ func sprintUntypedConstAsTyped(expr Expr) string {
         default:
                 return expr.String()
         }
+}
+
+// Determines if two types can be automatically converted between.
+func areTypesCompatible(xt, yt reflect.Type) bool {
+	return xt.AssignableTo(unhackType(yt)) || yt.AssignableTo(unhackType(xt))
 }

@@ -90,7 +90,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 	return []testgen.Dimension{
 		lhs,
 		ops,
-		rhs[0:7],
+		rhs,
 	}
 }
 

@@ -18,12 +18,6 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 		errs = append(errs, moreErrs...)
 	}
 
-	/*
-	if errs != nil {
-		return aexpr, errs
-	}
-	*/
-
 	xa := aexpr.X.(Expr)
 	ya := aexpr.Y.(Expr)
 
@@ -332,11 +326,7 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, typedExpr, un
 			}
 
 			z, errs := evalConstBinaryBoolExpr(ctx, binary, xbool, ybool)
-                        if errs != nil {
-                                return constValue{}, errs
-                        }
-			r, errs := promoteConstToTyped(ctx, ConstBool, z, yt, untypedExpr)
-			return constValue(r), errs
+			return constValue(z), errs
 		}
 	}
 	return constValue{}, append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
@@ -348,12 +338,17 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 	xt := xexpr.KnownType()[0]
 	yt := yexpr.KnownType()[0]
 
+        // Check that the types are compatible, handling the special alias type for runes
+        // For the sake of error messages, for expressions involving int32 and rune, the
+        // resulting type is that of the left operand
 	var zt reflect.Type
-	if xt.AssignableTo(yt) {
-		zt = yt
-	} else if yt.AssignableTo(xt) {
+        if xt == yt {
 		zt = xt
-	} else {
+        } else if xt == RuneType && yt == RuneType.Type {
+                zt = RuneType
+        } else if yt == RuneType && xt == RuneType.Type {
+                zt = xt
+        } else {
 		return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, binary)}}
 	}
 
@@ -362,30 +357,36 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 
 	if xok && yok {
 		z, errs := evalConstBinaryNumericExpr(ctx, binary, x, y)
+                if isBooleanOp(binary.Op) {
+                        return constValue(z), errs
+                }
+                if errs != nil {
+                        if _, ok := errs[0].(ErrInvalidBinaryOperation); ok {
+                                // This happens if the operator is not defined on x and y
+		                return constValue(z), errs
+                        }
+                }
 		from := reflect.Value(z).Interface().(*ConstNumber).Type
 		r, moreErrs := promoteConstToTyped(ctx, from, z, zt, binary)
-		errs = append(errs, moreErrs...)
-		return constValue(r), errs
+		return constValue(r), append(errs, moreErrs...)
 	} else if !xok && !yok {
 		switch zt.Kind() {
 		case reflect.String:
 			xstring := xexpr.Const().String()
 			ystring := yexpr.Const().String()
 			z, errs := evalConstBinaryStringExpr(ctx, binary, xstring, ystring)
+                        if isBooleanOp(binary.Op) {
+                                return constValue(z), errs
+                        }
 			r, moreErrs := promoteConstToTyped(ctx, ConstString, z, zt, binary)
-			errs = append(errs, moreErrs...)
-			return constValue(r), errs
+			return constValue(r), append(errs, moreErrs...)
 
 		case reflect.Bool:
 			xbool := xexpr.Const().Bool()
 			ybool := yexpr.Const().Bool()
 			z, errs := evalConstBinaryBoolExpr(ctx, binary, xbool, ybool)
-			r, moreErrs := promoteConstToTyped(ctx, ConstString, z, zt, binary)
-			errs = append(errs, moreErrs...)
-			return constValue(r), errs
+			return constValue(z), errs
 		}
-	} else {
-		panic("go-interactive: impossible")
 	}
-	panic("evalConstTypedBinaryExpr unimplemented")
+	panic("go-interactive: impossible")
 }
