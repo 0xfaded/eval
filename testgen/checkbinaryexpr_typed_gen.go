@@ -51,7 +51,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Float64", "float64(0xffffffff)"},
 		{"Complex64", "complex64(0xffffffff + 0xffffffff * 1i)"},
 		{"Complex128", "complex128(0xffffffff + 0xffffffff * 1i)"},
-		{"Rune32", "rune(0xffffffff)"},
+		{"Rune32", "rune(0x7fffffff)"},
 		{"StringT", `string("abc")`},
 		{"BoolT", "bool(true)"},
 	}
@@ -83,7 +83,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Float64", "float64(0xffffffff)"},
 		{"Complex64", "complex64(0xffffffff + 0xffffffff * 1i)"},
 		{"Complex128", "complex128(0xffffffff + 0xffffffff * 1i)"},
-		{"Rune32", "rune(0xffffffff)"},
+		{"Rune32", "rune(0x7fffffff)"},
 		{"StringT", `string("abc")`},
 		{"BoolT", "bool(true)"},
 	}

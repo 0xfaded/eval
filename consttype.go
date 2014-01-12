@@ -251,6 +251,11 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 }
 
 // Convert a typed numeric value to a const number. Ok is false if v is not numeric
+// Because overflowing constants would result in loss of precision in error messages,
+// the Expr.Const() method of nodes containing such errors return a *ConstNumber
+// instead of the typed value. Because of this, if v is a *ConstNumber, the
+// underlying const number will be returned. When working with a successfully type
+// checked tree a typed node's Expr.Const() method will never return a *ConstNumber.
 func convertTypedToConstNumber(v reflect.Value) (_ *ConstNumber, ok bool) {
 	switch v.Type().Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -266,7 +271,11 @@ func convertTypedToConstNumber(v reflect.Value) (_ *ConstNumber, ok bool) {
 		return NewConstComplex128(v.Complex()), true
 
 	default:
-		return nil, false
+                if n, ok := v.Interface().(*ConstNumber); ok {
+                        return n, true
+                } else {
+		        return nil, false
+                }
 	}
 }
 

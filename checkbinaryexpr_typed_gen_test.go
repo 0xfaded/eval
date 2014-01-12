@@ -4701,9 +4701,8 @@ func TestCheckBinaryTypedExprComplex128GtrNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + 4`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967299 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + 4`, env,
+		`constant 2147483651 overflows rune`,
 	)
 
 }
@@ -4712,9 +4711,8 @@ func TestCheckBinaryTypedExprRune32AddInt(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + '@'`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967359 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + '@'`, env,
+		`constant 2147483711 overflows rune`,
 	)
 
 }
@@ -4723,9 +4721,8 @@ func TestCheckBinaryTypedExprRune32AddRune(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + 2.0`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967297 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + 2.0`, env,
+		`constant 2147483649 overflows rune`,
 	)
 
 }
@@ -4734,10 +4731,8 @@ func TestCheckBinaryTypedExprRune32AddFloat(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + 8.0i`, env,
 		`constant 0+8i truncated to real`,
-		`constant 4294967295 overflows rune`,
 	)
 
 }
@@ -4746,10 +4741,9 @@ func TestCheckBinaryTypedExprRune32AddComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) + true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) + true (mismatched types rune and bool)`,
 	)
 
 }
@@ -4758,10 +4752,9 @@ func TestCheckBinaryTypedExprRune32AddBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) + "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) + "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -4770,8 +4763,7 @@ func TestCheckBinaryTypedExprRune32AddString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AddNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) + nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) + nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
@@ -4781,43 +4773,29 @@ func TestCheckBinaryTypedExprRune32AddNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32SubInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - 4`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967291 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) - 4`, env, rune(0x7fffffff) - 4, reflect.TypeOf(rune(0x7fffffff) - 4))
 }
 
 // Test Rune32 - Rune
 func TestCheckBinaryTypedExprRune32SubRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - '@'`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967231 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) - '@'`, env, rune(0x7fffffff) - '@', reflect.TypeOf(rune(0x7fffffff) - '@'))
 }
 
 // Test Rune32 - Float
 func TestCheckBinaryTypedExprRune32SubFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - 2.0`, env,
-		`constant 4294967295 overflows rune`,
-		`constant 4294967293 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) - 2.0`, env, rune(0x7fffffff) - 2.0, reflect.TypeOf(rune(0x7fffffff) - 2.0))
 }
 
 // Test Rune32 - Complex
 func TestCheckBinaryTypedExprRune32SubComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) - 8.0i`, env,
 		`constant 0+8i truncated to real`,
-		`constant 4294967295 overflows rune`,
 	)
 
 }
@@ -4826,10 +4804,9 @@ func TestCheckBinaryTypedExprRune32SubComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32SubBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) - true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) - true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) - true (mismatched types rune and bool)`,
 	)
 
 }
@@ -4838,10 +4815,9 @@ func TestCheckBinaryTypedExprRune32SubBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32SubString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) - "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) - "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) - "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -4850,8 +4826,7 @@ func TestCheckBinaryTypedExprRune32SubString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32SubNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) - nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) - nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
@@ -4861,38 +4836,28 @@ func TestCheckBinaryTypedExprRune32SubNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AndInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & 4`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) & 4`, env, rune(0x7fffffff) & 4, reflect.TypeOf(rune(0x7fffffff) & 4))
 }
 
 // Test Rune32 & Rune
 func TestCheckBinaryTypedExprRune32AndRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & '@'`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) & '@'`, env, rune(0x7fffffff) & '@', reflect.TypeOf(rune(0x7fffffff) & '@'))
 }
 
 // Test Rune32 & Float
 func TestCheckBinaryTypedExprRune32AndFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & 2.0`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) & 2.0`, env, rune(0x7fffffff) & 2.0, reflect.TypeOf(rune(0x7fffffff) & 2.0))
 }
 
 // Test Rune32 & Complex
 func TestCheckBinaryTypedExprRune32AndComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) & 8.0i`, env,
 		`constant 0+8i truncated to real`,
 	)
 
@@ -4902,10 +4867,9 @@ func TestCheckBinaryTypedExprRune32AndComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AndBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) & true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) & true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) & true (mismatched types rune and bool)`,
 	)
 
 }
@@ -4914,10 +4878,9 @@ func TestCheckBinaryTypedExprRune32AndBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AndString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) & "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) & "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) & "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -4926,8 +4889,7 @@ func TestCheckBinaryTypedExprRune32AndString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32AndNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) & nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) & nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
@@ -4937,38 +4899,28 @@ func TestCheckBinaryTypedExprRune32AndNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32RemInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % 4`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) % 4`, env, rune(0x7fffffff) % 4, reflect.TypeOf(rune(0x7fffffff) % 4))
 }
 
 // Test Rune32 % Rune
 func TestCheckBinaryTypedExprRune32RemRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % '@'`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) % '@'`, env, rune(0x7fffffff) % '@', reflect.TypeOf(rune(0x7fffffff) % '@'))
 }
 
 // Test Rune32 % Float
 func TestCheckBinaryTypedExprRune32RemFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % 2.0`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) % 2.0`, env, rune(0x7fffffff) % 2.0, reflect.TypeOf(rune(0x7fffffff) % 2.0))
 }
 
 // Test Rune32 % Complex
 func TestCheckBinaryTypedExprRune32RemComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) % 8.0i`, env,
 		`constant 0+8i truncated to real`,
 		`division by zero`,
 	)
@@ -4979,10 +4931,9 @@ func TestCheckBinaryTypedExprRune32RemComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32RemBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) % true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) % true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) % true (mismatched types rune and bool)`,
 	)
 
 }
@@ -4991,10 +4942,9 @@ func TestCheckBinaryTypedExprRune32RemBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32RemString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) % "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) % "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) % "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -5003,8 +4953,7 @@ func TestCheckBinaryTypedExprRune32RemString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32RemNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) % nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) % nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
@@ -5014,38 +4963,28 @@ func TestCheckBinaryTypedExprRune32RemNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32EqlInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == 4`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) == 4`, env, rune(0x7fffffff) == 4, reflect.TypeOf(rune(0x7fffffff) == 4))
 }
 
 // Test Rune32 == Rune
 func TestCheckBinaryTypedExprRune32EqlRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == '@'`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) == '@'`, env, rune(0x7fffffff) == '@', reflect.TypeOf(rune(0x7fffffff) == '@'))
 }
 
 // Test Rune32 == Float
 func TestCheckBinaryTypedExprRune32EqlFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == 2.0`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) == 2.0`, env, rune(0x7fffffff) == 2.0, reflect.TypeOf(rune(0x7fffffff) == 2.0))
 }
 
 // Test Rune32 == Complex
 func TestCheckBinaryTypedExprRune32EqlComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) == 8.0i`, env,
 		`constant 0+8i truncated to real`,
 	)
 
@@ -5055,10 +4994,9 @@ func TestCheckBinaryTypedExprRune32EqlComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32EqlBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) == true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) == true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) == true (mismatched types rune and bool)`,
 	)
 
 }
@@ -5067,10 +5005,9 @@ func TestCheckBinaryTypedExprRune32EqlBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32EqlString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) == "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) == "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) == "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -5079,8 +5016,7 @@ func TestCheckBinaryTypedExprRune32EqlString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32EqlNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) == nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) == nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
@@ -5090,38 +5026,28 @@ func TestCheckBinaryTypedExprRune32EqlNil(t *testing.T) {
 func TestCheckBinaryTypedExprRune32GtrInt(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > 4`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) > 4`, env, rune(0x7fffffff) > 4, reflect.TypeOf(rune(0x7fffffff) > 4))
 }
 
 // Test Rune32 > Rune
 func TestCheckBinaryTypedExprRune32GtrRune(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > '@'`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) > '@'`, env, rune(0x7fffffff) > '@', reflect.TypeOf(rune(0x7fffffff) > '@'))
 }
 
 // Test Rune32 > Float
 func TestCheckBinaryTypedExprRune32GtrFloat(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > 2.0`, env,
-		`constant 4294967295 overflows rune`,
-	)
-
+	expectConst(t, `rune(0x7fffffff) > 2.0`, env, rune(0x7fffffff) > 2.0, reflect.TypeOf(rune(0x7fffffff) > 2.0))
 }
 
 // Test Rune32 > Complex
 func TestCheckBinaryTypedExprRune32GtrComplex(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > 8.0i`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) > 8.0i`, env,
 		`constant 0+8i truncated to real`,
 	)
 
@@ -5131,10 +5057,9 @@ func TestCheckBinaryTypedExprRune32GtrComplex(t *testing.T) {
 func TestCheckBinaryTypedExprRune32GtrBool(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > true`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) > true`, env,
 		`cannot convert true to type rune`,
-		`invalid operation: rune(4294967295) > true (mismatched types rune and bool)`,
+		`invalid operation: rune(2147483647) > true (mismatched types rune and bool)`,
 	)
 
 }
@@ -5143,10 +5068,9 @@ func TestCheckBinaryTypedExprRune32GtrBool(t *testing.T) {
 func TestCheckBinaryTypedExprRune32GtrString(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > "abc"`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) > "abc"`, env,
 		`cannot convert "abc" to type rune`,
-		`invalid operation: rune(4294967295) > "abc" (mismatched types rune and string)`,
+		`invalid operation: rune(2147483647) > "abc" (mismatched types rune and string)`,
 	)
 
 }
@@ -5155,8 +5079,7 @@ func TestCheckBinaryTypedExprRune32GtrString(t *testing.T) {
 func TestCheckBinaryTypedExprRune32GtrNil(t *testing.T) {
 	env := makeEnv()
 
-	expectCheckError(t, `rune(0xffffffff) > nil`, env,
-		`constant 4294967295 overflows rune`,
+	expectCheckError(t, `rune(0x7fffffff) > nil`, env,
 		`cannot convert nil to type rune`,
 	)
 
