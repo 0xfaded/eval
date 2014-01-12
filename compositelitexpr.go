@@ -11,7 +11,7 @@ import (
 )
 
 func evalCompositeLit(ctx *Ctx, lit *CompositeLit, env *Env) (*reflect.Value, bool, error) {
-	t, err := evalType(ctx, lit.Type.(Expr), env)
+	t, err := evalType(ctx, lit.Type, env)
 	if err != nil {
 		return nil, true, err
 	}

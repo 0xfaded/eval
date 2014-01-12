@@ -9,27 +9,31 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 	acall = &CallExpr{CallExpr: callExpr}
 
 	var moreErrs []error
-	if acall.Fun, moreErrs = CheckExpr(ctx, callExpr.Fun, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
-	}
-
 	for i := range callExpr.Args {
 		if acall.Args[i], moreErrs = CheckExpr(ctx, callExpr.Args[i], env); moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
 	}
 
+        // First attempt to lookup types used for type casting
+	if to, err := evalType(ctx, acall.Fun, env); err == nil {
+		return checkCallTypeExpr(ctx, to, acall, env)
+	}
+
+	// TODO eval function calls
+	if acall.Fun, moreErrs = CheckExpr(ctx, callExpr.Fun, env); moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
+
 	if errs != nil {
 		return acall, errs
 	}
 
-	fun := acall.Fun.(Expr)
-	if to, err := evalType(ctx, acall.Fun.(Expr), env); err == nil {
-		return checkCallTypeExpr(ctx, to, acall, env)
-	} else if fun.IsConst() && fun.KnownType()[0] == ConstNil {
+        fun := acall.Fun.(Expr)
+        if fun.IsConst() && fun.KnownType()[0] == ConstNil {
 		return acall, []error{ErrUntypedNil{at(ctx, fun)}}
 	}
-	// TODO eval function calls
+
 	return acall, errs
 }
 

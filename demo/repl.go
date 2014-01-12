@@ -190,12 +190,18 @@ func makeBogusEnv() eval.Env {
 		Secret string
 	}
 
+        type R rune
+
 	alice    := Alice{1, "shhh"}
 	alicePtr := &alice
+        foo := 10
 
 	mainEnv.Vars["alice"]    = reflect.ValueOf(&alice)
 	mainEnv.Vars["alicePtr"] = reflect.ValueOf(&alicePtr)
+        mainEnv.Vars["foo"] = reflect.ValueOf(&foo)
+        mainEnv.Consts["bar"] = reflect.ValueOf(eval.NewConstInt64(5))
 	mainEnv.Types["Alice"]   = reflect.TypeOf(Alice{})
+	mainEnv.Types["R"]   = reflect.TypeOf(R(0))
 
 	return mainEnv
 }

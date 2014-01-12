@@ -1,8 +1,6 @@
 package eval
 
 import (
-	"os"
-	"log"
 	"testing"
 	"reflect"
 )
@@ -22,6 +20,7 @@ func TestFuncCallWithWrongArgs(t *testing.T) {
 	expectFail(t, "Foo(1.5)", env)
 }
 
+/* TODO move this test to checker tests
 func TestFuncCallLogNewWithWrongArgs(t *testing.T) {
 	env := makeEnv()
 	logpkg := makeEnv()
@@ -35,6 +34,7 @@ func TestFuncCallLogNewWithWrongArgs(t *testing.T) {
 
 	expectFail(t, "log.New(\"Bob\"), os.Stdout, 0)", env)
 }
+*/
 
 func TestFuncCallWithSplatOne(t *testing.T) {
 	env := makeEnv()

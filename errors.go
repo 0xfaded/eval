@@ -17,6 +17,10 @@ type ErrBadBasicLit struct {
 	ErrorContext
 }
 
+type ErrUndefined struct {
+	ErrorContext
+}
+
 type ErrInvalidOperand struct {
 	x reflect.Value
 	op token.Token
@@ -142,6 +146,10 @@ type ErrorContext struct {
 
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %s", err.Source())
+}
+
+func (err ErrUndefined) Error() string {
+	return fmt.Sprintf("undefined %v", err.Node)
 }
 
 func (err ErrInvalidOperand) Error() string {

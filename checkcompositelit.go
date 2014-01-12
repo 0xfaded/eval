@@ -8,9 +8,8 @@ func checkCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (aexpr *Compos
 	aexpr = &CompositeLit{CompositeLit: lit}
 
 	var moreErrs []error
-	if aexpr.Type, moreErrs = checkTypeExpr(ctx, lit.Type, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
-	}
+        // TODO confirm the type actually exists
+        aexpr.Type = lit.Type
 
 	for i := range lit.Elts {
 		if aexpr.Elts[i], moreErrs = CheckExpr(ctx, lit.Elts[i], env); moreErrs != nil {
