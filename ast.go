@@ -322,7 +322,7 @@ func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) 
 	i := v.Interface()
 	switch x := i.(type) {
 	case *ConstNumber:
-                // This is hear to print overflowing typed runes, which
+                // This is here to print overflowing typed runes, which
                 // are represented by a *ConstNumber and a RuneType
                 if t == RuneType {
                         r := *x
