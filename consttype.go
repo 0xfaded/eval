@@ -8,6 +8,7 @@ type ConstType interface {
 	reflect.Type
 	IsIntegral() bool
 	IsReal() bool
+	IsNumeric() bool
 }
 
 type ConstIntType struct { reflect.Type }
@@ -52,23 +53,17 @@ func (ConstStringType) IsReal() bool { return false }
 func (ConstNilType) IsReal() bool { return false }
 func (ConstBoolType) IsReal() bool { return false }
 
+func (ConstIntType) IsNumeric() bool { return true }
+func (ConstRuneType) IsNumeric() bool { return true }
+func (ConstFloatType) IsNumeric() bool { return true }
+func (ConstComplexType) IsNumeric() bool { return true }
+func (ConstStringType) IsNumeric() bool { return false }
+func (ConstNilType) IsNumeric() bool { return false }
+func (ConstBoolType) IsNumeric() bool { return false }
+
 // promoteConsts returns the ConstType of a binary, a non-boolean,
 // expression involving const types of x and y.  Errors match those
 // produced by gc and are as follows:
-//
-// If one type is a numeric type, and the other is not:
-//     ErrBadConstConversion other -> numeric
-//
-// If one type is a string type and the other is a bool type:
-//     ErrBadConstConversion bool -> int
-//     ErrBadConstConversion string -> int
-//
-// If one value is nil and the other a string value:
-//     ErrBadConstConversion nil -> int
-//     ErrBadConstConversion string -> int
-//
-// If one value is nil and the other a bool value:
-//     ErrBadConstConversion nil -> bool
 func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
@@ -146,9 +141,22 @@ func promoteConstNumbers(x, y ConstType) ConstType {
 	panic("go-interactive: promoteConstNumbers called with non-numbers")
 }
 
-func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
+// Convert an untyped constant to a typed constant, where it would be
+// legal to do using a type cast.
+func castConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
 	constValue, []error) {
+        return convertConstToTyped(ctx, from, c, to, true, expr)
+}
 
+// Convert an untyped constant to a typed constant, where it would be
+// legal to do so automatically in a binary expression.
+func promoteConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
+	constValue, []error) {
+        return convertConstToTyped(ctx, from, c, to, false, expr)
+}
+
+func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, isTypeCast bool, expr Expr) (
+	constValue, []error) {
 	v := hackedNew(to).Elem()
 
 	switch from.(type) {
@@ -203,9 +211,10 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			v.SetComplex(cmplx)
 			return constValue(v), nil
 
-		// string(97) is legal, equivalent of string('a')
+		// string(97) is legal, equivalent of string('a'), but this
+                // conversion is not automatic
 		case reflect.String:
-			if from.IsIntegral() {
+			if isTypeCast && from.IsIntegral() {
 				i, _, overflow := underlying.Value.Int(32)
 				if overflow {
 					err := ErrOverflowedConstant{at(ctx, expr), from, ConstString, underlying}
@@ -240,3 +249,24 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 
 	return constValue{}, []error{ErrBadConstConversion{at(ctx, expr), from, to, reflect.Value(c)}}
 }
+
+// Convert a typed numeric value to a const number. Ok is false if v is not numeric
+func convertTypedToConstNumber(v reflect.Value) (_ *ConstNumber, ok bool) {
+	switch v.Type().Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return NewConstInt64(v.Int()), true
+
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return NewConstUint64(v.Uint()), true
+
+	case reflect.Float32, reflect.Float64:
+		return NewConstFloat64(v.Float()), true
+
+	case reflect.Complex64, reflect.Complex128:
+		return NewConstComplex128(v.Complex()), true
+
+	default:
+		return nil, false
+	}
+}
+

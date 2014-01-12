@@ -149,7 +149,6 @@ func TestIndexStringConstantOutOfBounds(t *testing.T) {
 	expr := "a[2]"
 	expectError(t, expr, env, "invalid array index 2 (out of bounds for 2-byte string)")
 }
-*/
 
 /* TODO rewrite once the type checker is implemented
 func TestIndexStringNegativeIndex(t *testing.T) {

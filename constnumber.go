@@ -84,7 +84,12 @@ func (z *ConstNumber) StringShow0i(show0i bool) string {
 		r, _, _ := z.Value.Int(32)
 		return strconv.QuoteRuneToASCII(rune(r))
 	} else if z.Type == ConstComplex {
-		return z.Value.StringShow0i(show0i)
+		// Hack to show 0i instead of 0
+		if z.Value.IsZero() {
+			return "0i"
+		} else {
+			return z.Value.StringShow0i(show0i)
+		}
 	} else {
 		return z.Value.StringShow0i(false)
 	}

@@ -24,7 +24,7 @@ var body = template.Must(template.New("Body").Parse(
 `))
 
 func (*Test) Package() string {
-	return "interactive"
+	return "eval"
 }
 
 func (*Test) Prefix() string {

@@ -18,9 +18,11 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 		errs = append(errs, moreErrs...)
 	}
 
+	/*
 	if errs != nil {
 		return aexpr, errs
 	}
+	*/
 
 	xa := aexpr.X.(Expr)
 	ya := aexpr.Y.(Expr)
@@ -46,7 +48,8 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 			yv := ya.Const()
 			xv := xa.Const()
 			var promoted ConstType
-			if promoted, errs = promoteConsts(ctx, xc, yc, xa, ya, xv, yv); errs != nil {
+			if promoted, moreErrs = promoteConsts(ctx, xc, yc, xa, ya, xv, yv); moreErrs != nil {
+				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
 				if isBooleanOp(binary.Op) {
@@ -60,29 +63,28 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 				}
 			}
 		} else if yuntyped {
-			if z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, xa, ya); moreErrs!= nil {
+			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, xa, ya, true)
+			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
-				if isBooleanOp(binary.Op) {
-					aexpr.knownType = []reflect.Type{ConstBool}
-				} else {
-					aexpr.knownType = xt
-				}
+				aexpr.knownType = knownType{reflect.Value(z).Type()}
 				aexpr.constValue = z
 			}
 		} else if xuntyped {
-			if z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, ya, xa); moreErrs!= nil {
+			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, ya, xa, false)
+			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
-				if isBooleanOp(binary.Op) {
-					aexpr.knownType = []reflect.Type{ConstBool}
-				} else {
-					aexpr.knownType = yt
-				}
+				aexpr.knownType = knownType{reflect.Value(z).Type()}
 				aexpr.constValue = z
 			}
 		} else {
-			panic("Unimplemented")
+			if z, moreErrs := evalConstTypedBinaryExpr(ctx, aexpr, xa, ya); moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			} else {
+				aexpr.knownType = knownType{reflect.Value(z).Type()}
+				aexpr.constValue = z
+			}
 		}
 	}
 	return aexpr, errs
@@ -220,63 +222,170 @@ func evalConstBinaryBoolExpr(ctx *Ctx, constExpr *BinaryExpr, x, y bool) (constV
 }
 
 // Evaluate x op y
-func evalConstTypedUntypedBinaryExpr(ctx *Ctx, expr *BinaryExpr, typedExpr, untypedExpr Expr) (
+func evalConstTypedUntypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, typedExpr, untypedExpr Expr, reversed bool) (
 	constValue, []error) {
 
-	xt := untypedExpr.KnownType()[0]
+	xt := untypedExpr.KnownType()[0].(ConstType)
 	yt := typedExpr.KnownType()[0]
+
+	// x must be convertible to target type
+	xUntyped := untypedExpr.Const()
+	x, xConvErrs := promoteConstToTyped(ctx, xt, constValue(xUntyped), yt, untypedExpr)
+
+        // If the untyped operand is nil, gc simply says it could not convert the nil type
+        if xt == ConstNil {
+                // ... unless, its a string. In which case, report mismatched types
+                if yt.Kind() == reflect.String {
+		        return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, binary)}}
+                } else {
+		        return constValue{}, xConvErrs
+                }
+	} else if !isOpDefinedOn(binary.Op, yt) {
+		return constValue{}, append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+	}
+
+        // Check for an impossible conversion. This occurs when the types
+        // are incompatible, such as string(1.5). For other errors, such as
+        // integer overflows, the type check should continue as if the conversion
+        // succeeded
+        if len(xConvErrs) == 1 {
+                if _, ok := xConvErrs[0].(ErrBadConstConversion); ok {
+                        errs := append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+	                return constValue{}, errs
+                }
+        }
 
 	switch xt.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		x := untypedExpr.Const().Interface().(*ConstNumber)
-		var y *ConstNumber
-		switch yt.Kind() {
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			y = NewConstInt64(typedExpr.Const().Int())
+		xx, xok := convertTypedToConstNumber(reflect.Value(x))
+		yy, yok := convertTypedToConstNumber(typedExpr.Const())
 
-		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			y = NewConstUint64(typedExpr.Const().Uint())
-
-		case reflect.Float32, reflect.Float64:
-			y = NewConstFloat64(typedExpr.Const().Float())
-
-		case reflect.Complex64, reflect.Complex128:
-			y = NewConstComplex128(typedExpr.Const().Complex())
-
-		default:
-			// This will result in a bad conversion error
-			_, errs := convertConstToTyped(ctx, x.Type, constValueOf(x), yt, untypedExpr)
-			return constValue{}, errs
+		// If a child node errored, then it is possible that, typedExpr.Const() is
+		// actually a *ConstNumber to avoid loss of precision in error messages.
+		if !yok {
+			yy, yok = reflect.Value(typedExpr.Const()).Interface().(*ConstNumber)
 		}
 
-		z, errs := evalConstBinaryNumericExpr(ctx, expr, x, y)
-		r, moreErrs := convertConstToTyped(ctx, x.Type, z, yt, untypedExpr)
-		errs = append(errs, moreErrs...)
-		return constValue(r), errs
+		if !xok || !yok {
+			// This is a non numeric expression. Return the errors encountered so far
+			return constValue{}, append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+		}
+
+		if reversed {
+			xx, yy = yy, xx
+		}
+
+		z, errs := evalConstBinaryNumericExpr(ctx, binary, xx, yy)
+		if errs != nil {
+			return constValueOf(z), append(xConvErrs, errs...)
+		}
+		errs = append(xConvErrs, errs...)
+
+		var zt ConstType
+		var rt reflect.Type
+		if isBooleanOp(binary.Op) {
+			zt = ConstBool
+			rt = reflect.TypeOf(false)
+		} else {
+			zt = reflect.Value(z).Interface().(*ConstNumber).Type
+			rt = yt
+		}
+
+		r, moreErrs := promoteConstToTyped(ctx, zt, z, rt, binary)
+		return constValue(r), append(errs, moreErrs...)
 
 	case ConstStringType:
 		if yt.Kind() == reflect.String {
-			xstring := untypedExpr.Const().String()
+			xstring := reflect.Value(x).String()
 			ystring := typedExpr.Const().String()
-			z, errs := evalConstBinaryStringExpr(ctx, expr, xstring, ystring)
-			r, moreErrs := convertConstToTyped(ctx, ConstString, z, yt, untypedExpr)
-			errs = append(errs, moreErrs...)
+
+			if reversed {
+				xstring, ystring = ystring, xstring
+			}
+
+			z, errs := evalConstBinaryStringExpr(ctx, binary, xstring, ystring)
+                        if errs != nil {
+                                return constValue{}, errs
+                        }
+
+                        var zt ConstType
+                        var rt reflect.Type
+                        if isBooleanOp(binary.Op) {
+                                zt = ConstBool
+                                rt = reflect.TypeOf(false)
+                        } else {
+                                zt = ConstString
+                                rt = reflect.TypeOf("")
+                        }
+
+			r, errs := promoteConstToTyped(ctx, zt, z, rt, binary)
 			return constValue(r), errs
 		}
 
 	case ConstBoolType:
 		if yt.Kind() == reflect.Bool {
-			xbool := untypedExpr.Const().Bool()
+			xbool := reflect.Value(x).Bool()
 			ybool := typedExpr.Const().Bool()
-			z, errs := evalConstBinaryBoolExpr(ctx, expr, xbool, ybool)
-			r, moreErrs := convertConstToTyped(ctx, ConstBool, z, yt, untypedExpr)
+
+			if reversed {
+				xbool, ybool = ybool, xbool
+			}
+
+			z, errs := evalConstBinaryBoolExpr(ctx, binary, xbool, ybool)
+                        if errs != nil {
+                                return constValue{}, errs
+                        }
+			r, errs := promoteConstToTyped(ctx, ConstBool, z, yt, untypedExpr)
+			return constValue(r), errs
+		}
+	}
+	return constValue{}, append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+}
+
+func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (constValue, []error) {
+
+	// These are known not to be ConstTypes
+	xt := xexpr.KnownType()[0]
+	yt := yexpr.KnownType()[0]
+
+	var zt reflect.Type
+	if xt.AssignableTo(yt) {
+		zt = yt
+	} else if yt.AssignableTo(xt) {
+		zt = xt
+	} else {
+		return constValue{}, []error{ErrInvalidBinaryOperation{at(ctx, binary)}}
+	}
+
+	x, xok := convertTypedToConstNumber(xexpr.Const())
+	y, yok := convertTypedToConstNumber(yexpr.Const())
+
+	if xok && yok {
+		z, errs := evalConstBinaryNumericExpr(ctx, binary, x, y)
+		from := reflect.Value(z).Interface().(*ConstNumber).Type
+		r, moreErrs := promoteConstToTyped(ctx, from, z, zt, binary)
+		errs = append(errs, moreErrs...)
+		return constValue(r), errs
+	} else if !xok && !yok {
+		switch zt.Kind() {
+		case reflect.String:
+			xstring := xexpr.Const().String()
+			ystring := yexpr.Const().String()
+			z, errs := evalConstBinaryStringExpr(ctx, binary, xstring, ystring)
+			r, moreErrs := promoteConstToTyped(ctx, ConstString, z, zt, binary)
+			errs = append(errs, moreErrs...)
+			return constValue(r), errs
+
+		case reflect.Bool:
+			xbool := xexpr.Const().Bool()
+			ybool := yexpr.Const().Bool()
+			z, errs := evalConstBinaryBoolExpr(ctx, binary, xbool, ybool)
+			r, moreErrs := promoteConstToTyped(ctx, ConstString, z, zt, binary)
 			errs = append(errs, moreErrs...)
 			return constValue(r), errs
 		}
-
-	case ConstNilType:
-		panic("func")
+	} else {
+		panic("go-interactive: impossible")
 	}
-	panic("func")
-
+	panic("evalConstTypedBinaryExpr unimplemented")
 }
