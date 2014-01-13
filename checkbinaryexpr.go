@@ -108,7 +108,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
                 }
 
                 if isBooleanOp(binary.Op) {
-                        aexpr.knownType = knownType{ConstBool}
+                        aexpr.knownType = knownType{reflect.TypeOf(false)}
                 }
         }
 	return aexpr, errs

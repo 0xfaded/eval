@@ -25,17 +25,16 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (aexpr *UnaryExpr,
 			return aexpr, errs
 		}
 
+		aexpr.knownType = t
 		if a.IsConst() {
 			if c, ok := t[0].(ConstType); ok {
 				aexpr.constValue, moreErrs = evalConstUnaryExpr(ctx, aexpr, c)
 				if moreErrs != nil {
 					errs = append(errs, moreErrs...)
-				} else {
-					aexpr.knownType = t
 				}
-			}
-		}
-	}
+                        }
+                }
+        }
 	return aexpr, errs
 }
 

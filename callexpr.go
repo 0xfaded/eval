@@ -224,7 +224,7 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 
 	if builtin {
 		otyped := ret[1].Bool()
-		var err error = nil
+		var err error
 		if !ret[2].IsNil() {
 			err = ret[2].Interface().(error)
 		}

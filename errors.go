@@ -153,7 +153,7 @@ func (err ErrUndefined) Error() string {
 }
 
 func (err ErrInvalidOperand) Error() string {
-	return fmt.Sprintf("invalid unary operation %v %v %v", err.x, err.op)
+	return fmt.Sprintf("invalid unary operation %v %v", err.op, err.x)
 }
 
 func (err ErrInvalidOperands) Error() string {

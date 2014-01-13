@@ -11,18 +11,28 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
                 return b.Const(), true, nil
         }
 
-        zt := b.KnownType()[0]
         xexpr := b.X.(Expr)
         yexpr := b.Y.(Expr)
 
-        var x, y reflect.Value
-        if x, err = resolveOperand(ctx, xexpr, zt, env); err != nil {
-                return reflect.Value{}, false, err
-        } else if y, err = resolveOperand(ctx, yexpr, zt, env); err != nil {
-                return reflect.Value{}, false, err
+        // Compute the operand type
+        // TODO[crc] I have decided that const nodes with inferred types
+        // need to be retyped to avoid logic like below.
+        var zt []reflect.Type
+        if xexpr.IsConst() {
+                zt = yexpr.KnownType()
+        } else {
+                zt = xexpr.KnownType()
         }
 
-	switch zt.Kind() {
+        var xs, ys []reflect.Value
+        if xs, err = evalTypedExpr(ctx, xexpr, zt, env); err != nil {
+                return reflect.Value{}, false, err
+        } else if ys, err = evalTypedExpr(ctx, yexpr, zt, env); err != nil {
+                return reflect.Value{}, false, err
+        }
+        x, y := xs[0], ys[0]
+
+	switch zt[0].Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		r, err = evalBinaryIntExpr(ctx, x, b.Op, y)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
@@ -39,22 +49,6 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
                 panic("go-eval: impossible. Did you type check? (or more likely what you want is unimplemented)")
 	}
 	return r, true, err
-}
-
-func resolveOperand(ctx *Ctx, expr Expr, resultType reflect.Type, env *Env) (
-        x reflect.Value, err error) {
-        if expr.IsConst() {
-                x = expr.Const()
-                if ct, ok := expr.KnownType()[0].(ConstType); ok {
-                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), resultType, expr)
-                        x = reflect.Value(cx)
-                }
-        } else {
-                var xs *[]reflect.Value
-                xs, _, err = EvalExpr(ctx, expr, env)
-                x = (*xs)[0]
-        }
-        return x, err
 }
 
 func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
