@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+
+        "go/ast"
 )
 
 // EvalExpr is the main function to call to evaluate an ast-parsed
@@ -72,9 +74,31 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }
 
-func evalType(ctx *Ctx, expr Expr, env *Env) (reflect.Type, error) {
+// Evals an expression with a known result type. If the node is an
+// untyped constant, it is converted to type t. This function assumes
+// the input is successfully type checked, and therefore is undefined
+// incorrectly typed inputs.
+func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (
+        xs []reflect.Value, err error) {
+        if expr.IsConst() {
+                x := expr.Const()
+                if ct, ok := expr.KnownType()[0].(ConstType); ok {
+                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), t[0], expr)
+                        xs = []reflect.Value{reflect.Value(cx)}
+                } else {
+                        xs = []reflect.Value{x}
+                }
+        } else {
+                var xxs *[]reflect.Value
+                xxs, _, err = EvalExpr(ctx, expr, env)
+                xs = *xxs
+        }
+        return xs, err
+}
+
+func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
 	switch node := expr.(type) {
-	case *Ident:
+	case *ast.Ident:
 		if t, ok := env.Types[node.Name]; ok {
 			return t, nil
 		} else if t, ok := builtinTypes[node.Name]; ok {
@@ -82,17 +106,17 @@ func evalType(ctx *Ctx, expr Expr, env *Env) (reflect.Type, error) {
 		} else {
 			return t, errors.New("undefined type: " + node.Name)
 		}
-	case *ArrayType:
+	case *ast.ArrayType:
 		return nil, errors.New("array types not implemented")
-	case *StructType:
+	case *ast.StructType:
 		return nil, errors.New("struct types not implemented")
-	case *FuncType:
+	case *ast.FuncType:
 		return nil, errors.New("func types not implemented")
-	case *InterfaceType:
+	case *ast.InterfaceType:
 		return nil, errors.New("interface types not implemented")
-	case *MapType:
+	case *ast.MapType:
 		return nil, errors.New("map types not implemented")
-	case *ChanType:
+	case *ast.ChanType:
 		return nil, errors.New("chan types not implemented")
 	default:
 		return nil, errors.New(fmt.Sprintf("Type: Bad type (%+v)", node))

@@ -28,57 +28,42 @@ func evalUnaryExpr(ctx *Ctx, b *UnaryExpr, env *Env) (r reflect.Value, rtyped bo
 		r, err = evalUnaryFloatExpr(ctx, x, b.Op)
 	case reflect.Complex64, reflect.Complex128:
 		r, err = evalUnaryComplexExpr(ctx, x, b.Op)
-	case reflect.String:
-		r, err = evalUnaryStringExpr(ctx, x, b.Op)
+	case reflect.Bool:
+		r, err = evalUnaryBoolExpr(ctx, x, b.Op)
 	default:
-		err = ErrInvalidOperands{x, b.Op, x}
+	        err = ErrInvalidOperand{x, b.Op}
 	}
 	return
 }
 
-// Assumes y is assignable to x, panics otherwise
 func evalUnaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var r int64
 	var err error
-	// var b bool
-	is_bool := false
-
-	var b bool = false
 
 	xx := x.Int()
 	switch op {
 	case token.ADD: r = +xx
 	case token.SUB: r = -xx
+	case token.XOR: r = ^xx
 	default: err = ErrInvalidOperand{x, op}
 	}
-	if is_bool {
-		return reflect.ValueOf(b), err
-	} else {
-		return reflect.ValueOf(r).Convert(x.Type()), err
-	}
+	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-// Assumes y is assignable to x, panics otherwise
 func evalUnaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r uint64
-	var b bool
-	is_bool := false
 
 	xx := x.Uint()
 	switch op {
 	case token.ADD: r = +xx
-	// case token.SUB: r = -xx
+	case token.SUB: r = -xx
+	case token.XOR: r = ^xx
 	default: err = ErrInvalidOperand{x, op}
 	}
-	if is_bool {
-		return reflect.ValueOf(b), err
-	} else {
-		return reflect.ValueOf(r).Convert(x.Type()), err
-	}
+	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-// Assumes y is assignable to x, panics otherwise
 func evalUnaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r float64
@@ -92,25 +77,26 @@ func evalUnaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Valu
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-// Assumes y is assignable to x, panics otherwise
 func evalUnaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r complex128
 
-	// xx := x.Complex()
+	xx := x.Complex()
 	switch op {
+	case token.ADD: r = +xx
+	case token.SUB: r = -xx
 	default: err = ErrInvalidOperand{x, op}
 	}
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-// Assumes y is assignable to x, panics otherwise
-func evalUnaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryBoolExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
-	var r string
+	var r bool
 
-	// xx := x.String()
+	xx := x.Bool()
 	switch op {
+	case token.NOT: r = !xx
 	default: err = ErrInvalidOperand{x, op}
 	}
 	return reflect.ValueOf(r).Convert(x.Type()), err

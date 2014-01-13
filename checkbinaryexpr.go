@@ -80,7 +80,37 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 				aexpr.constValue = z
 			}
 		}
-	}
+	} else {
+                // Types in a fully typed expression must be equal.
+                // The only exception is for int32 and the psuedo rune
+                if xt[0] == yt[0] {
+                        aexpr.knownType = xt
+                } else if xt[0] == RuneType && yt[0] == RuneType.Type {
+                        aexpr.knownType = knownType{RuneType}
+                } else if yt[0] == RuneType && xt[0] == RuneType.Type {
+                        aexpr.knownType = xt
+                } else if yuntyped {
+	                _, moreErrs = promoteConstToTyped(ctx, yc, constValue(ya.Const()), xt[0], ya)
+			if moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			} else {
+				aexpr.knownType = xt
+			}
+                } else if xuntyped {
+	                _, moreErrs = promoteConstToTyped(ctx, xc, constValue(xa.Const()), yt[0], xa)
+			if moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			} else {
+				aexpr.knownType = yt
+			}
+                } else {
+                        errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
+                }
+
+                if isBooleanOp(binary.Op) {
+                        aexpr.knownType = knownType{reflect.TypeOf(false)}
+                }
+        }
 	return aexpr, errs
 }
 

@@ -17,6 +17,10 @@ type ErrBadBasicLit struct {
 	ErrorContext
 }
 
+type ErrUndefined struct {
+	ErrorContext
+}
+
 type ErrInvalidOperand struct {
 	x reflect.Value
 	op token.Token
@@ -144,8 +148,12 @@ func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %s", err.Source())
 }
 
+func (err ErrUndefined) Error() string {
+	return fmt.Sprintf("undefined %v", err.Node)
+}
+
 func (err ErrInvalidOperand) Error() string {
-	return fmt.Sprintf("invalid unary operation %v %v %v", err.x, err.op)
+	return fmt.Sprintf("invalid unary operation %v %v", err.op, err.x)
 }
 
 func (err ErrInvalidOperands) Error() string {

@@ -117,6 +117,20 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 	}
 }
 
+func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) {
+	ctx := &Ctx{expr}
+	if e, err := parser.ParseExpr(expr); err != nil {
+		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
+	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
+		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
+	} else if aexpr.IsConst() {
+		t.Fatalf("Expression '%s' yielded a const node(%+v)", expr, aexpr)
+	} else if len(aexpr.KnownType()) != 1 {
+		t.Fatalf("Expression '%s' expected to have single type '%v'", expr, expectedType)
+	} else if actual := aexpr.KnownType()[0]; !typesEqual(expectedType, actual) {
+                t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
+	}
+}
 func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {
 	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
