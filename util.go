@@ -22,6 +22,16 @@ func hackedNew(t reflect.Type) reflect.Value {
 	}
 }
 
+// Get the underlying reflect.Type a hacked type
+func unhackType(t reflect.Type) reflect.Type {
+	switch tt := t.(type) {
+	case Rune:
+		return tt.Type
+	default:
+		return t
+	}
+}
+
 func assignableValue(x reflect.Value, to reflect.Type, xTyped bool) (reflect.Value, error) {
 	var err error
 	if xTyped {
