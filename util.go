@@ -32,6 +32,44 @@ func unhackType(t reflect.Type) reflect.Type {
 	}
 }
 
+
+// Determine if type from is assignable to type to
+func typeAssignableTo(from, to reflect.Type) bool {
+	// Handle the rune alias
+	if r, ok := from.(Rune); ok {
+		from = r.Type
+	}
+
+	return from.AssignableTo(to)
+}
+
+// Determine if the result of from expr is assignable to type to. to must be a vanilla reflect.Type.
+// from must have a KnownType() of length 1. Const types that raise overflow and truncation
+// errors will still return true, but the errors will be reflected in the []error slice.
+func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
+	if len(from.KnownType()) != 1 {
+		panic("go-eval: assignableTo called with from.KnownType() != 1")
+	}
+	fromType := from.KnownType()[0]
+
+	// Check that consts can be converted
+	if c, ok := fromType.(ConstType); ok && from.IsConst() {
+		// If cv is a valid value, then the types are assignable even if
+		// other conversion errors, such as overflows, are present.
+		cv, errs := promoteConstToTyped(ctx, c, constValue(from.Const()), to, from)
+		if reflect.Value(cv).IsValid() {
+			return true, errs
+		} else {
+			// If the conversion was invalid, the caller usually does not
+			// want the ErrBadConstConversion error. Instead it will produce
+			// its own error specific to the cause
+			return false, nil
+		}
+	}
+
+	return typeAssignableTo(fromType, to), nil
+}
+
 func assignableValue(x reflect.Value, to reflect.Type, xTyped bool) (reflect.Value, error) {
 	var err error
 	if xTyped {
@@ -246,3 +284,25 @@ func FormatErrorPos(source, errmsg string) (cursored [] string) {
 	}
 	return cursored
 }
+
+// Walk the ast of expressions like (((x))) and return the inner *ParenExpr.
+// Returns input Expr if it is not a *ParenExpr
+func skipSuperfluousParens(expr Expr) Expr {
+	if p, ok := expr.(*ParenExpr); ok {
+		// Remove useless parens from (((x))) expressions
+		var tmp *ParenExpr
+		for ; ok; tmp, ok = p.X.(*ParenExpr) {
+			p = tmp
+		}
+
+		// Remove parens from all expressions where order of evaluation is irrelevant
+		switch p.X.(type) {
+		case *BinaryExpr:
+			return p
+		default:
+			return p.X.(Expr)
+		}
+	}
+	return expr
+}
+

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"go/ast"
 	"go/token"
@@ -65,6 +66,13 @@ type ErrWrongNumberOfArgsOld struct {
 
 type ErrWrongNumberOfArgs struct {
 	ErrorContext
+	numArgs int
+}
+
+type ErrWrongArgType struct {
+	ErrorContext
+	call *CallExpr
+	argPos int
 }
 
 type ErrMissingValue struct {
@@ -247,13 +255,39 @@ func (err ErrWrongNumberOfArgs) Error() string {
 	call := err.ErrorContext.Node.(*CallExpr)
 	if call.isTypeConversion {
 		to := call.KnownType()[0]
-		if call.Args == nil {
+		if err.numArgs == 0 {
 			return fmt.Sprintf("missing argument to conversion to %v", to)
 		} else {
 			return fmt.Sprintf("too many arguments to conversion to %v", to)
 		}
+	} else {
+		if err.numArgs < call.Fun.(Expr).KnownType()[0].NumIn() {
+			return fmt.Sprintf("not enough arguments in call to %v", call.Fun)
+		} else {
+			return fmt.Sprintf("too many arguments in call to %v", call.Fun)
+		}
 	}
-	return "TODO ErrWrongNumberOfArgs"
+}
+
+func (err ErrWrongArgType) Error() string {
+	ft := err.call.Fun.(Expr).KnownType()[0]
+	var expected reflect.Type
+	if ft.IsVariadic() && !err.call.argNEllipsis && err.argPos > ft.NumIn() - 1 {
+		expected = ft.In(ft.NumIn() - 1).Elem()
+	} else {
+		expected = ft.In(err.argPos)
+	}
+
+	if err.call.arg0MultiValued {
+		actual := err.Node.(Expr).KnownType()[err.argPos]
+		return fmt.Sprintf("cannot use %v as type %v in argument to %v",
+			sprintfType(actual), sprintfType(expected), err.call.Fun)
+	} else {
+		arg := err.Node.(Expr)
+		actual := arg.KnownType()[0]
+		return fmt.Sprintf("cannot use %v (type %v) as type %v in function argument",
+			arg, sprintfType(actual), sprintfType(expected))
+	}
 }
 
 func (err ErrInvalidUnaryOperation) Error() string {
@@ -442,4 +476,13 @@ func sprintUntypedConstAsTyped(expr Expr) string {
 // Determines if two types can be automatically converted between.
 func areTypesCompatible(xt, yt reflect.Type) bool {
 	return xt.AssignableTo(unhackType(yt)) || yt.AssignableTo(unhackType(xt))
+}
+
+// Format a type suitable for error messages.
+func sprintfType(t reflect.Type) string {
+	s := t.String()
+	if strings.HasPrefix(s, "main.") {
+		s = s[len("main."):]
+	}
+	return s
 }

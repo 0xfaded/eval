@@ -13,12 +13,14 @@ func TestFuncCallWithConst(t *testing.T) {
 	expectResult(t, "Foo(X)", env, 1)
 }
 
+/* TODO move this test to checker tests
 func TestFuncCallWithWrongArgs(t *testing.T) {
 	env := makeEnv()
 	env.Funcs["Foo"] = reflect.ValueOf(func (string) int { return 1; })
 
 	expectFail(t, "Foo(1.5)", env)
 }
+*/
 
 /* TODO move this test to checker tests
 func TestFuncCallLogNewWithWrongArgs(t *testing.T) {
@@ -66,6 +68,7 @@ func TestFuncCallWithSplatTwo(t *testing.T) {
 	expectResult(t, expr, env, expected)
 }
 
+/* TODO move this test to checker tests
 // This test hits a specific case in the implementation where
 // f(g()) is evaluated as args := g(); f(args)
 func TestFuncCallWithMissingValueSplat(t *testing.T) {
@@ -76,7 +79,9 @@ func TestFuncCallWithMissingValueSplat(t *testing.T) {
 
 	expectError(t, "g(f())", env, "f() used as value")
 }
+*/
 
+/* TODO move this test to checker tests
 func TestFuncCallWithMissingValue(t *testing.T) {
 	env := makeEnv()
 
@@ -85,7 +90,9 @@ func TestFuncCallWithMissingValue(t *testing.T) {
 
 	expectError(t, "g(1, f())", env, "f() used as value")
 }
+*/
 
+/* TODO move this test to checker tests
 func TestEvalCallTypeExpr(t *testing.T) {
 	type MyInt int // A simple type to test
 
@@ -121,3 +128,4 @@ func TestEvalCallTypeExpr(t *testing.T) {
 		"Cannot convert abc to type eval.MyInt")
 
 }
+*/
