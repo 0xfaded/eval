@@ -101,14 +101,11 @@ type CallExpr struct {
 	knownType
 	constValue
 
-	// Does this function take  single, multivalued expession that is unpacked as its arguments
-	isSplat bool
-
-	// Is the function type variadic
-	isVariadic bool
+	// Does this function a take single, multivalued expession that is unpacked as its arguments
+	arg0MultiValued bool
 
 	// Is an ellipsis expression used to unpack variadic arguments
-	hasEllipsis bool
+	argNEllipsis bool
 }
 
 type StarExpr struct {
@@ -292,27 +289,6 @@ func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {
 		// Remove parens all together from 1 + (2 * 3)
 		if b, ok := p.X.(*BinaryExpr); ok && b.Op.Precedence() > parent.Op.Precedence() {
 			return p.X
-		}
-	}
-	return expr
-}
-
-// Walk the ast of expressions like (((x))) and return the inner *ParenExpr.
-// Returns input Expr if it is not a *ParenExpr
-func skipSuperfluousParens(expr Expr) Expr {
-	if p, ok := expr.(*ParenExpr); ok {
-		// Remove useless parens from (((x))) expressions
-		var tmp *ParenExpr
-		for ; ok; tmp, ok = p.X.(*ParenExpr) {
-			p = tmp
-		}
-
-		// Remove parens from all expressions where order of evaluation is irrelevant
-		switch p.X.(type) {
-		case *BinaryExpr:
-			return p
-		default:
-			return p.X.(Expr)
 		}
 	}
 	return expr

@@ -65,6 +65,13 @@ type ErrWrongNumberOfArgsOld struct {
 
 type ErrWrongNumberOfArgs struct {
 	ErrorContext
+	numArgs int
+}
+
+type ErrWrongArgType struct {
+	ErrorContext
+	call *CallExpr
+	argPos int
 }
 
 type ErrMissingValue struct {
@@ -247,13 +254,17 @@ func (err ErrWrongNumberOfArgs) Error() string {
 	call := err.ErrorContext.Node.(*CallExpr)
 	if call.isTypeConversion {
 		to := call.KnownType()[0]
-		if call.Args == nil {
+		if err.numArgs  == 0 {
 			return fmt.Sprintf("missing argument to conversion to %v", to)
 		} else {
 			return fmt.Sprintf("too many arguments to conversion to %v", to)
 		}
 	}
 	return "TODO ErrWrongNumberOfArgs"
+}
+
+func (err ErrWrongArgType) Error() string {
+	return "TODO ErrWrongArgType"
 }
 
 func (err ErrInvalidUnaryOperation) Error() string {

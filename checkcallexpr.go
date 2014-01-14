@@ -15,34 +15,38 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 		}
 	}
 
-        // First attempt to lookup types used for type casting
+	// First attempt to lookup types used for type casting
+	// Next attempt to handle builtin calls.
+	// Finally assume a function call
 	if to, err := evalType(ctx, acall.Fun, env); err == nil {
-		return checkCallTypeExpr(ctx, to, acall, env)
+		return checkCallTypeExpr(ctx, acall, to, env)
+	} else if call, errs, wasBuiltin := checkCallBuiltinExpr(ctx, acall, env); wasBuiltin {
+		return call, errs
+	} else {
+		return checkCallFunExpr(ctx, acall, env)
 	}
-
-	// TODO eval function calls
-	if acall.Fun, moreErrs = CheckExpr(ctx, callExpr.Fun, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
-	}
-
-	if errs != nil {
-		return acall, errs
-	}
-
-        fun := acall.Fun.(Expr)
-        if fun.IsConst() && fun.KnownType()[0] == ConstNil {
-		return acall, []error{ErrUntypedNil{at(ctx, fun)}}
-	}
-
-	return acall, errs
 }
 
-func checkCallTypeExpr(ctx *Ctx, to reflect.Type, call *CallExpr, env *Env) (*CallExpr, []error) {
+// TODO move this stub to builtins.go after rewrite
+func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error, bool) {
+	ident, ok := call.Fun.(*ast.Ident)
+	if !ok {
+		return call, nil, false
+	}
+	if ident.Name == "complex" {
+		call.Fun = &Ident{Ident: ident}
+		call.knownType = knownType{reflect.TypeOf(complex128(0))}
+		return call, nil, true
+	}
+	return call, nil, false
+}
+
+func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {
 	call.knownType = []reflect.Type{to}
 	call.isTypeConversion = true
 
 	if len(call.Args) != 1 {
-		return call, []error{ErrWrongNumberOfArgs{at(ctx, call)}}
+		return call, []error{ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)}}
 	}
 
 	arg := call.Args[0].(Expr)
@@ -80,3 +84,132 @@ func checkCallTypeExpr(ctx *Ctx, to reflect.Type, call *CallExpr, env *Env) (*Ca
 		}
 	}
 }
+
+func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	fun, errs := CheckExpr(ctx, call.Fun, env)
+	if errs != nil {
+		return call, errs
+	}
+	call.Fun = fun
+
+	// TODO check that fun actually returns a function type
+
+	// catch nil casts, e.g. nil(1)
+	if fun.IsConst() && fun.KnownType()[0] == ConstNil {
+		return call, []error{ErrUntypedNil{at(ctx, fun)}}
+	}
+
+	ftype := fun.KnownType()[0]
+	call.knownType = make([]reflect.Type, ftype.NumOut())
+	for i := range call.knownType {
+		call.knownType[i] = ftype.Out(i)
+	}
+
+	// Special case handling doesn't play well with nil Args. Handle zero arg
+	// functions first.
+	if call.Args == nil {
+		if ftype.NumIn() == 0 {
+			return call, nil
+		} else {
+			return call, []error{ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)}}
+		}
+	}
+
+	// Special case for f(g()), where g may return multiple values
+	// The only way to verify that the multi-valued type of Args[0] arose
+	// from function call is to dig through any ParenExpr and see if at
+	// the bottom is another CallExpr
+	arg0MultiValued := false
+	arg0T := call.Args[0].(Expr).KnownType()
+	if len(call.Args) == 1 && len(arg0T) > 1 {
+		arg0 := call.Args[0].(Expr)
+		arg0 = skipSuperfluousParens(arg0)
+		if _, ok := arg0.(*CallExpr); ok {
+			arg0MultiValued = true
+		}
+	}
+
+	// Some handly values
+	variadic := ftype.IsVariadic()
+	numIn := ftype.NumIn()
+
+	call.arg0MultiValued = arg0MultiValued
+	if arg0MultiValued {
+		lenArgsM1 := len(arg0T) - 1
+		// Check all but the last arg which will be handled specially
+		var i int
+		for i = 0; i < lenArgsM1 && i < numIn; i += 1 {
+			if !typeAssignableTo(arg0T[i], ftype.In(i)) {
+				errs = append(errs, ErrWrongArgType{at(ctx, call.Args[0]), call, i})
+			}
+		}
+
+		var argNT reflect.Type
+		// Detect wrong number of args
+		if !variadic {
+			if len(call.Args) != numIn {
+				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(arg0T)})
+			}
+			argNT = ftype.In(i)
+		} else {
+			if len(call.Args) < numIn - 1 {
+				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(arg0T)})
+			}
+			argNT = ftype.In(i).Elem()
+		}
+
+		// Check remaining args
+		for ; i < numIn; i += 1 {
+			if !typeAssignableTo(arg0T[i], argNT) {
+				errs = append(errs, ErrWrongArgType{at(ctx, call.Args[0]), call, i})
+			}
+		}
+	} else {
+		lenArgsM1 := len(call.Args) - 1
+		_, argNEllipsis := call.Args[lenArgsM1].(Ellipsis)
+		call.argNEllipsis = argNEllipsis
+
+		// Check all but the last arg which will be handled specially
+		var i int
+		for i = 0; i < lenArgsM1 && i < numIn; i += 1 {
+			expr := call.Args[i].(Expr)
+			if _, err := expectSingleType(ctx, expr.KnownType(), expr); err != nil {
+				errs = append(errs, err)
+			} else if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); convErrs != nil {
+				errs = append(errs, convErrs...)
+			} else if !ok {
+				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
+			}
+		}
+
+		var argNT reflect.Type
+		// Detect wrong number of args
+		if !variadic || argNEllipsis {
+			if len(call.Args) != numIn {
+				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)})
+			}
+			argNT = ftype.In(numIn - 1)
+		} else {
+			if len(call.Args) < numIn - 1 {
+				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)})
+			} else if len(call.Args) == numIn - 1 {
+				return call, errs
+			}
+			argNT = ftype.In(numIn - 1).Elem()
+		}
+
+		// Check remaining args
+		for ; i < numIn; i += 1 {
+			expr := call.Args[i].(Expr)
+			if _, err := expectSingleType(ctx, expr.KnownType(), expr); err != nil {
+				errs = append(errs, err)
+			} else if ok, convErrs := exprAssignableTo(ctx, expr, argNT); convErrs != nil {
+				errs = append(errs, convErrs...)
+			} else if !ok {
+				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
+			}
+		}
+	}
+	return call, errs
+}
+
