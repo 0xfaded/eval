@@ -8,10 +8,24 @@ import (
 
 var (
 	intType reflect.Type = reflect.TypeOf(int(0))
+	i8 reflect.Type = reflect.TypeOf(int8(0))
+	i16 reflect.Type = reflect.TypeOf(int16(0))
+	i32 reflect.Type = reflect.TypeOf(int32(0))
+	i64 reflect.Type = reflect.TypeOf(int64(0))
+
+	uintType reflect.Type = reflect.TypeOf(uint(0))
+	u8 reflect.Type = reflect.TypeOf(uint8(0))
+	u16 reflect.Type = reflect.TypeOf(uint16(0))
+	u32 reflect.Type = reflect.TypeOf(uint32(0))
+	u64 reflect.Type = reflect.TypeOf(uint64(0))
+
 	f32 reflect.Type = reflect.TypeOf(float32(0))
 	f64 reflect.Type = reflect.TypeOf(float64(0))
 	c64 reflect.Type = reflect.TypeOf(complex64(0))
 	c128 reflect.Type = reflect.TypeOf(complex128(0))
+
+	boolType reflect.Type = reflect.TypeOf(bool(false))
+	stringType reflect.Type = reflect.TypeOf(string(""))
 )
 
 // For each parameter in a builtin function, a bool parameter is passed
@@ -62,28 +76,28 @@ var builtinFuncs = map[string] reflect.Value {
 }
 
 var builtinTypes = map[string] reflect.Type{
-	"int": reflect.TypeOf(int(0)),
-	"int8": reflect.TypeOf(int8(0)),
-	"int16": reflect.TypeOf(int16(0)),
-	"int32": reflect.TypeOf(int32(0)),
-	"int64": reflect.TypeOf(int64(0)),
+	"int": intType,
+	"int8": i8,
+	"int16": i16,
+	"int32": i32,
+	"int64": i64,
 
-	"uint": reflect.TypeOf(uint(0)),
-	"uint8": reflect.TypeOf(uint8(0)),
-	"uint16": reflect.TypeOf(uint16(0)),
-	"uint32": reflect.TypeOf(uint32(0)),
-	"uint64": reflect.TypeOf(uint64(0)),
+	"uint": uintType,
+	"uint8": u8,
+	"uint16": u16,
+	"uint32": u32,
+	"uint64": u64,
 
-	"float32": reflect.TypeOf(float32(0)),
-	"float64": reflect.TypeOf(float64(0)),
+	"float32": f32,
+	"float64": f64,
 
-	"complex64": reflect.TypeOf(complex64(0)),
-	"complex128": reflect.TypeOf(complex128(0)),
+	"complex64": c64,
+	"complex128": c128,
 
-	"bool": reflect.TypeOf(bool(false)),
-	"byte": reflect.TypeOf(byte(0)),
+	"bool": boolType,
+	"byte": ByteType,
 	"rune": RuneType,
-	"string": reflect.TypeOf(""),
+	"string": stringType,
 
 	"error": reflect.TypeOf(errors.New("")),
 }

@@ -14,12 +14,7 @@ import (
 
 // Equivalent of reflect.New, but unwraps internal Types into their original reflect.Type
 func hackedNew(t reflect.Type) reflect.Value {
-	switch tt := t.(type) {
-	case Rune:
-		return reflect.New(tt.Type)
-	default:
-		return reflect.New(t)
-	}
+	return reflect.New(unhackType(t))
 }
 
 // Get the underlying reflect.Type a hacked type
@@ -27,20 +22,16 @@ func unhackType(t reflect.Type) reflect.Type {
 	switch tt := t.(type) {
 	case Rune:
 		return tt.Type
+	case Byte:
+		return tt.Type
 	default:
 		return t
 	}
 }
 
-
-// Determine if type from is assignable to type to
+// Determine if type from is assignable to type to. From and To must not be ConstTypes
 func typeAssignableTo(from, to reflect.Type) bool {
-	// Handle the rune alias
-	if r, ok := from.(Rune); ok {
-		from = r.Type
-	}
-
-	return from.AssignableTo(to)
+	return from.AssignableTo(unhackType(to))
 }
 
 // Determine if the result of from expr is assignable to type to. to must be a vanilla reflect.Type.

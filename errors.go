@@ -75,6 +75,10 @@ type ErrWrongArgType struct {
 	argPos int
 }
 
+type ErrInvalidEllipsisInCall struct {
+	ErrorContext
+}
+
 type ErrMissingValue struct {
 	ErrorContext
 }
@@ -272,7 +276,7 @@ func (err ErrWrongNumberOfArgs) Error() string {
 func (err ErrWrongArgType) Error() string {
 	ft := err.call.Fun.(Expr).KnownType()[0]
 	var expected reflect.Type
-	if ft.IsVariadic() && !err.call.argNEllipsis && err.argPos > ft.NumIn() - 1 {
+	if ft.IsVariadic() && !err.call.argNEllipsis && err.argPos >= ft.NumIn() - 1 {
 		expected = ft.In(ft.NumIn() - 1).Elem()
 	} else {
 		expected = ft.In(err.argPos)
@@ -288,6 +292,11 @@ func (err ErrWrongArgType) Error() string {
 		return fmt.Sprintf("cannot use %v (type %v) as type %v in function argument",
 			arg, sprintfType(actual), sprintfType(expected))
 	}
+}
+
+func (err ErrInvalidEllipsisInCall) Error() string {
+	fun := err.Node.(*CallExpr).Fun
+	return fmt.Sprintf("invalid use of ... in call to %v", fun)
 }
 
 func (err ErrInvalidUnaryOperation) Error() string {

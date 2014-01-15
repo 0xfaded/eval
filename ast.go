@@ -96,8 +96,12 @@ type TypeAssertExpr struct {
 type CallExpr struct {
 	*ast.CallExpr
 
-	// Is this a type conversion. If true, 't' will be non-nil
+	// Is this a type conversion
 	isTypeConversion bool
+
+	// If isTypeConversion, is type name displayed when printing the tree
+	isDisplayedType bool
+
 	knownType
 	constValue
 
@@ -210,7 +214,7 @@ func (*MapType) Const() reflect.Value        { return reflect.Value{} }
 func (*ChanType) Const() reflect.Value       { return reflect.Value{} }
 
 // Does not assert that c is a valid const value type
-// Should be *BigComplex, bool, or string
+// Should be *ConstNumber, bool, or string
 func constValueOf(i interface{}) constValue {
 	return constValue(reflect.ValueOf(i))
 }
@@ -251,10 +255,33 @@ func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr"
 func (typeAssertExpr *TypeAssertExpr) String() string { return "TODO  typeAssertExpr.TypeAssertExpr" }
 
 func (callExpr *CallExpr) String() string {
-	if callExpr.IsConst() {
-		return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
-	} else if callExpr.isTypeConversion {
-		return "TODO  callExpr.CallExpr"
+	if callExpr.isTypeConversion {
+		if len(callExpr.Args) == 0 {
+			// missing argument error
+			return fmt.Sprintf("%v()", callExpr.Fun)
+		} else if len(callExpr.Args) > 1 {
+			// too many arguments error
+			s := fmt.Sprintf("%v", callExpr.Args)
+			sep := "("
+			for _, arg := range callExpr.Args {
+				s += fmt.Sprintf("%v%v", sep, arg)
+				sep = ", "
+			}
+			return s + ")"
+		} else {
+			var arg string
+			if callExpr.IsConst() {
+				arg = sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+			} else {
+				arg = fmt.Sprintf("%v", callExpr.Args[0])
+			}
+			if callExpr.isDisplayedType {
+				// Named conversions include the name in error messages
+				return fmt.Sprintf("%v(%v)", callExpr.Fun, arg)
+			} else {
+				return fmt.Sprintf("%v", arg)
+			}
+		}
 	} else {
 		return fmt.Sprintf("%v()", callExpr.Fun)
 	}
@@ -309,10 +336,12 @@ func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) 
 		        return "rune(" + r.StringShow0i(false) + ")"
                 }
 		return x.StringShow0i(false)
+		/*
         case rune:
                 if t == RuneType {
 		        return fmt.Sprintf("rune(%v)", x)
                 }
+		*/
 	case float32, float64:
 		return fmt.Sprintf("%.6g", x)
 	case complex64:
