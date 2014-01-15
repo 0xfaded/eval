@@ -83,5 +83,4 @@ func TestBuiltinNew(t *testing.T) {
 	if  returnKind != "ptr" {
 		t.Fatalf("Error Expecting `%s' return Kind to be `ptr' is `%s`", expr, returnKind)
 	}
-	expectError(t, "new(5)", env, "new parameter is not a type")
 }

@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"errors"
 	"reflect"
 	"go/ast"
 	"go/token"
@@ -9,6 +10,14 @@ import (
 func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr, errs []error) {
 	acall = &CallExpr{CallExpr: callExpr}
 
+	// First check for builtin calls. For new and make, the first argument is
+	// a type, not a value. Therefore, allow the builtin checks to recursively
+	// check their arguments
+	if call, errs, wasBuiltin := checkCallBuiltinExpr(ctx, acall, env); wasBuiltin {
+		return call, errs
+	}
+
+	// Recursively check arguments
 	var moreErrs []error
 	for i := range callExpr.Args {
 		if acall.Args[i], moreErrs = CheckExpr(ctx, callExpr.Args[i], env); moreErrs != nil {
@@ -16,13 +25,10 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 		}
 	}
 
-	// First attempt to lookup types used for type casting
-	// Next attempt to handle builtin calls.
-	// Finally assume a function call
+	// First check if this expression is a type cast
+	// Otherwise, assume a function call
 	if to, err := evalType(ctx, acall.Fun, env); err == nil {
 		return checkCallTypeExpr(ctx, acall, to, env)
-	} else if call, errs, wasBuiltin := checkCallBuiltinExpr(ctx, acall, env); wasBuiltin {
-		return call, errs
 	} else {
 		return checkCallFunExpr(ctx, acall, env)
 	}
@@ -35,9 +41,52 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 		return call, nil, false
 	}
 	if ident.Name == "complex" {
+		if len(call.Args) != 2 {
+			return call, []error{errors.New("complex wrong number args")}, true
+		}
+		var errs, moreErrs []error
+		if call.Args[0], moreErrs = CheckExpr(ctx, call.Args[0], env); moreErrs != nil {
+			errs = append(errs, moreErrs...)
+		}
+		if call.Args[1], moreErrs = CheckExpr(ctx, call.Args[1], env); moreErrs != nil {
+			errs = append(errs, moreErrs...)
+		}
 		call.Fun = &Ident{Ident: ident}
-		call.knownType = knownType{reflect.TypeOf(complex128(0))}
+		call.knownType = knownType{c128}
 		return call, nil, true
+	} else if ident.Name == "len" || ident.Name == "cap" {
+		if len(call.Args) != 1 {
+			return call, []error{errors.New(ident.Name + " wrong number args")}, true
+		}
+		var errs []error
+		call.Args[0], errs = CheckExpr(ctx, call.Args[0], env)
+		call.Fun = &Ident{Ident: ident}
+		call.knownType = knownType{intType}
+		return call, errs, true
+	} else if ident.Name == "new" {
+		if len(call.Args) != 1 {
+			return call, []error{errors.New("new wrong number args")}, true
+		} else if of, err := evalType(ctx, call.Args[0], env); err != nil {
+			return call, []error{err, errors.New("new bad type")}, true
+		} else {
+			call.Fun = &Ident{Ident: ident}
+			call.knownType = knownType{reflect.PtrTo(of)}
+			return call, nil, true
+		}
+	} else if ident.Name == "append" {
+		if len(call.Args) == 0 {
+			return call, []error{errors.New("append wrong number ards")}, true
+		} else {
+			var errs, moreErrs []error
+			for i := range call.Args {
+				if call.Args[i], moreErrs = CheckExpr(ctx, call.Args[i], env); moreErrs != nil {
+					errs = append(errs, moreErrs...)
+				}
+			}
+			call.Fun = &Ident{Ident: ident}
+			call.knownType = call.Args[0].(Expr).KnownType()
+			return call, errs, true
+		}
 	}
 	return call, nil, false
 }

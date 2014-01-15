@@ -103,7 +103,7 @@ func evalCompositeLitStruct(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *En
 		if kv, ok := elt.(*KeyValueExpr); ok != pairs {
 			return &v, true, errors.New("Elements are either all key value pairs or not")
 		} else if pairs {
-			if k, ok := kv.Key.(*Ident); !ok {
+			if k, ok := kv.Key.(*ast.Ident); !ok {
 				return &v, true, errors.New(fmt.Sprintf("Invalid key node %v %T", kv.Key, kv.Key))
 			} else if f := v.FieldByName(k.Name); !f.IsValid() {
 				return &v, true, errors.New(t.Name() + " has no field " + k.Name)
