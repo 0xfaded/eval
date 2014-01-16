@@ -53,7 +53,8 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return &[]reflect.Value{*v}, typed, err
 	case *TypeAssertExpr:
 	case *CallExpr:
-		return evalCallExpr(ctx, node, env)
+		vs, err := evalCallExpr(ctx, node, env)
+		return &vs, true, err
 	case *StarExpr:
 		v, typed, err := evalStarExpr(ctx, node, env)
 		if v == nil {
@@ -72,28 +73,6 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return nil , false, errors.New("undefined type")
 	}
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
-}
-
-// Evals an expression with a known result type. If the node is an
-// untyped constant, it is converted to type t. This function assumes
-// the input is successfully type checked, and therefore is undefined
-// incorrectly typed inputs.
-func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (
-        xs []reflect.Value, err error) {
-        if expr.IsConst() {
-                x := expr.Const()
-                if ct, ok := expr.KnownType()[0].(ConstType); ok {
-                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), t[0], expr)
-                        xs = []reflect.Value{reflect.Value(cx)}
-                } else {
-                        xs = []reflect.Value{x}
-                }
-        } else {
-                var xxs *[]reflect.Value
-                xxs, _, err = EvalExpr(ctx, expr, env)
-                xs = *xxs
-        }
-        return xs, err
 }
 
 func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
