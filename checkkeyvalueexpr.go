@@ -4,6 +4,7 @@ import (
 	"go/ast"
 )
 
+// TODO[crc] key value checking is context sensitive. Remove function
 func checkKeyValueExpr(ctx *Ctx, keyValue *ast.KeyValueExpr, env *Env) (aexpr *KeyValueExpr, errs []error) {
 	aexpr = &KeyValueExpr{KeyValueExpr: keyValue}
 

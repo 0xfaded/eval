@@ -155,6 +155,15 @@ func promoteConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
         return convertConstToTyped(ctx, from, c, to, false, expr)
 }
 
+// Convert an untyped constant to a typed constant. If the types from and to are
+// incompatible, ErrBadConstConversion is returned along with an invalid value.
+// If the types were compatible but other errors are present, such as integer
+// overflows or floating truncations, the conversion will continue and a valid
+// value will be returned. Therefore, if a valid value is returned, the const
+// type is assignable to the reflect.Type. This can be checked using
+//
+//  reflect.Value(constValue).IsValid()
+//
 func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, isTypeCast bool, expr Expr) (
 	constValue, []error) {
 	v := hackedNew(to).Elem()
@@ -172,7 +181,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			if overflow {
 				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, underlying})
 			}
-			// For some reason, the erros produced are "complex -> int" then "complex -> real"
+			// For some reason, the errors produced are "complex -> int" then "complex -> real"
 			_, truncation = underlying.Value.Real()
 			if truncation {
 				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
@@ -212,7 +221,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			return constValue(v), nil
 
 		// string(97) is legal, equivalent of string('a'), but this
-                // conversion is not automatic
+                // conversion is not automatic. "abc" + 10 is illegal.
 		case reflect.String:
 			if isTypeCast && from.IsIntegral() {
 				i, _, overflow := underlying.Value.Int(32)

@@ -15,6 +15,10 @@ import (
 )
 
 func compileExpr(expr string) (compileErrors []string, err error) {
+	return compileExprWithDefs(expr, "")
+}
+
+func compileExprWithDefs(expr, defs string) (compileErrors []string, err error) {
 	f, err := ioutil.TempFile("/tmp", "testgen")
 	if err != nil {
 		return nil, err
@@ -25,7 +29,8 @@ func compileExpr(expr string) (compileErrors []string, err error) {
 `package main
 func f(...interface{}) {}
 func main() {
-	f(%s)
+` + defs + `
+	(func(...interface{}) {})(%s)
 }
 `, expr);
 

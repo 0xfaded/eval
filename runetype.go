@@ -8,6 +8,10 @@ type Rune struct {
 	reflect.Type
 }
 
+func (Rune) Name() string {
+	return "rune"
+}
+
 func (Rune) String() string {
 	return "rune"
 }

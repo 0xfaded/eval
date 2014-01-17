@@ -96,19 +96,20 @@ type TypeAssertExpr struct {
 type CallExpr struct {
 	*ast.CallExpr
 
-	// Is this a type conversion. If true, 't' will be non-nil
+	// Is this a type conversion
 	isTypeConversion bool
+
+	// If isTypeConversion, is type name displayed when printing the tree
+	isDisplayedType bool
+
 	knownType
 	constValue
 
-	// Does this function take  single, multivalued expession that is unpacked as its arguments
-	isSplat bool
-
-	// Is the function type variadic
-	isVariadic bool
+	// Does this function a take single, multivalued expession that is unpacked as its arguments
+	arg0MultiValued bool
 
 	// Is an ellipsis expression used to unpack variadic arguments
-	hasEllipsis bool
+	argNEllipsis bool
 }
 
 type StarExpr struct {
@@ -213,7 +214,7 @@ func (*MapType) Const() reflect.Value        { return reflect.Value{} }
 func (*ChanType) Const() reflect.Value       { return reflect.Value{} }
 
 // Does not assert that c is a valid const value type
-// Should be *BigComplex, bool, or string
+// Should be *ConstNumber, bool, or string
 func constValueOf(i interface{}) constValue {
 	return constValue(reflect.ValueOf(i))
 }
@@ -238,7 +239,7 @@ func (basicLit *BasicLit) String() string {
 	return basicLit.Value
 }
 
-func (funcLit *FuncLit) String() string { return "TODO  funcLit.FuncLit" }
+func (funcLit *FuncLit) String() string { return "func literal" }
 func (compositeLit *CompositeLit) String() string { return "TODO  compositeLit.CompositeLit" }
 
 func (parenExpr *ParenExpr) String() string {
@@ -254,10 +255,36 @@ func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr"
 func (typeAssertExpr *TypeAssertExpr) String() string { return "TODO  typeAssertExpr.TypeAssertExpr" }
 
 func (callExpr *CallExpr) String() string {
-	if callExpr.IsConst() {
-		return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+	if callExpr.isTypeConversion {
+		if len(callExpr.Args) == 0 {
+			// missing argument error
+			return fmt.Sprintf("%v()", callExpr.Fun)
+		} else if len(callExpr.Args) > 1 {
+			// too many arguments error
+			s := fmt.Sprintf("%v", callExpr.Args)
+			sep := "("
+			for _, arg := range callExpr.Args {
+				s += fmt.Sprintf("%v%v", sep, arg)
+				sep = ", "
+			}
+			return s + ")"
+		} else {
+			var arg string
+			if callExpr.IsConst() {
+				arg = sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+			} else {
+				arg = fmt.Sprintf("%v", callExpr.Args[0])
+			}
+			if callExpr.isDisplayedType {
+				// Named conversions include the name in error messages
+				return fmt.Sprintf("%v(%v)", callExpr.Fun, arg)
+			} else {
+				return fmt.Sprintf("%v", arg)
+			}
+		}
+	} else {
+		return fmt.Sprintf("%v()", callExpr.Fun)
 	}
-	return "TODO  callExpr.CallExpr"
 }
 
 func (starExpr *StarExpr) String() string { return "TODO  starExpr.StarExpr" }
@@ -297,27 +324,6 @@ func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {
 	return expr
 }
 
-// Walk the ast of expressions like (((x))) and return the inner *ParenExpr.
-// Returns input Expr if it is not a *ParenExpr
-func skipSuperfluousParens(expr Expr) Expr {
-	if p, ok := expr.(*ParenExpr); ok {
-		// Remove useless parens from (((x))) expressions
-		var tmp *ParenExpr
-		for ; ok; tmp, ok = p.X.(*ParenExpr) {
-			p = tmp
-		}
-
-		// Remove parens from all expressions where order of evaluation is irrelevant
-		switch p.X.(type) {
-		case *BinaryExpr:
-			return p
-		default:
-			return p.X.(Expr)
-		}
-	}
-	return expr
-}
-
 func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) string {
 	i := v.Interface()
 	switch x := i.(type) {
@@ -330,10 +336,12 @@ func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) 
 		        return "rune(" + r.StringShow0i(false) + ")"
                 }
 		return x.StringShow0i(false)
+		/*
         case rune:
                 if t == RuneType {
 		        return fmt.Sprintf("rune(%v)", x)
                 }
+		*/
 	case float32, float64:
 		return fmt.Sprintf("%.6g", x)
 	case complex64:

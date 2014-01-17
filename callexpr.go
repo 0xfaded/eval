@@ -49,6 +49,14 @@ func evalCallFunExpr(ctx *Ctx, fun reflect.Value, call *CallExpr, env *Env) (*[]
 		return nil, false, err
 	}
 	obj := (*v)[0]
+
+	// TODO[crc] Remove this hack when type checker is integrated
+	if obj == builtinFuncs["new"] {
+		arg := reflect.ValueOf(call.KnownType()[0].Elem())
+		out := obj.Call([]reflect.Value{reflect.ValueOf(arg), reflect.ValueOf(true)})
+		return &[]reflect.Value{out[0].Interface().(reflect.Value)}, true, nil
+	}
+
 	if obj.Kind() != reflect.Func {
 		// Perhaps we have a type cast?
 		if typ, ok := obj.Interface().(reflect.Type); ok {
