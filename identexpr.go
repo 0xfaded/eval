@@ -29,8 +29,6 @@ func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, erro
 		return &v, false, nil
 	} else if v, ok := env.Funcs[name]; ok {
 		return &v, true, nil
-	} else if v, ok := builtinFuncs[name]; ok {
-		return &v, false, nil
 	} else if p, ok := env.Pkgs[name]; ok {
 		val := reflect.ValueOf(p)
 		return &val, true, nil

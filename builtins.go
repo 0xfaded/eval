@@ -2,7 +2,6 @@ package eval
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 )
 
@@ -27,53 +26,6 @@ var (
 	boolType reflect.Type = reflect.TypeOf(bool(false))
 	stringType reflect.Type = reflect.TypeOf(string(""))
 )
-
-// For each parameter in a builtin function, a bool parameter is passed
-// to indicate if the corresponding value is typed. The boolean(s) appear
-// after entire builtin parameter list.
-//
-// Builtin functions must return the builtin function reflect.Value, a
-// bool indicating if the return value is typed, and an error if there was one.
-// The returned Value must be valid
-var builtinFuncs = map[string] reflect.Value {
-	"complex": reflect.ValueOf(func(r, i reflect.Value, rt, it bool) (reflect.Value, bool, error) {
-		rr, rerr := assignableValue(r, f64, rt)
-		ii, ierr := assignableValue(i, f64, it)
-		if rerr == nil && ierr == nil {
-			return reflect.ValueOf(complex(rr.Float(), ii.Float())), rt || it, nil
-		}
-
-		rr, rerr = assignableValue(r, f32, rt)
-		ii, ierr = assignableValue(i, f32, it)
-		if rerr == nil && ierr == nil {
-			return reflect.ValueOf(complex64(complex(rr.Float(), ii.Float()))), rt || it, nil
-		}
-		return reflect.Zero(c128), false, ErrBadComplexArguments{r, i}
-	}),
-	"real": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-		if zz, err := assignableValue(z, c128, zt); err == nil {
-			return reflect.ValueOf(real(zz.Complex())), zt, nil
-		} else if zz, err := assignableValue(z, c64, zt); err == nil {
-			return reflect.ValueOf(float32(real(zz.Complex()))), zt, nil
-		} else {
-			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"real", z}
-		}
-	}),
-	"imag": reflect.ValueOf(func(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-		if zz, err := assignableValue(z, c128, zt); err == nil {
-			return reflect.ValueOf(imag(zz.Complex())), zt, nil
-		} else if zz, err := assignableValue(z, c64, zt); err == nil {
-			return reflect.ValueOf(float32(imag(zz.Complex()))), zt, nil
-		} else {
-			return reflect.Zero(f64), false, ErrBadBuiltinArgument{"imag", z}
-		}
-	}),
-	"append": reflect.ValueOf(builtinAppend),
-	"cap"   : reflect.ValueOf(builtinCap),
-	"len"   : reflect.ValueOf(builtinLen),
-	"new"   : reflect.ValueOf(builtinNew),
-	"panic" : reflect.ValueOf(builtinPanic),
-}
 
 var builtinTypes = map[string] reflect.Type{
 	"int": intType,
@@ -102,49 +54,55 @@ var builtinTypes = map[string] reflect.Type{
 	"error": reflect.TypeOf(errors.New("")),
 }
 
-// FIXME: the real append is variadic. We can only handle one arg.
-
-func builtinAppend(s, t reflect.Value, st, tt bool) (reflect.Value, bool, error) {
-	if s.Kind() != reflect.Slice {
-		return reflect.ValueOf(nil), true,
-		errors.New(fmt.Sprintf("first argument to append must be a slice; " +
-			"have %v", s.Type()))
-	}
-	stype, ttype := s.Type().Elem(), t.Type()
-	if !ttype.AssignableTo(stype) {
-		return reflect.ValueOf(nil), false,
-		errors.New(fmt.Sprintf("cannot use type %v as type %v in append",
-			ttype, stype))
-	}
-	return reflect.Append(s, t), true, nil
+var builtinFuncs = map[string] reflect.Value{
+	"complex": reflect.ValueOf(builtinComplex),
+	"real": reflect.ValueOf(builtinReal),
+	"imag": reflect.ValueOf(builtinImag),
+	"append": reflect.ValueOf(builtinAppend),
+	"cap": reflect.ValueOf(builtinCap),
+	"len": reflect.ValueOf(builtinLen),
+	"new": reflect.ValueOf(builtinNew),
+	"panic": reflect.ValueOf(builtinPanic),
 }
 
-func builtinCap(v reflect.Value, vt bool) (reflect.Value, bool, error) {
-	switch v.Kind() {
-	case reflect.Array, reflect.Chan, reflect.Slice:
-		return reflect.ValueOf(v.Cap()), true, nil
-	default:
-		return reflect.Zero(intType), false,
-		errors.New(fmt.Sprintf("invalid argument %v (type %v) for cap",
-			v.Interface(), v.Type()))
-	}
-}
-
-func builtinLen(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-	switch z.Kind() {
-	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
-		return reflect.ValueOf(z.Len()), true, nil
-	default:
-		return reflect.ValueOf(nil), false, ErrBadBuiltinArgument{"len", z}
-	}
-}
-
-func builtinNew(rtyp reflect.Value, bt bool) (reflect.Value, bool, error) {
-	if typ, ok := rtyp.Interface().(reflect.Type); ok {
-		return reflect.New(typ), true, nil
+func builtinComplex(re, im reflect.Value) reflect.Value {
+	if re.Type() == f64 {
+		return reflect.ValueOf(complex128(complex(re.Float(), im.Float())))
 	} else {
-		return reflect.ValueOf(nil), false, errors.New("new parameter is not a type")
+		return reflect.ValueOf(complex64(complex(re.Float(), im.Float())))
 	}
+}
+
+func builtinReal(cplx reflect.Value) reflect.Value {
+	if cplx.Type() == c128 {
+		return reflect.ValueOf(float64(real(cplx.Complex())))
+	} else {
+		return reflect.ValueOf(float32(real(cplx.Complex())))
+	}
+}
+
+func builtinImag(cplx reflect.Value) reflect.Value {
+	if cplx.Type() == c128 {
+		return reflect.ValueOf(float64(imag(cplx.Complex())))
+	} else {
+		return reflect.ValueOf(float32(imag(cplx.Complex())))
+	}
+}
+
+func builtinAppend(s reflect.Value, t reflect.Value) reflect.Value {
+	return reflect.AppendSlice(s, t)
+}
+
+func builtinLen(v reflect.Value) reflect.Value {
+	return reflect.ValueOf(v.Len())
+}
+
+func builtinCap(v reflect.Value) reflect.Value {
+	return reflect.ValueOf(v.Cap())
+}
+
+func builtinNew(t reflect.Type) reflect.Value {
+	return reflect.New(t)
 }
 
 func builtinPanic(z reflect.Value, zt bool) (reflect.Value, bool, error) {

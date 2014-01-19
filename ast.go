@@ -99,6 +99,9 @@ type CallExpr struct {
 	// Is this a type conversion
 	isTypeConversion bool
 
+	// Is this a builtin call
+	isBuiltin bool
+
 	// If isTypeConversion, is type name displayed when printing the tree
 	isDisplayedType bool
 

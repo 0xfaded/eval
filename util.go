@@ -297,3 +297,60 @@ func skipSuperfluousParens(expr Expr) Expr {
 	return expr
 }
 
+// Returns the float type that is half the width of the input complex type
+func comprisingFloatType(complexType reflect.Type) reflect.Type {
+	if complexType == c128 {
+		return f64
+	} else {
+		return f32
+	}
+}
+
+// Evals an expression with a known result type. If the node is an
+// untyped constant, it is converted to type t. This function assumes
+// the input is successfully type checked, and therefore is undefined
+// incorrectly typed inputs.
+func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (xs []reflect.Value, err error) {
+        if expr.IsConst() {
+                x := expr.Const()
+                if ct, ok := expr.KnownType()[0].(ConstType); ok {
+                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), t[0], expr)
+                        xs = []reflect.Value{reflect.Value(cx)}
+                } else {
+                        xs = []reflect.Value{x}
+                }
+        } else {
+                var xxs *[]reflect.Value
+                xxs, _, err = EvalExpr(ctx, expr, env)
+                xs = *xxs
+        }
+        return xs, err
+}
+
+// Eval a node and cast it to an int. expr must be a *ConstNumber or integral type
+func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
+        if expr.IsConst() {
+                x := expr.Const()
+                if ct, ok := expr.KnownType()[0].(ConstType); ok {
+                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), intType, expr)
+			return int(reflect.Value(cx).Int()), nil
+                } else {
+			panic("eval: const bool or string evaluated as int. Did you type check?")
+                }
+        } else {
+                xs, _, err := EvalExpr(ctx, expr, env);
+		if err != nil {
+			return 0, err
+		}
+		x := (*xs)[0]
+		switch x.Type().Kind() {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			return int(x.Int()), nil
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			return int(x.Uint()), nil
+		default:
+			panic("eval: non-integral type evaluated as int. Did you type check?")
+		}
+        }
+}
+

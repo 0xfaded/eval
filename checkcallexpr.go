@@ -13,7 +13,7 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 	// First check for builtin calls. For new and make, the first argument is
 	// a type, not a value. Therefore, allow the builtin checks to recursively
 	// check their arguments
-	if call, errs, wasBuiltin := checkCallBuiltinExpr(ctx, acall, env); wasBuiltin {
+	if call, errs, isBuiltin := checkCallBuiltinExpr(ctx, acall, env); isBuiltin {
 		return call, errs
 	}
 
@@ -52,8 +52,19 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 			errs = append(errs, moreErrs...)
 		}
 		call.Fun = &Ident{Ident: ident}
+		call.isBuiltin = true
 		call.knownType = knownType{c128}
 		return call, nil, true
+	} else if ident.Name == "real" || ident.Name == "imag" {
+		if len(call.Args) != 1 {
+			return call, []error{errors.New(ident.Name + " wrong number args")}, true
+		}
+		var errs []error
+		call.Args[0], errs = CheckExpr(ctx, call.Args[0], env)
+		call.Fun = &Ident{Ident: ident}
+		call.isBuiltin = true
+		call.knownType = knownType{f64}
+		return call, errs, true
 	} else if ident.Name == "len" || ident.Name == "cap" {
 		if len(call.Args) != 1 {
 			return call, []error{errors.New(ident.Name + " wrong number args")}, true
@@ -61,6 +72,7 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 		var errs []error
 		call.Args[0], errs = CheckExpr(ctx, call.Args[0], env)
 		call.Fun = &Ident{Ident: ident}
+		call.isBuiltin = true
 		call.knownType = knownType{intType}
 		return call, errs, true
 	} else if ident.Name == "new" {
@@ -70,12 +82,13 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 			return call, []error{err, errors.New("new bad type")}, true
 		} else {
 			call.Fun = &Ident{Ident: ident}
+			call.isBuiltin = true
 			call.knownType = knownType{reflect.PtrTo(of)}
 			return call, nil, true
 		}
 	} else if ident.Name == "append" {
 		if len(call.Args) == 0 {
-			return call, []error{errors.New("append wrong number ards")}, true
+			return call, []error{errors.New("append wrong number args")}, true
 		} else {
 			var errs, moreErrs []error
 			for i := range call.Args {
@@ -84,7 +97,9 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 				}
 			}
 			call.Fun = &Ident{Ident: ident}
+			call.isBuiltin = true
 			call.knownType = call.Args[0].(Expr).KnownType()
+			call.argNEllipsis = call.Ellipsis != token.NoPos
 			return call, errs, true
 		}
 	}
