@@ -138,6 +138,8 @@ check:
 
 		curIndex += 1
 	}
+	lit.indices = append(lit.indices, struct{pos, index int}{-1, -1})
+	lit.length = maxIndex
 	return lit, errs
 }
 
@@ -187,6 +189,7 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 					errs = append(errs, ErrDuplicateStructField{at(ctx, kv.Key), name})
 				}
 				seen[name] = true
+				lit.fields = append(lit.fields, field.Index[0])
 				kv.Value, moreErrs = checkStructField(ctx, kv.Value, field, env)
 				if moreErrs != nil {
 					errs = append(errs, moreErrs...)
