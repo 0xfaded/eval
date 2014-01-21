@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"go/ast"
 	"go/token"
@@ -34,6 +35,30 @@ func typeAssignableTo(from, to reflect.Type) bool {
 	return from.AssignableTo(unhackType(to))
 }
 
+// Check expr and then determine if it is assignable to type T. Essentially
+// exprAssignableTo(CheckExpr(expr), t), but errors are accumulated and a
+// bool value is returned indicating if an additional error is needed.
+// The error is needed if expr successfully typechecks but is not
+// assignable to t. In this case, the caller should append an appropriate,
+// use case specific error.
+func checkExprAssignableTo(ctx *Ctx, expr ast.Expr, t reflect.Type, env *Env) (Expr, bool, []error) {
+	var errs []error
+	aexpr, moreErrs := CheckExpr(ctx, expr, env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	} else if _, err := expectSingleType(ctx, aexpr.KnownType(), aexpr); err != nil {
+		errs = append(errs, err)
+	}
+	if errs != nil {
+		return aexpr, false, errs
+	}
+	ok, convErrs := exprAssignableTo(ctx, aexpr, t)
+	if convErrs != nil {
+		errs = append(errs, convErrs...)
+	}
+	return aexpr, !ok, errs
+}
+
 // Determine if the result of from expr is assignable to type to. to must be a vanilla reflect.Type.
 // from must have a KnownType() of length 1. Const types that raise overflow and truncation
 // errors will still return true, but the errors will be reflected in the []error slice.
@@ -48,14 +73,7 @@ func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
 		// If cv is a valid value, then the types are assignable even if
 		// other conversion errors, such as overflows, are present.
 		cv, errs := promoteConstToTyped(ctx, c, constValue(from.Const()), to, from)
-		if reflect.Value(cv).IsValid() {
-			return true, errs
-		} else {
-			// If the conversion was invalid, the caller usually does not
-			// want the ErrBadConstConversion error. Instead it will produce
-			// its own error specific to the cause
-			return false, nil
-		}
+		return reflect.Value(cv).IsValid(), errs
 	}
 
 	return typeAssignableTo(fromType, to), nil
@@ -354,3 +372,53 @@ func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
         }
 }
 
+func checkArrayIndex(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+	aexpr, checkErrs = CheckExpr(ctx, expr, env)
+	if !aexpr.IsConst() {
+		return aexpr, 0, false, checkErrs
+	}
+	t := aexpr.KnownType()[0]
+	var ii int64
+	if ct, ok := t.(ConstType); ok {
+		c, moreErrs := promoteConstToTyped(ctx, ct, constValue(aexpr.Const()), intType, aexpr)
+		if moreErrs != nil {
+			checkErrs = append(checkErrs, moreErrs...)
+		}
+		v := reflect.Value(c)
+		if v.IsValid() {
+			ii = v.Int()
+		} else {
+			return aexpr, 0, false, checkErrs
+		}
+	} else {
+		switch t.Kind() {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			ii = aexpr.Const().Int()
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			ii = int64(aexpr.Const().Uint())
+		default:
+			return aexpr, 0, false, checkErrs
+		}
+	}
+	// The limit of 2^31-1 is derived from the gc implementation,
+	// which seems to use this definition whilst type checking.
+	// The actual definition is the "largest value representable by an int"
+	return aexpr, int(ii), 0 <= ii && ii <= 0x7fffffff, checkErrs
+}
+
+func isValidGoName(name string) bool {
+	if name == "" {
+		return false
+	}
+
+	ok := true
+	// TODO[crc] go 1.2 includes unicode.DecodeRuneInString for decoding the first rune
+	for _, r := range name {
+		ok = ok && (r == '_' || unicode.IsLetter(r))
+		break
+	}
+	for _, r := range name {
+		ok = ok && (r == '_' || unicode.IsLetter(r) || unicode.IsNumber(r))
+	}
+	return ok
+}

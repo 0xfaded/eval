@@ -87,6 +87,7 @@ type ErrMultiInSingleContext struct {
 	ErrorContext
 }
 
+// TODO remove this after composite lit type checker integration
 type ErrArrayIndexOutOfBounds struct {
 	t reflect.Type
 	i uint64
@@ -151,6 +152,54 @@ type ErrUntypedNil struct {
 	ErrorContext
 }
 
+type ErrBadArrayKey struct {
+	ErrorContext
+}
+
+type ErrArrayKeyOutOfBounds struct {
+	ErrorContext
+	arrayT reflect.Type
+	index int
+}
+
+type ErrDuplicateArrayKey struct {
+	ErrorContext
+	index int
+}
+
+type ErrBadArrayValue struct {
+	ErrorContext
+	eltT reflect.Type
+}
+
+type ErrUnknownStructField struct {
+	ErrorContext
+	structT reflect.Type
+	field string
+}
+
+type ErrInvalidStructField struct {
+	ErrorContext
+}
+
+type ErrDuplicateStructField struct {
+	ErrorContext
+	field string
+}
+
+type ErrMixedStructValues struct {
+	ErrorContext
+}
+
+type ErrWrongNumberOfStructValues struct {
+	ErrorContext
+}
+
+type ErrBadStructValue struct {
+	ErrorContext
+	eltT reflect.Type
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -161,7 +210,7 @@ func (err ErrBadBasicLit) Error() string {
 }
 
 func (err ErrUndefined) Error() string {
-	return fmt.Sprintf("undefined %v", err.Node)
+	return fmt.Sprintf("undefined: %v", err.Node)
 }
 
 func (err ErrInvalidOperand) Error() string {
@@ -451,6 +500,67 @@ func (err ErrOverflowedConstant) Error() string {
 
 func (ErrUntypedNil) Error() string {
 	return "use of untyped nil"
+}
+
+func (ErrBadArrayKey) Error() string {
+	return "array index must be non-negative integer constant"
+}
+
+func (err ErrArrayKeyOutOfBounds) Error() string {
+	length := err.arrayT.Len()
+	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.index+1, length)
+}
+
+func (err ErrDuplicateArrayKey) Error() string {
+	return fmt.Sprintf("duplicate index in array literal: %v", err.index)
+}
+
+func (err ErrBadArrayValue) Error() string {
+	expr := err.Node.(Expr)
+	t := expr.KnownType()[0]
+	if t == ConstNil {
+		return fmt.Sprintf("cannot use nil as type %v in array element", err.eltT)
+	}
+	return fmt.Sprintf("cannot use %v (type %v) as type %v in array element",
+		expr, t, err.eltT)
+}
+
+func (err ErrUnknownStructField) Error() string {
+	return fmt.Sprintf("unknown %v field '%v' in struct literal",
+		err.structT, err.field)
+}
+
+func (err ErrInvalidStructField) Error() string {
+	return fmt.Sprintf("invalid field name %v in struct initializer", err.Node)
+}
+
+func (err ErrDuplicateStructField) Error() string {
+	return fmt.Sprintf("duplicate field name in struct literal: %v", err.field)
+}
+
+func (err ErrMixedStructValues) Error() string {
+	return fmt.Sprintf("mixture of field:value and value initializers")
+}
+
+func (err ErrWrongNumberOfStructValues) Error() string {
+	lit := err.Node.(*CompositeLit)
+	actual := len(lit.Elts)
+	expected := lit.KnownType()[0].NumField()
+	if actual < expected {
+		return fmt.Sprintf("too few values in struct initializer")
+	} else {
+		return fmt.Sprintf("too many values in struct initializer")
+	}
+}
+
+func (err ErrBadStructValue) Error() string {
+	expr := err.Node.(Expr)
+	t := expr.KnownType()[0]
+	if t == ConstNil {
+		return fmt.Sprintf("cannot use nil as type %v in field value", err.eltT)
+	}
+	return fmt.Sprintf("cannot use %v (type %v) as type %v in field value",
+		expr, t, err.eltT)
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
