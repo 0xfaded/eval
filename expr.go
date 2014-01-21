@@ -86,7 +86,13 @@ func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
 			return t, errors.New("undefined type: " + node.Name)
 		}
 	case *ast.ArrayType:
-		return nil, errors.New("array types not implemented")
+		if node.Len != nil {
+			return nil, errors.New("array types not implemented")
+		} else if eltT, err := evalType(ctx, node.Elt, env); err != nil {
+			return nil, err
+		} else {
+			return reflect.SliceOf(eltT), nil
+		}
 	case *ast.StructType:
 		return nil, errors.New("struct types not implemented")
 	case *ast.FuncType:

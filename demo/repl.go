@@ -195,15 +195,25 @@ func makeBogusEnv() eval.Env {
 	alice    := Alice{1, "shhh"}
 	alicePtr := &alice
         foo := 10
+	ints := []int{1, 2, 3, 4}
 	add := func(a, b int) int {
 		return a + b
+	}
+	sum := func(as ...int) int {
+		r := 0
+		for _, a := range as {
+			r += a
+		}
+		return r
 	}
 
 	mainEnv.Vars["alice"]    = reflect.ValueOf(&alice)
 	mainEnv.Vars["alicePtr"] = reflect.ValueOf(&alicePtr)
         mainEnv.Vars["foo"] = reflect.ValueOf(&foo)
+        mainEnv.Vars["ints"] = reflect.ValueOf(&ints)
         mainEnv.Consts["bar"] = reflect.ValueOf(eval.NewConstInt64(5))
 	mainEnv.Funcs["add"] = reflect.ValueOf(add)
+	mainEnv.Funcs["sum"] = reflect.ValueOf(sum)
 	mainEnv.Types["Alice"]   = reflect.TypeOf(Alice{})
 	mainEnv.Types["R"]   = reflect.TypeOf(R(0))
 
