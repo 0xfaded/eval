@@ -27,6 +27,8 @@ type Expr interface {
 
 	// String() matches the print format of expressions in go errors
 	String() string
+
+	setKnownType(t knownType)
 }
 
 type knownType []reflect.Type
@@ -223,6 +225,30 @@ func (*InterfaceType) Const() reflect.Value  { return reflect.Value{} }
 func (*MapType) Const() reflect.Value        { return reflect.Value{} }
 func (*ChanType) Const() reflect.Value       { return reflect.Value{} }
 
+func (*BadExpr) setKnownType(t knownType)      { panic("eval: cannot set knownType of BadExpr") }
+func (*FuncLit) setKnownType(t knownType)      { panic("eval: cannot set knownType of FuncLit") }
+func (*KeyValueExpr) setKnownType(t knownType) { panic("eval: cannot set knownType of KeyValueExpr") }
+
+func (e *BasicLit) setKnownType(t knownType)       { e.knownType = t }
+func (e *BinaryExpr) setKnownType(t knownType)     { e.knownType = t }
+func (e *CallExpr) setKnownType(t knownType)       { e.knownType = t }
+func (e *Ellipsis) setKnownType(t knownType)       { e.knownType = t }
+func (e *CompositeLit) setKnownType(t knownType)   { e.knownType = t }
+func (e *SelectorExpr) setKnownType(t knownType)   { e.knownType = t }
+func (e *Ident) setKnownType(t knownType)          { e.knownType = t }
+func (e *IndexExpr) setKnownType(t knownType)      { e.knownType = t }
+func (e *ParenExpr) setKnownType(t knownType)      { e.knownType = t }
+func (e *SliceExpr) setKnownType(t knownType)      { e.knownType = t }
+func (e *TypeAssertExpr) setKnownType(t knownType) { e.knownType = t }
+func (e *StarExpr) setKnownType(t knownType)       { e.knownType = t }
+func (e *UnaryExpr) setKnownType(t knownType)      { e.knownType = t }
+func (e *ArrayType) setKnownType(t knownType)      { e.knownType = t }
+func (e *StructType) setKnownType(t knownType)     { e.knownType = t }
+func (e *FuncType) setKnownType(t knownType)       { e.knownType = t }
+func (e *InterfaceType) setKnownType(t knownType)  { e.knownType = t }
+func (e *MapType) setKnownType(t knownType)        { e.knownType = t }
+func (e *ChanType) setKnownType(t knownType)       { e.knownType = t }
+
 // Does not assert that c is a valid const value type
 // Should be *ConstNumber, bool, or string
 func constValueOf(i interface{}) constValue {
@@ -289,7 +315,9 @@ func (callExpr *CallExpr) String() string {
 	}
 }
 
-func (starExpr *StarExpr) String() string { return "TODO  starExpr.StarExpr" }
+func (star *StarExpr) String() string {
+	return fmt.Sprintf("*%v", star.X)
+}
 
 func (unary *UnaryExpr) String() string {
 	operand := skipSuperfluousParens(unary.X.(Expr))

@@ -28,7 +28,7 @@ type ErrInvalidOperand struct {
 }
 
 type ErrInvalidIndirect struct {
-	t reflect.Type
+	ErrorContext
 }
 
 type ErrMismatchedTypes struct {
@@ -289,7 +289,16 @@ func (err ErrInvalidIndex) Error() string {
 }
 
 func (err ErrInvalidIndirect) Error() string {
-	return fmt.Sprintf("invalid indirect (type %v)", err.t)
+	expr := err.Node.(Expr)
+	t := expr.KnownType()[0]
+	if ct, ok := t.(ConstType); ok {
+		if ct == ConstNil {
+			return "invalid indirect of nil"
+		}
+		return fmt.Sprintf("invalid indirect of %v (type %s)",
+			expr, ct.ErrorType())
+	}
+	return fmt.Sprintf("invalid indirect of %v (type %s)", expr, t)
 }
 
 func (err ErrMissingValue) Error() string {

@@ -9,6 +9,9 @@ type ConstType interface {
 	IsIntegral() bool
 	IsReal() bool
 	IsNumeric() bool
+
+	// Format for "something bad X (type X.ErrorType())"
+	ErrorType() string
 }
 
 type ConstIntType struct { reflect.Type }
@@ -29,6 +32,7 @@ var (
 	ConstBool = ConstBoolType { reflect.TypeOf(false) }
 )
 
+// These are actually the names of the default const promotions
 func (ConstIntType) String() string { return "int" }
 func (ConstRuneType) String() string { return "rune" }
 func (ConstFloatType) String() string { return "float64" }
@@ -36,6 +40,14 @@ func (ConstComplexType) String() string { return "complex128" }
 func (ConstStringType) String() string { return "string" }
 func (ConstNilType) String() string { return "<T>" }
 func (ConstBoolType) String() string { return "bool" }
+
+func (ConstIntType) ErrorType() string { return "ideal" }
+func (ConstRuneType) ErrorType() string { return "ideal" }
+func (ConstFloatType) ErrorType() string { return "ideal" }
+func (ConstComplexType) ErrorType() string { return "ideal" }
+func (ConstStringType) ErrorType() string { return "ideal string" }
+func (ConstNilType) ErrorType() string { panic("nil type used in error") }
+func (ConstBoolType) ErrorType() string { return "ideal bool" }
 
 func (ConstIntType) IsIntegral() bool { return true }
 func (ConstRuneType) IsIntegral() bool { return true }
