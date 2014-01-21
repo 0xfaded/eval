@@ -64,8 +64,12 @@ type CompositeLit struct {
 	// length of array or slice literal
 	length int
 
-	// indices specified in array or slice literal
+	// indices specified in array or slice literal.
+	// terminated by a {-1, -1} after last index.
 	indices []struct{pos, index int}
+
+	// fields of struct mapping position to struct index
+	fields []int
 }
 
 type ParenExpr struct {
