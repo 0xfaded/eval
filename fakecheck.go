@@ -92,6 +92,8 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 		kv.Value = fakeCheckExpr(kv.Value, env)
 		return kv
 	default:
-		return &BadExpr{}
+		// If the input is already an Expr, assume it is already type checked.
+		// So far, this has been enough to produce the desired error messages.
+		return expr.(Expr)
 	}
 }
