@@ -102,9 +102,6 @@ type CallExpr struct {
 	// Is this a builtin call
 	isBuiltin bool
 
-	// If isTypeConversion, is type name displayed when printing the tree
-	isDisplayedType bool
-
 	knownType
 	constValue
 
@@ -272,18 +269,10 @@ func (callExpr *CallExpr) String() string {
 			}
 			return s + ")"
 		} else {
-			var arg string
 			if callExpr.IsConst() {
-				arg = sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
-			} else {
-				arg = fmt.Sprintf("%v", callExpr.Args[0])
+				return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
 			}
-			if callExpr.isDisplayedType {
-				// Named conversions include the name in error messages
-				return fmt.Sprintf("%v(%v)", callExpr.Fun, arg)
-			} else {
-				return fmt.Sprintf("%v", arg)
-			}
+			return fmt.Sprintf("%v(%v)", callExpr.KnownType()[0], callExpr.Args[0])
 		}
 	} else {
 		return fmt.Sprintf("%v()", callExpr.Fun)
@@ -328,23 +317,23 @@ func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {
 }
 
 func sprintConstValue(t reflect.Type, v reflect.Value, showZeroComponents bool) string {
+	if t == RuneType {
+		if n, ok := v.Interface().(*ConstNumber); ok {
+			return fmt.Sprintf("rune(%v)", n.Value.StringShow0i(false))
+		}
+	}
+	if isTypeDisplayed(t) {
+		return fmt.Sprintf("%v(%v)", t, sprintConstUntypedValue(v, showZeroComponents))
+	} else {
+		return fmt.Sprintf("%v", sprintConstUntypedValue(v, showZeroComponents))
+	}
+}
+
+func sprintConstUntypedValue(v reflect.Value, showZeroComponents bool) string {
 	i := v.Interface()
 	switch x := i.(type) {
 	case *ConstNumber:
-                // This is here to print overflowing typed runes, which
-                // are represented by a *ConstNumber and a RuneType
-                if t == RuneType {
-                        r := *x
-                        r.Type = ConstInt
-		        return "rune(" + r.StringShow0i(false) + ")"
-                }
 		return x.StringShow0i(false)
-		/*
-        case rune:
-                if t == RuneType {
-		        return fmt.Sprintf("rune(%v)", x)
-                }
-		*/
 	case float32, float64:
 		return fmt.Sprintf("%.6g", x)
 	case complex64:
@@ -383,3 +372,17 @@ func quoteString(i interface{}) interface{} {
 func (c constValue) String() string {
         return reflect.Value(c).String()
 }
+
+func isTypeDisplayed(t reflect.Type) bool {
+	switch t {
+	case ConstInt, ConstRune, ConstFloat, ConstComplex,
+		ConstString, ConstNil, ConstBool,
+		intType, i8, i16, i32, i64,
+		uintType, u8, u16, u32, u64,
+		f32, f64, c64, c128,
+		boolType, stringType:
+		     return false
+	}
+	return true
+}
+
