@@ -109,7 +109,6 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {
 	call.knownType = []reflect.Type{to}
 	call.isTypeConversion = true
-	call.isDisplayedType = isTypeDisplayedInErrors(to)
 
 	if len(call.Args) != 1 {
 		return call, []error{ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)}}
@@ -253,9 +252,9 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); convErrs != nil {
+			if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); ok {
 				errs = append(errs, convErrs...)
-			} else if !ok {
+			} else {
 				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
 			}
 		}
@@ -282,9 +281,9 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, argNT); convErrs != nil {
+			if ok, convErrs := exprAssignableTo(ctx, expr, argNT); ok {
 				errs = append(errs, convErrs...)
-			} else if !ok {
+			} else {
 				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
 			}
 		}
@@ -295,15 +294,4 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		}
 	}
 	return call, errs
-}
-
-func isTypeDisplayedInErrors(t reflect.Type) bool {
-	switch t {
-	case intType, i8, i16, i32, i64,
-		uintType, u8, u16, u32, u64,
-		f32, f64, c64, c128,
-		boolType, stringType:
-		return false
-	}
-	return true
 }

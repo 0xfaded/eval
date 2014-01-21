@@ -3700,7 +3700,7 @@ func TestCheckCallExprFixedXIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`not enough arguments in call to f`,
 	)
 
@@ -4050,7 +4050,7 @@ func TestCheckCallExprFixedIntIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `f(1, I(1))`, env,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -4405,7 +4405,7 @@ func TestCheckCallExprFixedFloatIntTyped(t *testing.T) {
 
 	expectCheckError(t, `f(1.5, I(1))`, env,
 		`constant 1.5 truncated to integer`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -4765,7 +4765,7 @@ func TestCheckCallExprFixedBoolIntTyped(t *testing.T) {
 
 	expectCheckError(t, `f(true, I(1))`, env,
 		`cannot use true (type bool) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -4981,7 +4981,7 @@ func TestCheckCallExprFixedIntTypedX(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`not enough arguments in call to f`,
 	)
 
@@ -5017,7 +5017,7 @@ func TestCheckCallExprFixedIntTypedInt(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), 1)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use 1 (type int) as type bool in function argument`,
 	)
 
@@ -5053,7 +5053,7 @@ func TestCheckCallExprFixedIntTypedFloat(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), 1.5)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use 1.5 (type float64) as type bool in function argument`,
 	)
 
@@ -5089,7 +5089,7 @@ func TestCheckCallExprFixedIntTypedBool(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), true)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -5124,8 +5124,8 @@ func TestCheckCallExprFixedIntTypedIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -5160,7 +5160,7 @@ func TestCheckCallExprFixedIntTypedInts(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), is...)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use is (type []int) as type bool in function argument`,
 		`invalid use of ... in call to f`,
 	)
@@ -5198,7 +5198,7 @@ func TestCheckCallExprFixedIntTypedEmptyFunc(t *testing.T) {
 
 	expectCheckError(t, `f(I(1), e())`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -5233,7 +5233,7 @@ func TestCheckCallExprFixedIntTypedSingleFunc(t *testing.T) {
 
 
 	expectCheckError(t, `f(I(1), s())`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use s() (type int) as type bool in function argument`,
 	)
 
@@ -5270,7 +5270,7 @@ func TestCheckCallExprFixedIntTypedMultiFunc(t *testing.T) {
 
 	expectCheckError(t, `f(I(1), m())`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -5306,7 +5306,7 @@ func TestCheckCallExprFixedIntTypedMultiFuncMixedTypes(t *testing.T) {
 
 	expectCheckError(t, `f(I(1), mt())`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -5809,7 +5809,7 @@ func TestCheckCallExprFixedEmptyFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `f(e(), I(1))`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -6162,7 +6162,7 @@ func TestCheckCallExprFixedSingleFuncIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `f(s(), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -6516,7 +6516,7 @@ func TestCheckCallExprFixedMultiFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `f(m(), I(1))`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -6875,7 +6875,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesIntTyped(t *testing.T) {
 
 	expectCheckError(t, `f(mt(), I(1))`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -7585,7 +7585,7 @@ func TestCheckCallExprFixedTypedIntIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `ft(1, I(1))`, env,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -7940,7 +7940,7 @@ func TestCheckCallExprFixedTypedFloatIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(1.5, I(1))`, env,
 		`constant 1.5 truncated to integer`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -8300,7 +8300,7 @@ func TestCheckCallExprFixedTypedBoolIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(true, I(1))`, env,
 		`cannot use true (type bool) as type eval.I in function argument`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -8653,7 +8653,7 @@ func TestCheckCallExprFixedTypedIntTypedIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `ft(I(1), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -9332,7 +9332,7 @@ func TestCheckCallExprFixedTypedEmptyFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(e(), I(1))`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -9692,7 +9692,7 @@ func TestCheckCallExprFixedTypedSingleFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(s(), I(1))`, env,
 		`cannot use s() (type int) as type eval.I in function argument`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -10052,7 +10052,7 @@ func TestCheckCallExprFixedTypedMultiFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(m(), I(1))`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -10412,7 +10412,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesIntTyped(t *testing.T) {
 
 	expectCheckError(t, `ft(mt(), I(1))`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type bool in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type bool in function argument`,
 	)
 
 }
@@ -10762,7 +10762,7 @@ func TestCheckCallExprVariadic1XIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -11097,7 +11097,7 @@ func TestCheckCallExprVariadic1IntIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v1(1, I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -11447,7 +11447,7 @@ func TestCheckCallExprVariadic1FloatIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v1(1.5, I(1))`, env,
 		`constant 1.5 truncated to integer`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -11803,7 +11803,7 @@ func TestCheckCallExprVariadic1BoolIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v1(true, I(1))`, env,
 		`cannot use true (type bool) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12016,7 +12016,7 @@ func TestCheckCallExprVariadic1IntTypedX(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12051,7 +12051,7 @@ func TestCheckCallExprVariadic1IntTypedInt(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1), 1)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12086,7 +12086,7 @@ func TestCheckCallExprVariadic1IntTypedFloat(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1), 1.5)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`constant 1.5 truncated to integer`,
 	)
 
@@ -12122,7 +12122,7 @@ func TestCheckCallExprVariadic1IntTypedBool(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1), true)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use true (type bool) as type int in function argument`,
 	)
 
@@ -12158,8 +12158,8 @@ func TestCheckCallExprVariadic1IntTypedIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12230,7 +12230,7 @@ func TestCheckCallExprVariadic1IntTypedEmptyFunc(t *testing.T) {
 
 	expectCheckError(t, `v1(I(1), e())`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12265,7 +12265,7 @@ func TestCheckCallExprVariadic1IntTypedSingleFunc(t *testing.T) {
 
 
 	expectCheckError(t, `v1(I(1), s())`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12301,7 +12301,7 @@ func TestCheckCallExprVariadic1IntTypedMultiFunc(t *testing.T) {
 
 	expectCheckError(t, `v1(I(1), m())`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12337,7 +12337,7 @@ func TestCheckCallExprVariadic1IntTypedMultiFuncMixedTypes(t *testing.T) {
 
 	expectCheckError(t, `v1(I(1), mt())`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -12835,7 +12835,7 @@ func TestCheckCallExprVariadic1EmptyFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v1(e(), I(1))`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -13183,7 +13183,7 @@ func TestCheckCallExprVariadic1SingleFuncIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v1(s(), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -13530,7 +13530,7 @@ func TestCheckCallExprVariadic1MultiFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v1(m(), I(1))`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -13887,7 +13887,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v1(mt(), I(1))`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -14238,7 +14238,7 @@ func TestCheckCallExprVariadic2XIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -14577,7 +14577,7 @@ func TestCheckCallExprVariadic2IntIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v2(1, I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -14924,7 +14924,7 @@ func TestCheckCallExprVariadic2FloatIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v2(1.5, I(1))`, env,
 		`constant 1.5 truncated to integer`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15280,7 +15280,7 @@ func TestCheckCallExprVariadic2BoolIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v2(true, I(1))`, env,
 		`cannot use true (type bool) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15493,7 +15493,7 @@ func TestCheckCallExprVariadic2IntTypedX(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15528,7 +15528,7 @@ func TestCheckCallExprVariadic2IntTypedInt(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), 1)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15563,7 +15563,7 @@ func TestCheckCallExprVariadic2IntTypedFloat(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), 1.5)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`constant 1.5 truncated to integer`,
 	)
 
@@ -15599,7 +15599,7 @@ func TestCheckCallExprVariadic2IntTypedBool(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), true)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 		`cannot use true (type bool) as type int in function argument`,
 	)
 
@@ -15635,8 +15635,8 @@ func TestCheckCallExprVariadic2IntTypedIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15671,7 +15671,7 @@ func TestCheckCallExprVariadic2IntTypedInts(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), is...)`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15707,7 +15707,7 @@ func TestCheckCallExprVariadic2IntTypedEmptyFunc(t *testing.T) {
 
 	expectCheckError(t, `v2(I(1), e())`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15742,7 +15742,7 @@ func TestCheckCallExprVariadic2IntTypedSingleFunc(t *testing.T) {
 
 
 	expectCheckError(t, `v2(I(1), s())`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15778,7 +15778,7 @@ func TestCheckCallExprVariadic2IntTypedMultiFunc(t *testing.T) {
 
 	expectCheckError(t, `v2(I(1), m())`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -15814,7 +15814,7 @@ func TestCheckCallExprVariadic2IntTypedMultiFuncMixedTypes(t *testing.T) {
 
 	expectCheckError(t, `v2(I(1), mt())`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -16316,7 +16316,7 @@ func TestCheckCallExprVariadic2EmptyFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v2(e(), I(1))`, env,
 		`e() used as value`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -16663,7 +16663,7 @@ func TestCheckCallExprVariadic2SingleFuncIntTyped(t *testing.T) {
 
 
 	expectCheckError(t, `v2(s(), I(1))`, env,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -17007,7 +17007,7 @@ func TestCheckCallExprVariadic2MultiFuncIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v2(m(), I(1))`, env,
 		`multiple-value m() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
@@ -17363,7 +17363,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesIntTyped(t *testing.T) {
 
 	expectCheckError(t, `v2(mt(), I(1))`, env,
 		`multiple-value mt() in single-value context`,
-		`cannot use I(1) (type eval.I) as type int in function argument`,
+		`cannot use eval.I(1) (type eval.I) as type int in function argument`,
 	)
 
 }
