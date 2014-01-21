@@ -41,7 +41,7 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
 	var errs, moreErrs []error
 	eltT := t.Elem()
-	maxIndex, curIndex := 0, 0
+	maxIndex, curIndex := -1, 0
 	outOfBounds := false
 	length := -1
 	if t.Kind() == reflect.Array {
@@ -103,6 +103,12 @@ check:
 
 		curIndex += 1
 	}
+	lit.indices = append(lit.indices, struct{pos, index int}{-1, -1})
+	if length == -1 {
+		lit.length = maxIndex + 1
+	} else {
+		lit.length = length
+	}
 	return lit, errs
 }
 
@@ -152,6 +158,7 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 					errs = append(errs, ErrDuplicateStructField{at(ctx, kv.Key), name})
 				}
 				seen[name] = true
+				lit.fields = append(lit.fields, field.Index[0])
 				kv.Value, moreErrs = checkStructField(ctx, kv.Value, field, env)
 				if moreErrs != nil {
 					errs = append(errs, moreErrs...)
@@ -167,6 +174,7 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
+			lit.fields = append(lit.fields, i)
 		}
 		if numFields != len(lit.Elts) {
 			errs = append(errs, ErrWrongNumberOfStructValues{at(ctx, lit)})
