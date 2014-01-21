@@ -43,6 +43,7 @@ func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	case *ast.KeyValueExpr:
 		return checkKeyValueExpr(ctx, expr, env)
 	default:
+		panic("grr")
 		return nil, []error{errors.New(fmt.Sprintf("Type: Bad expr (%+v)", expr))}
 	}
 

@@ -252,9 +252,9 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); convErrs != nil {
+			if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); ok {
 				errs = append(errs, convErrs...)
-			} else if !ok {
+			} else {
 				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
 			}
 		}
@@ -281,9 +281,9 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, argNT); convErrs != nil {
+			if ok, convErrs := exprAssignableTo(ctx, expr, argNT); ok {
 				errs = append(errs, convErrs...)
-			} else if !ok {
+			} else {
 				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
 			}
 		}

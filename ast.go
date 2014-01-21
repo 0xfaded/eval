@@ -60,6 +60,12 @@ type FuncLit struct {
 type CompositeLit struct {
 	*ast.CompositeLit
 	knownType
+
+	// length of array or slice literal
+	length int
+
+	// indices specified in array or slice literal
+	indices []struct{pos, index int}
 }
 
 type ParenExpr struct {
