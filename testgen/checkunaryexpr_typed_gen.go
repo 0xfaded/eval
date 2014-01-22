@@ -8,6 +8,7 @@ import (
 	"github.com/0xfaded/go-testgen"
 )
 
+
 type Test struct{}
 
 var comment = template.Must(template.New("Comment").Parse(
@@ -21,7 +22,7 @@ var body = template.Must(template.New("Body").Parse(
 		`+"`{{ . }}`"+`,{{ end }}
 	)
 {{ else }}
-	expectConst(t, `+"`{{ .Expr }}`"+`, env, {{ .NewConstType }}({{ .Expr }}), {{ .ResultType }}){{ end }}
+	expectConst(t, `+"`{{ .Expr }}`"+`, env, {{ .Expr }}, reflect.TypeOf({{ .Expr }})){{ end }}
 `))
 
 func (*Test) Package() string {
@@ -29,23 +30,23 @@ func (*Test) Package() string {
 }
 
 func (*Test) Prefix() string {
-	return "CheckUnaryExpr"
+	return "CheckUnaryTypedExpr"
 }
 
 func (*Test) Imports() map[string]string {
-	return nil
+	return map[string]string {"reflect": ""}
 }
 
 func (*Test) Dimensions() []testgen.Dimension {
 	// All numeric values have been chosen to be a power of two, for good reason :)
 	types := []testgen.Element{
-		{"Int", "4"},
-		{"Rune", "'@'"},
-		{"Float", "2.0"},
-		{"Complex", "8.0i"},
-		{"Bool", "true"},
-		{"String", `"abc"`},
-		{"Nil", "nil"},
+		{"Int32", "int32(4)"},
+		//TODO[crc] go1.1 doesnt pick this up. Add after upgrade to 1.2
+		// {"int32Overflow", "int32(-0x80000000)"},
+		{"Float64", "float64(2)"},
+		{"Complex128", "complex128(8i)"},
+		{"Bool", "bool(true)"},
+		{"String", `string("abc")`},
 	}
 	ops := []testgen.Element{
 		{"Add", token.ADD},
@@ -70,7 +71,6 @@ func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
 
 func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	op  := elts[0].Value.(token.Token)
-	rhs := elts[1].Name
 
 	expr := fmt.Sprintf("%v %v", op, elts[1].Value)
 	compileErrs, err := compileExpr(expr)
@@ -78,32 +78,10 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		return err
 	}
 
-	var newConstType string
-	var resultType string
-
-	switch rhs {
-	case "Int":
-		newConstType = "NewConstInt64"
-		resultType = "ConstInt"
-	case "Rune":
-		newConstType = "NewConstRune"
-		resultType = "ConstRune"
-	case "Float":
-		newConstType = "NewConstFloat64"
-		resultType = "ConstFloat"
-	case "Complex":
-		newConstType = "NewConstComplex128"
-		resultType = "ConstComplex"
-	case "Bool":
-		resultType = "ConstBool"
-	}
-
 	vars := map[string] interface{} {
 		"Expr": expr,
 		"Errors": compileErrs,
 		"Op": elts[1],
-		"NewConstType": newConstType,
-		"ResultType": resultType,
 	}
 
 	return body.Execute(w, &vars)

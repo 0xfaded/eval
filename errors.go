@@ -121,6 +121,10 @@ type ErrInvalidUnaryOperation struct {
 	ErrorContext
 }
 
+type ErrInvalidAddressOf struct {
+	ErrorContext
+}
+
 type ErrBadConversion struct {
 	ErrorContext
 	from reflect.Type
@@ -361,20 +365,17 @@ func (err ErrInvalidUnaryOperation) Error() string {
 	unary := err.ErrorContext.Node.(*UnaryExpr)
 	x := unary.X.(Expr)
 	t := x.KnownType()[0]
-	switch t {
-	case ConstNil:
-		return fmt.Sprintf("invalid operation: %v nil", unary.Op)
-	case ConstBool:
-		return fmt.Sprintf("invalid operation: %v ideal bool", unary.Op)
-	case ConstString:
-		return fmt.Sprintf("invalid operation: %v ideal string", unary.Op)
-	default:
-		if unary.Op == token.XOR {
-			return fmt.Sprintf("illegal constant expression %v ideal", unary.Op)
-		} else {
-			return fmt.Sprintf("invalid operation: %v ideal", unary.Op)
+	if ct, ok := t.(ConstType); ok {
+		if unary.Op == token.XOR && ct.IsNumeric() {
+			return fmt.Sprintf("illegal constant expression ^ %v", ct.ErrorType())
 		}
+		return fmt.Sprintf("invalid operation: %v %v", unary.Op, ct.ErrorType())
 	}
+	return fmt.Sprintf("invalid operation: %v %v", unary.Op, t)
+}
+
+func (err ErrInvalidAddressOf) Error() string {
+	return fmt.Sprintf("cannot take the address of %v", err.Node)
 }
 
 func (err ErrInvalidBinaryOperation) Error() string {

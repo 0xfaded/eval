@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"go/ast"
+	"go/token"
 )
 
 // Annotated ast.Expr nodes
@@ -42,6 +43,7 @@ type Ident struct {
 	*ast.Ident
 	knownType
 	constValue
+	source envSource
 }
 
 type Ellipsis struct {
@@ -321,6 +323,13 @@ func (star *StarExpr) String() string {
 
 func (unary *UnaryExpr) String() string {
 	operand := skipSuperfluousParens(unary.X.(Expr))
+	if unary.Op == token.AND {
+		if _, ok := unary.X.(*StarExpr); ok {
+			return fmt.Sprintf("&(%v)", operand)
+		} else {
+			return fmt.Sprintf("&%v", operand)
+		}
+	}
 	return fmt.Sprintf("%v %v", unary.Op, operand)
 }
 

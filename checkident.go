@@ -27,6 +27,7 @@ func checkIdent(ctx *Ctx, ident *ast.Ident, env *Env) (_ *Ident, errs []error) {
         default:
                 if v, ok := env.Vars[aexpr.Name]; ok {
                         aexpr.knownType = knownType{v.Elem().Type()}
+			aexpr.source = envVar
                 } else if v, ok := env.Consts[aexpr.Name]; ok {
                         if n, ok := v.Interface().(*ConstNumber); ok {
                                 aexpr.knownType = knownType{n.Type}
@@ -34,8 +35,10 @@ func checkIdent(ctx *Ctx, ident *ast.Ident, env *Env) (_ *Ident, errs []error) {
                                 aexpr.knownType = knownType{v.Type()}
                         }
                         aexpr.constValue = constValue(v)
+			aexpr.source = envConst
                 } else if v, ok := env.Funcs[aexpr.Name]; ok {
                         aexpr.knownType = knownType{v.Type()}
+			aexpr.source = envFunc
                 } else {
                         errs = append(errs, ErrUndefined{at(ctx, ident)})
                 }
