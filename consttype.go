@@ -12,6 +12,9 @@ type ConstType interface {
 
 	// Format for "something bad X (type X.ErrorType())"
 	ErrorType() string
+
+	// The go type the ConstType is promoted to by default
+	DefaultPromotion() reflect.Type
 }
 
 type ConstIntType struct { reflect.Type }
@@ -46,8 +49,16 @@ func (ConstRuneType) ErrorType() string { return "ideal" }
 func (ConstFloatType) ErrorType() string { return "ideal" }
 func (ConstComplexType) ErrorType() string { return "ideal" }
 func (ConstStringType) ErrorType() string { return "ideal string" }
-func (ConstNilType) ErrorType() string { panic("nil type used in error") }
+func (ConstNilType) ErrorType() string { return "nil" }
 func (ConstBoolType) ErrorType() string { return "ideal bool" }
+
+func (c ConstIntType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstRuneType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstFloatType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstComplexType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstStringType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstNilType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstBoolType) DefaultPromotion() reflect.Type { return c.Type }
 
 func (ConstIntType) IsIntegral() bool { return true }
 func (ConstRuneType) IsIntegral() bool { return true }

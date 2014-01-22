@@ -6,32 +6,36 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(ctx *Ctx, b *UnaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
-	var xx *[]reflect.Value
-	var xtyped bool
-	if xx, xtyped, err = EvalExpr(ctx, b.X.(Expr), env); err != nil {
-		return reflect.Value{}, false, err
+func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (r reflect.Value, err error) {
+	if unary.IsConst() {
+		return unary.Const(), nil
 	}
-	rtyped = xtyped
+
+	var xx *[]reflect.Value
+	if xx, _, err = EvalExpr(ctx, unary.X.(Expr), env); err != nil {
+		return reflect.Value{}, err
+	}
 	x := (*xx)[0]
 
-	if userConversion != nil {
-		x, xtyped, err = userConversion(x, xtyped)
+	// handle & and <- first
+	if unary.Op == token.AND {
+		return x.Addr(), nil
 	}
+	// TODO handle <-
 
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalUnaryIntExpr(ctx, x, b.Op)
+		r, err = evalUnaryIntExpr(ctx, x, unary.Op)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalUnaryUintExpr(ctx, x, b.Op)
+		r, err = evalUnaryUintExpr(ctx, x, unary.Op)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalUnaryFloatExpr(ctx, x, b.Op)
+		r, err = evalUnaryFloatExpr(ctx, x, unary.Op)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalUnaryComplexExpr(ctx, x, b.Op)
+		r, err = evalUnaryComplexExpr(ctx, x, unary.Op)
 	case reflect.Bool:
-		r, err = evalUnaryBoolExpr(ctx, x, b.Op)
+		r, err = evalUnaryBoolExpr(ctx, x, unary.Op)
 	default:
-	        err = ErrInvalidOperand{x, b.Op}
+	        err = ErrInvalidOperand{x, unary.Op}
 	}
 	return
 }

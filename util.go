@@ -246,6 +246,32 @@ func isOpDefinedOn(op token.Token, t reflect.Type) bool {
 	return false
 }
 
+func isUnaryOpDefinedOn(op token.Token, t reflect.Type) bool {
+	if _, ok := t.(ConstNilType); ok {
+		return false
+	}
+
+	switch t.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		switch op {
+		case token.ADD, token.SUB, token.XOR:
+			return true
+		}
+	case reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128:
+		switch op {
+		case token.ADD, token.SUB:
+			return true
+		}
+	case reflect.Bool:
+		switch op {
+		case token.NOT:
+			return true
+		}
+	}
+	return false
+}
+
 // FIXME: should also match and handle just a line and no column
 var parseError = regexp.MustCompile(`^([0-9]+):([0-9]+): `)
 
@@ -421,4 +447,44 @@ func isValidGoName(name string) bool {
 		ok = ok && (r == '_' || unicode.IsLetter(r) || unicode.IsNumber(r))
 	}
 	return ok
+}
+
+// spec: addressable, that is, either a
+// variable,
+// pointer indirection,
+// or slice indexing operation;
+// or a field selector of an addressable struct operand;
+// or an array indexing operation of an addressable array.
+// As an exception to the addressability requirement, x may also be a (possibly parenthesized) composite literal
+func isAddressable(expr Expr) bool {
+	expr = skipSuperfluousParens(expr)
+	switch n := expr.(type) {
+	case *Ident:
+		return n.source == envVar
+	case *StarExpr:
+		return true
+	case *IndexExpr:
+		x := n.X.(Expr)
+		t := x.KnownType()[0]
+		switch t.Kind() {
+		case reflect.Slice:
+			return true
+		case reflect.Array:
+			return isAddressable(x)
+		case reflect.Ptr:
+			return true
+		}
+	case *SelectorExpr:
+		x := n.X.(Expr)
+		t := x.KnownType()[0]
+		switch t.Kind() {
+		case reflect.Struct:
+			return isAddressable(x)
+		case reflect.Ptr:
+			return true
+		}
+	case *CompositeLit:
+		return true
+	}
+	return false
 }

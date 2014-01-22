@@ -6,6 +6,14 @@ import (
 
 type Pkg *Env
 
+type envSource int
+const (
+	envUnknown envSource = iota
+	envVar
+	envConst
+	envFunc
+)
+
 // A Environment used for evaluation
 type Env struct {
 	Name string  // e.g "fmt"

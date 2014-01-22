@@ -1,61 +1,99 @@
 package eval
 
 import (
+	"reflect"
+
 	"go/ast"
 	"go/token"
 )
 
-func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (aexpr *UnaryExpr, errs []error) {
-	aexpr = &UnaryExpr{UnaryExpr: unary}
+func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (*UnaryExpr, []error) {
+	aexpr := &UnaryExpr{UnaryExpr: unary}
 
-	var moreErrs []error
-	if aexpr.X, moreErrs = CheckExpr(ctx, unary.X, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
-	}
-
-	if errs == nil {
-		a := aexpr.X.(Expr)
-		t := a.KnownType()
-
-		// Check for multi valued expressions. Not much we can do if we find one
-		// TODO check for single values
-
-		// TODO shim
-		if len(t) != 1 {
-			return aexpr, errs
-		}
-
-		aexpr.knownType = t
-		if a.IsConst() {
-			if c, ok := t[0].(ConstType); ok {
-				aexpr.constValue, moreErrs = evalConstUnaryExpr(ctx, aexpr, c)
-				if moreErrs != nil {
-					errs = append(errs, moreErrs...)
+	x, errs := CheckExpr(ctx, unary.X, env)
+	if errs == nil || x.IsConst() {
+		if t, err := expectSingleType(ctx, x.KnownType(), x); err != nil {
+			errs = append(errs, err)
+		} else if unary.Op == token.AND { // address off
+			if !isAddressable(x) {
+				printableX := fakeCheckExpr(unary.X, env)
+				printableX.setKnownType(knownType{t})
+				errs = append(errs, ErrInvalidAddressOf{at(ctx, printableX)})
+			}
+			t := x.KnownType()[0]
+			if ct, ok := t.(ConstType); ok {
+				if ct == ConstNil {
+					errs = append(errs, ErrUntypedNil{at(ctx, x)})
+				} else {
+					ptrT := reflect.PtrTo(unhackType(ct.DefaultPromotion()))
+					aexpr.knownType = knownType{ptrT}
 				}
-                        }
-                }
+			} else {
+				ptrT := reflect.PtrTo(unhackType(t))
+				aexpr.knownType = knownType{ptrT}
+			}
+			aexpr.X = x
+		// TODO handle <-
+		} else {
+			aexpr.X = x
+			// All numeric and bool unary expressions do not change type
+			aexpr.knownType = knownType(x.KnownType())
+			if x.IsConst() {
+				if ct, ok := t.(ConstType); ok {
+					c, moreErrs := evalConstUnaryExpr(ctx, aexpr, x, ct)
+					if moreErrs != nil {
+						errs = append(errs, moreErrs...)
+					}
+					aexpr.constValue = c
+
+				} else {
+					c, moreErrs := evalConstTypedUnaryExpr(ctx, aexpr, x)
+					if moreErrs != nil {
+						errs = append(errs, moreErrs...)
+					}
+					aexpr.constValue = c
+				}
+			} else {
+				if !isUnaryOpDefinedOn(unary.Op, t) {
+					errs = append(errs, ErrInvalidUnaryOperation{at(ctx, unary)})
+				}
+			}
+		}
         }
+	aexpr.X = x
 	return aexpr, errs
 }
 
-// Evaluates a const binary Expr. May return a sensical constValue
-// even if ErrTruncatedConst errors are present
-func evalConstUnaryExpr(ctx *Ctx, constExpr *UnaryExpr, resultType ConstType) (constValue, []error) {
-	x := constExpr.X.(Expr).Const()
-	switch resultType.(type) {
+func evalConstUnaryExpr(ctx *Ctx, unary *UnaryExpr, x Expr, xT ConstType) (constValue, []error) {
+	switch xT.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-		xx := x.Interface().(*ConstNumber)
-		return evalConstUnaryNumericExpr(ctx, constExpr, xx)
+		xx := x.Const().Interface().(*ConstNumber)
+		return evalConstUnaryNumericExpr(ctx, unary, xx)
 	case ConstBoolType:
-		xx := x.Bool()
-		return evalConstUnaryBoolExpr(ctx, constExpr, xx)
+		xx := x.Const().Bool()
+		return evalConstUnaryBoolExpr(ctx, unary, xx)
 	default:
-		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
+		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, unary)}}
 	}
 }
 
-func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *ConstNumber) (constValue, []error) {
-	switch constExpr.Op {
+func evalConstTypedUnaryExpr(ctx *Ctx, unary *UnaryExpr, x Expr) (constValue, []error) {
+	t := x.KnownType()[0]
+	if xx, ok := convertTypedToConstNumber(x.Const()); ok {
+		zz, errs := evalConstUnaryNumericExpr(ctx, unary, xx)
+		if !reflect.Value(zz).IsValid() {
+			return constValue{}, errs
+		}
+		rr, moreErrs := promoteConstToTyped(ctx, xx.Type, zz, t, x)
+		return rr, append(errs, moreErrs...)
+	} else if t.Kind() == reflect.Bool {
+		return evalConstUnaryBoolExpr(ctx, unary, x.Const().Bool())
+	}
+	return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, unary)}}
+}
+
+func evalConstUnaryNumericExpr(ctx *Ctx, unary *UnaryExpr, x *ConstNumber) (constValue, []error) {
+	switch unary.Op {
 	case token.ADD:
 		return constValueOf(x), nil
 	case token.SUB:
@@ -67,14 +105,14 @@ func evalConstUnaryNumericExpr(ctx *Ctx, constExpr *UnaryExpr, x *ConstNumber) (
 			return constValueOf(minusOne.Xor(minusOne, x)), nil
 		}
 	}
-	return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
+	return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, unary)}}
 }
 
-func evalConstUnaryBoolExpr(ctx *Ctx, constExpr *UnaryExpr, x bool) (constValue, []error) {
-	switch constExpr.Op {
+func evalConstUnaryBoolExpr(ctx *Ctx, unary *UnaryExpr, x bool) (constValue, []error) {
+	switch unary.Op {
 	case token.NOT:
 		return constValueOf(!x), nil
 	default:
-		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, constExpr)}}
+		return constValue{}, []error{ErrInvalidUnaryOperation{at(ctx, unary)}}
 	}
 }

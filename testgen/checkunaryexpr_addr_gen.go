@@ -10,7 +10,7 @@ import (
 type Test struct{}
 
 var comment = template.Must(template.New("Comment").Parse(
-`// Test {{ .Star.Value }}
+`// Test {{ .Amp.Value }}
 `))
 
 var defs =
@@ -22,7 +22,6 @@ var defs =
 var body = template.Must(template.New("Body").Parse(defs +
 `	env := makeEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
-	env.Vars["b"] = reflect.ValueOf(&b)
 {{ if .Errors }}
 	expectCheckError(t, `+"`{{ .Expr }}`"+`, env,{{ range .Errors }}
 		`+"`{{ . }}`"+`,{{ end }}
@@ -36,7 +35,7 @@ func (*Test) Package() string {
 }
 
 func (*Test) Prefix() string {
-	return "CheckStarExpr"
+	return "CheckAddrExpr"
 }
 
 func (*Test) Imports() map[string]string {
@@ -46,16 +45,16 @@ func (*Test) Imports() map[string]string {
 func (*Test) Dimensions() []testgen.Dimension {
 	stars := []testgen.Element{
 		{"A", "a"},
-		{"B", "b"},
-		{"AtA", "&a"},
-		{"AtB", "&b"},
 		{"Int", "int(1)"},
 		{"Number", "1.4"},
 		{"Rune", "'a'"},
 		{"Bool", "true"},
 		{"String", `"a"`},
 		{"Nil", "nil"},
-		{"StarB", "*b"},
+		{"AtA", " &a"},
+		{"StarB", " *a"},
+		{"Slice", "[]int{1}"},
+		// TODO[crc] add &slice[x] and &struct.field
 	}
 	return []testgen.Dimension{
 		stars,
@@ -64,14 +63,14 @@ func (*Test) Dimensions() []testgen.Dimension {
 
 func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
 	vars := map[string] interface{} {
-		"Star": elts[0],
+		"Amp": elts[0],
 	}
 
 	return comment.Execute(w, vars)
 }
 
 func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
-	expr := fmt.Sprintf("*%v", elts[0].Value)
+	expr := fmt.Sprintf("&%v", elts[0].Value)
 
 	compileErrs, err := compileExprWithDefs(expr, defs)
 	if err != nil {
