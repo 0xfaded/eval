@@ -183,3 +183,70 @@ func TestCheckUnaryExprXorNil(t *testing.T) {
 	)
 
 }
+
+// Test ! Int
+func TestCheckUnaryExprNotInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! 4`, env,
+		`invalid operation: ! ideal`,
+	)
+
+}
+
+// Test ! Rune
+func TestCheckUnaryExprNotRune(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! '@'`, env,
+		`invalid operation: ! ideal`,
+	)
+
+}
+
+// Test ! Float
+func TestCheckUnaryExprNotFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! 2.0`, env,
+		`invalid operation: ! ideal`,
+	)
+
+}
+
+// Test ! Complex
+func TestCheckUnaryExprNotComplex(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! 8.0i`, env,
+		`invalid operation: ! ideal`,
+	)
+
+}
+
+// Test ! Bool
+func TestCheckUnaryExprNotBool(t *testing.T) {
+	env := makeEnv()
+
+	expectConst(t, `! true`, env, (! true), ConstBool)
+}
+
+// Test ! String
+func TestCheckUnaryExprNotString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! "abc"`, env,
+		`invalid operation: ! ideal string`,
+	)
+
+}
+
+// Test ! Nil
+func TestCheckUnaryExprNotNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `! nil`, env,
+		`invalid operation: ! nil`,
+	)
+
+}

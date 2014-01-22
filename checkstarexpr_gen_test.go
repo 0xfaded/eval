@@ -34,6 +34,32 @@ func TestCheckStarExprB(t *testing.T) {
 	expectType(t, `*b`, env, reflect.TypeOf(*b))
 }
 
+// Test &a
+func TestCheckStarExprAtA(t *testing.T) {
+
+	a := 1
+	b := &a
+	_ = b
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+
+	expectType(t, `*&a`, env, reflect.TypeOf(*&a))
+}
+
+// Test &b
+func TestCheckStarExprAtB(t *testing.T) {
+
+	a := 1
+	b := &a
+	_ = b
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+
+	expectType(t, `*&b`, env, reflect.TypeOf(*&b))
+}
+
 // Test int(1)
 func TestCheckStarExprInt(t *testing.T) {
 
