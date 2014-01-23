@@ -4,12 +4,12 @@ import (
 	"go/ast"
 )
 
-func checkParenExpr(ctx *Ctx, paren *ast.ParenExpr, env *Env) (aexpr *ParenExpr, errs []error) {
-	aexpr = &ParenExpr{ParenExpr: paren}
+func checkParenExpr(ctx *Ctx, paren *ast.ParenExpr, env *Env) (*ParenExpr, []error) {
+	aexpr := &ParenExpr{ParenExpr: paren}
+	x, errs := CheckExpr(ctx, paren.X, env)
 
-	var moreErrs []error
-	if aexpr.X, moreErrs = CheckExpr(ctx, paren.X, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
-	}
+	aexpr.X = x
+	aexpr.knownType = knownType(x.KnownType())
+	aexpr.constValue = constValue(x.Const())
 	return aexpr, errs
 }

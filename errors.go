@@ -31,6 +31,10 @@ type ErrInvalidIndirect struct {
 	ErrorContext
 }
 
+type ErrUndefinedFieldOrMethod struct {
+	ErrorContext
+}
+
 type ErrMismatchedTypes struct {
 	x reflect.Value
 	op token.Token
@@ -303,6 +307,13 @@ func (err ErrInvalidIndirect) Error() string {
 			expr, ct.ErrorType())
 	}
 	return fmt.Sprintf("invalid indirect of %v (type %s)", expr, t)
+}
+
+func (err ErrUndefinedFieldOrMethod) Error() string {
+	selector := err.Node.(*SelectorExpr)
+	t := selector.X.(Expr).KnownType()[0]
+	return fmt.Sprintf("%v undefined (type %v has no field or method %v)",
+		selector, t, selector.Sel.Name)
 }
 
 func (err ErrMissingValue) Error() string {

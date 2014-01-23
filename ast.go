@@ -85,6 +85,20 @@ type ParenExpr struct {
 type SelectorExpr struct {
 	*ast.SelectorExpr
 	knownType
+	constValue
+
+	// if not "", this is a package selector
+	pkgName string
+
+	// if not nil, this is a struct field
+	field []int
+
+	// if true, the method was found on the pointer
+	// for this type, not the type itself.
+	isPtrReceiver bool
+
+	// the method index
+	method int
 }
 
 type IndexExpr struct {
@@ -197,7 +211,6 @@ func (*BadExpr) IsConst() bool        { return false }
 func (*Ellipsis) IsConst() bool       { return false }
 func (*FuncLit) IsConst() bool        { return false }
 func (*CompositeLit) IsConst() bool   { return false }
-func (*SelectorExpr) IsConst() bool   { return false }
 func (*IndexExpr) IsConst() bool      { return false }
 func (*SliceExpr) IsConst() bool      { return false }
 func (*TypeAssertExpr) IsConst() bool { return false }
@@ -214,7 +227,6 @@ func (*BadExpr) Const() reflect.Value        { return reflect.Value{} }
 func (*Ellipsis) Const() reflect.Value       { return reflect.Value{} }
 func (*FuncLit) Const() reflect.Value        { return reflect.Value{} }
 func (*CompositeLit) Const() reflect.Value   { return reflect.Value{} }
-func (*SelectorExpr) Const() reflect.Value   { return reflect.Value{} }
 func (*IndexExpr) Const() reflect.Value      { return reflect.Value{} }
 func (*SliceExpr) Const() reflect.Value      { return reflect.Value{} }
 func (*TypeAssertExpr) Const() reflect.Value { return reflect.Value{} }
@@ -268,7 +280,13 @@ func (ident *Ident) String() string {
 	return ident.Ident.String()
 }
 
-func (ellipsis *Ellipsis) String() string { return "TODO  ellipsis.Ellipsis" }
+func (ellipsis *Ellipsis) String() string {
+	if ellipsis.Elt != nil {
+		return fmt.Sprintf("...%v", ellipsis.Elt)
+	} else {
+		return "..."
+	}
+}
 
 func (basicLit *BasicLit) String() string {
 	if basicLit.IsConst() {
@@ -287,7 +305,10 @@ func (parenExpr *ParenExpr) String() string {
 	return skipSuperfluousParens(parenExpr).String()
 }
 
-func (selectorExpr *SelectorExpr) String() string { return "TODO  selectorExpr.SelectorExpr" }
+func (selectorExpr *SelectorExpr) String() string {
+	return fmt.Sprintf("%s.%v", selectorExpr.X, selectorExpr.Sel)
+}
+
 func (indexExpr *IndexExpr) String() string { return "TODO  indexExpr.IndexExpr" }
 func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr" }
 func (typeAssertExpr *TypeAssertExpr) String() string { return "TODO  typeAssertExpr.TypeAssertExpr" }
