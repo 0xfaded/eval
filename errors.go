@@ -91,15 +91,17 @@ type ErrMultiInSingleContext struct {
 	ErrorContext
 }
 
-// TODO remove this after composite lit type checker integration
-type ErrArrayIndexOutOfBounds struct {
-	t reflect.Type
-	i uint64
+type ErrNonIntegerIndex struct {
+	ErrorContext
+}
+
+type ErrIndexOutOfBounds struct {
+	ErrorContext
+	i int
 }
 
 type ErrInvalidIndexOperation struct {
 	ErrorContext
-	t reflect.Type
 }
 
 type ErrInvalidSliceType struct {
@@ -255,7 +257,8 @@ func (err ErrWrongNumberOfArgsOld) Error() string {
 }
 
 func (err ErrInvalidIndexOperation) Error() string {
-	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), err.t)
+	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
+	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), t)
 }
 
 func (err ErrInvalidSliceType) Error() string {
@@ -324,8 +327,25 @@ func (err ErrMultiInSingleContext) Error() string {
 	return fmt.Sprintf("multiple-value %s in single-value context", err.ErrorContext.Source())
 }
 
-func (err ErrArrayIndexOutOfBounds) Error() string {
-	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
+func (err ErrNonIntegerIndex) Error() string {
+	expr := err.Node.(*IndexExpr)
+	xT := expr.X.(Expr).KnownType()[0]
+	var xname string
+	if xT.Kind() == reflect.String {
+		xname = "string"
+	} else {
+		xname = "array"
+	}
+	return fmt.Sprintf("non-integer %s index %v", xname, expr.Index)
+}
+
+func (err ErrIndexOutOfBounds) Error() string {
+	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
+	if t.Kind() == reflect.String {
+		return fmt.Sprintf("invalid string index %d (out of bounds for %d-byte array", err.i, t.Len())
+	} else {
+		return fmt.Sprintf("invalid array index %d (out of bounds for %d-element array", err.i, t.Len())
+	}
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {
