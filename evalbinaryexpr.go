@@ -46,7 +46,7 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
 	case reflect.Bool:
 		r, err = evalBinaryBoolExpr(ctx, x, b.Op, y)
 	default:
-                panic("go-eval: impossible. Did you type check? (or more likely what you want is unimplemented)")
+                panic("eval: unimplemented binary ops")
 	}
 	return r, true, err
 }
@@ -83,7 +83,7 @@ func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Valu
 	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
 	if is_bool {
 		return reflect.ValueOf(b), err
@@ -124,7 +124,7 @@ func evalBinaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Val
 	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
 	if is_bool {
 		return reflect.ValueOf(b), err
@@ -155,7 +155,7 @@ func evalBinaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Va
 	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
 	if is_bool {
 		return reflect.ValueOf(b), nil
@@ -182,7 +182,7 @@ func evalBinaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.
 	case token.EQL: b = xx == yy; is_bool = true
 	case token.NEQ: b = xx != yy; is_bool = true
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
 	if is_bool {
 		return reflect.ValueOf(b), nil
@@ -206,7 +206,7 @@ func evalBinaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.V
 	case token.LSS: b = xx < yy;  is_bool = true
 	case token.GTR: b = xx > yy;  is_bool = true
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
 	if is_bool {
 		return reflect.ValueOf(b), nil
@@ -224,7 +224,7 @@ func evalBinaryBoolExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Val
 	case token.EQL: r = xx == yy
 	case token.NEQ: r = xx != yy
 	default:
-                panic("go-eval: impossible. Did you type check?")
+		panic(dytc("bad binary op"))
 	}
         return reflect.ValueOf(r), nil
 }

@@ -29,10 +29,6 @@ func expectVoid(t *testing.T, expr string, env *Env) {
 	expectResults(t, expr, env, &[]interface{}{})
 }
 
-func expectNil(t *testing.T, expr string, env *Env) {
-	expectResults(t, expr, env, nil)
-}
-
 func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
 	expect2 := []interface{}{expected}
 	expectResults(t, expr, env, &expect2)

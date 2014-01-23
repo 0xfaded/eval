@@ -73,7 +73,21 @@ func evalIndexExprInt(ctx *Ctx, x reflect.Value, intExpr ast.Expr, env *Env) (*r
 }
 
 func evalIntIndex(ctx *Ctx, intExpr ast.Expr, env *Env, containerType reflect.Type) (int, error) {
-	if is, typed, err := EvalExpr(ctx, intExpr.(Expr), env); err != nil {
+	expr := intExpr.(Expr)
+	if expr.IsConst() {
+		c := expr.Const()
+		ct := expr.KnownType()[0].(ConstType)
+		i, errs := promoteConstToTyped(ctx, ct, constValue(c), intType, expr)
+		if errs == nil {
+			r := reflect.Value(i).Interface().(int)
+			if 0 <= r && (containerType.Kind() != reflect.Array || r < containerType.Len()) {
+				return r, nil
+			} else {
+				c = reflect.Value(i)
+			}
+		}
+		return -1, ErrInvalidIndex{at(ctx, intExpr), c, containerType}
+	} else if is, typed, err := EvalExpr(ctx, intExpr.(Expr), env); err != nil {
 		return -1, err
 	} else if is == nil {
 		// XXX temporary error until typed evaluation of nil

@@ -84,6 +84,7 @@ type ParenExpr struct {
 
 type SelectorExpr struct {
 	*ast.SelectorExpr
+	Sel *Ident
 	knownType
 	constValue
 

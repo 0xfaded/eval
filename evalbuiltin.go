@@ -102,7 +102,7 @@ func evalBuiltinMakeExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, e
 	case reflect.Chan:
 		res = reflect.MakeChan(resT, length)
 	default:
-		panic("eval: make(bad type). Did you type check?")
+		panic(dytc("make(bad type)"))
 	}
 	return []reflect.Value{res}, nil
 }

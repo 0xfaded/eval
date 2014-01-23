@@ -25,8 +25,8 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return &ret, typed, err
 	case *Ellipsis:
 	case *BasicLit:
-		v, typed, err := evalBasicLit(ctx, node)
-		return &[]reflect.Value{v}, typed, err
+		v, err := evalBasicLit(ctx, node)
+		return &[]reflect.Value{v}, true, err
 	case *FuncLit:
 	case *CompositeLit:
 		v, err := evalCompositeLit(ctx, node, env)

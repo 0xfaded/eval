@@ -379,7 +379,7 @@ func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
                         cx, _ := promoteConstToTyped(ctx, ct, constValue(x), intType, expr)
 			return int(reflect.Value(cx).Int()), nil
                 } else {
-			panic("eval: const bool or string evaluated as int. Did you type check?")
+			panic(dytc("const bool or string evaluated as int"))
                 }
         } else {
                 xs, _, err := EvalExpr(ctx, expr, env);
@@ -393,7 +393,7 @@ func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 			return int(x.Uint()), nil
 		default:
-			panic("eval: non-integral type evaluated as int. Did you type check?")
+			panic(dytc("non-integral type evaluated as int"))
 		}
         }
 }

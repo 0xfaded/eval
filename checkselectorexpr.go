@@ -12,7 +12,7 @@ func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*Selecto
 	if ident, ok := selector.X.(*ast.Ident); ok {
 		if pkg, ok := env.Pkgs[ident.Name]; ok {
 			// Lookup this ident in the context of the package.
-			sel, errs := checkIdent(ctx, aexpr.Sel, pkg)
+			sel, errs := checkIdent(ctx, aexpr.SelectorExpr.Sel, pkg)
 			if len(errs) == 1 {
 				if undefined, ok := (errs[0]).(ErrUndefined); ok {
 					undefined.Node = aexpr
@@ -25,12 +25,14 @@ func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*Selecto
 			aexpr.knownType = sel.knownType
 			aexpr.pkgName = ident.Name
 			aexpr.X = &Ident{Ident: ident}
+			aexpr.Sel = sel
 			return aexpr, errs
 		}
 	}
 
 	x, errs := CheckExpr(ctx, selector.X, env)
 	aexpr.X = x
+	aexpr.Sel = &Ident{Ident: selector.Sel}
 	if errs != nil && !x.IsConst() {
 		return aexpr, errs
 	}

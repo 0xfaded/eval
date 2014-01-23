@@ -5,11 +5,6 @@ import (
 	"testing"
 )
 
-func TestNilValue(t *testing.T) {
-	env := makeEnv()
-	expectNil(t, "nil", env)
-}
-
 func TestStringVar(t *testing.T) {
 	env := makeEnv()
         s := "abc"
