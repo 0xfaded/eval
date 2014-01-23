@@ -15,7 +15,7 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (*UnaryExpr, []err
 		if t, err := expectSingleType(ctx, x.KnownType(), x); err != nil {
 			errs = append(errs, err)
 		} else if unary.Op == token.AND { // address off
-			if !isAddressable(x) {
+			if !isAddressableOrCompositeLit(x) {
 				printableX := fakeCheckExpr(unary.X, env)
 				printableX.setKnownType(knownType{t})
 				errs = append(errs, ErrInvalidAddressOf{at(ctx, printableX)})

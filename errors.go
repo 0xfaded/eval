@@ -1,17 +1,12 @@
 package eval
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strings"
 
 	"go/ast"
 	"go/token"
-)
-
-var (
-	ErrArrayKey = errors.New("array index must be non-negative integer constant")
 )
 
 type ErrBadBasicLit struct {
@@ -91,20 +86,29 @@ type ErrMultiInSingleContext struct {
 	ErrorContext
 }
 
-// TODO remove this after composite lit type checker integration
-type ErrArrayIndexOutOfBounds struct {
-	t reflect.Type
-	i uint64
+type ErrNonIntegerIndex struct {
+	ErrorContext
+}
+
+type ErrIndexOutOfBounds struct {
+	ErrorContext
+	i int
 }
 
 type ErrInvalidIndexOperation struct {
 	ErrorContext
-	t reflect.Type
 }
 
-type ErrInvalidSliceType struct {
+type ErrInvalidSliceIndex struct {
 	ErrorContext
-	t reflect.Type
+}
+
+type ErrInvalidSliceOperation struct {
+	ErrorContext
+}
+
+type ErrUnaddressableSliceOperand struct {
+	ErrorContext
 }
 
 type ErrInvalidIndex struct {
@@ -255,45 +259,23 @@ func (err ErrWrongNumberOfArgsOld) Error() string {
 }
 
 func (err ErrInvalidIndexOperation) Error() string {
-	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), err.t)
+	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
+	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), t)
 }
 
-func (err ErrInvalidSliceType) Error() string {
-	return fmt.Sprintf("cannot slice (type %v)", err.t)
+func (err ErrInvalidSliceIndex) Error() string {
+	slice := err.Node.(*SliceExpr)
+	return fmt.Sprintf("invalid slice index: %v > %v", slice.Low, slice.High)
 }
 
-func (err ErrInvalidIndex) Error() string {
-	var ct string
+func (err ErrInvalidSliceOperation) Error() string {
+	x := err.Node.(*SliceExpr).X.(Expr)
+	xT := x.KnownType()[0]
+	return fmt.Sprintf("cannot slice %v (type %v)", x, xT)
+}
 
-	switch err.containerType.Kind() {
-	//case reflect.Map:
-	case reflect.Array:
-		ct = "array"
-	case reflect.Slice:
-		ct = "slice"
-	case reflect.String:
-		ct = "string"
-	default:
-		panic("go-interactive error: ErrInvalidIndex requires indexable err.containerType")
-	}
-
-	switch err.indexValue.Type().Kind() {
-	case reflect.Int:
-		var reason string
-		i := int(err.indexValue.Int())
-		if err.containerType.Kind() == reflect.Array && i >= err.containerType.Len() {
-			reason = fmt.Sprintf("out of bounds for %d-element array", err.containerType.Len())
-
-		// TODO string errors for constant strings constant values are implemented
-		// out of bounds for 3-byte string
-		// } else if err.containerType.Kind == reflect.String && i > err.containerType.Len() {
-		} else {
-			reason = "index must be non-negative"
-		}
-		return fmt.Sprintf("invalid %s index %s (%s)", ct, err.Source(), reason)
-	default:
-		return fmt.Sprintf("non-integer %s index %s", ct, err.Source())
-	}
+func (err ErrUnaddressableSliceOperand) Error() string {
+	return fmt.Sprintf("invalid operation %v (slice of unaddressable value)", err.Node)
 }
 
 func (err ErrInvalidIndirect) Error() string {
@@ -324,8 +306,25 @@ func (err ErrMultiInSingleContext) Error() string {
 	return fmt.Sprintf("multiple-value %s in single-value context", err.ErrorContext.Source())
 }
 
-func (err ErrArrayIndexOutOfBounds) Error() string {
-	return fmt.Sprintf("array index %d out of bounds [0:%d]", err.i, err.t.Len())
+func (err ErrNonIntegerIndex) Error() string {
+	expr := err.Node.(*IndexExpr)
+	xT := expr.X.(Expr).KnownType()[0]
+	var xname string
+	if xT.Kind() == reflect.String {
+		xname = "string"
+	} else {
+		xname = "array"
+	}
+	return fmt.Sprintf("non-integer %s index %v", xname, expr.Index)
+}
+
+func (err ErrIndexOutOfBounds) Error() string {
+	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
+	if t.Kind() == reflect.String {
+		return fmt.Sprintf("invalid string index %d (out of bounds for %d-byte array", err.i, t.Len())
+	} else {
+		return fmt.Sprintf("invalid array index %d (out of bounds for %d-element array", err.i, t.Len())
+	}
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {

@@ -371,6 +371,50 @@ func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (xs []reflect.Val
         return xs, err
 }
 
+// Type check an integral node. Returns the type checked node, the
+// integer value if constant, ok if the node was indeed integral,
+// and checkErrs which occur during the type check. It is possible
+// that checkErrs will be non-nil yet ok is still true. In this case
+// the errors are non-fatal, such as integer truncation.
+func checkInteger(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+	aexpr, checkErrs = CheckExpr(ctx, expr, env)
+	if checkErrs != nil && !aexpr.IsConst() {
+		return aexpr, 0, false, checkErrs
+	}
+	t, err := expectSingleType(ctx, aexpr.KnownType(), aexpr)
+	if err != nil {
+		return aexpr, 0, false, append(checkErrs, err)
+	}
+
+	var ii int64
+	if ct, ok := t.(ConstType); ok {
+		c, moreErrs := promoteConstToTyped(ctx, ct, constValue(aexpr.Const()), intType, aexpr)
+		if moreErrs != nil {
+			checkErrs = append(checkErrs, moreErrs...)
+		}
+		v := reflect.Value(c)
+		if v.IsValid() {
+			ii = v.Int()
+		} else {
+			return aexpr, 0, false, checkErrs
+		}
+	} else {
+		switch t.Kind() {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			if aexpr.IsConst() {
+				ii = aexpr.Const().Int()
+			}
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			if aexpr.IsConst() {
+				ii = int64(aexpr.Const().Uint())
+			}
+		default:
+			return aexpr, 0, false, checkErrs
+		}
+	}
+	return aexpr, int(ii), true, checkErrs
+}
+
 // Eval a node and cast it to an int. expr must be a *ConstNumber or integral type
 func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
         if expr.IsConst() {
@@ -483,8 +527,15 @@ func isAddressable(expr Expr) bool {
 		case reflect.Ptr:
 			return true
 		}
-	case *CompositeLit:
-		return true
 	}
 	return false
+}
+
+func isAddressableOrCompositeLit(expr Expr) bool {
+	expr = skipSuperfluousParens(expr)
+	if _, ok := expr.(*CompositeLit); ok {
+		return true
+	} else {
+		return isAddressable(expr)
+	}
 }

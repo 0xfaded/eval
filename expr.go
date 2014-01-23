@@ -40,17 +40,11 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		}
 		return &[]reflect.Value{*v}, typed, err
 	case *IndexExpr:
-		v, typed, err := evalIndexExpr(ctx, node, env)
-		if v == nil {
-			return nil, typed, err
-		}
-		return &[]reflect.Value{*v}, typed, err
+		v, err := evalIndexExpr(ctx, node, env)
+		return &[]reflect.Value{v}, true, err
 	case *SliceExpr:
-		v, typed, err := evalSliceExpr(ctx, node, env)
-		if v == nil {
-			return nil, typed, err
-		}
-		return &[]reflect.Value{*v}, typed, err
+		v, err := evalSliceExpr(ctx, node, env)
+		return &[]reflect.Value{v}, true, err
 	case *TypeAssertExpr:
 	case *CallExpr:
 		vs, err := evalCallExpr(ctx, node, env)
