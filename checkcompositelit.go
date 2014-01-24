@@ -18,10 +18,10 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 	// We won't generate any errors here if the given type does not match lit.Type.
 	// The caller will need to detect the type incompatibility.
 	if lit.Type != nil {
-		var err error
-		t, err = evalType(ctx, lit.Type, env)
-		if err != nil {
-			return alit, []error{err}
+		var errs []error
+		lit.Type, t, errs = checkType(ctx, lit.Type, env)
+		if errs != nil {
+			return alit, errs
 		}
 	}
 

@@ -5,10 +5,10 @@ import (
 	"go/token"
 )
 
-func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped bool, err error) {
+func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, err error) {
 
         if b.IsConst() {
-                return b.Const(), true, nil
+                return b.Const(), nil
         }
 
         xexpr := b.X.(Expr)
@@ -26,9 +26,9 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
 
         var xs, ys []reflect.Value
         if xs, err = evalTypedExpr(ctx, xexpr, zt, env); err != nil {
-                return reflect.Value{}, false, err
+                return reflect.Value{}, err
         } else if ys, err = evalTypedExpr(ctx, yexpr, zt, env); err != nil {
-                return reflect.Value{}, false, err
+                return reflect.Value{}, err
         }
         x, y := xs[0], ys[0]
 
@@ -48,7 +48,7 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, rtyped 
 	default:
                 panic("eval: unimplemented binary ops")
 	}
-	return r, true, err
+	return r, err
 }
 
 func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {

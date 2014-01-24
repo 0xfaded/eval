@@ -2,10 +2,7 @@ package eval
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
-
-        "go/ast"
 )
 
 // EvalExpr is the main function to call to evaluate an ast-parsed
@@ -17,12 +14,12 @@ import (
 func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *Ident:
-		v, typed, err := evalIdentExprCallback(ctx, node, env)
+		v, _, err := evalIdentExprCallback(ctx, node, env)
 		if v == nil {
 			return nil, false, err
 		}
 		ret := []reflect.Value{*v}
-		return &ret, typed, err
+		return &ret, true, err
 	case *Ellipsis:
 	case *BasicLit:
 		v, err := evalBasicLit(ctx, node)
@@ -34,11 +31,11 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 	case *ParenExpr:
 		return EvalExpr(ctx, node.X.(Expr), env)
 	case *SelectorExpr:
-		v, typed, err := evalSelectorExprCallback(ctx, node, env)
+		v, _, err := evalSelectorExprCallback(ctx, node, env)
 		if v == nil {
-			return nil, typed, err
+			return nil, true, err
 		}
-		return &[]reflect.Value{*v}, typed, err
+		return &[]reflect.Value{*v}, true, err
 	case *IndexExpr:
 		v, err := evalIndexExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err
@@ -58,50 +55,11 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		v, err := evalUnaryExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err
 	case *BinaryExpr:
-		v, typed, err := evalBinaryExpr(ctx, node, env)
-		return &[]reflect.Value{v}, typed, err
+		v, err := evalBinaryExpr(ctx, node, env)
+		return &[]reflect.Value{v}, true, err
 	case *KeyValueExpr:
 	default:
 		return nil , false, errors.New("undefined type")
 	}
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
-}
-
-func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
-	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
-		expr = parens.X
-	}
-	switch node := expr.(type) {
-	case *ast.Ident:
-		if t, ok := env.Types[node.Name]; ok {
-			return t, nil
-		} else if t, ok := builtinTypes[node.Name]; ok {
-			return t, nil
-		}
-	case *ast.StarExpr:
-		if elemT, err := evalType(ctx, node.X, env); err != nil {
-			return nil, err
-		} else {
-			return reflect.PtrTo(elemT), nil
-		}
-	case *ast.ArrayType:
-		if node.Len != nil {
-			return nil, errors.New("array types not implemented")
-		} else if eltT, err := evalType(ctx, node.Elt, env); err != nil {
-			return nil, err
-		} else {
-			return reflect.SliceOf(eltT), nil
-		}
-	case *ast.StructType:
-		return nil, errors.New("struct types not implemented")
-	case *ast.FuncType:
-		return nil, errors.New("func types not implemented")
-	case *ast.InterfaceType:
-		return nil, errors.New("interface types not implemented")
-	case *ast.MapType:
-		return nil, errors.New("map types not implemented")
-	case *ast.ChanType:
-		return nil, errors.New("chan types not implemented")
-	}
-	return nil, errors.New(fmt.Sprintf("Type: Bad type (%+v)", expr))
 }

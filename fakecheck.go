@@ -66,7 +66,7 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 			}
 		}
 		if !c.isBuiltin {
-			if t, err := evalType(&Ctx{""}, c.Fun, env); err == nil {
+			if _, t, errs := checkType(&Ctx{""}, c.Fun, env); errs == nil {
 				c.isTypeConversion = true
 				c.knownType = knownType{t}
 			}

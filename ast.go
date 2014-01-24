@@ -312,7 +312,10 @@ func (selectorExpr *SelectorExpr) String() string {
 
 func (indexExpr *IndexExpr) String() string { return "TODO  indexExpr.IndexExpr" }
 func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr" }
-func (typeAssertExpr *TypeAssertExpr) String() string { return "TODO  typeAssertExpr.TypeAssertExpr" }
+
+func (assert *TypeAssertExpr) String() string {
+	return fmt.Sprintf("%v.(%s)", assert.X, assert.Type)
+}
 
 func (callExpr *CallExpr) String() string {
 	if callExpr.isTypeConversion {
@@ -363,7 +366,15 @@ func (binary *BinaryExpr) String() string {
 }
 
 func (keyValueExpr *KeyValueExpr) String() string { return "TODO  keyValueExpr.KeyValueExpr" }
-func (arrayType *ArrayType) String() string { return "TODO  arrayType.ArrayType" }
+
+func (arrayType *ArrayType) String() string {
+	if arrayType.Len != nil {
+		return fmt.Sprintf("[%v]%v", arrayType.Len, arrayType.Elt)
+	} else {
+		return fmt.Sprintf("[]%v", arrayType.Elt)
+	}
+}
+
 func (structType *StructType) String() string { return "TODO  structType.StructType" }
 func (funcType *FuncType) String() string { return "TODO  funcType.FuncType" }
 func (interfaceType *InterfaceType) String() string { return "TODO  interfaceType.InterfaceType" }

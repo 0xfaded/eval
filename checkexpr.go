@@ -2,9 +2,7 @@ package eval
 
 import (
 	"errors"
-	"fmt"
-	//"reflect"
-
+	"reflect"
 	"go/ast"
 )
 
@@ -54,28 +52,63 @@ func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	case *ast.KeyValueExpr:
 		panic("eval: KeyValueExpr checked")
 	default:
-		return nil, []error{errors.New(fmt.Sprintf("Type: Bad expr (%+v)", expr))}
+		panic("eval: Bad expr")
 	}
-
 }
 
-func checkTypeExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
-	switch expr := expr.(type) {
-	case *ast.Ident:
-		return &Ident{Ident: expr}, nil
-	case *ast.ArrayType:
-		return &ArrayType{ArrayType: expr}, nil
-	case *ast.StructType:
-		return &StructType{StructType: expr}, nil
-	case *ast.FuncType:
-		return &FuncType{FuncType: expr}, nil
-	case *ast.InterfaceType:
-		return &InterfaceType{InterfaceType: expr}, nil
-	case *ast.MapType:
-		return &MapType{MapType: expr}, nil
-	case *ast.ChanType:
-		return &ChanType{ChanType: expr}, nil
-	default:
-		return nil, []error{errors.New(fmt.Sprintf("Type: Bad type (%+v)", expr))}
+func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, []error) {
+	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
+		expr = parens.X
 	}
+	switch node := expr.(type) {
+	case *ast.Ident:
+		ident := &Ident{Ident: node}
+		if t, ok := env.Types[node.Name]; ok {
+			return ident, t, nil
+		} else if t, ok := builtinTypes[node.Name]; ok {
+			return ident, t, nil
+		} else {
+			return ident, nil, []error{ErrUndefined{at(ctx, ident)}}
+		}
+	case *ast.StarExpr:
+		star := &StarExpr{StarExpr: node}
+		elem, elemT, errs := checkType(ctx, node.X, env)
+		star.X = elem
+		if errs != nil {
+			return star, nil, errs
+		} else {
+			return star, reflect.PtrTo(elemT), nil
+		}
+	case *ast.ArrayType:
+		arrayT := &ArrayType{ArrayType: node}
+		if node.Len != nil {
+			return arrayT, nil, []error{errors.New("array types not implemented")}
+		} else {
+			elt, eltT, errs := checkType(ctx, node.Elt, env);
+			arrayT.Elt = elt
+			if errs != nil {
+				return arrayT, nil, errs
+			} else {
+				return arrayT, reflect.SliceOf(eltT), nil
+			}
+		}
+	case *ast.StructType:
+		structT := &StructType{StructType: node}
+		return structT, nil, []error{errors.New("struct types not implemented")}
+	case *ast.FuncType:
+		funcT := &FuncType{FuncType: node}
+		return funcT, nil, []error{errors.New("func types not implemented")}
+	case *ast.InterfaceType:
+		interfaceT := &InterfaceType{InterfaceType: node}
+		return interfaceT, nil, []error{errors.New("interface types not implemented")}
+	case *ast.MapType:
+		mapT := &MapType{MapType: node}
+		return mapT, nil, []error{errors.New("map types not implemented")}
+	case *ast.ChanType:
+		chanT := &ChanType{ChanType: node}
+		return chanT, nil, []error{errors.New("chan types not implemented")}
+	}
+	// Note this error should never be shown to the user. It is used to detect
+	// when a CallExpr is a type conversion
+	return nil, nil, []error{errors.New("Bad type")}
 }
