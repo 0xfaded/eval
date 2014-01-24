@@ -160,19 +160,22 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 
 func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	fun, errs := CheckExpr(ctx, call.Fun, env)
-	if errs != nil {
+	if errs != nil && !fun.IsConst() {
 		return call, errs
 	}
 	call.Fun = fun
 
 	// TODO check that fun actually returns a function type
-
+	ftype, err := expectSingleType(ctx, fun.KnownType(), fun)
+	if err != nil {
+		return call, append(errs, err)
 	// catch nil casts, e.g. nil(1)
-	if fun.IsConst() && fun.KnownType()[0] == ConstNil {
+	} else if ftype == ConstNil {
 		return call, []error{ErrUntypedNil{at(ctx, fun)}}
+	} else if ftype.Kind() != reflect.Func {
+		return call, []error{ErrCallNonFuncType{at(ctx, fun)}}
 	}
 
-	ftype := fun.KnownType()[0]
 	call.knownType = make([]reflect.Type, ftype.NumOut())
 	for i := range call.knownType {
 		call.knownType[i] = ftype.Out(i)

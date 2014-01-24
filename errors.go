@@ -57,10 +57,8 @@ type ErrBadBuiltinArgument struct {
 	value reflect.Value
 }
 
-// TODO remove when checker complete
-type ErrWrongNumberOfArgsOld struct {
-	fun reflect.Value
-	numArgs int
+type ErrCallNonFuncType struct {
+	ErrorContext
 }
 
 type ErrWrongNumberOfArgs struct {
@@ -258,15 +256,6 @@ func (err ErrBadBuiltinArgument) Error() string {
 	return fmt.Sprintf("invalid operation: %s(%v)", err.fun, err.value)
 }
 
-func (err ErrWrongNumberOfArgsOld) Error() string {
-	expected := err.fun.Type().NumIn()
-	if err.numArgs < expected {
-		return fmt.Sprintf("not enough args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
-	} else {
-		return fmt.Sprintf("too many args (%d) to call %v (%d)", err.numArgs, err.fun, expected)
-	}
-}
-
 func (err ErrInvalidIndexOperation) Error() string {
 	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
 	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), t)
@@ -349,6 +338,12 @@ func (err ErrIndexOutOfBounds) Error() string {
 		return fmt.Sprintf("invalid %s index %v (out of bounds for %d-%s %s)",
 			xname, i, length, eltname, xname)
 	}
+}
+
+func (err ErrCallNonFuncType) Error() string {
+	expr := err.Node.(Expr)
+	return fmt.Sprintf("cannot call non-function %v (type %v)",
+		expr, expr.KnownType()[0])
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {
@@ -629,7 +624,7 @@ func (err ErrImpossibleTypeAssert) Error() string {
 	}
 
 	return fmt.Sprintf("impossible type assertion:\n" +
-		"\t%v does not implemente %v (missing %s method)",
+		"\t%v does not implement %v (missing %s method)",
 		xT, iT, missingMethod)
 }
 
