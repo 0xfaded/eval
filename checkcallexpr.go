@@ -120,22 +120,26 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 		return call, []error{err}
 	}
 
-	if arg.IsConst() {
-		// For bad constant conversions, gc produces two error messages. E.g. string to uint64
-		// cannot convert "abc" to type uint64
-		// cannot convert "abc" (type string) to type uint64
+	if ct, ok := from.(ConstType); ok {
+		// For bad constant conversions, gc produces two error
+		// messages. E.g. string to uint64 cannot convert "abc"
+		// to type uint64 cannot convert "abc" (type string) to
+		// type uint64
 		//
-		// I've separated these into ErrBadConstConversiond and ErrBadConversion
-		// The exception is if the conversion is from nil
-		v, errs := castConstToTyped(ctx, from.(ConstType), constValue(arg.Const()), to, arg)
-
+		// I've separated these into ErrBadConstConversiond and
+		// ErrBadConversion The exception is if the conversion
+		// is from nil
+		v, errs := castConstToTyped(ctx, ct, constValue(arg.Const()), to, arg)
 		if errs != nil {
-			if b, ok := errs[0].(ErrBadConstConversion); ok && b.from != ConstNil {
+			b, ok := errs[0].(ErrBadConstConversion)
+			if ok && b.from != ConstNil {
 				err := ErrBadConversion{b.ErrorContext, b.from, b.to, b.v}
 				errs = append(errs, err)
 			}
-			// Some expr nodes will continue to generate errors even if their children produce
-			// errors. constValue must be set for this to happen.
+			// Some expr nodes will continue to generate
+			// errors even if their children produce
+			// errors. constValue must be set for this to
+			// happen.
 			call.constValue = constValue(arg.Const())
 		} else {
 			call.constValue = v
@@ -143,6 +147,9 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 		return call, errs
 	} else {
 		if from.ConvertibleTo(to) {
+			if arg.IsConst() {
+				call.constValue = constValue(arg.Const().Convert(to))
+			}
 			return call, nil
 		} else {
 			return call, []error{ErrBadConstConversion{at(ctx, call), from, to, reflect.Value{}}}
