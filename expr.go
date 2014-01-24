@@ -46,6 +46,8 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		v, err := evalSliceExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err
 	case *TypeAssertExpr:
+		v, err := evalTypeAssertExpr(ctx, node, env)
+		return &[]reflect.Value{v}, true, err
 	case *CallExpr:
 		vs, err := evalCallExpr(ctx, node, env)
 		return &vs, true, err
@@ -60,7 +62,6 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		return &[]reflect.Value{v}, typed, err
 	case *KeyValueExpr:
 	default:
-		panic(node)
 		return nil , false, errors.New("undefined type")
 	}
 	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil

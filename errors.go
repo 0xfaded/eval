@@ -213,6 +213,14 @@ type ErrBadStructValue struct {
 	eltT reflect.Type
 }
 
+type ErrInvalidTypeAssert struct {
+	ErrorContext
+}
+
+type ErrImpossibleTypeAssert struct {
+	ErrorContext
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -597,6 +605,32 @@ func (err ErrBadStructValue) Error() string {
 	}
 	return fmt.Sprintf("cannot use %v (type %v) as type %v in field value",
 		expr, t, err.eltT)
+}
+
+func (err ErrInvalidTypeAssert) Error() string {
+	assert := err.Node.(*TypeAssertExpr)
+	xT := assert.X.(Expr).KnownType()[0]
+	return fmt.Sprintf("invalid type assertion: %v (non-interface type %v on left)",
+		assert, xT)
+}
+
+func (err ErrImpossibleTypeAssert) Error() string {
+	assert := err.Node.(*TypeAssertExpr)
+	iT := assert.KnownType()[0]
+	xT := assert.X.(Expr).KnownType()[0]
+
+	var missingMethod string
+	numMethod := iT.NumMethod()
+	for i := 0; i < numMethod; i += 1 {
+		missingMethod = iT.Method(i).Name
+		if _, ok := xT.MethodByName(missingMethod); !ok {
+			break
+		}
+	}
+
+	return fmt.Sprintf("impossible type assertion:\n" +
+		"\t%v does not implemente %v (missing %s method)",
+		xT, iT, missingMethod)
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {

@@ -42,7 +42,7 @@ func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	case *ast.SliceExpr:
 		return checkSliceExpr(ctx, expr, env)
 	case *ast.TypeAssertExpr:
-		return &TypeAssertExpr{TypeAssertExpr: expr}, nil
+		return checkTypeAssertExpr(ctx, expr, env)
 	case *ast.CallExpr:
 		return checkCallExpr(ctx, expr, env)
 	case *ast.StarExpr:

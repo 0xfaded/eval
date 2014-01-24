@@ -120,6 +120,18 @@ func REPL(env *eval.Env) {
 	}
 }
 
+type XI interface { x() }
+type YI interface { y() }
+type ZI interface { x() }
+
+type X int
+type Y int
+type Z int
+
+func (X) x() {}
+func (Y) y() {}
+func (Z) x() {}
+
 // Create an eval.Env environment to use in evaluation.
 // This is a bit ugly here, because we are rolling everything by hand, but
 // we want some sort of environment to show off in demo'ing.
@@ -216,6 +228,19 @@ func makeBogusEnv() eval.Env {
 	mainEnv.Funcs["sum"] = reflect.ValueOf(sum)
 	mainEnv.Types["Alice"]   = reflect.TypeOf(Alice{})
 	mainEnv.Types["R"]   = reflect.TypeOf(R(0))
+
+	var xi *XI = new(XI)
+	var yi *YI = new(YI)
+	var zi *ZI = new(ZI)
+	*xi = XI(X(0))
+	*yi = YI(Y(0))
+	*zi = ZI(Z(0))
+	mainEnv.Types["XI"] = reflect.TypeOf(xi).Elem()
+	mainEnv.Types["YI"] = reflect.TypeOf(yi).Elem()
+	mainEnv.Types["ZI"] = reflect.TypeOf(zi).Elem()
+	mainEnv.Types["X"] = reflect.TypeOf(X(0))
+	mainEnv.Types["Y"] = reflect.TypeOf(Y(0))
+	mainEnv.Types["Z"] = reflect.TypeOf(Z(0))
 
 	return mainEnv
 }
