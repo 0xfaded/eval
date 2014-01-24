@@ -67,6 +67,9 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 }
 
 func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
+	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
+		expr = parens.X
+	}
 	switch node := expr.(type) {
 	case *ast.Ident:
 		if t, ok := env.Types[node.Name]; ok {
