@@ -92,6 +92,7 @@ type ErrNonIntegerIndex struct {
 
 type ErrIndexOutOfBounds struct {
 	ErrorContext
+	x Expr
 	i int
 }
 
@@ -307,23 +308,38 @@ func (err ErrMultiInSingleContext) Error() string {
 }
 
 func (err ErrNonIntegerIndex) Error() string {
-	expr := err.Node.(*IndexExpr)
-	xT := expr.X.(Expr).KnownType()[0]
+	i := err.Node.(Expr)
+	iT := i.KnownType()[0]
 	var xname string
-	if xT.Kind() == reflect.String {
+	if iT.Kind() == reflect.String {
 		xname = "string"
 	} else {
 		xname = "array"
 	}
-	return fmt.Sprintf("non-integer %s index %v", xname, expr.Index)
+	return fmt.Sprintf("non-integer %s index %v", xname, i)
 }
 
 func (err ErrIndexOutOfBounds) Error() string {
-	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
-	if t.Kind() == reflect.String {
-		return fmt.Sprintf("invalid string index %d (out of bounds for %d-byte array", err.i, t.Len())
+	i := err.Node.(Expr)
+	x := err.x
+	var xname string
+	var eltname string
+	var length int
+	if x.KnownType()[0].Kind() == reflect.String {
+		length = x.Const().Len()
+		xname = "string"
+		eltname = "byte"
 	} else {
-		return fmt.Sprintf("invalid array index %d (out of bounds for %d-element array", err.i, t.Len())
+		length = x.KnownType()[0].Len()
+		xname = "array"
+		eltname = "element"
+	}
+	if err.i < 0 {
+		return fmt.Sprintf("invalid %s index %v (index must be non negative)",
+			xname, i)
+	} else {
+		return fmt.Sprintf("invalid %s index %v (out of bounds for %d-%s %s)",
+			xname, i, length, eltname, xname)
 	}
 }
 

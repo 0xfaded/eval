@@ -59,12 +59,12 @@ func checkSliceExpr(ctx *Ctx, slice *ast.SliceExpr, env *Env) (*SliceExpr, []err
 				}
 			}
 			if low != nil && low.IsConst() && high.IsConst() && !(l <= h) {
-				errs = append(errs, ErrInvalidSliceIndex{at(ctx, slice)})
+				errs = append(errs, ErrInvalidSliceIndex{at(ctx, aexpr)})
 			}
 		}
 		return aexpr, errs
 	default:
-		return aexpr, append(errs, ErrInvalidSliceOperation{at(ctx, slice)})
+		return aexpr, append(errs, ErrInvalidSliceOperation{at(ctx, aexpr)})
 	}
 }
 
@@ -83,10 +83,10 @@ func checkSliceVectorExpr(ctx *Ctx, x Expr, index ast.Expr, env *Env) (Expr, int
 		// NOTE[crc] There is no upper bounds check on a const string. This is
 		// to match gc. See issue http://code.google.com/p/go/issues/detail?id=7200
 		if iint < 0 {
-			errs = append(errs, ErrIndexOutOfBounds{at(ctx, index), iint})
+			errs = append(errs, ErrIndexOutOfBounds{at(ctx, i), x, iint})
 		} else if t.Kind() == reflect.Array {
 			if iint >= t.Len() {
-				errs = append(errs, ErrIndexOutOfBounds{at(ctx, index), iint})
+				errs = append(errs, ErrIndexOutOfBounds{at(ctx, i), x, iint})
 			}
 		}
 	}

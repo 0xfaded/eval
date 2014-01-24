@@ -42,7 +42,7 @@ func checkIndexExpr(ctx *Ctx, index *ast.IndexExpr, env *Env) (*IndexExpr, []err
 		aexpr.Index = i
 		return aexpr, errs
 	default:
-		return aexpr, append(errs, ErrInvalidIndexOperation{at(ctx, index)})
+		return aexpr, append(errs, ErrInvalidIndexOperation{at(ctx, aexpr)})
 	}
 }
 
@@ -59,15 +59,15 @@ func checkIndexVectorExpr(ctx *Ctx, x Expr, index ast.Expr, env *Env) (Expr, []e
 	} else if i.IsConst() {
 		// If we know the index at compile time, we must assert it is in bounds.
 		if iint < 0 {
-			errs = append(errs, ErrIndexOutOfBounds{at(ctx, index), iint})
+			errs = append(errs, ErrIndexOutOfBounds{at(ctx, i), x, iint})
 		} else if t.Kind() == reflect.Array {
 			if iint >= t.Len() {
-				errs = append(errs, ErrIndexOutOfBounds{at(ctx, index), iint})
+				errs = append(errs, ErrIndexOutOfBounds{at(ctx, i), x, iint})
 			}
 		} else if t.Kind() == reflect.String && x.IsConst() {
 			str := x.Const()
 			if iint >= str.Len() {
-				errs = append(errs, ErrIndexOutOfBounds{at(ctx, index), iint})
+				errs = append(errs, ErrIndexOutOfBounds{at(ctx, i), x, iint})
 			}
 		}
 	}
