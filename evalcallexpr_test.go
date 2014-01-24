@@ -43,3 +43,15 @@ func TestFuncCallWithSplatTwo(t *testing.T) {
 	expectResult(t, expr, env, expected)
 }
 
+func TestTypeConversionWithEmptyInterface(t *testing.T) {
+	env := makeEnv()
+	expectResult(t, "interface{}(1)", env, interface{}(1))
+	expectResult(t, "interface{}(1.5)", env, interface{}(1.5))
+	expectResult(t, "interface{}(1i)", env, interface{}(1i))
+	expectResult(t, "interface{}('a')", env, interface{}('a'))
+	expectResult(t, "interface{}(\"a\")", env, interface{}("a"))
+	expectResult(t, "interface{}(nil)", env, interface{}(nil))
+	expectResult(t, "interface{}([]int{})", env, interface{}([]int{}))
+	expectResult(t, "interface{}('a')", env, interface{}('a'))
+}
+

@@ -25,6 +25,8 @@ var (
 
 	boolType reflect.Type = reflect.TypeOf(bool(false))
 	stringType reflect.Type = reflect.TypeOf(string(""))
+
+	emptyInterface reflect.Type = reflect.TypeOf(new(interface{})).Elem()
 )
 
 var builtinTypes = map[string] reflect.Type{

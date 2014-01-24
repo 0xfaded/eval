@@ -100,6 +100,10 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, []error) 
 		return funcT, nil, []error{errors.New("func types not implemented")}
 	case *ast.InterfaceType:
 		interfaceT := &InterfaceType{InterfaceType: node}
+		// Allow interface{}'s
+		if node.Methods.List == nil {
+			return interfaceT, emptyInterface, nil
+		}
 		return interfaceT, nil, []error{errors.New("interface types not implemented")}
 	case *ast.MapType:
 		mapT := &MapType{MapType: node}

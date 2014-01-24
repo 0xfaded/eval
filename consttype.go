@@ -255,16 +255,31 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 				v.SetString(string(i))
 				return constValue(v), nil
 			}
+
+		// consts can satisfy the empty interface only
+		case reflect.Interface:
+			if to == emptyInterface {
+				to = underlying.Type.DefaultPromotion()
+				cv, _ := convertConstToTyped(ctx, from, c, to, isTypeCast, expr)
+				v.Set(reflect.Value(cv).Convert(emptyInterface))
+				return constValue(v), nil
+			}
 		}
 	case ConstStringType:
-		if v.Type().Kind() == reflect.String {
+		if to.Kind() == reflect.String {
 			v.SetString(reflect.Value(c).String())
+			return constValue(v), nil
+		} else if to == emptyInterface {
+			v.Set(reflect.Value(c).Convert(emptyInterface))
 			return constValue(v), nil
 		}
 
 	case ConstBoolType:
 		if to.Kind() == reflect.Bool {
 			v.SetBool(reflect.Value(c).Bool())
+			return constValue(v), nil
+		} else if to == emptyInterface {
+			v.Set(reflect.Value(c).Convert(emptyInterface))
 			return constValue(v), nil
 		}
 
