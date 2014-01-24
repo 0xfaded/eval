@@ -76,8 +76,12 @@ func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
 			return t, nil
 		} else if t, ok := builtinTypes[node.Name]; ok {
 			return t, nil
+		}
+	case *ast.StarExpr:
+		if elemT, err := evalType(ctx, node.X, env); err != nil {
+			return nil, err
 		} else {
-			return t, errors.New("undefined type: " + node.Name)
+			return reflect.PtrTo(elemT), nil
 		}
 	case *ast.ArrayType:
 		if node.Len != nil {
@@ -97,7 +101,6 @@ func evalType(ctx *Ctx, expr ast.Expr, env *Env) (reflect.Type, error) {
 		return nil, errors.New("map types not implemented")
 	case *ast.ChanType:
 		return nil, errors.New("chan types not implemented")
-	default:
-		return nil, errors.New(fmt.Sprintf("Type: Bad type (%+v)", node))
 	}
+	return nil, errors.New(fmt.Sprintf("Type: Bad type (%+v)", expr))
 }

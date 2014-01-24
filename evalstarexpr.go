@@ -5,9 +5,13 @@ import (
 )
 
 func evalStarExpr(ctx *Ctx, starExpr *StarExpr, env *Env) (reflect.Value, error) {
-	if v, _, err := EvalExpr(ctx, starExpr.X.(Expr), env); err != nil {
+	if vs, _, err := EvalExpr(ctx, starExpr.X.(Expr), env); err != nil {
 		return reflect.Value{}, err
 	} else {
-		return (*v)[0].Elem(), nil
+		v := (*vs)[0]
+		if v.IsNil() {
+			return reflect.Value{}, PanicInvalidDereference{}
+		}
+		return v.Elem(), nil
 	}
 }
