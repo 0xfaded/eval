@@ -79,40 +79,6 @@ func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
 	return typeAssignableTo(fromType, to), nil
 }
 
-func assignableValue(x reflect.Value, to reflect.Type, xTyped bool) (reflect.Value, error) {
-	var err error
-	if xTyped {
-		if x.Type().AssignableTo(to) {
-			return x, nil
-		}
-	} else {
-		if x, err = promoteUntypedNumeral(x, to); err == nil {
-			return x, nil
-		}
-	}
-	return x, errors.New(fmt.Sprintf("Cannot convert %v to type %v", x, to))
-}
-
-func setTypedValue(dst, src reflect.Value, srcTyped bool) error {
-	if assignable, err := assignableValue(src, dst.Type(), srcTyped); err != nil {
-		return errors.New(fmt.Sprintf("Cannot assign %v = %v", dst, src))
-	} else {
-		dst.Set(assignable)
-		return nil
-	}
-}
-
-func makeSliceWithValues(elts []reflect.Value, sliceType reflect.Type) (reflect.Value, error) {
-	slice := reflect.MakeSlice(sliceType, len(elts), len(elts))
-	for i := 0; i < slice.Len(); i += 1 {
-		if err := setTypedValue(slice.Index(i), elts[i], true); err != nil {
-			return reflect.Value{}, nil
-		}
-	}
-	return slice, nil
-}
-
-
 // Only considers untyped kinds produced by our runtime. Assumes input type is unnamed
 func isUntypedNumeral(x reflect.Value) bool {
 	switch x.Kind() {
@@ -245,6 +211,12 @@ func isOpDefinedOn(op token.Token, t reflect.Type) bool {
 		case token.ADD, token.EQL, token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR:
 			return true
 		}
+
+	// This is slighly misleading. slices, funcs and maps are only
+	// comparable if their paired operand is nil
+	case reflect.Ptr, reflect.Interface, reflect.Struct,
+		reflect.Slice, reflect.Map, reflect.Chan:
+		return op == token.EQL || op == token.NEQ
 	}
 	return false
 }
@@ -541,4 +513,19 @@ func isAddressableOrCompositeLit(expr Expr) bool {
 	} else {
 		return isAddressable(expr)
 	}
+}
+
+func isStructComparable(structT reflect.Type) bool {
+	numField := structT.NumField()
+	for i := 0; i < numField; i += 1 {
+		field := structT.Field(i)
+		if field.Name == "_" {
+			continue
+		}
+		k := field.Type.Kind()
+		if k == reflect.Slice || k == reflect.Map || k == reflect.Chan {
+			return false
+		}
+	}
+	return true
 }

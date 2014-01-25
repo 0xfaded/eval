@@ -19,6 +19,10 @@ func compileExpr(expr string) (compileErrors []string, err error) {
 }
 
 func compileExprWithDefs(expr, defs string) (compileErrors []string, err error) {
+	return compileExprWithDefsAndGlobals(expr, defs, "")
+}
+
+func compileExprWithDefsAndGlobals(expr, defs, globals string) (compileErrors []string, err error) {
 	f, err := ioutil.TempFile("/tmp", "testgen")
 	if err != nil {
 		return nil, err
@@ -27,12 +31,14 @@ func compileExprWithDefs(expr, defs string) (compileErrors []string, err error) 
 
 	_, err = fmt.Fprintf(f,
 `package main
-func f(...interface{}) {}
+
+%s
+
 func main() {
-` + defs + `
+%s
 	(func(...interface{}) {})(%s)
 }
-`, expr);
+`, globals, defs, expr);
 
 	if err != nil {
 		return nil, err

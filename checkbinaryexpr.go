@@ -84,35 +84,51 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			}
 		}
 	} else {
-                // Types in a fully typed expression must be equal.
-                // The only exception is for int32 and the psuedo rune
-                if xt == yt {
-                        aexpr.knownType = knownType{xt}
-                } else if xt == RuneType && yt == RuneType.Type {
-                        aexpr.knownType = knownType{RuneType}
-                } else if yt == RuneType && xt == RuneType.Type {
-                        aexpr.knownType = knownType{xt}
-                } else if yuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, yc, constValue(y.Const()), xt, y)
-			if moreErrs != nil {
-				errs = append(errs, moreErrs...)
+		if yuntyped {
+			// the old switcheroo
+			xt, yt = yt, xt
+			xc, yc = yc, xc
+			x, y = y, x
+			xuntyped = true
+		}
+		xk := xt.Kind()
+		yk := yt.Kind()
+		var operandT reflect.Type
+		// Identical types are always valid, except non comparable structs
+                if unhackType(xt) == unhackType(yt) {
+			if xk == reflect.Struct && !isStructComparable(xt) {
+				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
-				aexpr.knownType = knownType{xt}
+				operandT = xt
 			}
+		// special cases for (slice|map|func|interface) == nil
+		} else if xt == ConstNil && (yk == reflect.Slice || yk == reflect.Map ||
+			yk == reflect.Func || yk == reflect.Interface) {
+			operandT = yt
                 } else if xuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
-			if moreErrs != nil {
-				errs = append(errs, moreErrs...)
+	                c, moreErrs := promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
+			errs = append(errs, moreErrs...)
+			if reflect.Value(c).IsValid() {
+				operandT = yt
+			}
+		// An interface is comprable if its paired operand implements it
+		} else if xk == reflect.Interface && yt.Implements(xt) {
+			operandT = xt
+		} else if yk == reflect.Interface && xt.Implements(yt) {
+			operandT = yt
+                }
+
+		if operandT != nil {
+			if !isOpDefinedOn(binary.Op, operandT) {
+				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
+			} else if isBooleanOp(binary.Op) {
+				aexpr.knownType = knownType{reflect.TypeOf(boolType)}
 			} else {
-				aexpr.knownType = knownType{yt}
+				aexpr.knownType = knownType{operandT}
 			}
                 } else {
                         errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
-                }
-
-                if isBooleanOp(binary.Op) {
-                        aexpr.knownType = knownType{reflect.TypeOf(false)}
-                }
+		}
         }
 	return aexpr, errs
 }
