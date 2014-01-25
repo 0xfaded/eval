@@ -214,7 +214,7 @@ func isOpDefinedOn(op token.Token, t reflect.Type) bool {
 
 	// This is slighly misleading. slices, funcs and maps are only
 	// comparable if their paired operand is nil
-	case reflect.Ptr, reflect.Interface, reflect.Struct,
+	case reflect.Ptr, reflect.Array, reflect.Interface, reflect.Struct,
 		reflect.Slice, reflect.Map, reflect.Chan:
 		return op == token.EQL || op == token.NEQ
 	}
@@ -526,6 +526,15 @@ func isStructComparable(structT reflect.Type) bool {
 		if k == reflect.Slice || k == reflect.Map || k == reflect.Chan {
 			return false
 		}
+	}
+	return true
+}
+
+func attemptBinaryOpConversion(to reflect.Type) bool {
+	switch to.Kind() {
+	case reflect.Invalid, reflect.Array, reflect.Chan, reflect.Func, reflect.Interface,
+		reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct:
+		return false
 	}
 	return true
 }

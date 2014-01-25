@@ -40,6 +40,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 
 	xc, xuntyped := xt.(ConstType)
 	yc, yuntyped := yt.(ConstType)
+	op := binary.Op
 	if x.IsConst() && y.IsConst() {
 		if xuntyped && yuntyped {
 			yv := y.Const()
@@ -49,7 +50,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
-				if isBooleanOp(binary.Op) {
+				if isBooleanOp(op) {
 					aexpr.knownType = []reflect.Type{ConstBool}
 				} else {
 					aexpr.knownType = knownType{promoted}
@@ -91,8 +92,34 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			x, y = y, x
 			xuntyped = true
 		}
-		xk := xt.Kind()
 		yk := yt.Kind()
+
+		// special cases for const nil
+		// note that only (slice|map|func|interface|ptr) == nil are legal
+		// other expressions containing ConstNil do not produces a mismatched
+		// types error (ErrInvalidBinaryOperation)
+		if xt == ConstNil {
+			if (op == token.EQL || op == token.NEQ) &&
+				(yk == reflect.Slice || yk == reflect.Map || yk == reflect.Func ||
+				yk == reflect.Interface || yk == reflect.Ptr) {
+				aexpr.knownType = knownType{boolType}
+			} else if yk == reflect.String || yk == reflect.Slice || yk == reflect.Interface {
+				// Except strings, they do produce mismatched types
+				// instead of bad conversions
+				err := ErrInvalidBinaryOperation{at(ctx, aexpr)}
+				errs = append(errs, err)
+			} else {
+				err := ErrBadConstConversion{at(ctx, x), xt, yt, x.Const()}
+				errs = append(errs, err)
+			}
+			// http://code.google.com/p/go/issues/detail?id=7206
+			if yk == reflect.Array || yk == reflect.Uintptr {
+				errs = append(errs, ErrUntypedNil{at(ctx, x)})
+			}
+			return aexpr, errs
+		}
+
+		xk := xt.Kind()
 		var operandT reflect.Type
 		// Identical types are always valid, except non comparable structs
                 if unhackType(xt) == unhackType(yt) {
@@ -101,15 +128,21 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			} else {
 				operandT = xt
 			}
-		// special cases for (slice|map|func|interface) == nil
-		} else if xt == ConstNil && (yk == reflect.Slice || yk == reflect.Map ||
-			yk == reflect.Func || yk == reflect.Interface) {
-			operandT = yt
-                } else if xuntyped {
+                } else if xuntyped && attemptBinaryOpConversion(yt) {
 	                c, moreErrs := promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
 			errs = append(errs, moreErrs...)
-			if reflect.Value(c).IsValid() {
+			v := reflect.Value(c)
+			if v.IsValid() {
 				operandT = yt
+				// Check for divide by zero. Note we only need to do this
+				// if y was the untyped constant, and also note that
+				// it may have been truncated
+				if yuntyped && (op == token.QUO || op == token.REM) &&
+					isOpDefinedOn(op, operandT) &&
+					v.Interface() == reflect.Zero(yt).Interface() {
+
+					errs = append(errs, ErrDivideByZero{at(ctx, x)})
+				}
 			}
 		// An interface is comprable if its paired operand implements it
 		} else if xk == reflect.Interface && yt.Implements(xt) {
@@ -122,7 +155,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			if !isOpDefinedOn(binary.Op, operandT) {
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else if isBooleanOp(binary.Op) {
-				aexpr.knownType = knownType{reflect.TypeOf(boolType)}
+				aexpr.knownType = knownType{boolType}
 			} else {
 				aexpr.knownType = knownType{operandT}
 			}
@@ -291,11 +324,9 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, typedExpr, un
         // are incompatible, such as string(1.5). For other errors, such as
         // integer overflows, the type check should continue as if the conversion
         // succeeded
-        if len(xConvErrs) == 1 {
-                if _, ok := xConvErrs[0].(ErrBadConstConversion); ok {
-                        errs := append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
-	                return constValue{}, errs
-                }
+        if !reflect.Value(x).IsValid() {
+		errs := append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+		return constValue{}, errs
         }
 
 	switch xt.(type) {

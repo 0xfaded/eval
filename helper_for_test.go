@@ -89,7 +89,7 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 		} else if len(aexpr.KnownType()) == 0 {
 			t.Fatalf("Expression '%s' expected to have type '%v'", expr, expectedType)
 		} else if actual := aexpr.KnownType()[0]; !typesEqual(expectedType, actual) {
-			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
+			t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, aexpr.KnownType()[0], expectedType)
 		}
 	}
 }
@@ -105,7 +105,7 @@ func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) 
 	} else if len(aexpr.KnownType()) != 1 {
 		t.Fatalf("Expression '%s' expected to have single type '%v'", expr, expectedType)
 	} else if actual := aexpr.KnownType()[0]; !typesEqual(expectedType, actual) {
-                t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, t, expectedType)
+		t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, aexpr.KnownType()[0], expectedType)
 	}
 }
 func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {

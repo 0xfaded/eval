@@ -32,6 +32,8 @@ type interfaceY interface { x() }
 type interfaceZ interface { z() }
 type XinterfaceX int
 func (XinterfaceX) x() {}
+type arrayT [2]int
+type sliceT []int
 type structT struct {
 	a int
 	_ []int
@@ -83,18 +85,19 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Int", "int(1)"},
 		{"Float32", "float32(1.5)"},
 		{"Complex128", "complex128(1i)"},
-		{"Rune", "rune('a')"},
+		// once in the runtime, runes are int32. This is a wont fix
+		//{"Rune", "rune('a')"},
 		{"String", `string("abc")`},
 		{"BoolT", "bool(true)"},
 		{"Slice", "sliceT(nil)"},
 		{"Array", "arrayT{}"},
-		{"XinterfaceX", "XinterfaceX(0)"},
+		{"XinterfaceX", "XinterfaceX(1)"},
 		{"InterfaceX", "interfaceX(nil)"},
 		{"InterfaceY", "interfaceY(nil)"},
 		{"InterfaceZ", "interfaceZ(nil)"},
 		{"Ptr", "(*int)(nil)"},
-		{"Struct", "structT(true)"},
-		{"StructUncomp", "structUncompT(true)"},
+		{"Struct", "structT{}"},
+		{"StructUncomp", "structUncompT{}"},
 	}
 	ops := []testgen.Element{
 		{"Add", token.ADD},
@@ -106,9 +109,9 @@ func (*Test) Dimensions() []testgen.Dimension {
 	// exclude const types
 	lhs := rhs[7:]
 	return []testgen.Dimension{
-		lhs[:3],
+		lhs[7:11],
 		ops,
-		rhs[:5],
+		rhs,
 	}
 }
 
@@ -137,6 +140,16 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	defs := adef + "\n" + bdef
 
 	compileErrs, err := compileExprWithDefsAndGlobals(expr, defs, typeDefs)
+	for i := range compileErrs {
+		compileErrs[i] = strings.Replace(compileErrs[i], "sliceT", "eval.sliceT", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "arrayT", "eval.arrayT", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "interfaceX", "eval.interfaceX", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "Xeval.interfaceX", "eval.XinterfaceX", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "interfaceY", "eval.interfaceY", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "interfaceZ", "eval.interfaceZ", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "structT", "eval.structT", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "structUncompT", "eval.structUncompT", -1)
+	}
 	if err != nil {
 		return err
 	}
