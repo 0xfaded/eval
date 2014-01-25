@@ -7,42 +7,45 @@ import (
 	"go/token"
 )
 
-func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryExpr, errs []error) {
-	aexpr = &BinaryExpr{BinaryExpr: binary}
+func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, []error) {
+	aexpr := &BinaryExpr{BinaryExpr: binary}
 
-	var moreErrs []error
-	if aexpr.X, moreErrs = CheckExpr(ctx, binary.X, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
+	var xok, yok bool
+	var xt, yt reflect.Type
+	var err error
+
+	x, errs := CheckExpr(ctx, binary.X, env)
+	binary.X = x
+	if errs == nil || x.IsConst() {
+		if xt, err = expectSingleType(ctx, x.KnownType(), x); err != nil {
+			errs = append(errs, err)
+		} else {
+			xok = true
+		}
 	}
-	if aexpr.Y, moreErrs = CheckExpr(ctx, binary.Y, env); moreErrs != nil {
-		errs = append(errs, moreErrs...)
+
+	y, moreErrs := CheckExpr(ctx, binary.Y, env)
+	binary.Y = y
+	if moreErrs == nil || y.IsConst() {
+		if yt, err = expectSingleType(ctx, y.KnownType(), y); err != nil {
+			errs = append(moreErrs, err)
+		} else {
+			yok = true
+		}
 	}
-
-	xa := aexpr.X.(Expr)
-	ya := aexpr.Y.(Expr)
-
-	xt := xa.KnownType()
-	yt := ya.KnownType()
-
-	// Check for multi valued expressions. Not much we can do if we find one
-	// TODO check for single values
-
-	// Check for compatible types
-
-	// TODO tx and ty will always have a known type once checker is complete
-	//      This if() is a shim
-	if len(xt) != 1 || len(yt) != 1 {
+	errs = append(errs, moreErrs...)
+	if !(xok && yok) {
 		return aexpr, errs
 	}
 
-	xc, xuntyped := xt[0].(ConstType)
-	yc, yuntyped := yt[0].(ConstType)
-	if xa.IsConst() && ya.IsConst() {
+	xc, xuntyped := xt.(ConstType)
+	yc, yuntyped := yt.(ConstType)
+	if x.IsConst() && y.IsConst() {
 		if xuntyped && yuntyped {
-			yv := ya.Const()
-			xv := xa.Const()
+			yv := y.Const()
+			xv := x.Const()
 			var promoted ConstType
-			if promoted, moreErrs = promoteConsts(ctx, xc, yc, xa, ya, xv, yv); moreErrs != nil {
+			if promoted, moreErrs = promoteConsts(ctx, xc, yc, x, y, xv, yv); moreErrs != nil {
 				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
@@ -57,7 +60,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 				}
 			}
 		} else if yuntyped {
-			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, xa, ya, true)
+			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, x, y, true)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
@@ -65,7 +68,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 				aexpr.constValue = z
 			}
 		} else if xuntyped {
-			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, ya, xa, false)
+			z, moreErrs := evalConstTypedUntypedBinaryExpr(ctx, aexpr, y, x, false)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
@@ -73,7 +76,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 				aexpr.constValue = z
 			}
 		} else {
-			if z, moreErrs := evalConstTypedBinaryExpr(ctx, aexpr, xa, ya); moreErrs != nil {
+			if z, moreErrs := evalConstTypedBinaryExpr(ctx, aexpr, x, y); moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
 				aexpr.knownType = knownType{reflect.Value(z).Type()}
@@ -83,25 +86,25 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (aexpr *BinaryE
 	} else {
                 // Types in a fully typed expression must be equal.
                 // The only exception is for int32 and the psuedo rune
-                if xt[0] == yt[0] {
-                        aexpr.knownType = xt
-                } else if xt[0] == RuneType && yt[0] == RuneType.Type {
+                if xt == yt {
+                        aexpr.knownType = knownType{xt}
+                } else if xt == RuneType && yt == RuneType.Type {
                         aexpr.knownType = knownType{RuneType}
-                } else if yt[0] == RuneType && xt[0] == RuneType.Type {
-                        aexpr.knownType = xt
+                } else if yt == RuneType && xt == RuneType.Type {
+                        aexpr.knownType = knownType{xt}
                 } else if yuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, yc, constValue(ya.Const()), xt[0], ya)
+	                _, moreErrs = promoteConstToTyped(ctx, yc, constValue(y.Const()), xt, y)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
-				aexpr.knownType = xt
+				aexpr.knownType = knownType{xt}
 			}
                 } else if xuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, xc, constValue(xa.Const()), yt[0], xa)
+	                _, moreErrs = promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			} else {
-				aexpr.knownType = yt
+				aexpr.knownType = knownType{yt}
 			}
                 } else {
                         errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
