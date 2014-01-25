@@ -40,6 +40,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 
 	xc, xuntyped := xt.(ConstType)
 	yc, yuntyped := yt.(ConstType)
+	op := binary.Op
 	if x.IsConst() && y.IsConst() {
 		if xuntyped && yuntyped {
 			yv := y.Const()
@@ -49,7 +50,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
-				if isBooleanOp(binary.Op) {
+				if isBooleanOp(op) {
 					aexpr.knownType = []reflect.Type{ConstBool}
 				} else {
 					aexpr.knownType = knownType{promoted}
@@ -84,35 +85,97 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			}
 		}
 	} else {
-                // Types in a fully typed expression must be equal.
-                // The only exception is for int32 and the psuedo rune
-                if xt == yt {
-                        aexpr.knownType = knownType{xt}
-                } else if xt == RuneType && yt == RuneType.Type {
-                        aexpr.knownType = knownType{RuneType}
-                } else if yt == RuneType && xt == RuneType.Type {
-                        aexpr.knownType = knownType{xt}
-                } else if yuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, yc, constValue(y.Const()), xt, y)
-			if moreErrs != nil {
-				errs = append(errs, moreErrs...)
+		if yuntyped {
+			// the old switcheroo
+			xt, yt = yt, xt
+			xc, yc = yc, xc
+			x, y = y, x
+			xuntyped = true
+		}
+		yk := yt.Kind()
+		errExpr := aexpr
+
+		// special cases for const nil
+		// note that only (slice|map|func|interface|ptr) == nil are legal
+		// other expressions containing ConstNil do not produces a mismatched
+		// types error (ErrInvalidBinaryOperation)
+		if xt == ConstNil {
+			if (op == token.EQL || op == token.NEQ) &&
+				(yk == reflect.Slice || yk == reflect.Map || yk == reflect.Func ||
+				yk == reflect.Interface || yk == reflect.Ptr) {
+				aexpr.knownType = knownType{boolType}
+			} else if yk == reflect.String || yk == reflect.Slice || yk == reflect.Interface || yk == reflect.Ptr || yk == reflect.Map {
+				// Except strings, they do produce mismatched types
+				// instead of bad conversions
+				err := ErrInvalidBinaryOperation{at(ctx, aexpr)}
+				errs = append(errs, err)
 			} else {
-				aexpr.knownType = knownType{xt}
+				err := ErrBadConstConversion{at(ctx, x), xt, yt, x.Const()}
+				errs = append(errs, err)
 			}
-                } else if xuntyped {
-	                _, moreErrs = promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
-			if moreErrs != nil {
-				errs = append(errs, moreErrs...)
+			// http://code.google.com/p/go/issues/detail?id=7206
+			if yk == reflect.Array || yk == reflect.Uintptr {
+				errs = append(errs, ErrUntypedNil{at(ctx, x)})
+			}
+			return aexpr, errs
+		}
+
+		xk := xt.Kind()
+		var operandT reflect.Type
+		// Identical types are always valid, except non comparable structs
+		// and types with can only be compared to nil
+                if unhackType(xt) == unhackType(yt) {
+			if !comparableToNilOnly(xt) && (xk != reflect.Struct || isStructComparable(xt)) {
+				operandT = xt
+			}
+                } else if xuntyped && attemptBinaryOpConversion(yt) {
+	                c, moreErrs := promoteConstToTyped(ctx, xc, constValue(x.Const()), yt, x)
+			errs = append(errs, moreErrs...)
+			v := reflect.Value(c)
+			if v.IsValid() {
+				operandT = yt
+				// Check for divide by zero. Note we only need to do this
+				// if y was the untyped constant, and also note that
+				// it may have been truncated
+				if yuntyped && (op == token.QUO || op == token.REM) &&
+					isOpDefinedOn(op, operandT) &&
+					v.Interface() == reflect.Zero(yt).Interface() {
+
+					errs = append(errs, ErrDivideByZero{at(ctx, x)})
+				}
+			}
+		// An interface is comprable if its paired operand implements it.
+		// To match gc error output, if the operator produces a boolean and
+		// one operand is a type that satisfies but is not the the other
+		// operand's type, wrap that node in a type cast. This will only be
+		// used by errors.
+		} else if yk == reflect.Interface && xt.Implements(yt) {
+			operandT = yt
+			if isBooleanOp(op) {
+				errExpr = new(BinaryExpr)
+				*errExpr = *aexpr
+				errExpr.X = wrapConcreteTypeWithInterface(x, yt)
+			}
+		} else if xk == reflect.Interface && yt.Implements(xt) {
+			operandT = xt
+			if isBooleanOp(op) {
+				errExpr = new(BinaryExpr)
+				*errExpr = *aexpr
+				errExpr.Y = wrapConcreteTypeWithInterface(y, xt)
+			}
+                }
+
+		if operandT != nil {
+			if !isOpDefinedOn(binary.Op, operandT) {
+				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
+			} else if isBooleanOp(binary.Op) {
+				aexpr.knownType = knownType{boolType}
 			} else {
-				aexpr.knownType = knownType{yt}
+				aexpr.knownType = knownType{operandT}
 			}
                 } else {
                         errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
-                }
-
-                if isBooleanOp(binary.Op) {
-                        aexpr.knownType = knownType{reflect.TypeOf(false)}
-                }
+		}
         }
 	return aexpr, errs
 }
@@ -275,11 +338,9 @@ func evalConstTypedUntypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, typedExpr, un
         // are incompatible, such as string(1.5). For other errors, such as
         // integer overflows, the type check should continue as if the conversion
         // succeeded
-        if len(xConvErrs) == 1 {
-                if _, ok := xConvErrs[0].(ErrBadConstConversion); ok {
-                        errs := append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
-	                return constValue{}, errs
-                }
+        if !reflect.Value(x).IsValid() {
+		errs := append(xConvErrs, ErrInvalidBinaryOperation{at(ctx, binary)})
+		return constValue{}, errs
         }
 
 	switch xt.(type) {
@@ -422,4 +483,16 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 		}
 	}
 	panic("go-interactive: impossible")
+}
+
+func wrapConcreteTypeWithInterface(operand Expr, interfaceT reflect.Type) Expr {
+	// Rig the token positions to such that typeConv.(Len|Pos) match operand
+	typeConv := &CallExpr{CallExpr: new(ast.CallExpr)}
+	typeConv.Fun = &Ident{Ident: &ast.Ident{Name: "", NamePos: operand.Pos()}}
+	typeConv.Lparen = operand.Pos()
+	typeConv.Rparen = operand.End() - 1
+	typeConv.knownType = knownType{interfaceT}
+	typeConv.Args = []ast.Expr{operand}
+	typeConv.isTypeConversion = true
+	return typeConv;
 }

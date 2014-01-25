@@ -265,6 +265,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 				return constValue(v), nil
 			}
 		}
+
 	case ConstStringType:
 		if to.Kind() == reflect.String {
 			v.SetString(reflect.Value(c).String())

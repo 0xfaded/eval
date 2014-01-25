@@ -17,12 +17,17 @@ func evalCallExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
 }
 
 func evalCallTypeExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
-	// Arg0 cannot be const, otherwise the entire expression would be const and
-	// evalCallExpr will have already returned.
-	if arg, _, err := EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
+	// Arg0 can only be const if it is ConstNil, otherwise the entire expression
+	// would be const and evalCallExpr will have already returned.
+	arg := call.Args[0].(Expr)
+	t := arg.KnownType()[0]
+	if t == ConstNil {
+		// This has already been typechecked to be a nil-able type
+		return []reflect.Value{hackedNew(call.KnownType()[0]).Elem()}, nil
+	} else if v, _, err := EvalExpr(ctx, arg, env); err != nil {
 		return nil, nil
 	} else {
-		cast, _ := assignableValue((*arg)[0], call.KnownType()[0], true)
+		cast := (*v)[0].Convert(unhackType(call.KnownType()[0]))
 		return []reflect.Value{cast}, nil
 	}
 }

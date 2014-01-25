@@ -131,19 +131,20 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 		// ErrBadConversion The exception is if the conversion
 		// is from nil
 		v, errs := castConstToTyped(ctx, ct, constValue(arg.Const()), to, arg)
-		if errs != nil {
-			b, ok := errs[0].(ErrBadConstConversion)
-			if ok && b.from != ConstNil {
-				err := ErrBadConversion{b.ErrorContext, b.from, b.to, b.v}
-				errs = append(errs, err)
+		if ct != ConstNil {
+			if errs != nil {
+				if b, ok := errs[0].(ErrBadConstConversion); ok {
+					err := ErrBadConversion{b.ErrorContext, b.from, b.to, b.v}
+					errs = append(errs, err)
+				}
+				// Some expr nodes will continue to generate
+				// errors even if their children produce
+				// errors. constValue must be set for this to
+				// happen.
+				call.constValue = constValue(arg.Const())
+			} else {
+				call.constValue = v
 			}
-			// Some expr nodes will continue to generate
-			// errors even if their children produce
-			// errors. constValue must be set for this to
-			// happen.
-			call.constValue = constValue(arg.Const())
-		} else {
-			call.constValue = v
 		}
 		return call, errs
 	} else {

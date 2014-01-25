@@ -3,7 +3,6 @@ package eval
 import (
 	"fmt"
 	"reflect"
-	"strings"
 
 	"go/ast"
 	"go/token"
@@ -376,12 +375,12 @@ func (err ErrWrongArgType) Error() string {
 	if err.call.arg0MultiValued {
 		actual := err.Node.(Expr).KnownType()[err.argPos]
 		return fmt.Sprintf("cannot use %v as type %v in argument to %v",
-			sprintfType(actual), sprintfType(expected), err.call.Fun)
+			actual, expected, err.call.Fun)
 	} else {
 		arg := err.Node.(Expr)
 		actual := arg.KnownType()[0]
 		return fmt.Sprintf("cannot use %v (type %v) as type %v in function argument",
-			arg, sprintfType(actual), sprintfType(expected))
+			arg, actual, expected)
 	}
 }
 
@@ -419,10 +418,9 @@ func (err ErrInvalidBinaryOperation) Error() string {
 	xct, xcok := xt.(ConstType)
 	yct, ycok := yt.(ConstType)
 
-	xn, xnok := x.Const().Interface().(*ConstNumber)
-	yn, ynok := y.Const().Interface().(*ConstNumber)
-
 	if xcok && ycok {
+		xn, xnok := x.Const().Interface().(*ConstNumber)
+		yn, ynok := y.Const().Interface().(*ConstNumber)
 
 		if xnok && ynok {
 			switch op {
@@ -447,33 +445,62 @@ func (err ErrInvalidBinaryOperation) Error() string {
                 // The gc implementation re-types nodes in const expressions, so that both sides
                 // have type yt. We don't do this, so we will have to make the conversion again.
                 // Runes get printed out verbatim
-                xx, errs := promoteConstToTyped(&Ctx{}, xct, constValue(x.Const()), yt, x)
-                mismatch := false
-                if errs != nil {
-                        if _, ok := errs[0].(ErrBadConstConversion); ok {
-                                mismatch = true
-                        }
-                }
-		if !mismatch && !isOpDefinedOn(op, yt) {
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
-                                sprintConstValue(xt, reflect.Value(xx), false), op, y, op, yt)
+		var xFmt string
+		if xt == ConstNil {
+			// strings always produce mismatched types when
+			// used with nil
+			if yt.Kind() != reflect.String {
+				xFmt = "nil"
+			}
+		} else {
+			xx, _ := promoteConstToTyped(&Ctx{}, xct, constValue(x.Const()), yt, x)
+			if reflect.Value(xx).IsValid() {
+				xFmt = sprintConstValue(xt, reflect.Value(xx), false)
+			}
+		}
+		if xFmt != "" && !isOpDefinedOn(op, yt) {
+			ytFmt := sprintOperandType(yt)
+                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
+                                xFmt, op, y, op, ytFmt)
                 }
 	} else if ycok {
-                yy, errs := promoteConstToTyped(&Ctx{}, yct, constValue(y.Const()), xt, y)
-                mismatch := false
-                if errs != nil {
-                        if _, ok := errs[0].(ErrBadConstConversion); ok {
-                                mismatch = true
-                        }
-                }
-		if !mismatch && !isOpDefinedOn(op, xt) {
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
-                                x, op, sprintConstValue(yt, reflect.Value(yy), false), op, xt)
+		var yFmt string
+		if yt == ConstNil {
+			if xt.Kind() != reflect.String {
+				yFmt = "nil"
+			}
+		} else {
+			yy, _ := promoteConstToTyped(&Ctx{}, yct, constValue(y.Const()), xt, y)
+			if reflect.Value(yy).IsValid() {
+				yFmt = sprintConstValue(yt, reflect.Value(yy), false)
+			}
+		}
+		if yFmt != "" && !isOpDefinedOn(op, xt) {
+			xtFmt := sprintOperandType(xt)
+                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
+                                x, op, yFmt, op, xtFmt)
 		}
 	} else {
-		if areTypesCompatible(xt, yt) && !isOpDefinedOn(op, xt) {
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
-                                x, op, y, op, xt)
+		// Interfaces produce mismatched type errors unless
+		// their types are identical
+		var mismatch bool
+		if xt.Kind() == reflect.Interface || yt.Kind() == reflect.Interface {
+			mismatch = xt != yt
+		} else {
+			mismatch = !areTypesCompatible(xt, yt)
+		}
+		if !mismatch && !isOpDefinedOn(op, xt) {
+			xtFmt := sprintOperandType(xt)
+                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
+                                x, op, y, op, xtFmt)
+		} else if !mismatch && xt.Kind() == reflect.Struct {
+			if field, ok := nonComparableField(xt); ok {
+				return fmt.Sprintf("invalid operation: %v %v %v (struct containing %v cannot be compared)",
+					x, op, y, field.Type)
+			}
+		} else if !mismatch && comparableToNilOnly(xt) {
+			return fmt.Sprintf("invalid operation: %v %v %v (%v can only be compared to nil)",
+				x, op, y, sprintOperandType(xt))
 		}
         }
 
@@ -662,11 +689,21 @@ func areTypesCompatible(xt, yt reflect.Type) bool {
 	return xt.AssignableTo(unhackType(yt)) || yt.AssignableTo(unhackType(xt))
 }
 
-// Format a type suitable for error messages.
-func sprintfType(t reflect.Type) string {
-	s := t.String()
-	if strings.HasPrefix(s, "main.") {
-		s = s[len("main."):]
+func sprintOperandType(t reflect.Type) string {
+	switch t.Kind() {
+	case reflect.Array:
+		return "array"
+	case reflect.Slice:
+		return "slice"
+	case reflect.Interface:
+		return "interface"
+	case reflect.Ptr:
+		return "pointer"
+	case reflect.Struct:
+		return "struct"
+	case reflect.Map:
+		return "map"
+	default:
+		return t.String()
 	}
-	return s
 }
