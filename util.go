@@ -191,9 +191,12 @@ func expectSingleType(ctx *Ctx, types []reflect.Type, srcExpr ast.Expr) (reflect
 	}
 }
 
+// Is op a boolean operator that produces a const bool type.
+// Notably absent are LAND(&&) and LOR(||), which result
+// in a value of the same type as their operands.
 func isBooleanOp(op token.Token) bool {
 	switch op {
-	case token.EQL, token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR, token.LAND, token.LOR:
+	case token.EQL, token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR:
 		return true
 	default:
 		return false
