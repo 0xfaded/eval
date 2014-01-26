@@ -19,6 +19,9 @@ type PanicInterfaceConversion struct {
 	// the dynamic type of operand. nil for interface to interface assertions
 	dynamicT reflect.Type
 }
+type PanicUncomparableType struct {
+	dynamicT reflect.Type
+}
 
 func (err PanicDivideByZero) Error() string {
         return "runtime error: integer divide by zero"
@@ -55,4 +58,8 @@ func (err PanicInterfaceConversion) Error() string {
 		return fmt.Sprintf("interface conversion: %v is %v, not %v",
 			err.xT, err.dynamicT, err.aT)
 	}
+}
+
+func (err PanicUncomparableType) Error() string {
+        return fmt.Sprintf("runtime error: comparing uncomparable type %v", err.dynamicT)
 }

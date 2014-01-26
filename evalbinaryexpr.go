@@ -3,22 +3,24 @@ package eval
 import (
 	"reflect"
 	"go/token"
+
+	"errors"
 )
 
-func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, err error) {
+func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, err error) {
 
-        if b.IsConst() {
-                return b.Const(), nil
+        if binary.IsConst() {
+                return binary.Const(), nil
         }
 
-        xexpr := b.X.(Expr)
-        yexpr := b.Y.(Expr)
+        xexpr := binary.X.(Expr)
+        yexpr := binary.Y.(Expr)
 
         // Compute the operand type
         // TODO[crc] I have decided that const nodes with inferred types
         // need to be retyped to avoid logic like below.
         var zt []reflect.Type
-        if xexpr.IsConst() {
+        if xexpr.IsConst() && xexpr.KnownType()[0].Kind() != reflect.Interface {
                 zt = yexpr.KnownType()
         } else {
                 zt = xexpr.KnownType()
@@ -32,21 +34,55 @@ func evalBinaryExpr(ctx *Ctx, b *BinaryExpr, env *Env) (r reflect.Value, err err
         }
         x, y := xs[0], ys[0]
 
+	var b bool
 	switch zt[0].Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalBinaryIntExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryIntExpr(ctx, x, binary.Op, y)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalBinaryUintExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryUintExpr(ctx, x, binary.Op, y)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalBinaryFloatExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryFloatExpr(ctx, x, binary.Op, y)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalBinaryComplexExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryComplexExpr(ctx, x, binary.Op, y)
 	case reflect.String:
-		r, err = evalBinaryStringExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryStringExpr(ctx, x, binary.Op, y)
 	case reflect.Bool:
-		r, err = evalBinaryBoolExpr(ctx, x, b.Op, y)
+		r, err = evalBinaryBoolExpr(ctx, x, binary.Op, y)
+	case reflect.Interface, reflect.Ptr:
+		if xexpr.KnownType()[0] == ConstNil {
+			b = y.IsNil()
+		} else if yexpr.KnownType()[0] == ConstNil {
+			b = x.IsNil()
+		} else if t := areDynamicTypesComparable(x, y); t != nil {
+			return reflect.Value{}, PanicUncomparableType{t}
+		} else {
+			b = x.Interface() == y.Interface()
+		}
+		if binary.Op == token.NEQ {
+			b = !b
+		}
+		r = reflect.ValueOf(b)
+	case reflect.Struct, reflect.Array:
+		if t := areDynamicTypesComparable(x, y); t != nil {
+			return reflect.Value{}, PanicUncomparableType{t}
+		}
+		b = x.Interface() == y.Interface()
+		if binary.Op == token.NEQ {
+			b = !b
+		}
+		r = reflect.ValueOf(b)
+	case reflect.Map, reflect.Slice, reflect.Func:
+		if xexpr.KnownType()[0] == ConstNil {
+			b = y.IsNil()
+		} else {
+			b = x.IsNil()
+		}
+		if binary.Op == token.NEQ {
+			b = !b
+		}
+		r = reflect.ValueOf(b)
 	default:
-                panic("eval: unimplemented binary ops")
+                return reflect.Value{}, errors.New("eval: unimplemented binary ops :(")
 	}
 	return r, err
 }
@@ -228,3 +264,35 @@ func evalBinaryBoolExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Val
 	}
         return reflect.ValueOf(r), nil
 }
+
+func areDynamicTypesComparable(x, y reflect.Value) reflect.Type {
+	if x.Type() != y.Type() {
+		return nil
+	}
+	switch x.Type().Kind() {
+	case reflect.Interface:
+		return areDynamicTypesComparable(x.Elem(), y.Elem())
+	case reflect.Struct:
+		numField := x.NumField()
+		for i := 0; i < numField; i += 1 {
+			if t := areDynamicTypesComparable(x.Field(i), y.Field(i)); t != nil {
+				if t.Kind() == reflect.Struct {
+					return t
+				} else {
+					return x.Type()
+				}
+			}
+		}
+	case reflect.Array:
+		length := x.Len()
+		for i := 0; i < length; i += 1 {
+			if t := areDynamicTypesComparable(x.Index(i), y.Index(i)); t != nil {
+				return t
+			}
+		}
+	case reflect.Map, reflect.Func, reflect.Slice:
+		return x.Type()
+	}
+	return nil
+}
+
