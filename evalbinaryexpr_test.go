@@ -115,6 +115,105 @@ func TestBoolBinaryOps(t *testing.T) {
         expectResult(t, `x && x`, env, x && x)
 }
 
+func TestArrayStructBinaryOps(t *testing.T) {
+	type S struct {
+		i int
+	}
+	a := S{1}
+	b := S{2}
+	c := [2]int{1,2}
+	d := [2]int{1,2}
+
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+	env.Vars["c"] = reflect.ValueOf(&c)
+	env.Vars["d"] = reflect.ValueOf(&d)
+
+        expectResult(t, "a == b", env, a == b)
+        expectResult(t, "a != b", env, a != b)
+        expectResult(t, "c == d", env, c == d)
+        expectResult(t, "c != d", env, c != d)
+}
+
+func TestInterfaceBinaryOps(t *testing.T) {
+	var xi XI = X(0)
+	var zi0 ZI = Z(0)
+	var zi1 ZI = X(0)
+	var x X = X(0)
+	env := makeEnv()
+	env.Vars["xi"] = reflect.ValueOf(&xi)
+	env.Vars["zi0"] = reflect.ValueOf(&zi0)
+	env.Vars["zi1"] = reflect.ValueOf(&zi1)
+	env.Vars["x"] = reflect.ValueOf(&x)
+
+        expectResult(t, "xi == nil", env, xi == nil)
+        expectResult(t, "xi != nil", env, xi != nil)
+        expectResult(t, "zi0 == xi", env, zi0 == xi)
+        expectResult(t, "zi0 != xi", env, zi0 != xi)
+	// gc bug http://code.google.com/p/go/issues/detail?id=7207
+        expectResult(t, "zi1 == xi", env, true)
+        expectResult(t, "zi1 != xi", env, false)
+        expectResult(t, "zi0 == x", env, zi0 == x)
+        expectResult(t, "zi0 != x", env, zi0 != x)
+        expectResult(t, "zi1 == x", env, zi1 == x)
+        expectResult(t, "zi1 != x", env, zi1 != x)
+}
+
+func TestInterfaceUncompBinaryOps(t *testing.T) {
+	type uncompS struct {
+		_ []int
+	}
+	type uncompNestedS struct {
+		a interface{}
+	}
+	var a interface{} = uncompS{}
+	var b interface{} = uncompNestedS{a}
+	var c interface{} = [1]interface{}{b}
+	var d interface{} = []int{}
+
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+	env.Vars["c"] = reflect.ValueOf(&c)
+	env.Vars["d"] = reflect.ValueOf(&d)
+
+        expectPanic(t, "a == a", env, "runtime error: comparing uncomparable type eval.uncompS")
+        expectPanic(t, "b == b", env, "runtime error: comparing uncomparable type eval.uncompS")
+        expectPanic(t, "c == c", env, "runtime error: comparing uncomparable type eval.uncompS")
+        expectPanic(t, "d == d", env, "runtime error: comparing uncomparable type []int")
+}
+
+func TestPtrBinaryOps(t *testing.T) {
+	a := new(int)
+	b := a
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+
+        expectResult(t, "a == nil", env, a == nil)
+        expectResult(t, "a != nil", env, a != nil)
+        expectResult(t, "a == b", env, a == b)
+        expectResult(t, "a != b", env, a != b)
+}
+
+func TestMapSliceFuncBinaryOps(t *testing.T) {
+	a := map[int]int{}
+	b := []int(nil)
+	c := (func())(nil)
+	env := makeEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+	env.Vars["c"] = reflect.ValueOf(&c)
+
+        expectResult(t, "a == nil", env, a == nil)
+        expectResult(t, "a != nil", env, a != nil)
+        expectResult(t, "b == nil", env, b == nil)
+        expectResult(t, "b != nil", env, b != nil)
+        expectResult(t, "c == nil", env, c == nil)
+        expectResult(t, "c != nil", env, c != nil)
+}
+
 func TestTypedBinaryOps(t *testing.T) {
 
 	type Foo int
