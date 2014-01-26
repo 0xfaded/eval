@@ -23,7 +23,7 @@ A skeletal structure is below:
 	import ("reflect"; "go/parser"; "github.com/0xfaded/eval")
 
 	...
-	env := eval.Env {
+	env := &eval.Env {
 		Name:   ".",
 		Vars:   make(map[string] reflect.Value),
 		Consts: make(map[string] reflect.Value),
@@ -33,7 +33,7 @@ A skeletal structure is below:
 	}
 	// Populate env with a useful evaluation environment
 
-    line := "fmt.Println("something to eval)"
+    line := `5 * 6 + int32(len("abc"[0:1])))` // something to eval
 	ctx := &eval.Ctx{line}
 	if expr, err := parser.ParseExpr(line); err != nil {
 		fmt.Printf("parse error: %s\n", err)
@@ -44,7 +44,8 @@ A skeletal structure is below:
 	} else if vals, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
 		fmt.Printf("eval error: %s\n", err)
 	} else {
-	  // do something with vals..
+	  // do something with pointer to reflect.Value array vals, e.g.:
+	  fmt.Println((*vals)[0].Interface())
 	}
 ```
 
