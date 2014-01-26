@@ -297,7 +297,20 @@ func (basicLit *BasicLit) String() string {
 }
 
 func (funcLit *FuncLit) String() string { return "func literal" }
-func (compositeLit *CompositeLit) String() string { return "TODO  compositeLit.CompositeLit" }
+
+func (lit *CompositeLit) String() string {
+	t := lit.KnownType()[0]
+	if t.Name() != "" {
+		return fmt.Sprintf("%s literal", t.Name())
+	}
+
+	switch t.Kind() {
+	case reflect.Slice:
+		return fmt.Sprintf("[]%v literal", t.Elem())
+	default:
+		return "TODO composite lit"
+	}
+}
 
 func (parenExpr *ParenExpr) String() string {
 	if parenExpr.IsConst() {

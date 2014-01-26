@@ -218,6 +218,10 @@ type ErrImpossibleTypeAssert struct {
 	ErrorContext
 }
 
+type ErrMissingCompositeLitType struct {
+	ErrorContext
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -653,6 +657,10 @@ func (err ErrImpossibleTypeAssert) Error() string {
 	return fmt.Sprintf("impossible type assertion:\n" +
 		"\t%v does not implement %v (missing %s method)",
 		xT, iT, missingMethod)
+}
+
+func (err ErrMissingCompositeLitType) Error() string {
+	return "missing type in composite literal"
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {

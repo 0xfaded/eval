@@ -23,6 +23,8 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 		if errs != nil {
 			return alit, errs
 		}
+	} else if t == nil {
+		return alit, []error{ErrMissingCompositeLitType{at(ctx, alit)}}
 	}
 
 	alit.knownType = knownType{t}
@@ -191,6 +193,13 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 }
 
 func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+	switch eltT.Kind() {
+	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
+		if lit, ok := expr.(*ast.CompositeLit); ok {
+			return checkCompositeLitR(ctx, lit, eltT, env)
+		}
+	}
+
 	aexpr, conversionFailed, errs := checkExprAssignableTo(ctx, expr, eltT, env)
 	if conversionFailed {
 		// NOTE[crc] this hack removes conversion errors from consts other
