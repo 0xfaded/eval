@@ -93,6 +93,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 			xuntyped = true
 		}
 		yk := yt.Kind()
+		errExpr := aexpr
 
 		// special cases for const nil
 		// note that only (slice|map|func|interface|ptr) == nil are legal
@@ -144,11 +145,25 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 					errs = append(errs, ErrDivideByZero{at(ctx, x)})
 				}
 			}
-		// An interface is comprable if its paired operand implements it
-		} else if xk == reflect.Interface && yt.Implements(xt) {
-			operandT = xt
+		// An interface is comprable if its paired operand implements it.
+		// To match gc error output, if the operator produces a boolean and
+		// one operand is a type that satisfies but is not the the other
+		// operand's type, wrap that node in a type cast. This will only be
+		// used by errors.
 		} else if yk == reflect.Interface && xt.Implements(yt) {
 			operandT = yt
+			if isBooleanOp(op) {
+				errExpr = new(BinaryExpr)
+				*errExpr = *aexpr
+				errExpr.X = wrapConcreteTypeWithInterface(x, yt)
+			}
+		} else if xk == reflect.Interface && yt.Implements(xt) {
+			operandT = xt
+			if isBooleanOp(op) {
+				errExpr = new(BinaryExpr)
+				*errExpr = *aexpr
+				errExpr.Y = wrapConcreteTypeWithInterface(y, xt)
+			}
                 }
 
 		if operandT != nil {
@@ -469,4 +484,16 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 		}
 	}
 	panic("go-interactive: impossible")
+}
+
+func wrapConcreteTypeWithInterface(operand Expr, interfaceT reflect.Type) Expr {
+	// Rig the token positions to such that typeConv.(Len|Pos) match operand
+	typeConv := &CallExpr{CallExpr: new(ast.CallExpr)}
+	typeConv.Fun = &Ident{Ident: &ast.Ident{Name: "", NamePos: operand.Pos()}}
+	typeConv.Lparen = operand.Pos()
+	typeConv.Rparen = operand.End() - 1
+	typeConv.knownType = knownType{interfaceT}
+	typeConv.Args = []ast.Expr{operand}
+	typeConv.isTypeConversion = true
+	return typeConv;
 }

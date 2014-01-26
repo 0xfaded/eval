@@ -476,10 +476,16 @@ func (err ErrInvalidBinaryOperation) Error() string {
 		}
 	} else {
 		operandT := xt
-		if operandT.Kind() == reflect.Interface {
-			operandT = yt
+		var mismatch bool
+		// Interfaces are wierd. Non-bool ops produce mismatched type
+		// errors in preference to operation not defined. Bool ops
+		// are the reverse.
+		if xt.Kind() == reflect.Interface || yt.Kind() == reflect.Interface {
+			mismatch = xt != yt
+		} else {
+			mismatch = !areTypesCompatible(xt, yt)
 		}
-		if areTypesCompatible(xt, yt) && !isOpDefinedOn(op, operandT) {
+		if !mismatch && !isOpDefinedOn(op, operandT) {
 			xtFmt := sprintOperandType(xt)
                         return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
                                 x, op, y, op, xtFmt)
