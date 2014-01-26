@@ -516,6 +516,11 @@ func isAddressableOrCompositeLit(expr Expr) bool {
 }
 
 func isStructComparable(structT reflect.Type) bool {
+	_, ok := nonComparableField(structT)
+	return !ok
+}
+
+func nonComparableField(structT reflect.Type) (reflect.StructField, bool) {
 	numField := structT.NumField()
 	for i := 0; i < numField; i += 1 {
 		field := structT.Field(i)
@@ -524,10 +529,10 @@ func isStructComparable(structT reflect.Type) bool {
 		}
 		k := field.Type.Kind()
 		if k == reflect.Slice || k == reflect.Map || k == reflect.Chan {
-			return false
+			return field, true
 		}
 	}
-	return true
+	return reflect.StructField{}, false
 }
 
 func attemptBinaryOpConversion(to reflect.Type) bool {
@@ -537,4 +542,12 @@ func attemptBinaryOpConversion(to reflect.Type) bool {
 		return false
 	}
 	return true
+}
+
+func comparableToNilOnly(x reflect.Type) bool {
+	switch x.Kind() {
+	case reflect.Func, reflect.Map, reflect.Slice:
+		return true
+	}
+	return false
 }

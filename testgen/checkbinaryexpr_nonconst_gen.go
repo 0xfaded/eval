@@ -33,6 +33,7 @@ type interfaceZ interface { z() }
 type XinterfaceX int
 func (XinterfaceX) x() {}
 type arrayT [2]int
+type mapT map[int]int
 type sliceT []int
 type structT struct {
 	a int
@@ -50,6 +51,9 @@ func makeCheckBinaryNonConstExprEnv() *Env {
 	env.Types["interfaceY"] = reflect.TypeOf(new(interfaceY)).Elem()
 	env.Types["interfaceZ"] = reflect.TypeOf(new(interfaceZ)).Elem()
 	env.Types["XinterfaceX"] = reflect.TypeOf(XinterfaceX(0))
+	env.Types["arrayT"] = reflect.TypeOf(arrayT{})
+	env.Types["mapT"] = reflect.TypeOf(mapT{})
+	env.Types["sliceT"] = reflect.TypeOf(sliceT{})
 	env.Types["structT"] = reflect.TypeOf(structT{})
 	env.Types["structUncompT"] = reflect.TypeOf(structUncompT{})
 	return env
@@ -91,6 +95,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"BoolT", "bool(true)"},
 		{"Slice", "sliceT(nil)"},
 		{"Array", "arrayT{}"},
+		{"Map", "mapT{}"},
 		{"XinterfaceX", "XinterfaceX(1)"},
 		{"InterfaceX", "interfaceX(nil)"},
 		{"InterfaceY", "interfaceY(nil)"},
@@ -109,7 +114,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 	// exclude const types
 	lhs := rhs[7:]
 	return []testgen.Dimension{
-		lhs[7:11],
+		lhs,
 		ops,
 		rhs,
 	}
@@ -143,6 +148,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	for i := range compileErrs {
 		compileErrs[i] = strings.Replace(compileErrs[i], "sliceT", "eval.sliceT", -1)
 		compileErrs[i] = strings.Replace(compileErrs[i], "arrayT", "eval.arrayT", -1)
+		compileErrs[i] = strings.Replace(compileErrs[i], "mapT", "eval.mapT", -1)
 		compileErrs[i] = strings.Replace(compileErrs[i], "interfaceX", "eval.interfaceX", -1)
 		compileErrs[i] = strings.Replace(compileErrs[i], "Xeval.interfaceX", "eval.XinterfaceX", -1)
 		compileErrs[i] = strings.Replace(compileErrs[i], "interfaceY", "eval.interfaceY", -1)

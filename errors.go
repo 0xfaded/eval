@@ -447,7 +447,11 @@ func (err ErrInvalidBinaryOperation) Error() string {
                 // Runes get printed out verbatim
 		var xFmt string
 		if xt == ConstNil {
-			xFmt = "nil"
+			// strings always produce mismatched types when
+			// used with nil
+			if yt.Kind() != reflect.String {
+				xFmt = "nil"
+			}
 		} else {
 			xx, _ := promoteConstToTyped(&Ctx{}, xct, constValue(x.Const()), yt, x)
 			if reflect.Value(xx).IsValid() {
@@ -462,7 +466,9 @@ func (err ErrInvalidBinaryOperation) Error() string {
 	} else if ycok {
 		var yFmt string
 		if yt == ConstNil {
-			yFmt = "nil"
+			if xt.Kind() != reflect.String {
+				yFmt = "nil"
+			}
 		} else {
 			yy, _ := promoteConstToTyped(&Ctx{}, yct, constValue(y.Const()), xt, y)
 			if reflect.Value(yy).IsValid() {
@@ -475,20 +481,26 @@ func (err ErrInvalidBinaryOperation) Error() string {
                                 x, op, yFmt, op, xtFmt)
 		}
 	} else {
-		operandT := xt
+		// Interfaces produce mismatched type errors unless
+		// their types are identical
 		var mismatch bool
-		// Interfaces are wierd. Non-bool ops produce mismatched type
-		// errors in preference to operation not defined. Bool ops
-		// are the reverse.
 		if xt.Kind() == reflect.Interface || yt.Kind() == reflect.Interface {
 			mismatch = xt != yt
 		} else {
 			mismatch = !areTypesCompatible(xt, yt)
 		}
-		if !mismatch && !isOpDefinedOn(op, operandT) {
+		if !mismatch && !isOpDefinedOn(op, xt) {
 			xtFmt := sprintOperandType(xt)
                         return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
                                 x, op, y, op, xtFmt)
+		} else if !mismatch && xt.Kind() == reflect.Struct {
+			if field, ok := nonComparableField(xt); ok {
+				return fmt.Sprintf("invalid operation: %v %v %v (struct containing %v cannot be compared)",
+					x, op, y, field.Type)
+			}
+		} else if !mismatch && comparableToNilOnly(xt) {
+			return fmt.Sprintf("invalid operation: %v %v %v (%v can only be compared to nil)",
+				x, op, y, sprintOperandType(xt))
 		}
         }
 
@@ -685,6 +697,12 @@ func sprintOperandType(t reflect.Type) string {
 		return "slice"
 	case reflect.Interface:
 		return "interface"
+	case reflect.Ptr:
+		return "pointer"
+	case reflect.Struct:
+		return "struct"
+	case reflect.Map:
+		return "map"
 	default:
 		return t.String()
 	}

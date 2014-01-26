@@ -104,7 +104,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 				(yk == reflect.Slice || yk == reflect.Map || yk == reflect.Func ||
 				yk == reflect.Interface || yk == reflect.Ptr) {
 				aexpr.knownType = knownType{boolType}
-			} else if yk == reflect.String || yk == reflect.Slice || yk == reflect.Interface {
+			} else if yk == reflect.String || yk == reflect.Slice || yk == reflect.Interface || yk == reflect.Ptr || yk == reflect.Map {
 				// Except strings, they do produce mismatched types
 				// instead of bad conversions
 				err := ErrInvalidBinaryOperation{at(ctx, aexpr)}
@@ -123,10 +123,9 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 		xk := xt.Kind()
 		var operandT reflect.Type
 		// Identical types are always valid, except non comparable structs
+		// and types with can only be compared to nil
                 if unhackType(xt) == unhackType(yt) {
-			if xk == reflect.Struct && !isStructComparable(xt) {
-				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
-			} else {
+			if !comparableToNilOnly(xt) && (xk != reflect.Struct || isStructComparable(xt)) {
 				operandT = xt
 			}
                 } else if xuntyped && attemptBinaryOpConversion(yt) {
