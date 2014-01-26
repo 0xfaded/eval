@@ -66,7 +66,7 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 			}
 		}
 		if !c.isBuiltin {
-			if _, t, errs := checkType(&Ctx{""}, c.Fun, env); errs == nil {
+			if _, t, errs := checkType(&Ctx{""}, uncheckType(c.Fun), env); errs == nil {
 				c.isTypeConversion = true
 				c.knownType = knownType{t}
 			}
@@ -98,5 +98,30 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 		// If the input is already an Expr, assume it is already type checked.
 		// So far, this has been enough to produce the desired error messages.
 		return expr.(Expr)
+	}
+}
+
+func uncheckType(expr ast.Expr) ast.Expr {
+	switch e := expr.(type) {
+	case *ParenExpr:
+		e.X = uncheckType(e.X)
+		return e.ParenExpr
+	case *Ident:
+		return e.Ident
+	case *StarExpr:
+		e.X = uncheckType(e.X)
+		return e.StarExpr
+	case *StructType:
+		return e.StructType
+	case *ArrayType:
+		return e.ArrayType
+	case *InterfaceType:
+		return e.InterfaceType
+	case *MapType:
+		return e.MapType
+	case *ChanType:
+		return e.ChanType
+	default:
+		return e
 	}
 }
