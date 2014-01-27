@@ -94,6 +94,32 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 		kv.Key = fakeCheckExpr(kv.Key, env)
 		kv.Value = fakeCheckExpr(kv.Value, env)
 		return kv
+
+	// Types
+	case *ast.ArrayType:
+		arrayT := &ArrayType{ArrayType: expr}
+		arrayT.Len = fakeCheckExpr(arrayT.Len, env)
+		arrayT.Elt = fakeCheckExpr(arrayT.Elt, env)
+		return arrayT
+	case *ast.StructType:
+		structT := &StructType{StructType: expr}
+		return structT
+	case *ast.FuncType:
+		funcT := &FuncType{FuncType: expr}
+		return funcT
+	case *ast.InterfaceType:
+		interfaceT := &InterfaceType{InterfaceType: expr}
+		return interfaceT
+	case *ast.MapType:
+		mapT := &MapType{MapType: expr}
+		mapT.Key = fakeCheckExpr(mapT.Key, env)
+		mapT.Value = fakeCheckExpr(mapT.Value, env)
+		return mapT
+	case *ast.ChanType:
+		chanT := &ChanType{ChanType: expr}
+		chanT.Value = fakeCheckExpr(chanT.Value, env)
+		return chanT
+
 	default:
 		// If the input is already an Expr, assume it is already type checked.
 		// So far, this has been enough to produce the desired error messages.
@@ -124,4 +150,71 @@ func uncheckType(expr ast.Expr) ast.Expr {
 	default:
 		return e
 	}
+}
+
+// Remove the const value from an Expr. If the Expr is not const, do nothing. Otherwise,
+// return a non const clone.
+func unconstNode(expr Expr) Expr {
+	// Special case for non-const builtin calls which must have their args unconsted
+	if e, ok := expr.(*CallExpr); ok && (e.IsConst() || e.isBuiltin) {
+		u := new(CallExpr)
+		*u = *e
+		u.constValue = constValue{}
+		if u.isBuiltin {
+			u.CallExpr = new(ast.CallExpr)
+			*u.CallExpr = *e.CallExpr
+			u.Args = make([]ast.Expr, len(e.Args))
+			for i := range e.Args {
+				if arg, ok := e.Args[i].(Expr); ok {
+					u.Args[i] = unconstNode(arg)
+				} else {
+					u.Args[i] = e.Args[i]
+				}
+			}
+		}
+		return u
+	}
+
+	if !expr.IsConst() {
+		return expr
+	}
+	switch e := expr.(type) {
+	case *Ident:
+		u := new(Ident)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	case *BasicLit:
+		u := new(BasicLit)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	case *SelectorExpr:
+		u := new(SelectorExpr)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	case *IndexExpr:
+		u := new(IndexExpr)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	case *UnaryExpr:
+		u := new(UnaryExpr)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	case *BinaryExpr:
+		u := new(BinaryExpr)
+		*u = *e
+		u.constValue = constValue{}
+		return u
+	default:
+		panic("eval: impossible. non-const node IsConst() returned true")
+	}
+}
+
+// shorthand for unconstNode
+func uc(expr Expr) Expr {
+	return unconstNode(expr)
 }

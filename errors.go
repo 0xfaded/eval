@@ -249,6 +249,51 @@ type ErrMissingCompositeLitType struct {
 	ErrorContext
 }
 
+type ErrBuiltinWrongNumberOfArgs struct {
+	ErrorContext
+}
+
+type ErrBuiltinWrongArgType struct {
+	ErrorContext
+	call *CallExpr
+}
+
+type ErrBuiltinMismatchedArgs struct {
+	ErrorContext
+	x, y reflect.Type
+}
+
+type ErrBuiltinNonTypeArg struct {
+	ErrorContext
+}
+
+type ErrBuiltinInvalidEllipsis struct {
+	ErrorContext
+}
+
+type ErrMakeBadType struct {
+	ErrorContext
+	of reflect.Type
+}
+
+type ErrMakeNonIntegerArg struct {
+	ErrorContext
+	i int
+}
+
+type ErrMakeLenGtrThanCap struct {
+	ErrorContext
+	length, capacity int
+}
+
+type ErrAppendFirstArgNotSlice struct {
+	ErrorContext
+}
+
+type ErrAppendFirstArgNotVariadic struct {
+	ErrorContext
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -726,6 +771,144 @@ func (err ErrImpossibleTypeAssert) Error() string {
 
 func (err ErrMissingCompositeLitType) Error() string {
 	return "missing type in composite literal"
+}
+
+func (err ErrBuiltinWrongNumberOfArgs) Error() string {
+	call := err.Node.(*CallExpr)
+	ident := call.Fun.(*Ident)
+	tooMany := false
+	var cause string
+	switch ident.Name {
+	case "complex":
+		if len(call.Args) == 0 {
+			cause = " - complex(<N>, <N>)"
+		} else {
+			tooMany = len(call.Args) > 2
+			cause = fmt.Sprintf(" - complex(%v, <N>)", uc(call.Args[0].(Expr)))
+		}
+	case "new":
+		if len(call.Args) != 0 {
+			tooMany = true
+			cause = fmt.Sprintf("(%v)", uc(call.Args[0].(Expr)))
+		}
+	case "make":
+		if len(call.Args) == 1 {
+			return fmt.Sprintf("too few arguments to make: %v", uc(call))
+		} else if len(call.Args) != 0 {
+			tooMany = true
+			cause = fmt.Sprintf(": %v", uc(call))
+		}
+	case "append":
+		// Note the s on arguments, which
+		return "missing arguments to append"
+	default:
+		cause = fmt.Sprintf(": %v", uc(call))
+		tooMany = len(call.Args) != 0
+	}
+	if tooMany {
+		return fmt.Sprintf("too many arguments to %s%s", ident.Name, cause)
+	} else {
+		return fmt.Sprintf("missing argument to %s%s", ident.Name, cause)
+	}
+}
+
+func (err ErrBuiltinWrongArgType) Error() string {
+	ident := err.call.Fun.(*Ident)
+	arg := err.Node.(Expr)
+	var t string
+	kt := arg.KnownType()[0]
+	if ct, ok := kt.(ConstType); ok {
+		t = ct.ErrorType()
+	} else {
+		t = kt.String()
+	}
+	switch ident.Name {
+	case "complex":
+		call := uc(err.call).(*CallExpr)
+		// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
+		call.argNEllipsis = false
+		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
+			call, t)
+	case "append":
+		expected := err.call.Args[0].(Expr).KnownType()[0].Elem()
+		if kt == ConstNil {
+			return fmt.Sprintf("cannot use nil as type %v in append", expected)
+		}
+		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), kt, expected)
+	default:
+		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), kt, ident.Name)
+	}
+}
+
+func (err ErrBuiltinMismatchedArgs) Error() string {
+	call := err.Node.(*CallExpr)
+	var x, y string
+	cx, cxok := err.x.(ConstType)
+	cy, cyok := err.y.(ConstType)
+	if cxok && cyok {
+		x = cx.ErrorType()
+		y = cy.ErrorType()
+	} else if cx == ConstNil {
+		x = "nil"
+		y = err.y.String()
+	} else if cy == ConstNil {
+		x = err.x.String()
+		y = "nil"
+	} else {
+		x = err.x.String()
+		y = err.y.String()
+	}
+	call = uc(call).(*CallExpr)
+	// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
+	call.argNEllipsis = false
+	return fmt.Sprintf("invalid operation: %v (mismatched types %s and %s)", uc(call), x, y)
+}
+
+func (err ErrBuiltinNonTypeArg) Error() string {
+	return fmt.Sprintf("%v is not a type", uc(err.Node.(Expr)))
+}
+
+func (err ErrBuiltinInvalidEllipsis) Error() string {
+	ident := err.Node.(*CallExpr).Fun.(*Ident)
+	return fmt.Sprintf("invalid use of ... with builtin %s", ident.Name)
+}
+
+func (err ErrMakeBadType) Error() string {
+	return "TODO ErrMakeBadType"
+}
+
+func (err ErrMakeNonIntegerArg) Error() string {
+	var culprit string
+	if err.i == 1 {
+		culprit = "len"
+	} else {
+		culprit = "cap"
+	}
+	return fmt.Sprintf("make: non-integer %s argument %v", culprit, uc(err.Node.(Expr)))
+}
+
+func (err ErrMakeLenGtrThanCap) Error() string {
+	return fmt.Sprintf("len larger than cap in %v", err.Node)
+}
+
+func (err ErrAppendFirstArgNotSlice) Error() string {
+	arg := err.Node.(Expr)
+	t := arg.KnownType()[0]
+	if t == ConstNil {
+		return "first argument to append must be typed slice; have untyped nil"
+	} else {
+		var s string
+		if ct, ok := t.(ConstType); ok {
+			s = ct.ErrorType()
+		} else {
+			s = t.String()
+		}
+		return fmt.Sprintf("first argument to append must be slice; have %s", s)
+	}
+}
+
+func (err ErrAppendFirstArgNotVariadic) Error() string {
+	return "cannot use ... on first argument to append"
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {

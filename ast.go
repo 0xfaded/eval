@@ -300,7 +300,14 @@ func (basicLit *BasicLit) String() string {
 func (funcLit *FuncLit) String() string { return "func literal" }
 
 func (lit *CompositeLit) String() string {
-	t := lit.KnownType()[0]
+	kt := lit.KnownType()
+	if kt == nil {
+		// This matches gc formatting for unchecked nodes.
+		// For example, complex([]int{}) produces
+		// missing argument to complex - complex(composite literal, <N>)
+		return "composite literal"
+	}
+	t := kt[0]
 	if t.Name() != "" {
 		return fmt.Sprintf("%s literal", t.Name())
 	}
@@ -331,28 +338,31 @@ func (assert *TypeAssertExpr) String() string {
 	return fmt.Sprintf("%v.(%s)", assert.X, assert.Type)
 }
 
-func (callExpr *CallExpr) String() string {
-	if callExpr.isTypeConversion {
-		if len(callExpr.Args) == 0 {
+func (call *CallExpr) String() string {
+	if call.isTypeConversion || call.isBuiltin {
+		if len(call.Args) == 0 {
 			// missing argument error
-			return fmt.Sprintf("%v()", callExpr.Fun)
-		} else if len(callExpr.Args) > 1 {
+			return fmt.Sprintf("%v()", call.Fun)
+		} else if len(call.Args) > 1 || call.isBuiltin {
 			// too many arguments error
-			s := fmt.Sprintf("%v", callExpr.Args)
+			s := fmt.Sprintf("%v", call.Fun)
 			sep := "("
-			for _, arg := range callExpr.Args {
+			for _, arg := range call.Args {
 				s += fmt.Sprintf("%v%v", sep, arg)
 				sep = ", "
 			}
+			if call.argNEllipsis {
+				s += "..."
+			}
 			return s + ")"
 		} else {
-			if callExpr.IsConst() {
-				return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+			if call.IsConst() {
+				return sprintConstValue(call.KnownType()[0], call.Const(), true)
 			}
-			return fmt.Sprintf("%v(%v)", callExpr.KnownType()[0], callExpr.Args[0])
+			return fmt.Sprintf("%v(%v)", call.KnownType()[0], call.Args[0])
 		}
 	} else {
-		return fmt.Sprintf("%v()", callExpr.Fun)
+		return fmt.Sprintf("%v()", call.Fun)
 	}
 }
 
@@ -392,7 +402,10 @@ func (arrayType *ArrayType) String() string {
 func (structType *StructType) String() string { return "TODO  structType.StructType" }
 func (funcType *FuncType) String() string { return "TODO  funcType.FuncType" }
 func (interfaceType *InterfaceType) String() string { return "TODO  interfaceType.InterfaceType" }
-func (mapType *MapType) String() string { return "TODO  mapType.MapType" }
+
+func (mapType *MapType) String() string {
+	return fmt.Sprintf("map[%v]%v", mapType.Key, mapType.Value)
+}
 
 func (chanType *ChanType) String() string {
 	value := fmt.Sprint(chanType.Value)

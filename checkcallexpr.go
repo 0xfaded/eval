@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"errors"
 	"reflect"
 	"go/ast"
 	"go/token"
@@ -36,78 +35,6 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 	} else {
 		return checkCallFunExpr(ctx, acall, env)
 	}
-}
-
-// TODO move this stub to builtins.go after rewrite
-func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error, bool) {
-	ident, ok := call.Fun.(*ast.Ident)
-	if !ok {
-		return call, nil, false
-	}
-	if ident.Name == "complex" {
-		if len(call.Args) != 2 {
-			return call, []error{errors.New("complex wrong number args")}, true
-		}
-		var errs, moreErrs []error
-		if call.Args[0], moreErrs = CheckExpr(ctx, call.Args[0], env); moreErrs != nil {
-			errs = append(errs, moreErrs...)
-		}
-		if call.Args[1], moreErrs = CheckExpr(ctx, call.Args[1], env); moreErrs != nil {
-			errs = append(errs, moreErrs...)
-		}
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
-		call.knownType = knownType{c128}
-		return call, nil, true
-	} else if ident.Name == "real" || ident.Name == "imag" {
-		if len(call.Args) != 1 {
-			return call, []error{errors.New(ident.Name + " wrong number args")}, true
-		}
-		var errs []error
-		call.Args[0], errs = CheckExpr(ctx, call.Args[0], env)
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
-		call.knownType = knownType{f64}
-		return call, errs, true
-	} else if ident.Name == "len" || ident.Name == "cap" {
-		if len(call.Args) != 1 {
-			return call, []error{errors.New(ident.Name + " wrong number args")}, true
-		}
-		var errs []error
-		call.Args[0], errs = CheckExpr(ctx, call.Args[0], env)
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
-		call.knownType = knownType{intType}
-		return call, errs, true
-	} else if ident.Name == "new" {
-		if len(call.Args) != 1 {
-			return call, []error{errors.New("new wrong number args")}, true
-		} else if _, of, _, errs := checkType(ctx, call.Args[0], env); errs != nil {
-			return call, append(errs, errors.New("new bad type")), true
-		} else {
-			call.Fun = &Ident{Ident: ident}
-			call.isBuiltin = true
-			call.knownType = knownType{reflect.PtrTo(of)}
-			return call, nil, true
-		}
-	} else if ident.Name == "append" {
-		if len(call.Args) == 0 {
-			return call, []error{errors.New("append wrong number args")}, true
-		} else {
-			var errs, moreErrs []error
-			for i := range call.Args {
-				if call.Args[i], moreErrs = CheckExpr(ctx, call.Args[i], env); moreErrs != nil {
-					errs = append(errs, moreErrs...)
-				}
-			}
-			call.Fun = &Ident{Ident: ident}
-			call.isBuiltin = true
-			call.knownType = call.Args[0].(Expr).KnownType()
-			call.argNEllipsis = call.Ellipsis != token.NoPos
-			return call, errs, true
-		}
-	}
-	return call, nil, false
 }
 
 func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {

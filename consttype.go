@@ -286,10 +286,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 
 	case ConstNilType:
 		// Unfortunately there is no reflect.Type.CanNil()
-		switch to.Kind() {
-		case reflect.Chan, reflect.Func, reflect.Interface,
-			reflect.Map, reflect.Ptr, reflect.Slice:
-
+		if isNillable(to) {
 			// v is already nil
 			return constValue(v), nil
 		}

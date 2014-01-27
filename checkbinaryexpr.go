@@ -9,34 +9,12 @@ import (
 
 func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, []error) {
 	aexpr := &BinaryExpr{BinaryExpr: binary}
-
-	var xok, yok bool
-	var xt, yt reflect.Type
-	var err error
-
-	x, errs := CheckExpr(ctx, binary.X, env)
-	binary.X = x
-	if errs == nil || x.IsConst() {
-		if xt, err = expectSingleType(ctx, x.KnownType(), x); err != nil {
-			errs = append(errs, err)
-		} else {
-			xok = true
-		}
-	}
-
-	y, moreErrs := CheckExpr(ctx, binary.Y, env)
-	binary.Y = y
-	if moreErrs == nil || y.IsConst() {
-		if yt, err = expectSingleType(ctx, y.KnownType(), y); err != nil {
-			errs = append(moreErrs, err)
-		} else {
-			yok = true
-		}
-	}
-	errs = append(errs, moreErrs...)
-	if !(xok && yok) {
+	x, y, ok, errs := checkBinaryOperands(ctx, binary.X, binary.Y, env)
+	binary.X, binary.Y = x, y
+	if !ok {
 		return aexpr, errs
 	}
+	xt, yt := x.KnownType()[0], y.KnownType()[0]
 
 	xc, xuntyped := xt.(ConstType)
 	yc, yuntyped := yt.(ConstType)
@@ -45,8 +23,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 		if xuntyped && yuntyped {
 			yv := y.Const()
 			xv := x.Const()
-			var promoted ConstType
-			if promoted, moreErrs = promoteConsts(ctx, xc, yc, x, y, xv, yv); moreErrs != nil {
+			if promoted, moreErrs := promoteConsts(ctx, xc, yc, x, y, xv, yv); moreErrs != nil {
 				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
@@ -484,6 +461,32 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 	}
 	panic("go-interactive: impossible")
 }
+
+func checkBinaryOperands(ctx *Ctx, xexpr, yexpr ast.Expr, env *Env) (Expr, Expr, bool, []error) {
+	var xok, yok bool
+	var err error
+
+	x, errs := CheckExpr(ctx, xexpr, env)
+	if errs == nil || x.IsConst() {
+		if _, err = expectSingleType(ctx, x.KnownType(), x); err != nil {
+			errs = append(errs, err)
+		} else {
+			xok = true
+		}
+	}
+
+	y, moreErrs := CheckExpr(ctx, yexpr, env)
+	if moreErrs == nil || y.IsConst() {
+		if _, err = expectSingleType(ctx, y.KnownType(), y); err != nil {
+			errs = append(moreErrs, err)
+		} else {
+			yok = true
+		}
+	}
+	errs = append(errs, moreErrs...)
+	return x, y, xok && yok, errs
+}
+
 
 func wrapConcreteTypeWithInterface(operand Expr, interfaceT reflect.Type) Expr {
 	// Rig the token positions to such that typeConv.(Len|Pos) match operand
