@@ -12232,3 +12232,2421 @@ func TestCheckCompositeLitExprSliceCKIntCKInt(t *testing.T) {
 	)
 
 }
+
+// Test Map{}
+func TestCheckCompositeLitExprMapXX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectType(t, `map[int] int{}`, env, reflect.TypeOf(map[int] int{}))
+}
+
+// Test Map{1}
+func TestCheckCompositeLitExprMapXInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{"a"}
+func TestCheckCompositeLitExprMapXString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{"a"}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil}
+func TestCheckCompositeLitExprMapXNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: 1}
+func TestCheckCompositeLitExprMapXIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectType(t, `map[int] int{1: 1}`, env, reflect.TypeOf(map[int] int{1: 1}))
+}
+
+// Test Map{1: "a"}
+func TestCheckCompositeLitExprMapXIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: "a"}`, env,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{float32(1.5): 1}
+func TestCheckCompositeLitExprMapXFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.5): 1}`, env,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{a: 1}
+func TestCheckCompositeLitExprMapXAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1}`, env,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{a: "a"}
+func TestCheckCompositeLitExprMapXAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: "a"}`, env,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{b: 1}
+func TestCheckCompositeLitExprMapXBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1}`, env,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{c: 1}
+func TestCheckCompositeLitExprMapXCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1}`, env,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{1}
+func TestCheckCompositeLitExprMapIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1, 1}
+func TestCheckCompositeLitExprMapIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, 1}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1, "a"}
+func TestCheckCompositeLitExprMapIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, "a"}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1, nil}
+func TestCheckCompositeLitExprMapIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, nil}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1, 1: 1}
+func TestCheckCompositeLitExprMapIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, 1: 1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1, 1: "a"}
+func TestCheckCompositeLitExprMapIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, 1: "a"}`, env,
+		`missing key in map literal`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, float32(1.5): 1}`, env,
+		`missing key in map literal`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{1, a: 1}
+func TestCheckCompositeLitExprMapIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, a: 1}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{1, a: "a"}
+func TestCheckCompositeLitExprMapIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, a: "a"}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1, b: 1}
+func TestCheckCompositeLitExprMapIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, b: 1}`, env,
+		`missing key in map literal`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{1, c: 1}
+func TestCheckCompositeLitExprMapIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1, c: 1}`, env,
+		`missing key in map literal`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{nil}
+func TestCheckCompositeLitExprMapNilX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil, 1}
+func TestCheckCompositeLitExprMapNilInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, 1}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil, "a"}
+func TestCheckCompositeLitExprMapNilString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, "a"}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil, nil}
+func TestCheckCompositeLitExprMapNilNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, nil}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil, 1: 1}
+func TestCheckCompositeLitExprMapNilIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, 1: 1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{nil, 1: "a"}
+func TestCheckCompositeLitExprMapNilIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, 1: "a"}`, env,
+		`missing key in map literal`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{nil, float32(1.5): 1}
+func TestCheckCompositeLitExprMapNilFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, float32(1.5): 1}`, env,
+		`missing key in map literal`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{nil, a: 1}
+func TestCheckCompositeLitExprMapNilAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, a: 1}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{nil, a: "a"}
+func TestCheckCompositeLitExprMapNilAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, a: "a"}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{nil, b: 1}
+func TestCheckCompositeLitExprMapNilBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, b: 1}`, env,
+		`missing key in map literal`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{nil, c: 1}
+func TestCheckCompositeLitExprMapNilCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{nil, c: 1}`, env,
+		`missing key in map literal`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{true}
+func TestCheckCompositeLitExprMapBoolX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{true, 1}
+func TestCheckCompositeLitExprMapBoolInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, 1}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{true, "a"}
+func TestCheckCompositeLitExprMapBoolString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, "a"}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{true, nil}
+func TestCheckCompositeLitExprMapBoolNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, nil}`, env,
+		`missing key in map literal`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{true, 1: 1}
+func TestCheckCompositeLitExprMapBoolIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, 1: 1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{true, 1: "a"}
+func TestCheckCompositeLitExprMapBoolIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, 1: "a"}`, env,
+		`missing key in map literal`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{true, float32(1.5): 1}
+func TestCheckCompositeLitExprMapBoolFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, float32(1.5): 1}`, env,
+		`missing key in map literal`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{true, a: 1}
+func TestCheckCompositeLitExprMapBoolAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, a: 1}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{true, a: "a"}
+func TestCheckCompositeLitExprMapBoolAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, a: "a"}`, env,
+		`missing key in map literal`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{true, b: 1}
+func TestCheckCompositeLitExprMapBoolBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, b: 1}`, env,
+		`missing key in map literal`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{true, c: 1}
+func TestCheckCompositeLitExprMapBoolCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{true, c: 1}`, env,
+		`missing key in map literal`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{1: 1}
+func TestCheckCompositeLitExprMapIntKIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectType(t, `map[int] int{1: 1}`, env, reflect.TypeOf(map[int] int{1: 1}))
+}
+
+// Test Map{1: 1, 1}
+func TestCheckCompositeLitExprMapIntKIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, 1}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: 1, "a"}
+func TestCheckCompositeLitExprMapIntKIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, "a"}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: 1, nil}
+func TestCheckCompositeLitExprMapIntKIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, nil}`, env,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: 1, 1: 1}
+func TestCheckCompositeLitExprMapIntKIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, 1: 1}`, env,
+		`duplicate key 1 in map literal`,
+	)
+
+}
+
+// Test Map{1: 1, 1: "a"}
+func TestCheckCompositeLitExprMapIntKIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, 1: "a"}`, env,
+		`duplicate key 1 in map literal`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1: 1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapIntKIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, float32(1.5): 1}`, env,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{1: 1, a: 1}
+func TestCheckCompositeLitExprMapIntKIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, a: 1}`, env,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{1: 1, a: "a"}
+func TestCheckCompositeLitExprMapIntKIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, a: "a"}`, env,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1: 1, b: 1}
+func TestCheckCompositeLitExprMapIntKIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, b: 1}`, env,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{1: 1, c: 1}
+func TestCheckCompositeLitExprMapIntKIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: 1, c: 1}`, env,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{1: true}
+func TestCheckCompositeLitExprMapIntKBoolX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true}`, env,
+		`cannot use true (type bool) as type int in map value`,
+	)
+
+}
+
+// Test Map{1: true, 1}
+func TestCheckCompositeLitExprMapIntKBoolInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: true, "a"}
+func TestCheckCompositeLitExprMapIntKBoolString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, "a"}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: true, nil}
+func TestCheckCompositeLitExprMapIntKBoolNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, nil}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{1: true, 1: 1}
+func TestCheckCompositeLitExprMapIntKBoolIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, 1: 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`duplicate key 1 in map literal`,
+	)
+
+}
+
+// Test Map{1: true, 1: "a"}
+func TestCheckCompositeLitExprMapIntKBoolIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, 1: "a"}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`duplicate key 1 in map literal`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1: true, float32(1.5): 1}
+func TestCheckCompositeLitExprMapIntKBoolFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, float32(1.5): 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{1: true, a: 1}
+func TestCheckCompositeLitExprMapIntKBoolAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, a: 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{1: true, a: "a"}
+func TestCheckCompositeLitExprMapIntKBoolAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, a: "a"}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{1: true, b: 1}
+func TestCheckCompositeLitExprMapIntKBoolBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, b: 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{1: true, c: 1}
+func TestCheckCompositeLitExprMapIntKBoolCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{1: true, c: 1}`, env,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1}
+func TestCheckCompositeLitExprMapFloatKIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, 1}
+func TestCheckCompositeLitExprMapFloatKIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, "a"}
+func TestCheckCompositeLitExprMapFloatKIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, "a"}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, nil}
+func TestCheckCompositeLitExprMapFloatKIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, nil}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, 1: 1}
+func TestCheckCompositeLitExprMapFloatKIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, 1: 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, 1: "a"}
+func TestCheckCompositeLitExprMapFloatKIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, 1: "a"}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapFloatKIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, float32(1.5): 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, a: 1}
+func TestCheckCompositeLitExprMapFloatKIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, a: 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, a: "a"}
+func TestCheckCompositeLitExprMapFloatKIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, a: "a"}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, b: 1}
+func TestCheckCompositeLitExprMapFloatKIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, b: 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{float32(1.4): 1, c: 1}
+func TestCheckCompositeLitExprMapFloatKIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{float32(1.4): 1, c: 1}`, env,
+		`cannot use float32(1.4) (type float32) as type int in map key`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{a: 1}
+func TestCheckCompositeLitExprMapAKIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1}`, env,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{a: 1, 1}
+func TestCheckCompositeLitExprMapAKIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, 1}`, env,
+		`undefined: a`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: 1, "a"}
+func TestCheckCompositeLitExprMapAKIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, "a"}`, env,
+		`undefined: a`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: 1, nil}
+func TestCheckCompositeLitExprMapAKIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, nil}`, env,
+		`undefined: a`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: 1, 1: 1}
+func TestCheckCompositeLitExprMapAKIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, 1: 1}`, env,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{a: 1, 1: "a"}
+func TestCheckCompositeLitExprMapAKIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, 1: "a"}`, env,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: 1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapAKIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, float32(1.5): 1}`, env,
+		`undefined: a`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{a: 1, a: 1}
+func TestCheckCompositeLitExprMapAKIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, a: 1}`, env,
+		`undefined: a`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{a: 1, a: "a"}
+func TestCheckCompositeLitExprMapAKIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, a: "a"}`, env,
+		`undefined: a`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: 1, b: 1}
+func TestCheckCompositeLitExprMapAKIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, b: 1}`, env,
+		`undefined: a`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{a: 1, c: 1}
+func TestCheckCompositeLitExprMapAKIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: 1, c: 1}`, env,
+		`undefined: a`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{a: true}
+func TestCheckCompositeLitExprMapAKBoolX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: true, 1}
+func TestCheckCompositeLitExprMapAKBoolInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: true, "a"}
+func TestCheckCompositeLitExprMapAKBoolString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, "a"}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: true, nil}
+func TestCheckCompositeLitExprMapAKBoolNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, nil}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{a: true, 1: 1}
+func TestCheckCompositeLitExprMapAKBoolIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, 1: 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: true, 1: "a"}
+func TestCheckCompositeLitExprMapAKBoolIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, 1: "a"}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: true, float32(1.5): 1}
+func TestCheckCompositeLitExprMapAKBoolFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, float32(1.5): 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{a: true, a: 1}
+func TestCheckCompositeLitExprMapAKBoolAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, a: 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{a: true, a: "a"}
+func TestCheckCompositeLitExprMapAKBoolAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, a: "a"}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{a: true, b: 1}
+func TestCheckCompositeLitExprMapAKBoolBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, b: 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{a: true, c: 1}
+func TestCheckCompositeLitExprMapAKBoolCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{a: true, c: 1}`, env,
+		`undefined: a`,
+		`cannot use true (type bool) as type int in map value`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{b: 1}
+func TestCheckCompositeLitExprMapBKIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1}`, env,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{b: 1, 1}
+func TestCheckCompositeLitExprMapBKIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, 1}`, env,
+		`undefined: b`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{b: 1, "a"}
+func TestCheckCompositeLitExprMapBKIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, "a"}`, env,
+		`undefined: b`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{b: 1, nil}
+func TestCheckCompositeLitExprMapBKIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, nil}`, env,
+		`undefined: b`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{b: 1, 1: 1}
+func TestCheckCompositeLitExprMapBKIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, 1: 1}`, env,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{b: 1, 1: "a"}
+func TestCheckCompositeLitExprMapBKIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, 1: "a"}`, env,
+		`undefined: b`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{b: 1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapBKIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, float32(1.5): 1}`, env,
+		`undefined: b`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{b: 1, a: 1}
+func TestCheckCompositeLitExprMapBKIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, a: 1}`, env,
+		`undefined: b`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{b: 1, a: "a"}
+func TestCheckCompositeLitExprMapBKIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, a: "a"}`, env,
+		`undefined: b`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{b: 1, b: 1}
+func TestCheckCompositeLitExprMapBKIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, b: 1}`, env,
+		`undefined: b`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{b: 1, c: 1}
+func TestCheckCompositeLitExprMapBKIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{b: 1, c: 1}`, env,
+		`undefined: b`,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{c: 1}
+func TestCheckCompositeLitExprMapCKIntX(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1}`, env,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{c: 1, 1}
+func TestCheckCompositeLitExprMapCKIntInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, 1}`, env,
+		`undefined: c`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{c: 1, "a"}
+func TestCheckCompositeLitExprMapCKIntString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, "a"}`, env,
+		`undefined: c`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{c: 1, nil}
+func TestCheckCompositeLitExprMapCKIntNil(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, nil}`, env,
+		`undefined: c`,
+		`missing key in map literal`,
+	)
+
+}
+
+// Test Map{c: 1, 1: 1}
+func TestCheckCompositeLitExprMapCKIntIntKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, 1: 1}`, env,
+		`undefined: c`,
+	)
+
+}
+
+// Test Map{c: 1, 1: "a"}
+func TestCheckCompositeLitExprMapCKIntIntKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, 1: "a"}`, env,
+		`undefined: c`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{c: 1, float32(1.5): 1}
+func TestCheckCompositeLitExprMapCKIntFloatKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, float32(1.5): 1}`, env,
+		`undefined: c`,
+		`cannot use float32(1.5) (type float32) as type int in map key`,
+	)
+
+}
+
+// Test Map{c: 1, a: 1}
+func TestCheckCompositeLitExprMapCKIntAKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, a: 1}`, env,
+		`undefined: c`,
+		`undefined: a`,
+	)
+
+}
+
+// Test Map{c: 1, a: "a"}
+func TestCheckCompositeLitExprMapCKIntAKString(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, a: "a"}`, env,
+		`undefined: c`,
+		`undefined: a`,
+		`cannot convert "a" to type int`,
+		`cannot use "a" (type string) as type int in map value`,
+	)
+
+}
+
+// Test Map{c: 1, b: 1}
+func TestCheckCompositeLitExprMapCKIntBKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, b: 1}`, env,
+		`undefined: c`,
+		`undefined: b`,
+	)
+
+}
+
+// Test Map{c: 1, c: 1}
+func TestCheckCompositeLitExprMapCKIntCKInt(t *testing.T) {
+	type a1 [1]int
+	type a2 [2]int
+	type s1 struct{ a int }
+	type s2 struct{ a, b int }
+	env := makeEnv()
+	env.Types["a1"] = reflect.TypeOf(a1{})
+	env.Types["a2"] = reflect.TypeOf(a2{})
+	env.Types["s1"] = reflect.TypeOf(s1{})
+	env.Types["s2"] = reflect.TypeOf(s2{})
+
+
+	expectCheckError(t, `map[int] int{c: 1, c: 1}`, env,
+		`undefined: c`,
+		`undefined: c`,
+	)
+
+}
