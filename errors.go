@@ -162,6 +162,29 @@ type ErrUntypedNil struct {
 	ErrorContext
 }
 
+type ErrUncomparableMapKey struct {
+	ErrorContext
+	keyT reflect.Type
+}
+
+type ErrMissingMapKey struct {
+	ErrorContext
+}
+
+type ErrBadMapKey struct {
+	ErrorContext
+	keyT reflect.Type
+}
+
+type ErrDuplicateMapKey struct {
+	ErrorContext
+}
+
+type ErrBadMapValue struct {
+	ErrorContext
+	eltT reflect.Type
+}
+
 type ErrBadArrayKey struct {
 	ErrorContext
 }
@@ -570,6 +593,39 @@ func (err ErrOverflowedConstant) Error() string {
 
 func (ErrUntypedNil) Error() string {
 	return "use of untyped nil"
+}
+
+func (err ErrUncomparableMapKey) Error() string {
+	return fmt.Sprintf("invalid map key type %v", err.keyT)
+}
+
+func (err ErrMissingMapKey) Error() string {
+	return "missing key in map literal"
+}
+
+func (err ErrBadMapKey) Error() string {
+	expr := err.Node.(Expr)
+	t := expr.KnownType()[0]
+	if t == ConstNil {
+		return fmt.Sprintf("cannot use nil as type %v in map key", err.keyT)
+	}
+	return fmt.Sprintf("cannot use %v (type %v) as type %v in map key",
+		expr, t, err.keyT)
+}
+
+func (err ErrDuplicateMapKey) Error() string {
+	key := err.Node.(Expr)
+	return fmt.Sprintf("duplicate key %v in map literal", key)
+}
+
+func (err ErrBadMapValue) Error() string {
+	expr := err.Node.(Expr)
+	t := expr.KnownType()[0]
+	if t == ConstNil {
+		return fmt.Sprintf("cannot use nil as type %v in map value", err.eltT)
+	}
+	return fmt.Sprintf("cannot use %v (type %v) as type %v in map value",
+		expr, t, err.eltT)
 }
 
 func (ErrBadArrayKey) Error() string {

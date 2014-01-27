@@ -515,6 +515,17 @@ func isAddressableOrCompositeLit(expr Expr) bool {
 	}
 }
 
+func isStaticTypeComparable(t reflect.Type) bool {
+	switch t.Kind() {
+	case reflect.Slice, reflect.Map, reflect.Func:
+		return false
+	case reflect.Struct:
+		return isStructComparable(t)
+	default:
+		return true
+	}
+}
+
 func isStructComparable(structT reflect.Type) bool {
 	_, ok := nonComparableField(structT)
 	return !ok
@@ -527,8 +538,7 @@ func nonComparableField(structT reflect.Type) (reflect.StructField, bool) {
 		if field.Name == "_" {
 			continue
 		}
-		k := field.Type.Kind()
-		if k == reflect.Slice || k == reflect.Map || k == reflect.Chan {
+		if !isStaticTypeComparable(field.Type) {
 			return field, true
 		}
 	}

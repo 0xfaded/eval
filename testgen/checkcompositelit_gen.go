@@ -53,7 +53,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"S1", "s1"},
 		{"S2", "s2"},
 		{"Slice", "[]int"},
-		//{"Map", "map[int] int"},
+		{"Map", "map[int] int"},
 	}
 	arg0 := []testgen.Element{
 		{"X", ""},
@@ -86,6 +86,10 @@ func (*Test) Dimensions() []testgen.Dimension {
 		arg0,
 		arg1,
 	}
+}
+
+func (*Test) Globals(w io.Writer) error {
+	return nil
 }
 
 func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
@@ -129,8 +133,8 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	}
 
 	n0, n1, n2 := elts[0].Name, elts[1].Name, elts[2].Name
-	n2HasKey := !(n2 == "X" || n2 == "Int" || n2 == "String" || n2 == "Bool" || n2 == "Nil")
 	n1HasKey := !(n1 == "X" || n1 == "Int" || n1 == "String" || n1 == "Bool" || n1 == "Nil")
+	n2HasKey := !(n2 == "X" || n2 == "Int" || n2 == "String" || n2 == "Bool" || n2 == "Nil")
 	seenBadArrayIndex := false
 	testErrs := true
 	for i := 0; i < len(compileErrs); i += 1 {
@@ -185,6 +189,19 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		n1HasKey && n2HasKey &&
 		n1 != "IntKInt" && n1 != "IntKBool" && n2 != "IntKInt" && n2 != "IntKBool" {
 		compileErrs = append(compileErrs, compileErrs[1])
+	}
+	if len(compileErrs) > 0 && n0 == "Map" && !n1HasKey && !n2HasKey &&
+		n1 != "X" && n2 != "X" && !(n1 == "Nil" && n2 == "Nil") {
+		compileErrs = append(compileErrs, compileErrs[0])
+	}
+	if len(compileErrs) == 1 && n0 == "Map" && n1HasKey && n2HasKey &&
+		strings.HasPrefix(compileErrs[0], "undefined") &&
+		n1[0] == n2[0] {
+
+		compileErrs = append(compileErrs[:1], append([]string{compileErrs[0]}, compileErrs[1:]...)...)
+	}
+	if n0 == "Map" && n1 == "AKInt" && n2 == "AKString" {
+		compileErrs = append(compileErrs[:1], append([]string{compileErrs[0]}, compileErrs[1:]...)...)
 	}
 	vars := map[string] interface{} {
 		"Expr": expr,

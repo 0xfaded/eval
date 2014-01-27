@@ -20,7 +20,7 @@ func checkTypeAssertExpr(ctx *Ctx, assert *ast.TypeAssertExpr, env *Env) (*TypeA
 	} else if xT.Kind() != reflect.Interface {
 		errs = append(errs, ErrInvalidTypeAssert{at(ctx, aexpr)})
 	} else {
-		typ, t, moreErrs := checkType(ctx, assert.Type, env)
+		typ, t, _, moreErrs := checkType(ctx, assert.Type, env)
 		aexpr.Type = typ
 		if moreErrs != nil {
 			errs = append(errs, moreErrs...)

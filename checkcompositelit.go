@@ -19,7 +19,7 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 	// The caller will need to detect the type incompatibility.
 	if lit.Type != nil {
 		var errs []error
-		lit.Type, t, errs = checkType(ctx, lit.Type, env)
+		lit.Type, t, _, errs = checkType(ctx, lit.Type, env)
 		if errs != nil {
 			return alit, errs
 		}
@@ -30,7 +30,8 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 	alit.knownType = knownType{t}
 
 	switch t.Kind() {
-	//case reflect.Map:
+	case reflect.Map:
+		return checkCompositeLitMap(ctx, alit, t, env)
 	case reflect.Array, reflect.Slice:
 		return checkCompositeLitArrayOrSlice(ctx, alit, t, env)
 	case reflect.Struct:
@@ -38,6 +39,66 @@ func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *En
 	default:
 		panic("eval: unimplemented composite lit " + t.Kind().String())
 	}
+}
+
+func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+	var errs, moreErrs []error
+
+	kT := t.Key()
+
+	// Don't check for duplicate interface{} keys. This is a gc bug
+	// http://code.google.com/p/go/issues/detail?id=7214
+	var seen map[interface{}] bool
+	if kT.Kind() != reflect.Interface {
+		seen = make(map[interface{}] bool, len(lit.Elts))
+	}
+	eltT := t.Elem()
+
+	for i := range lit.Elts {
+		if kv, ok := lit.Elts[i].(*ast.KeyValueExpr); !ok {
+			lit.Elts[i], moreErrs = CheckExpr(ctx, lit.Elts[i], env)
+			if moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			}
+			errs = append(errs, ErrMissingMapKey{at(ctx, lit.Elts[i])})
+		} else {
+			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
+			k, conversionFailed, moreErrs := checkExprAssignableTo(ctx, kv.Key, kT, env)
+			if conversionFailed {
+				if len(k.KnownType()) != 0 {
+					kF := fakeCheckExpr(kv.Key, env)
+					kF.setKnownType(knownType(k.KnownType()))
+					errs = append(errs, ErrBadMapKey{at(ctx, kF), kT})
+				}
+			} else {
+				errs = append(errs, moreErrs...)
+			}
+			kv.Key = k
+
+			if seen != nil && k.IsConst() {
+				var constKey interface{}
+				if k.KnownType()[0] == ConstNil {
+					constKey = nil
+				} else if cT, ok := k.KnownType()[0].(ConstType); ok {
+					c, _ := promoteConstToTyped(ctx, cT, constValue(k.Const()),
+						cT.DefaultPromotion(), k)
+					constKey = reflect.Value(c).Interface()
+				} else {
+					constKey = k.Const().Interface()
+				}
+				if seen[constKey] {
+					errs = append(errs, ErrDuplicateMapKey{at(ctx, kv.Key)})
+				}
+				seen[constKey] = true
+			}
+			v, moreErrs := checkMapValue(ctx, kv.Value, eltT, env)
+			if moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			}
+			kv.Value = v
+		}
+	}
+	return lit, errs
 }
 
 func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
@@ -190,6 +251,32 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 		}
 	}
 	return lit, errs
+}
+
+func checkMapValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+	switch eltT.Kind() {
+	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
+		if lit, ok := expr.(*ast.CompositeLit); ok {
+			return checkCompositeLitR(ctx, lit, eltT, env)
+		}
+	}
+
+	aexpr, conversionFailed, errs := checkExprAssignableTo(ctx, expr, eltT, env)
+	if conversionFailed {
+		// NOTE[crc] this hack removes conversion errors from consts other
+		// than strings and nil to match the output of gc.
+		if ccerr, ok := errs[0].(ErrBadConstConversion); ok {
+			if ccerr.from == ConstNil {
+				// No ErrBadMapValue for nil
+				return aexpr, errs
+			} else if ccerr.from != ConstString {
+				// gc implementation only displays string conversion errors
+				errs = nil
+			}
+		}
+		errs = append(errs, ErrBadMapValue{at(ctx, aexpr), eltT})
+	}
+	return aexpr, errs
 }
 
 func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {

@@ -56,7 +56,7 @@ func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	}
 }
 
-func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, []error) {
+func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []error) {
 	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
 		expr = parens.X
 	}
@@ -64,55 +64,68 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, []error) 
 	case *ast.Ident:
 		ident := &Ident{Ident: node}
 		if t, ok := env.Types[node.Name]; ok {
-			return ident, t, nil
+			return ident, t, true, nil
 		} else if t, ok := builtinTypes[node.Name]; ok {
-			return ident, t, nil
+			return ident, t, true, nil
 		} else {
-			return ident, nil, []error{ErrUndefined{at(ctx, ident)}}
+			return ident, nil, false, []error{ErrUndefined{at(ctx, ident)}}
 		}
 	case *ast.StarExpr:
 		star := &StarExpr{StarExpr: node}
-		elem, elemT, errs := checkType(ctx, node.X, env)
+		elem, elemT, isType, errs := checkType(ctx, node.X, env)
 		star.X = elem
 		if errs != nil {
-			return star, nil, errs
+			return star, nil, isType, errs
 		} else {
-			return star, reflect.PtrTo(elemT), nil
+			return star, reflect.PtrTo(elemT), isType, nil
 		}
 	case *ast.ArrayType:
 		arrayT := &ArrayType{ArrayType: node}
 		if node.Len != nil {
-			return arrayT, nil, []error{errors.New("array types not implemented")}
+			return arrayT, nil, true, []error{errors.New("array types not implemented")}
 		} else {
-			elt, eltT, errs := checkType(ctx, node.Elt, env);
+			elt, eltT, _, errs := checkType(ctx, node.Elt, env);
 			arrayT.Elt = elt
 			if errs != nil {
-				return arrayT, nil, errs
+				return arrayT, nil, true, errs
 			} else {
-				return arrayT, reflect.SliceOf(eltT), nil
+				return arrayT, reflect.SliceOf(eltT), true, nil
 			}
 		}
 	case *ast.StructType:
 		structT := &StructType{StructType: node}
-		return structT, nil, []error{errors.New("struct types not implemented")}
+		return structT, nil, true, []error{errors.New("struct types not implemented")}
 	case *ast.FuncType:
 		funcT := &FuncType{FuncType: node}
-		return funcT, nil, []error{errors.New("func types not implemented")}
+		return funcT, nil, true, []error{errors.New("func types not implemented")}
 	case *ast.InterfaceType:
 		interfaceT := &InterfaceType{InterfaceType: node}
 		// Allow interface{}'s
 		if node.Methods.List == nil {
-			return interfaceT, emptyInterface, nil
+			return interfaceT, emptyInterface, true, nil
 		}
-		return interfaceT, nil, []error{errors.New("interface types not implemented")}
+		return interfaceT, nil, true, []error{errors.New("interface types not implemented")}
 	case *ast.MapType:
 		mapT := &MapType{MapType: node}
-		return mapT, nil, []error{errors.New("map types not implemented")}
+		keyT, k, _, errs := checkType(ctx, mapT.Key, env)
+		mapT.Key = keyT
+		if k != nil && !isStaticTypeComparable(k) {
+			errs = append(errs, ErrUncomparableMapKey{at(ctx, node), k})
+		}
+		valueT, v, _, moreErrs := checkType(ctx, mapT.Value, env)
+		mapT.Value = valueT
+		if moreErrs != nil {
+			errs = append(errs, moreErrs...)
+		}
+		if errs == nil {
+			return mapT, reflect.MapOf(k, v), true, nil
+		}
+		return mapT, nil, true, errs
 	case *ast.ChanType:
 		chanT := &ChanType{ChanType: node}
-		return chanT, nil, []error{errors.New("chan types not implemented")}
+		return chanT, nil, true, []error{errors.New("chan types not implemented")}
 	}
 	// Note this error should never be shown to the user. It is used to detect
 	// when a CallExpr is a type conversion
-	return nil, nil, []error{errors.New("Bad type")}
+	return nil, nil, false, []error{errors.New("Bad type")}
 }

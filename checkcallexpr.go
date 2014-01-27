@@ -27,7 +27,10 @@ func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr,
 
 	// First check if this expression is a type cast
 	// Otherwise, assume a function call
-	if typ, to, errs := checkType(ctx, acall.Fun, env); errs == nil {
+	if typ, to, isType, moreErrs := checkType(ctx, acall.Fun, env); isType {
+		if moreErrs != nil {
+			return acall, append(errs, moreErrs...)
+		}
 		acall.Fun = typ
 		return checkCallTypeExpr(ctx, acall, to, env)
 	} else {
@@ -79,7 +82,7 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 	} else if ident.Name == "new" {
 		if len(call.Args) != 1 {
 			return call, []error{errors.New("new wrong number args")}, true
-		} else if _, of, errs := checkType(ctx, call.Args[0], env); errs != nil {
+		} else if _, of, _, errs := checkType(ctx, call.Args[0], env); errs != nil {
 			return call, append(errs, errors.New("new bad type")), true
 		} else {
 			call.Fun = &Ident{Ident: ident}
