@@ -162,6 +162,10 @@ type ErrUntypedNil struct {
 	ErrorContext
 }
 
+type ErrTypeUsedAsExpression struct {
+	ErrorContext
+}
+
 type ErrUncomparableMapKey struct {
 	ErrorContext
 	keyT reflect.Type
@@ -593,6 +597,11 @@ func (err ErrOverflowedConstant) Error() string {
 
 func (ErrUntypedNil) Error() string {
 	return "use of untyped nil"
+}
+
+func (err ErrTypeUsedAsExpression) Error() string {
+	t := err.Node.(Expr)
+	return fmt.Sprintf("type %v is not an expression", t)
 }
 
 func (err ErrUncomparableMapKey) Error() string {

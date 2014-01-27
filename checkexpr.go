@@ -18,6 +18,10 @@ import (
 // if expr.IsConst() is true, then the resulting Expr has been successfully
 // checked, regardless of if errors are present.
 func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
+	if t, _, isType, _ := checkType(ctx, expr, env); isType {
+		return t, []error{ErrTypeUsedAsExpression{at(ctx, t)}}
+	}
+
 	switch expr := expr.(type) {
 	case *ast.BadExpr:
 		return &BadExpr{BadExpr: expr}, nil
