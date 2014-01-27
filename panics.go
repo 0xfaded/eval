@@ -22,6 +22,9 @@ type PanicInterfaceConversion struct {
 type PanicUncomparableType struct {
 	dynamicT reflect.Type
 }
+type PanicUnhashableType struct {
+	dynamicT reflect.Type
+}
 
 func (err PanicDivideByZero) Error() string {
         return "runtime error: integer divide by zero"
@@ -62,4 +65,8 @@ func (err PanicInterfaceConversion) Error() string {
 
 func (err PanicUncomparableType) Error() string {
         return fmt.Sprintf("runtime error: comparing uncomparable type %v", err.dynamicT)
+}
+
+func (err PanicUnhashableType) Error() string {
+        return fmt.Sprintf("runtime error: hash of unhashable type %v", err.dynamicT)
 }

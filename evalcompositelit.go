@@ -10,7 +10,8 @@ func evalCompositeLit(ctx *Ctx, lit *CompositeLit, env *Env) (reflect.Value, err
 	t := lit.KnownType()[0]
 
 	switch t.Kind() {
-	//case reflect.Map:
+	case reflect.Map:
+		return evalCompositeLitMap(ctx, t, lit, env)
 	case reflect.Array, reflect.Slice:
 		return evalCompositeLitArrayOrSlice(ctx, t, lit, env)
 	case reflect.Struct:
@@ -18,6 +19,33 @@ func evalCompositeLit(ctx *Ctx, lit *CompositeLit, env *Env) (reflect.Value, err
 	default:
 		return reflect.Value{}, errors.New(fmt.Sprintf("eval: unimplemented type for composite literal %s", t.Name()))
 	}
+}
+
+func evalCompositeLitMap(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *Env) (reflect.Value, error) {
+
+	m := reflect.MakeMap(t)
+
+	kT := knownType{t.Key()}
+	vT := knownType{t.Elem()}
+	for _, elt := range lit.Elts {
+		kv := elt.(*KeyValueExpr)
+		k, err := evalTypedExpr(ctx, kv.Key.(Expr), kT, env)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		if kT[0].Kind() == reflect.Interface {
+			dynamicT := k[0].Elem().Type()
+			if !isStaticTypeComparable(dynamicT) {
+				return reflect.Value{}, PanicUnhashableType{dynamicT}
+			}
+		}
+		v, err := evalTypedExpr(ctx, kv.Value.(Expr), vT, env)
+		if err != nil {
+			return reflect.Value{}, err
+		}
+		m.SetMapIndex(k[0], v[0])
+	}
+	return m, nil
 }
 
 func evalCompositeLitArrayOrSlice(ctx *Ctx, t reflect.Type, lit *CompositeLit, env *Env) (reflect.Value, error) {
