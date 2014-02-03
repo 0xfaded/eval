@@ -77,7 +77,10 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 	case *ast.StarExpr:
 		star := &StarExpr{StarExpr: node}
 		elem, elemT, isType, errs := checkType(ctx, node.X, env)
-		star.X = elem
+		if isType {
+			// Only set X if X is a type, as * can be part of an expression or type
+			star.X = elem
+		}
 		if errs != nil {
 			return star, nil, isType, errs
 		} else {
