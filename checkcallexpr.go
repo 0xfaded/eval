@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"errors"
 	"reflect"
 	"go/ast"
 	"go/token"

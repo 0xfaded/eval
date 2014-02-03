@@ -23,8 +23,7 @@ func checkBinaryExpr(ctx *Ctx, binary *ast.BinaryExpr, env *Env) (*BinaryExpr, [
 		if xuntyped && yuntyped {
 			yv := y.Const()
 			xv := x.Const()
-			var promoted ConstType
-			if promoted, moreErrs = promoteConsts(ctx, xc, yc, x, y, xv, yv); moreErrs != nil {
+			if promoted, moreErrs := promoteConsts(ctx, xc, yc, x, y, xv, yv); moreErrs != nil {
 				errs = append(errs, moreErrs...)
 				errs = append(errs, ErrInvalidBinaryOperation{at(ctx, aexpr)})
 			} else {
@@ -463,23 +462,22 @@ func evalConstTypedBinaryExpr(ctx *Ctx, binary *BinaryExpr, xexpr, yexpr Expr) (
 	panic("go-interactive: impossible")
 }
 
-func checkBinaryOperands(ctx, yexpr, xexpr ast.Expr, env *Env) (Expr, Expr, bool, errs) {
+func checkBinaryOperands(ctx *Ctx, xexpr, yexpr ast.Expr, env *Env) (Expr, Expr, bool, []error) {
 	var xok, yok bool
-	var xt, yt reflect.Type
 	var err error
 
-	x, errs := CheckExpr(ctx, binary.X, env)
+	x, errs := CheckExpr(ctx, xexpr, env)
 	if errs == nil || x.IsConst() {
-		if xt, err = expectSingleType(ctx, x.KnownType(), x); err != nil {
+		if _, err = expectSingleType(ctx, x.KnownType(), x); err != nil {
 			errs = append(errs, err)
 		} else {
 			xok = true
 		}
 	}
 
-	y, moreErrs := CheckExpr(ctx, binary.Y, env)
+	y, moreErrs := CheckExpr(ctx, yexpr, env)
 	if moreErrs == nil || y.IsConst() {
-		if yt, err = expectSingleType(ctx, y.KnownType(), y); err != nil {
+		if _, err = expectSingleType(ctx, y.KnownType(), y); err != nil {
 			errs = append(moreErrs, err)
 		} else {
 			yok = true

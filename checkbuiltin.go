@@ -4,38 +4,47 @@ import (
 	"reflect"
 
 	"go/ast"
+	"go/token"
 )
 
 func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error, bool) {
 	var errs []error
 	ident, ok := call.Fun.(*ast.Ident)
+	if !ok {
+		return call, nil, false
+	}
 	switch ident.Name {
 	case "complex":
-		call, errs = checkBuiltinComplexExpr(ctx, call, env)
-	case "real", "imag":
-		call, errs = checkBuiltinRealImagExpr(ctx, call, env)
+		call, errs = checkBuiltinComplex(ctx, call, env)
+	case "real":
+		call, errs = checkBuiltinRealImag(ctx, call, env, true)
+	case "imag":
+		call, errs = checkBuiltinRealImag(ctx, call, env, false)
 	case "new":
-		call, errs = checkBuiltinNewExpr(ctx, call, env)
+		call, errs = checkBuiltinNew(ctx, call, env)
 	case "make":
-		call, errs = checkBuiltinMakeExpr(ctx, call, env)
+		call, errs = checkBuiltinMake(ctx, call, env)
 	case "len":
-		call, errs = checkBuiltinLenExpr(ctx, call, env)
+		call, errs = checkBuiltinLenCap(ctx, call, env, true)
 	case "cap":
-		call, errs = checkBuiltinCapExpr(ctx, call, env)
+		call, errs = checkBuiltinLenCap(ctx, call, env, false)
 	case "append":
-		call, errs = checkBuiltinAppendExpr(ctx, call, env)
+		call, errs = checkBuiltinAppend(ctx, call, env)
+		/*
 	case "copy":
 		call, errs = checkBuiltinCopyExpr(ctx, call, env)
 	case "delete":
 		call, errs = checkBuiltinDeleteExpr(ctx, call, env)
+		*/
 	default:
 		return call, nil, false
 	}
-	acall.Fun = &Ident{Ident: ident, isBuiltin: true}
-	return acall, errs, true
+	call.Fun = &Ident{Ident: ident}
+	call.isBuiltin = true
+	return call, errs, true
 }
 
-func checkBuiltinComplexExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	if len(call.Args) != 2 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
@@ -50,42 +59,42 @@ func checkBuiltinComplexExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []e
 	if xctok && yctok {
 		if xct.IsNumeric() && yct.IsNumeric() {
 			call.knownType = knownType{c128}
-			xc, xerrs := promoteConstToTyped(ctx, xct, reflect.Value(x.Const()), f64, x)
+			xc, xerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), f64, x)
 			if xerrs != nil {
 				errs = append(errs, xerrs...)
 			}
-			yc, yerrs := promoteConstToTyped(ctx, xct, reflect.Value(x.Const()), f64, x)
-			if yerr != nil {
+			yc, yerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), f64, x)
+			if yerrs != nil {
 				errs = append(errs, yerrs...)
 			}
 			if reflect.Value(xc).IsValid() && reflect.Value(yc).IsValid() {
-				xf = float64(reflect.Value(xc).Float())
-				yf = float64(reflect.Value(yc).Float())
+				xf := float64(reflect.Value(xc).Float())
+				yf := float64(reflect.Value(yc).Float())
 				call.constValue = constValueOf(complex(xf, yf))
 				return call, errs
 			}
 		}
 	} else if xctok {
-		if attemptBinaryConversion(yt) {
-			xc, xerrs := promoteConstToTyped(ctx, xct, reflect.Value(x.Const()), yt, x)
+		if attemptBinaryOpConversion(yt) {
+			xc, xerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), yt, x)
 			if xerrs != nil {
 				errs = append(errs, xerrs...)
 			}
 			xv := reflect.Value(xc)
 			if xv.IsValid() {
 				if yt.Kind() == reflect.Float32 {
-					call.knownType = knownType{c64}
+					call.knownType = knownType{yt}
 					if y.IsConst() {
-						xf = float32(xv.Float())
-						yf = float32(y.Const().Float())
+						xf := float32(xv.Float())
+						yf := float32(y.Const().Float())
 						call.constValue = constValueOf(complex(xf, yf))
 					}
 					return call, errs
 				} else if yt.Kind() == reflect.Float64 {
-					call.knownType = knownType{c128}
+					call.knownType = knownType{yt}
 					if y.IsConst() {
-						xf = float64(xv.Float())
-						yf = float64(y.Const().Float())
+						xf := float64(xv.Float())
+						yf := float64(y.Const().Float())
 						call.constValue = constValueOf(complex(xf, yf))
 					}
 					return call, errs
@@ -93,26 +102,26 @@ func checkBuiltinComplexExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []e
 			}
 		}
 	} else if yctok {
-		if attemptBinaryConversion(xt) {
-			yc, yerrs := promoteConstToTyped(ctx, yct, reflect.Value(y.Const()), xt, y)
+		if attemptBinaryOpConversion(xt) {
+			yc, yerrs := promoteConstToTyped(ctx, yct, constValue(y.Const()), xt, y)
 			if yerrs != nil {
 				errs = append(errs, yerrs...)
 			}
 			yv := reflect.Value(yc)
 			if yv.IsValid() {
 				if xt.Kind() == reflect.Float32 {
-					call.knownType = knownType{c64}
+					call.knownType = knownType{xt}
 					if x.IsConst() {
-						xf = float32(x.Const().Float())
-						yf = float32(yv.Float())
+						xf := float32(x.Const().Float())
+						yf := float32(yv.Float())
 						call.constValue = constValueOf(complex(xf, yf))
 					}
 					return call, errs
 				} else if xt.Kind() == reflect.Float64 {
-					call.knownType = knownType{c128}
+					call.knownType = knownType{xt}
 					if x.IsConst() {
-						xf = float64(x.Const().Float())
-						yf = float64(yv.Float())
+						xf := float64(x.Const().Float())
+						yf := float64(yv.Float())
 						call.constValue = constValueOf(complex(xf, yf))
 					}
 					return call, errs
@@ -120,19 +129,19 @@ func checkBuiltinComplexExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []e
 			}
 		}
 	} else if xt == yt {
-		if xt == reflect.Float32 {
-			call.knownType = knownType{c64}
+		if xt.Kind() == reflect.Float32 {
+			call.knownType = knownType{xt}
 			if x.IsConst() && y.IsConst() {
-				xf = float32(x.Const().Float())
-				yf = float32(y.Const().Float())
+				xf := float32(x.Const().Float())
+				yf := float32(y.Const().Float())
 				call.constValue = constValueOf(complex(xf, yf))
 			}
 			return call, errs
-		} else if xt == reflect.Float64 {
-			call.knownType = knownType{c128}
+		} else if xt.Kind() == reflect.Float64 {
+			call.knownType = knownType{xt}
 			if x.IsConst() && y.IsConst() {
-				xf = float64(x.Const().Float())
-				yf = float64(y.Const().Float())
+				xf := float64(x.Const().Float())
+				yf := float64(y.Const().Float())
 				call.constValue = constValueOf(complex(xf, yf))
 			}
 			return call, errs
@@ -161,9 +170,9 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 	}
 
 	if ct, ok := xt.(ConstType); ok {
-		xc, moreErrs := promoteConstToTyped(ctx, ct, reflect.Value(y.Const()), c128, x)
+		xc, moreErrs := promoteConstToTyped(ctx, ct, constValue(x.Const()), c128, x)
 		if moreErrs != nil {
-			errs = append(errs, yerrs...)
+			errs = append(errs, moreErrs...)
 		}
 		xv := reflect.Value(xc)
 		if xv.IsValid() {
@@ -206,7 +215,7 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 }
 
 
-func checkBuiltinNew(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr, []error) {
+func checkBuiltinNew(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	if len(call.Args) != 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
@@ -222,7 +231,7 @@ func checkBuiltinNew(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr,
 	}
 }
 
-func checkBuiltinMake(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr, []error) {
+func checkBuiltinMake(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	if len(call.Args) != 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
@@ -242,17 +251,18 @@ func checkBuiltinMake(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr
 			errs = append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
 		}
 		narg = 3
-	case reflect.Map, Chan:
+	case reflect.Map, reflect.Chan:
 		narg = 2
 	default:
-		return call, append(errs, ErrCannotMake{at(ctx, call.Args[0]), of})
+		return call, append(errs, ErrMakeBadType{at(ctx, call.Args[0]), of})
 	}
 	var args [3]int
 	for i := 1; i < narg && i < len(call.Args); i += 1 {
 		arg, iint, ok, moreErrs := checkInteger(ctx, call.Args[i], env)
+		call.Args[i] = arg
 		args[i] = iint
 		if moreErrs != nil {
-			errs = append(errs, moreErrs)
+			errs = append(errs, moreErrs...)
 		} else if !ok {
 			// Type check passed but is non integral
 			errs = append(errs, ErrMakeNonIntegerArg{at(ctx, call.Args[i]), call, i})
@@ -260,9 +270,9 @@ func checkBuiltinMake(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr
 	}
 	if len(call.Args) > narg {
 		errs = append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
-	} else if len(call.Args) == 3 && call.Args[1].IsConst() && call.Args[2].IsConst() {
+	} else if len(call.Args) == 3 && call.Args[1].(Expr).IsConst() && call.Args[2].(Expr).IsConst() {
 		if args[1] > args[2] {
-			errs = append(errs, ErrMakeLenGtrThanCap{at(ctx, call)})
+			errs = append(errs, ErrMakeLenGtrThanCap{at(ctx, call), args[1], args[2]})
 		}
 	}
 	return call, errs
@@ -277,14 +287,14 @@ func (found *callRecvWalker) visit(expr Expr) bool {
 		*found = true
 		return false
 	}
-	if unary, ok := expr.(*unary); ok && unary.Op == Arrow {
+	if unary, ok := expr.(*UnaryExpr); ok && unary.Op == token.ARROW {
 		*found = true
 		return false
 	}
 	return true
 }
 
-func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr, []error) {
+func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallExpr, []error) {
 	call.knownType = knownType{intType}
 	if len(call.Args) != 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
@@ -314,13 +324,13 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallEx
 		w := new(callRecvWalker)
 		walk(x, w)
 		if !*w {
-			call.constValue = xt.Len()
+			call.constValue = constValueOf(xt.Len())
 		}
 	case reflect.String:
 		if !isLen {
 			errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
 		} else if x.IsConst() {
-			call.constValue = x.Const().Len()
+			call.constValue = constValueOf(x.Const().Len())
 		}
 	default:
 		errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
@@ -328,71 +338,72 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallEx
 	return call, errs
 }
 
-func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, bool isLen) (*CallExpr, []error) {
-	call.knownType = knownType{intType}
-	if len(call.Args) != 1 {
+func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	if len(call.Args) < 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
-	x, errs := CheckExpr(ctx, call, env)
-	call.Args[0] = x
-	if errs != nil && !x.IsConst() {
+	slice, errs := CheckExpr(ctx, call.Args[0], env)
+	call.Args[0] = slice
+	if errs != nil && !slice.IsConst() {
 		return call, errs
 	}
-	xt, err := expectSingleType(ctx, x.KnownType(), x)
+	sliceT, err := expectSingleType(ctx, slice.KnownType(), slice)
 	if err != nil {
 		return call, append(errs, err)
 	}
-	switch xt.Kind() {
-	case reflect.Chan: // do nothing
-	case reflect.Slice, reflect.Map:
-		if !isLen {
-			errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
-		}
-	case reflect.Ptr:
-		xt := xt.Elem()
-		if xt.Kind() != reflect.Array {
-			break
-		}
-		fallthrough
-	case reflect.Array:
-		w := new(callRecvWalker)
-		walk(x, w)
-		if !*w {
-			call.constValue = xt.Len()
-		}
-	case reflect.String:
-		if !isLen {
-			errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
-		} else if x.IsConst() {
-			call.constValue = x.Const().Len()
-		}
-	default:
-		errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
+	if sliceT.Kind() != reflect.Slice {
+		return call, append(errs, ErrAppendFirstArgNotSlice{at(ctx, call.Args[0])})
 	}
-	return call, errs
-}
-
-	x, errs := CheckExpr(ctx, call.Args[0], env)
-	call.Args[0] = x
-		call.isBuiltin = true
-		call.knownType = knownType{intType}
-		return call, errs
-	} else if ident.Name == "append" {
-		if len(call.Args) == 0 {
-			return call, []error{errors.New("append wrong number args")}
+	call.knownType = knownType{sliceT}
+	if call.Ellipsis != token.NoPos {
+		if len(call.Args) == 1 {
+			return call, append(errs, ErrAppendFirstArgNotVariadic{at(ctx, call.Args[0])})
+		} else if len(call.Args) != 2 {
+			return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
 		} else {
-			var errs, moreErrs []error
-			for i := range call.Args {
-				if call.Args[i], moreErrs = CheckExpr(ctx, call.Args[i], env); moreErrs != nil {
-					errs = append(errs, moreErrs...)
-				}
+			arg1, moreErrs := CheckExpr(ctx, call.Args[1], env)
+			call.Args[1] = arg1
+			if moreErrs != nil && !slice.IsConst() {
+				return call, append(errs, moreErrs...)
 			}
-			call.isBuiltin = true
-			call.knownType = call.Args[0].(Expr).KnownType()
-			call.argNEllipsis = call.Ellipsis != token.NoPos
-			return call, errs
+			arg1T, err := expectSingleType(ctx, slice.KnownType(), slice)
+			if err != nil {
+				return call, append(errs, err)
+			}
+			if arg1T != sliceT {
+				return call, append(errs, ErrBuiltinWrongArgType{at(ctx, arg1), call, sliceT})
+			}
+		}
+	} else {
+		skipTypeCheck := make([]bool, len(call.Args))
+		for i, arg := range call.Args {
+			call.Args[i] = arg
+			if argI, moreErrs := CheckExpr(ctx, call.Args[i], env); moreErrs != nil {
+				errs = append(errs, moreErrs...)
+				skipTypeCheck[i] = true
+			} else if _, err := expectSingleType(ctx, argI.KnownType(), argI); err != nil {
+				errs = append(errs, err)
+				skipTypeCheck[i] = true
+			}
+		}
+		eltT := sliceT.Elem()
+		for i := 1; i < len(call.Args); i += 1 {
+			if skipTypeCheck[i] {
+				continue
+			}
+			argI := call.Args[i].(Expr)
+			if argI.IsConst() {
+				if ct, ok := argI.KnownType()[0].(ConstType); ok {
+					_, moreErrs := promoteConstToTyped(ctx, ct, constValue(argI.Const()), eltT, argI)
+					if moreErrs != nil {
+						errs = append(errs, moreErrs...)
+					}
+				}
+			} else if argI.KnownType()[0] != eltT {
+				return call, append(errs, ErrBuiltinWrongArgType{at(ctx, argI), call, eltT})
+			}
 		}
 	}
-	return call, nil, false
+	return call, errs
 }
 

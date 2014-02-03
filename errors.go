@@ -249,6 +249,52 @@ type ErrMissingCompositeLitType struct {
 	ErrorContext
 }
 
+type ErrBuiltinWrongNumberOfArgs struct {
+	ErrorContext
+}
+
+type ErrBuiltinWrongArgType struct {
+	ErrorContext
+	call *CallExpr
+	t reflect.Type
+}
+
+type ErrBuiltinMistypedArgs struct {
+	ErrorContext
+}
+
+type ErrBuiltinMismatchedArgs struct {
+	ErrorContext
+}
+
+type ErrBuiltinNonTypeArg struct {
+	ErrorContext
+}
+
+type ErrMakeBadType struct {
+	ErrorContext
+	of reflect.Type
+}
+
+type ErrMakeNonIntegerArg struct {
+	ErrorContext
+	call *CallExpr
+	i int
+}
+
+type ErrMakeLenGtrThanCap struct {
+	ErrorContext
+	length, capacity int
+}
+
+type ErrAppendFirstArgNotSlice struct {
+	ErrorContext
+}
+
+type ErrAppendFirstArgNotVariadic struct {
+	ErrorContext
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -727,6 +773,47 @@ func (err ErrImpossibleTypeAssert) Error() string {
 func (err ErrMissingCompositeLitType) Error() string {
 	return "missing type in composite literal"
 }
+
+func (err ErrBuiltinWrongNumberOfArgs) Error() string {
+	return "TODO ErrBuiltinWrongNumberOfArgs"
+}
+
+func (err ErrBuiltinWrongArgType) Error() string {
+	return "TODO ErrBuiltinWrongArgType"
+}
+
+func (err ErrBuiltinMistypedArgs) Error() string {
+	return "TODO ErrBuiltinMistypedArgs"
+}
+
+func (err ErrBuiltinMismatchedArgs) Error() string {
+	return "TODO ErrBuiltinMismatchedArgs"
+}
+
+func (err ErrBuiltinNonTypeArg) Error() string {
+	return "TODO ErrBuiltinNonTypeArg"
+}
+
+func (err ErrMakeBadType) Error() string {
+	return "TODO ErrMakeBadType"
+}
+
+func (err ErrMakeNonIntegerArg) Error() string {
+	return "TODO ErrMakeNonIntegerArg"
+}
+
+func (err ErrMakeLenGtrThanCap) Error() string {
+	return "TODO ErrMakeLenGtrThanCap"
+}
+
+func (err ErrAppendFirstArgNotSlice) Error() string {
+	return "TODO ErrAppendFirstArgNotSlice"
+}
+
+func (err ErrAppendFirstArgNotVariadic) Error() string {
+	return "TODO ErrAppendFirstArgNotVariadic"
+}
+
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
 	return ErrorContext{ctx.Input, expr}

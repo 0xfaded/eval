@@ -3,11 +3,13 @@ package eval
 import (
 	"reflect"
 
+	"fmt"
 	"go/ast"
 )
 
 func checkStarExpr(ctx *Ctx, star *ast.StarExpr, env *Env) (*StarExpr, []error) {
 	aexpr := &StarExpr{StarExpr: star}
+	fmt.Printf("%v %T\n", aexpr.X, aexpr.X)
 	x, errs := CheckExpr(ctx, aexpr.X, env)
 
 	if errs != nil && !x.IsConst() {
