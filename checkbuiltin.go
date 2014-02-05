@@ -63,7 +63,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 			if xerrs != nil {
 				errs = append(errs, xerrs...)
 			}
-			yc, yerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), f64, x)
+			yc, yerrs := promoteConstToTyped(ctx, yct, constValue(y.Const()), f64, y)
 			if yerrs != nil {
 				errs = append(errs, yerrs...)
 			}
@@ -76,14 +76,14 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 		}
 	} else if xctok {
 		if attemptBinaryOpConversion(yt) {
-			xc, xerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), yt, x)
+			xc, xerrs := promoteConstToTyped(ctx, xct, constValue(x.Const()), f64, x)
 			if xerrs != nil {
 				errs = append(errs, xerrs...)
 			}
 			xv := reflect.Value(xc)
 			if xv.IsValid() {
 				if yt.Kind() == reflect.Float32 {
-					call.knownType = knownType{yt}
+					call.knownType = knownType{c64}
 					if y.IsConst() {
 						xf := float32(xv.Float())
 						yf := float32(y.Const().Float())
@@ -91,7 +91,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 					}
 					return call, errs
 				} else if yt.Kind() == reflect.Float64 {
-					call.knownType = knownType{yt}
+					call.knownType = knownType{c128}
 					if y.IsConst() {
 						xf := float64(xv.Float())
 						yf := float64(y.Const().Float())
@@ -103,14 +103,14 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 		}
 	} else if yctok {
 		if attemptBinaryOpConversion(xt) {
-			yc, yerrs := promoteConstToTyped(ctx, yct, constValue(y.Const()), xt, y)
+			yc, yerrs := promoteConstToTyped(ctx, yct, constValue(y.Const()), f64, y)
 			if yerrs != nil {
 				errs = append(errs, yerrs...)
 			}
 			yv := reflect.Value(yc)
 			if yv.IsValid() {
 				if xt.Kind() == reflect.Float32 {
-					call.knownType = knownType{xt}
+					call.knownType = knownType{c64}
 					if x.IsConst() {
 						xf := float32(x.Const().Float())
 						yf := float32(yv.Float())
@@ -118,7 +118,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 					}
 					return call, errs
 				} else if xt.Kind() == reflect.Float64 {
-					call.knownType = knownType{xt}
+					call.knownType = knownType{c128}
 					if x.IsConst() {
 						xf := float64(x.Const().Float())
 						yf := float64(yv.Float())
@@ -130,7 +130,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 		}
 	} else if xt == yt {
 		if xt.Kind() == reflect.Float32 {
-			call.knownType = knownType{xt}
+			call.knownType = knownType{c64}
 			if x.IsConst() && y.IsConst() {
 				xf := float32(x.Const().Float())
 				yf := float32(y.Const().Float())
@@ -138,7 +138,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 			}
 			return call, errs
 		} else if xt.Kind() == reflect.Float64 {
-			call.knownType = knownType{xt}
+			call.knownType = knownType{c128}
 			if x.IsConst() && y.IsConst() {
 				xf := float64(x.Const().Float())
 				yf := float64(y.Const().Float())
@@ -159,7 +159,7 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 	if len(call.Args) != 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
-	x, errs := CheckExpr(ctx, call, env)
+	x, errs := CheckExpr(ctx, call.Args[0], env)
 	call.Args[0] = x
 	if errs != nil && !x.IsConst() {
 		return call, errs
@@ -299,7 +299,7 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallEx
 	if len(call.Args) != 1 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
-	x, errs := CheckExpr(ctx, call, env)
+	x, errs := CheckExpr(ctx, call.Args[0], env)
 	call.Args[0] = x
 	if errs != nil && !x.IsConst() {
 		return call, errs
@@ -309,8 +309,8 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallEx
 		return call, append(errs, err)
 	}
 	switch xt.Kind() {
-	case reflect.Chan: // do nothing
-	case reflect.Slice, reflect.Map:
+	case reflect.Chan, reflect.Slice: // do nothing
+	case reflect.Map:
 		if !isLen {
 			errs = append(errs, ErrBuiltinMistypedArgs{at(ctx, call)})
 		}
@@ -356,6 +356,7 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 	}
 	call.knownType = knownType{sliceT}
 	if call.Ellipsis != token.NoPos {
+		call.argNEllipsis = true
 		if len(call.Args) == 1 {
 			return call, append(errs, ErrAppendFirstArgNotVariadic{at(ctx, call.Args[0])})
 		} else if len(call.Args) != 2 {
@@ -376,9 +377,10 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 		}
 	} else {
 		skipTypeCheck := make([]bool, len(call.Args))
-		for i, arg := range call.Args {
-			call.Args[i] = arg
-			if argI, moreErrs := CheckExpr(ctx, call.Args[i], env); moreErrs != nil {
+		for i := 1; i < len(call.Args); i += 1 {
+			argI, moreErrs := CheckExpr(ctx, call.Args[i], env)
+			call.Args[i] = argI
+			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 				skipTypeCheck[i] = true
 			} else if _, err := expectSingleType(ctx, argI.KnownType(), argI); err != nil {
