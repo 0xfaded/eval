@@ -41,8 +41,8 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Imag", "imag"},
 		{"New", "new"},
 		//{"Make", "make"},
-		//{"Len", "len"},
-		//{"Cap", "cap"},
+		{"Len", "len"},
+		{"Cap", "cap"},
 		//{"Append", "append"},
 		//{"Copy", "copy"},
 		//{"Delete", "delete"},
@@ -58,7 +58,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Type", "int"},
 		{"MakeType", "map[int]int"},
 	}
-	arg1 := append(arg0, testgen.Element{"Double", "1, 1"})
+	arg1 := append(arg0, testgen.Element{"Double", "1, 1"}, testgen.Element{"Ellipsis", "[]int{1,2}..."})
 	return []testgen.Dimension{
 		builtins,
 		arg0,
@@ -128,6 +128,15 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	switch f {
 	case "Complex", "Real", "Imag":
 		expectConst = true
+	case "Len", "Cap":
+		z := x
+		if z == "X" {
+			z = y
+		}
+		switch z {
+		case "String":
+			expectConst = true
+		}
 	}
 
 	vars := map[string] interface{} {

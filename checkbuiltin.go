@@ -15,60 +15,49 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 	}
 	switch ident.Name {
 	case "complex":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinComplex(ctx, call, env)
 	case "real":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinRealImag(ctx, call, env, true)
 	case "imag":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinRealImag(ctx, call, env, false)
 	case "new":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinNew(ctx, call, env)
 	case "make":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinMake(ctx, call, env)
 	case "len":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinLenCap(ctx, call, env, true)
 	case "cap":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinLenCap(ctx, call, env, false)
 	case "append":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinAppend(ctx, call, env)
 		/*
 	case "copy":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinCopyExpr(ctx, call, env)
 	case "delete":
-		call.Fun = &Ident{Ident: ident}
-		call.isBuiltin = true
 		call, errs = checkBuiltinDeleteExpr(ctx, call, env)
 		*/
 	default:
 		return call, nil, false
 	}
+	call.Fun = &Ident{Ident: ident}
+	call.isBuiltin = true
 	return call, errs, true
 }
 
 func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
+	}
 	if len(call.Args) != 2 {
 		fakeCheckRemainingArgs(call, 0, env)
-		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
 	}
-	x, y, ok, errs := checkBinaryOperands(ctx, call.Args[0], call.Args[1], env)
+	x, y, ok, moreErrs := checkBinaryOperands(ctx, call.Args[0], call.Args[1], env)
 	call.Args[0], call.Args[1] = x, y
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
 	if !ok {
 		return call, errs
 	}
@@ -196,13 +185,20 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 }
 
 func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*CallExpr, []error) {
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
+	}
 	if len(call.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
-		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
 	}
-	x, errs := CheckExpr(ctx, call.Args[0], env)
+	x, moreErrs := CheckExpr(ctx, call.Args[0], env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
 	call.Args[0] = x
-	if errs != nil && !x.IsConst() {
+	if moreErrs != nil && !x.IsConst() {
 		return call, errs
 	}
 	xt, err := expectSingleType(ctx, x.KnownType(), x)
@@ -258,25 +254,31 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 	return call, errs
 }
 
-
 func checkBuiltinNew(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
-	if len(call.Args) == 0 {
-		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
 	}
-	x, of, isType, errs := checkType(ctx, call.Args[0], env)
+	if len(call.Args) == 0 {
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	}
+	x, of, isType, moreErrs := checkType(ctx, call.Args[0], env)
 	if !isType {
-		x, errs = CheckExpr(ctx, call.Args[0], env)
+		x, moreErrs = CheckExpr(ctx, call.Args[0], env)
+		if moreErrs != nil {
+			errs = append(errs, moreErrs...)
+		}
 		call.Args[0] = x
 		fakeCheckRemainingArgs(call, 1, env)
-		if errs == nil {
-			errs = []error{ErrBuiltinNonTypeArg{at(ctx, call.Args[0])}}
+		if moreErrs == nil {
+			errs = append(errs, ErrBuiltinNonTypeArg{at(ctx, call.Args[0])})
 		}
 		return call, errs
 	} else if len(call.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
-		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
-	} else if errs != nil {
-		return call, errs
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	} else if moreErrs != nil {
+		return call, append(errs, moreErrs...)
 	} else {
 		call.Args[0] = x
 		call.knownType = knownType{reflect.PtrTo(of)}
@@ -349,10 +351,19 @@ func (found *callRecvWalker) visit(expr Expr) bool {
 
 func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallExpr, []error) {
 	call.knownType = knownType{intType}
-	if len(call.Args) != 1 {
-		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
 	}
-	x, errs := CheckExpr(ctx, call.Args[0], env)
+	if len(call.Args) != 1 {
+		fakeCheckRemainingArgs(call, 0, env)
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	}
+
+	x, moreErrs := CheckExpr(ctx, call.Args[0], env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
 	call.Args[0] = x
 	if errs != nil && !x.IsConst() {
 		return call, errs
@@ -360,6 +371,9 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallEx
 	xt, err := expectSingleType(ctx, x.KnownType(), x)
 	if err != nil {
 		return call, append(errs, err)
+	}
+	if xt == ConstNil {
+		return call, append(errs, ErrUntypedNil{at(ctx, x)})
 	}
 	switch xt.Kind() {
 	case reflect.Chan, reflect.Slice: // do nothing

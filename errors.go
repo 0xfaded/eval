@@ -268,6 +268,10 @@ type ErrBuiltinNonTypeArg struct {
 	ErrorContext
 }
 
+type ErrBuiltinInvalidEllipsis struct {
+	ErrorContext
+}
+
 type ErrMakeBadType struct {
 	ErrorContext
 	of reflect.Type
@@ -810,8 +814,11 @@ func (err ErrBuiltinWrongArgType) Error() string {
 	}
 	switch ident.Name {
 	case "complex":
+		call := uc(err.call).(*CallExpr)
+		// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
+		call.argNEllipsis = false
 		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
-			uc(err.call), t)
+			call, t)
 	default:
 		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), err.t, ident.Name)
 	}
@@ -835,11 +842,19 @@ func (err ErrBuiltinMismatchedArgs) Error() string {
 		x = err.x.String()
 		y = err.y.String()
 	}
+	call = uc(call).(*CallExpr)
+	// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
+	call.argNEllipsis = false
 	return fmt.Sprintf("invalid operation: %v (mismatched types %s and %s)", uc(call), x, y)
 }
 
 func (err ErrBuiltinNonTypeArg) Error() string {
 	return fmt.Sprintf("%v is not a type", uc(err.Node.(Expr)))
+}
+
+func (err ErrBuiltinInvalidEllipsis) Error() string {
+	ident := err.Node.(*CallExpr).Fun.(*Ident)
+	return fmt.Sprintf("invalid use of ... with builtin %s", ident.Name)
 }
 
 func (err ErrMakeBadType) Error() string {

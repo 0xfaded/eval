@@ -337,28 +337,31 @@ func (assert *TypeAssertExpr) String() string {
 	return fmt.Sprintf("%v.(%s)", assert.X, assert.Type)
 }
 
-func (callExpr *CallExpr) String() string {
-	if callExpr.isTypeConversion || callExpr.isBuiltin {
-		if len(callExpr.Args) == 0 {
+func (call *CallExpr) String() string {
+	if call.isTypeConversion || call.isBuiltin {
+		if len(call.Args) == 0 {
 			// missing argument error
-			return fmt.Sprintf("%v()", callExpr.Fun)
-		} else if len(callExpr.Args) > 1 || callExpr.isBuiltin {
+			return fmt.Sprintf("%v()", call.Fun)
+		} else if len(call.Args) > 1 || call.isBuiltin {
 			// too many arguments error
-			s := fmt.Sprintf("%v", callExpr.Fun)
+			s := fmt.Sprintf("%v", call.Fun)
 			sep := "("
-			for _, arg := range callExpr.Args {
+			for _, arg := range call.Args {
 				s += fmt.Sprintf("%v%v", sep, arg)
 				sep = ", "
 			}
+			if call.argNEllipsis {
+				s += "..."
+			}
 			return s + ")"
 		} else {
-			if callExpr.IsConst() {
-				return sprintConstValue(callExpr.KnownType()[0], callExpr.Const(), true)
+			if call.IsConst() {
+				return sprintConstValue(call.KnownType()[0], call.Const(), true)
 			}
-			return fmt.Sprintf("%v(%v)", callExpr.KnownType()[0], callExpr.Args[0])
+			return fmt.Sprintf("%v(%v)", call.KnownType()[0], call.Args[0])
 		}
 	} else {
-		return fmt.Sprintf("%v()", callExpr.Fun)
+		return fmt.Sprintf("%v()", call.Fun)
 	}
 }
 
