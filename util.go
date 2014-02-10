@@ -561,3 +561,13 @@ func comparableToNilOnly(x reflect.Type) bool {
 	}
 	return false
 }
+
+func isNillable(t reflect.Type) bool {
+	switch t.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface,
+		reflect.Map, reflect.Ptr, reflect.Slice:
+		return true
+	}
+	return false
+}
+

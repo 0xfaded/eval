@@ -259,12 +259,9 @@ type ErrBuiltinWrongArgType struct {
 	t reflect.Type
 }
 
-type ErrBuiltinMistypedArgs struct {
-	ErrorContext
-}
-
 type ErrBuiltinMismatchedArgs struct {
 	ErrorContext
+	x, y reflect.Type
 }
 
 type ErrBuiltinNonTypeArg struct {
@@ -775,19 +772,62 @@ func (err ErrMissingCompositeLitType) Error() string {
 }
 
 func (err ErrBuiltinWrongNumberOfArgs) Error() string {
-	return "TODO ErrBuiltinWrongNumberOfArgs"
+	call := err.Node.(*CallExpr)
+	ident := call.Fun.(*Ident)
+	cause := "TODO Cause"
+	tooMany := false
+	switch ident.Name {
+	case "complex":
+		if len(call.Args) == 0 {
+			cause = "complex(<N>, <N>)"
+		} else {
+			tooMany = true
+			cause = fmt.Sprintf("complex(%v, <N>)", uc(call.Args[0].(Expr)))
+		}
+	}
+	if tooMany {
+		return fmt.Sprintf("missing argument to %v - %s", ident.Name, cause)
+	} else {
+		return fmt.Sprintf("missing argument to %v - %s", ident.Name, cause)
+	}
 }
 
 func (err ErrBuiltinWrongArgType) Error() string {
-	return "TODO ErrBuiltinWrongArgType"
-}
-
-func (err ErrBuiltinMistypedArgs) Error() string {
-	return "TODO ErrBuiltinMistypedArgs"
+	ident := err.call.Fun.(*Ident)
+	var t string
+	if ct, ok := err.t.(ConstType); ok {
+		t = ct.ErrorType()
+	} else {
+		t = err.t.String()
+	}
+	switch ident.Name {
+	case "complex":
+		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
+			uc(err.call), t)
+	default:
+		return "TODO ErrBuiltinWrongArgType"
+	}
 }
 
 func (err ErrBuiltinMismatchedArgs) Error() string {
-	return "TODO ErrBuiltinMismatchedArgs"
+	call := err.Node.(*CallExpr)
+	var x, y string
+	cx, cxok := err.x.(ConstType)
+	cy, cyok := err.y.(ConstType)
+	if cxok && cyok {
+		x = cx.ErrorType()
+		y = cy.ErrorType()
+	} else if cx == ConstNil {
+		x = "nil"
+		y = err.y.String()
+	} else if cy == ConstNil {
+		x = err.x.String()
+		y = "nil"
+	} else {
+		x = err.x.String()
+		y = err.y.String()
+	}
+	return fmt.Sprintf("invalid operation: %v (mismatched types %s and %s)", uc(call), x, y)
 }
 
 func (err ErrBuiltinNonTypeArg) Error() string {

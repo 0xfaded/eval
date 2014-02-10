@@ -44,13 +44,13 @@ func (ConstStringType) String() string { return "string" }
 func (ConstNilType) String() string { return "<T>" }
 func (ConstBoolType) String() string { return "bool" }
 
-func (ConstIntType) ErrorType() string { return "ideal" }
-func (ConstRuneType) ErrorType() string { return "ideal" }
-func (ConstFloatType) ErrorType() string { return "ideal" }
-func (ConstComplexType) ErrorType() string { return "ideal" }
-func (ConstStringType) ErrorType() string { return "ideal string" }
+func (ConstIntType) ErrorType() string { return "untyped number" }
+func (ConstRuneType) ErrorType() string { return "untyped number" }
+func (ConstFloatType) ErrorType() string { return "untyped number" }
+func (ConstComplexType) ErrorType() string { return "untyped number" }
+func (ConstStringType) ErrorType() string { return "untyped string" }
 func (ConstNilType) ErrorType() string { return "nil" }
-func (ConstBoolType) ErrorType() string { return "ideal bool" }
+func (ConstBoolType) ErrorType() string { return "untyped bool" }
 
 func (c ConstIntType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstRuneType) DefaultPromotion() reflect.Type { return c.Type }
@@ -286,10 +286,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 
 	case ConstNilType:
 		// Unfortunately there is no reflect.Type.CanNil()
-		switch to.Kind() {
-		case reflect.Chan, reflect.Func, reflect.Interface,
-			reflect.Map, reflect.Ptr, reflect.Slice:
-
+		if isNillable(to) {
 			// v is already nil
 			return constValue(v), nil
 		}
