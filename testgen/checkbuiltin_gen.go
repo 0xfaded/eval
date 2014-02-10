@@ -43,7 +43,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		//{"Make", "make"},
 		{"Len", "len"},
 		{"Cap", "cap"},
-		//{"Append", "append"},
+		{"Append", "append"},
 		//{"Copy", "copy"},
 		//{"Delete", "delete"},
 	}
@@ -114,7 +114,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	x := elts[1].Name
 	y := elts[2].Name
 
-	if f == "Complex" {
+	if f == "Complex" || f == "Append" {
 		if len(compileErrs) == 1 && (x == "Type" || x == "MakeType") {
 			if y == "Type" {
 				compileErrs = append(compileErrs, "type int is not an expression")

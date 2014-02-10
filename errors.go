@@ -256,7 +256,6 @@ type ErrBuiltinWrongNumberOfArgs struct {
 type ErrBuiltinWrongArgType struct {
 	ErrorContext
 	call *CallExpr
-	t reflect.Type
 }
 
 type ErrBuiltinMismatchedArgs struct {
@@ -793,6 +792,9 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 			tooMany = true
 			cause = fmt.Sprintf("(%v)", uc(call.Args[0].(Expr)))
 		}
+	case "append":
+		// Note the s on arguments, which
+		return "missing arguments to append"
 	default:
 		cause = fmt.Sprintf(": %v", uc(call))
 		tooMany = len(call.Args) != 0
@@ -806,11 +808,13 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 
 func (err ErrBuiltinWrongArgType) Error() string {
 	ident := err.call.Fun.(*Ident)
+	arg := err.Node.(Expr)
 	var t string
-	if ct, ok := err.t.(ConstType); ok {
+	kt := arg.KnownType()[0]
+	if ct, ok := kt.(ConstType); ok {
 		t = ct.ErrorType()
 	} else {
-		t = err.t.String()
+		t = kt.String()
 	}
 	switch ident.Name {
 	case "complex":
@@ -819,8 +823,14 @@ func (err ErrBuiltinWrongArgType) Error() string {
 		call.argNEllipsis = false
 		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
 			call, t)
+	case "append":
+		expected := err.call.Args[0].(Expr).KnownType()[0].Elem()
+		if kt == ConstNil {
+			return fmt.Sprintf("cannot use nil as type %v in append", expected)
+		}
+		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), kt, expected)
 	default:
-		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), err.t, ident.Name)
+		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), kt, ident.Name)
 	}
 }
 
@@ -870,13 +880,24 @@ func (err ErrMakeLenGtrThanCap) Error() string {
 }
 
 func (err ErrAppendFirstArgNotSlice) Error() string {
-	return "TODO ErrAppendFirstArgNotSlice"
+	arg := err.Node.(Expr)
+	t := arg.KnownType()[0]
+	if t == ConstNil {
+		return "first argument to append must be typed slice; have untyped nil"
+	} else {
+		var s string
+		if ct, ok := t.(ConstType); ok {
+			s = ct.ErrorType()
+		} else {
+			s = t.String()
+		}
+		return fmt.Sprintf("first argument to append must be slice; have %s", s)
+	}
 }
 
 func (err ErrAppendFirstArgNotVariadic) Error() string {
-	return "TODO ErrAppendFirstArgNotVariadic"
+	return "cannot use ... on first argument to append"
 }
-
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
 	return ErrorContext{ctx.Input, expr}

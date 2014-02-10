@@ -114,7 +114,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 			}
 		} else {
 			if xt == ConstNil && isNillable(yt) {
-				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, y), call, yt})
+				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, y), call})
 				return call, errs
 			}
 		}
@@ -128,7 +128,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 					return call, errs
 				}
 			} else if yt == ConstNil {
-				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 				return call, errs
 			}
 			yv := reflect.Value(yc)
@@ -153,7 +153,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 			}
 		} else {
 			if yt == ConstNil && isNillable(xt) {
-				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 				return call, errs
 			}
 		}
@@ -177,7 +177,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 		}
 	}
 	if unhackType(xt) == unhackType(yt) {
-		errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+		errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 	} else {
 		errs = append(errs, ErrBuiltinMismatchedArgs{at(ctx, call), xt, yt})
 	}
@@ -250,7 +250,7 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 		}
 		return call, errs
 	}
-	errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+	errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 	return call, errs
 }
 
@@ -379,7 +379,7 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallEx
 	case reflect.Chan, reflect.Slice: // do nothing
 	case reflect.Map:
 		if !isLen {
-			errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+			errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 		}
 	case reflect.Ptr:
 		xt := xt.Elem()
@@ -395,33 +395,37 @@ func checkBuiltinLenCap(ctx *Ctx, call *CallExpr, env *Env, isLen bool) (*CallEx
 		}
 	case reflect.String:
 		if !isLen {
-			errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+			errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 		} else if x.IsConst() {
 			call.constValue = constValueOf(x.Const().Len())
 		}
 	default:
-		errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call, xt})
+		errs = append(errs, ErrBuiltinWrongArgType{at(ctx, x), call})
 	}
 	return call, errs
 }
 
 func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	if len(call.Args) < 1 {
+		fakeCheckRemainingArgs(call, 0, env)
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
 	slice, errs := CheckExpr(ctx, call.Args[0], env)
 	call.Args[0] = slice
-	if errs != nil && !slice.IsConst() {
-		return call, errs
+	var sliceT reflect.Type
+	var isSlice bool
+	if errs == nil || slice.IsConst() {
+		var err error
+		sliceT, err = expectSingleType(ctx, slice.KnownType(), slice)
+		if err != nil {
+			fakeCheckRemainingArgs(call, 1, env)
+			return call, append(errs, err)
+		}
+		if sliceT != ConstNil {
+			isSlice = sliceT.Kind() == reflect.Slice
+			call.knownType = knownType{sliceT}
+		}
 	}
-	sliceT, err := expectSingleType(ctx, slice.KnownType(), slice)
-	if err != nil {
-		return call, append(errs, err)
-	}
-	if sliceT.Kind() != reflect.Slice {
-		return call, append(errs, ErrAppendFirstArgNotSlice{at(ctx, call.Args[0])})
-	}
-	call.knownType = knownType{sliceT}
 	if call.Ellipsis != token.NoPos {
 		call.argNEllipsis = true
 		if len(call.Args) == 1 {
@@ -434,12 +438,15 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 			if moreErrs != nil && !slice.IsConst() {
 				return call, append(errs, moreErrs...)
 			}
-			arg1T, err := expectSingleType(ctx, slice.KnownType(), slice)
+			arg1T, err := expectSingleType(ctx, arg1.KnownType(), arg1)
 			if err != nil {
-				return call, append(errs, err)
-			}
-			if arg1T != sliceT {
-				return call, append(errs, ErrBuiltinWrongArgType{at(ctx, arg1), call, sliceT})
+				errs = append(errs, err)
+			} else if isSlice {
+				if arg1T != sliceT {
+					errs = append(errs, ErrBuiltinWrongArgType{at(ctx, arg1), call})
+				}
+			} else if sliceT != nil {
+				errs = append(errs, ErrAppendFirstArgNotSlice{at(ctx, call.Args[0])})
 			}
 		}
 	} else {
@@ -449,28 +456,41 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 			call.Args[i] = argI
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
-				skipTypeCheck[i] = true
-			} else if _, err := expectSingleType(ctx, argI.KnownType(), argI); err != nil {
-				errs = append(errs, err)
+			}
+			if moreErrs == nil || argI.IsConst() {
+				if _, err := expectSingleType(ctx, argI.KnownType(), argI); err != nil {
+					skipTypeCheck[i] = true
+					errs = append(errs, err)
+				}
+			} else {
 				skipTypeCheck[i] = true
 			}
 		}
-		eltT := sliceT.Elem()
-		for i := 1; i < len(call.Args); i += 1 {
-			if skipTypeCheck[i] {
-				continue
-			}
-			argI := call.Args[i].(Expr)
-			if argI.IsConst() {
-				if ct, ok := argI.KnownType()[0].(ConstType); ok {
-					_, moreErrs := promoteConstToTyped(ctx, ct, constValue(argI.Const()), eltT, argI)
-					if moreErrs != nil {
-						errs = append(errs, moreErrs...)
+		if isSlice {
+			eltT := sliceT.Elem()
+			for i := 1; i < len(call.Args); i += 1 {
+				if skipTypeCheck[i] {
+					continue
+				}
+				argI := call.Args[i].(Expr)
+				ok := false
+				if argI.IsConst() {
+					var ct ConstType
+					if ct, ok = argI.KnownType()[0].(ConstType); ok {
+						x, moreErrs := promoteConstToTyped(ctx, ct, constValue(argI.Const()), eltT, argI)
+						if !reflect.Value(x).IsValid() {
+							errs = append(errs, ErrBuiltinWrongArgType{at(ctx, argI), call})
+						} else if moreErrs != nil {
+							errs = append(errs, moreErrs...)
+						}
 					}
 				}
-			} else if argI.KnownType()[0] != eltT {
-				return call, append(errs, ErrBuiltinWrongArgType{at(ctx, argI), call, eltT})
+				if !ok && unhackType(argI.KnownType()[0]) != unhackType(eltT) {
+					errs = append(errs, ErrBuiltinWrongArgType{at(ctx, argI), call})
+				}
 			}
+		} else if sliceT != nil {
+			errs = append(errs, ErrAppendFirstArgNotSlice{at(ctx, call.Args[0])})
 		}
 	}
 	return call, errs
