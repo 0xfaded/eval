@@ -197,6 +197,7 @@ func checkBuiltinComplex(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error
 
 func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*CallExpr, []error) {
 	if len(call.Args) != 1 {
+		fakeCheckRemainingArgs(call, 0, env)
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
 	x, errs := CheckExpr(ctx, call.Args[0], env)
@@ -208,24 +209,27 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 	if err != nil {
 		return call, append(errs, err)
 	}
+	if xt == ConstNil {
+		return call, append(errs, ErrUntypedNil{at(ctx, x)})
+	}
 
 	if ct, ok := xt.(ConstType); ok {
-		xc, moreErrs := promoteConstToTyped(ctx, ct, constValue(x.Const()), c128, x)
-		if moreErrs != nil {
-			errs = append(errs, moreErrs...)
-		}
-		xv := reflect.Value(xc)
-		if xv.IsValid() {
-			call.knownType = knownType{f64}
-			if x.IsConst() {
-				c := complex128(x.Const().Complex())
+		if ct == ConstComplex {
+			xc, moreErrs := promoteConstToTyped(ctx, ct, constValue(x.Const()), c128, x)
+			if moreErrs != nil {
+				errs = append(errs, moreErrs...)
+			}
+			xv := reflect.Value(xc)
+			if xv.IsValid() {
+				call.knownType = knownType{f64}
+				c := complex128(reflect.Value(xc).Complex())
 				if isReal {
 					call.constValue = constValueOf(real(c))
 				} else {
 					call.constValue = constValueOf(imag(c))
 				}
+				return call, errs
 			}
-			return call, errs
 		}
 	} else if xt.Kind() == reflect.Complex128 {
 		call.knownType = knownType{f64}

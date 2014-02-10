@@ -37,8 +37,8 @@ func (*Test) Imports() map[string]string {
 func (*Test) Dimensions() []testgen.Dimension {
 	builtins := []testgen.Element{
 		{"Complex", "complex"},
-		//{"Real", "real"},
-		//{"Imag", "imag"},
+		{"Real", "real"},
+		{"Imag", "imag"},
 		//{"New", "new"},
 		//{"Make", "make"},
 		//{"Len", "len"},
@@ -47,7 +47,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		//{"Copy", "copy"},
 		//{"Delete", "delete"},
 	}
-	args := []testgen.Element{
+	arg0 := []testgen.Element{
 		{"X", ""},
 		{"Int", "1"},
 		{"Float32", "float32(1)"},
@@ -58,10 +58,11 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Type", "int"},
 		{"MakeType", "map[int]int"},
 	}
+	arg1 := append(arg0, testgen.Element{"Double", "1, 1"})
 	return []testgen.Dimension{
 		builtins,
-		args,
-		args,
+		arg0,
+		arg1,
 	}
 }
 

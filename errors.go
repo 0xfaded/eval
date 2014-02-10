@@ -774,21 +774,24 @@ func (err ErrMissingCompositeLitType) Error() string {
 func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 	call := err.Node.(*CallExpr)
 	ident := call.Fun.(*Ident)
-	cause := "TODO Cause"
 	tooMany := false
+	var cause string
 	switch ident.Name {
 	case "complex":
 		if len(call.Args) == 0 {
-			cause = "complex(<N>, <N>)"
+			cause = " - complex(<N>, <N>)"
 		} else {
-			tooMany = true
-			cause = fmt.Sprintf("complex(%v, <N>)", uc(call.Args[0].(Expr)))
+			tooMany = len(call.Args) > 2
+			cause = fmt.Sprintf(" - complex(%v, <N>)", uc(call.Args[0].(Expr)))
 		}
+	default:
+		cause = fmt.Sprintf(": %v", uc(call))
+		tooMany = len(call.Args) != 0
 	}
 	if tooMany {
-		return fmt.Sprintf("missing argument to %v - %s", ident.Name, cause)
+		return fmt.Sprintf("too many arguments to %v%v", ident.Name, cause)
 	} else {
-		return fmt.Sprintf("missing argument to %v - %s", ident.Name, cause)
+		return fmt.Sprintf("missing argument to %v%v", ident.Name, cause)
 	}
 }
 
@@ -805,7 +808,7 @@ func (err ErrBuiltinWrongArgType) Error() string {
 		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
 			uc(err.call), t)
 	default:
-		return "TODO ErrBuiltinWrongArgType"
+		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), err.t, ident.Name)
 	}
 }
 

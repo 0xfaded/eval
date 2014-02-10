@@ -2,7 +2,6 @@ package eval
 
 import (
 	"go/ast"
-	"fmt"
 )
 
 // convert an ast.Expr to an Expr without actually checking it. This
@@ -169,7 +168,7 @@ func unconstNode(expr Expr) Expr {
 				if arg, ok := e.Args[i].(Expr); ok {
 					u.Args[i] = unconstNode(arg)
 				} else {
-					fmt.Printf("nay\n")
+					u.Args[i] = e.Args[i]
 				}
 			}
 		}
