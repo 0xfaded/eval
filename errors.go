@@ -784,14 +784,19 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 			tooMany = len(call.Args) > 2
 			cause = fmt.Sprintf(" - complex(%v, <N>)", uc(call.Args[0].(Expr)))
 		}
+	case "new":
+		if len(call.Args) != 0 {
+			tooMany = true
+			cause = fmt.Sprintf("(%v)", uc(call.Args[0].(Expr)))
+		}
 	default:
 		cause = fmt.Sprintf(": %v", uc(call))
 		tooMany = len(call.Args) != 0
 	}
 	if tooMany {
-		return fmt.Sprintf("too many arguments to %v%v", ident.Name, cause)
+		return fmt.Sprintf("too many arguments to %s%s", ident.Name, cause)
 	} else {
-		return fmt.Sprintf("missing argument to %v%v", ident.Name, cause)
+		return fmt.Sprintf("missing argument to %s%s", ident.Name, cause)
 	}
 }
 
@@ -834,7 +839,7 @@ func (err ErrBuiltinMismatchedArgs) Error() string {
 }
 
 func (err ErrBuiltinNonTypeArg) Error() string {
-	return "TODO ErrBuiltinNonTypeArg"
+	return fmt.Sprintf("%v is not a type", uc(err.Node.(Expr)))
 }
 
 func (err ErrMakeBadType) Error() string {

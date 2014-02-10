@@ -39,7 +39,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Complex", "complex"},
 		{"Real", "real"},
 		{"Imag", "imag"},
-		//{"New", "new"},
+		{"New", "new"},
 		//{"Make", "make"},
 		//{"Len", "len"},
 		//{"Cap", "cap"},
@@ -124,11 +124,17 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		}
 	}
 
+	expectConst := false
+	switch f {
+	case "Complex", "Real", "Imag":
+		expectConst = true
+	}
+
 	vars := map[string] interface{} {
 		"Expr": expr,
 		"Errors": compileErrs,
 		"TestErrs": true,
-		"ExpectConst": true,
+		"ExpectConst": expectConst,
 	}
 
 	return body.Execute(w, &vars)

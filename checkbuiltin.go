@@ -260,16 +260,25 @@ func checkBuiltinRealImag(ctx *Ctx, call *CallExpr, env *Env, isReal bool) (*Cal
 
 
 func checkBuiltinNew(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
-	if len(call.Args) != 1 {
+	if len(call.Args) == 0 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	}
 	x, of, isType, errs := checkType(ctx, call.Args[0], env)
-	call.Args[0] = x
 	if !isType {
-		return call, append(errs, ErrBuiltinNonTypeArg{at(ctx, call.Args[0])})
+		x, errs = CheckExpr(ctx, call.Args[0], env)
+		call.Args[0] = x
+		fakeCheckRemainingArgs(call, 1, env)
+		if errs == nil {
+			errs = []error{ErrBuiltinNonTypeArg{at(ctx, call.Args[0])}}
+		}
+		return call, errs
+	} else if len(call.Args) != 1 {
+		fakeCheckRemainingArgs(call, 0, env)
+		return call, []error{ErrBuiltinWrongNumberOfArgs{at(ctx, call)}}
 	} else if errs != nil {
 		return call, errs
 	} else {
+		call.Args[0] = x
 		call.knownType = knownType{reflect.PtrTo(of)}
 		return call, nil
 	}
