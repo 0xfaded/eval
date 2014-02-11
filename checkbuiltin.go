@@ -448,7 +448,7 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 			if err != nil {
 				errs = append(errs, err)
 			} else if isSlice {
-				if arg1T != sliceT {
+				if arg1T != sliceT && !(sliceT == byteSlice && arg1T.Kind() == reflect.String) {
 					errs = append(errs, ErrBuiltinWrongArgType{at(ctx, arg1), call})
 				}
 			} else if sliceT != nil {

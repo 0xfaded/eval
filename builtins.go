@@ -27,6 +27,8 @@ var (
 	stringType reflect.Type = reflect.TypeOf(string(""))
 
 	emptyInterface reflect.Type = reflect.TypeOf(new(interface{})).Elem()
+
+	byteSlice reflect.Type = reflect.SliceOf(u8)
 )
 
 var builtinTypes = map[string] reflect.Type{
@@ -92,6 +94,9 @@ func builtinImag(cplx reflect.Value) reflect.Value {
 }
 
 func builtinAppend(s reflect.Value, t reflect.Value) reflect.Value {
+	if s.Type() == byteSlice && t.Type().Kind() == reflect.String {
+		t = reflect.ValueOf([]byte(t.String()))
+	}
 	return reflect.AppendSlice(s, t)
 }
 
