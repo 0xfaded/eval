@@ -273,6 +273,9 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 		} else if to == emptyInterface {
 			v.Set(reflect.Value(c).Convert(emptyInterface))
 			return constValue(v), nil
+		} else if isTypeCast && to == byteSlice {
+			v = reflect.Value(c).Convert(to)
+			return constValue(v), nil
 		}
 
 	case ConstBoolType:
