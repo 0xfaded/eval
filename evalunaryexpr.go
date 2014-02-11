@@ -6,7 +6,7 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (_ []reflect.Value, err error) {
+func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) ([]reflect.Value, error) {
 	if unary.IsConst() {
 		return []reflect.Value{unary.Const()}, nil
 	}
@@ -21,8 +21,13 @@ func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (_ []reflect.Value, err
 	if unary.Op == token.AND {
 		return []reflect.Value{x.Addr()}, nil
 	} else if unary.Op == token.ARROW {
-		v, ok := x.Recv()
-		return []reflect.Value{v, reflect.ValueOf(ok)}, nil
+		// TODO[crc] use x.Recv in contexts where blocking is acceptable
+		v, _ := x.TryRecv()
+		if !v.IsValid() {
+			v = reflect.New(x.Type().Elem()).Elem()
+		}
+		// TODO[crc] also return ok once assignability context is implemented
+		return []reflect.Value{v}, nil
 	}
 
 	var r reflect.Value
