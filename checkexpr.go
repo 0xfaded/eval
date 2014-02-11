@@ -96,7 +96,7 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 			if errs != nil {
 				return arrayT, nil, true, errs
 			} else {
-				return arrayT, reflect.SliceOf(eltT), true, nil
+				return arrayT, reflect.SliceOf(unhackType(eltT)), true, nil
 			}
 		}
 	case *ast.StructType:
@@ -125,7 +125,7 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 			errs = append(errs, moreErrs...)
 		}
 		if errs == nil {
-			return mapT, reflect.MapOf(k, v), true, nil
+			return mapT, reflect.MapOf(unhackType(k), unhackType(v)), true, nil
 		}
 		return mapT, nil, true, errs
 	case *ast.ChanType:
@@ -142,7 +142,7 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 			} else {
 				chanT.dir = reflect.BothDir
 			}
-			return chanT, reflect.ChanOf(chanT.dir, valueT), true, nil
+			return chanT, reflect.ChanOf(chanT.dir, unhackType(valueT)), true, nil
 		}
 	}
 	// Note this error should never be shown to the user. It is used to detect
