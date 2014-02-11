@@ -51,7 +51,7 @@ func TestBasicCheckConstBinaryIntegerFloating(t *testing.T) {
 
 	// Invalid
 	expectCheckError(t, "5 % 1.0", env, "illegal constant expression: floating-point % operation")
-	expectCheckError(t, "5 | 1.0", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "5 | 1.0", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
@@ -62,9 +62,9 @@ func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
 	expectConst(t, "5 != 1.5i", env, 5 != 1.5i, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "5 > 1.5i", env, "illegal constant expression: ideal > ideal")
-	expectCheckError(t, "5 % 2.0i", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "5 & 1.5i", env, "illegal constant expression: ideal & ideal")
+	expectCheckError(t, "5 > 1.5i", env, "illegal constant expression: untyped number > untyped number")
+	expectCheckError(t, "5 % 2.0i", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "5 & 1.5i", env, "illegal constant expression: untyped number & untyped number")
 }
 
 func TestBasicCheckConstBinaryIntegerBool(t *testing.T) {
@@ -177,7 +177,7 @@ func TestBasicCheckConstBinaryRuneFloating(t *testing.T) {
 
 	// Invalid
 	expectCheckError(t, "'d' % 1.0", env, "illegal constant expression: floating-point % operation")
-	expectCheckError(t, "'d' &^ 1.0", env, "illegal constant expression: ideal &^ ideal")
+	expectCheckError(t, "'d' &^ 1.0", env, "illegal constant expression: untyped number &^ untyped number")
 }
 
 func TestBasicCheckConstBinaryRuneComplex(t *testing.T) {
@@ -188,9 +188,9 @@ func TestBasicCheckConstBinaryRuneComplex(t *testing.T) {
 	expectConst(t, "'a' == 1i", env, 'a' == 1i, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "'d' > 1.5i", env, "illegal constant expression: ideal > ideal")
-	expectCheckError(t, "'d' % 1.0i", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "'d' ^ 1.0i", env, "illegal constant expression: ideal ^ ideal")
+	expectCheckError(t, "'d' > 1.5i", env, "illegal constant expression: untyped number > untyped number")
+	expectCheckError(t, "'d' % 1.0i", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "'d' ^ 1.0i", env, "illegal constant expression: untyped number ^ untyped number")
 }
 
 func TestBasicCheckConstBinaryRuneBool(t *testing.T) {
@@ -282,7 +282,7 @@ func TestBasicCheckConstBinaryFloatingInteger(t *testing.T) {
 
 	// Invalid
 	expectCheckError(t, "1.5 % 2", env, "illegal constant expression: floating-point % operation")
-	expectCheckError(t, "1.5 &^ 3", env, "illegal constant expression: ideal &^ ideal")
+	expectCheckError(t, "1.5 &^ 3", env, "illegal constant expression: untyped number &^ untyped number")
 }
 
 func TestBasicCheckConstBinaryFloatingRune(t *testing.T) {
@@ -295,7 +295,7 @@ func TestBasicCheckConstBinaryFloatingRune(t *testing.T) {
 
 	// Invalid
 	expectCheckError(t, "1.5 % 'a'", env, "illegal constant expression: floating-point % operation")
-	expectCheckError(t, "1.5 | 'a'", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "1.5 | 'a'", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryFloatingFloating(t *testing.T) {
@@ -308,7 +308,7 @@ func TestBasicCheckConstBinaryFloatingFloating(t *testing.T) {
 
 	// Invalid
 	expectCheckError(t, "1.5 % 1.5", env, "illegal constant expression: floating-point % operation")
-	expectCheckError(t, "1.5 | 1.5", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "1.5 | 1.5", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
@@ -319,9 +319,9 @@ func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
 	expectConst(t, "1.5 == 1.25i", env, 1.5 == 1.25i, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "1.5 < 1.25i", env, "illegal constant expression: ideal < ideal")
-	expectCheckError(t, "1.5 % 1.5i", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "1.5 | 1.5i", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "1.5 < 1.25i", env, "illegal constant expression: untyped number < untyped number")
+	expectCheckError(t, "1.5 % 1.5i", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "1.5 | 1.5i", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryFloatBool(t *testing.T) {
@@ -411,9 +411,9 @@ func TestBasicCheckConstBinaryComplexInteger(t *testing.T) {
 	expectConst(t, "2.5i == 2", env, 2.5i == 2, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "2.5i < 2", env, "illegal constant expression: ideal < ideal")
-	expectCheckError(t, "2.5i % 2", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "2.5i | 2", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "2.5i < 2", env, "illegal constant expression: untyped number < untyped number")
+	expectCheckError(t, "2.5i % 2", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "2.5i | 2", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryComplexRune(t *testing.T) {
@@ -423,9 +423,9 @@ func TestBasicCheckConstBinaryComplexRune(t *testing.T) {
 	expectConst(t, "2.5i == 'a'", env, 2.5i == 'a', ConstBool)
 
 	// Invalid
-	expectCheckError(t, "2.5i < 'a'", env, "illegal constant expression: ideal < ideal")
-	expectCheckError(t, "2.5i % 'a'", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "2.5i | 'a'", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "2.5i < 'a'", env, "illegal constant expression: untyped number < untyped number")
+	expectCheckError(t, "2.5i % 'a'", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "2.5i | 'a'", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryComplexComplexing(t *testing.T) {
@@ -435,9 +435,9 @@ func TestBasicCheckConstBinaryComplexComplexing(t *testing.T) {
 	expectConst(t, "2.5i == 2.0", env, 2.5i == 2.0, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "2.5i < 2.0", env, "illegal constant expression: ideal < ideal")
-	expectCheckError(t, "2.5i % 2.0", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "2.5i | 2.0", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "2.5i < 2.0", env, "illegal constant expression: untyped number < untyped number")
+	expectCheckError(t, "2.5i % 2.0", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "2.5i | 2.0", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryComplexComplex(t *testing.T) {
@@ -447,9 +447,9 @@ func TestBasicCheckConstBinaryComplexComplex(t *testing.T) {
 	expectConst(t, "2.5i == 2i", env, 2.5i == 2i, ConstBool)
 
 	// Invalid
-	expectCheckError(t, "2.5i < 2i", env, "illegal constant expression: ideal < ideal")
-	expectCheckError(t, "2.5i % 2i", env, "illegal constant expression: ideal % ideal")
-	expectCheckError(t, "2.5i | 2i", env, "illegal constant expression: ideal | ideal")
+	expectCheckError(t, "2.5i < 2i", env, "illegal constant expression: untyped number < untyped number")
+	expectCheckError(t, "2.5i % 2i", env, "illegal constant expression: untyped number % untyped number")
+	expectCheckError(t, "2.5i | 2i", env, "illegal constant expression: untyped number | untyped number")
 }
 
 func TestBasicCheckConstBinaryComplexBool(t *testing.T) {

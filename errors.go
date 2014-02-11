@@ -460,7 +460,7 @@ func (err ErrInvalidBinaryOperation) Error() string {
 					return "illegal constant expression: floating-point % operation"
 				}
 			}
-			return fmt.Sprintf("illegal constant expression: ideal %v ideal", op)
+			return fmt.Sprintf("illegal constant expression: %s %v %s", xct.ErrorType(), op, yct.ErrorType())
 		} else if xt == yt {
 			// const nil value prints as <T>, as an operand we should print nil
 			var operandType interface{}

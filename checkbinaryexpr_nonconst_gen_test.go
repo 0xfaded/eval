@@ -16551,14 +16551,15 @@ func TestCheckBinaryNonConstExprStructEqlPtr(t *testing.T) {
 }
 
 // Test Struct == Struct
-/*
 func TestCheckBinaryNonConstExprStructEqlStruct(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
 	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
 	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
-	expectType(t, `a == b`, env, reflect.TypeOf(a == b))
+	expectCheckError(t, `a == b`, env,
+		`invalid operation: a == b (struct containing []int cannot be compared)`,
+	)
+
 }
-*/
 
 // Test Struct == StructUncomp
 func TestCheckBinaryNonConstExprStructEqlStructUncomp(t *testing.T) {

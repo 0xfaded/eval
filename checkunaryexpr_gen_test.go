@@ -37,7 +37,7 @@ func TestCheckUnaryExprAddBool(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `+ true`, env,
-		`invalid operation: + ideal bool`,
+		`invalid operation: + untyped bool`,
 	)
 
 }
@@ -47,7 +47,7 @@ func TestCheckUnaryExprAddString(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `+ "abc"`, env,
-		`invalid operation: + ideal string`,
+		`invalid operation: + untyped string`,
 	)
 
 }
@@ -95,7 +95,7 @@ func TestCheckUnaryExprSubBool(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `- true`, env,
-		`invalid operation: - ideal bool`,
+		`invalid operation: - untyped bool`,
 	)
 
 }
@@ -105,7 +105,7 @@ func TestCheckUnaryExprSubString(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `- "abc"`, env,
-		`invalid operation: - ideal string`,
+		`invalid operation: - untyped string`,
 	)
 
 }
@@ -139,7 +139,7 @@ func TestCheckUnaryExprXorFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `^ 2.0`, env,
-		`illegal constant expression ^ ideal`,
+		`illegal constant expression ^ untyped number`,
 	)
 
 }
@@ -149,7 +149,7 @@ func TestCheckUnaryExprXorComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `^ 8.0i`, env,
-		`illegal constant expression ^ ideal`,
+		`illegal constant expression ^ untyped number`,
 	)
 
 }
@@ -159,7 +159,7 @@ func TestCheckUnaryExprXorBool(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `^ true`, env,
-		`invalid operation: ^ ideal bool`,
+		`invalid operation: ^ untyped bool`,
 	)
 
 }
@@ -169,7 +169,7 @@ func TestCheckUnaryExprXorString(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `^ "abc"`, env,
-		`invalid operation: ^ ideal string`,
+		`invalid operation: ^ untyped string`,
 	)
 
 }
@@ -189,7 +189,7 @@ func TestCheckUnaryExprNotInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `! 4`, env,
-		`invalid operation: ! ideal`,
+		`invalid operation: ! untyped number`,
 	)
 
 }
@@ -199,7 +199,7 @@ func TestCheckUnaryExprNotRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `! '@'`, env,
-		`invalid operation: ! ideal`,
+		`invalid operation: ! untyped number`,
 	)
 
 }
@@ -209,7 +209,7 @@ func TestCheckUnaryExprNotFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `! 2.0`, env,
-		`invalid operation: ! ideal`,
+		`invalid operation: ! untyped number`,
 	)
 
 }
@@ -219,7 +219,7 @@ func TestCheckUnaryExprNotComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `! 8.0i`, env,
-		`invalid operation: ! ideal`,
+		`invalid operation: ! untyped number`,
 	)
 
 }
@@ -236,7 +236,7 @@ func TestCheckUnaryExprNotString(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `! "abc"`, env,
-		`invalid operation: ! ideal string`,
+		`invalid operation: ! untyped string`,
 	)
 
 }

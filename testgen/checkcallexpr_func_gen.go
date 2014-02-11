@@ -102,6 +102,10 @@ func (*Test) Dimensions() []testgen.Dimension {
 	}
 }
 
+func (*Test) Globals(w io.Writer) error {
+	return nil
+}
+
 func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
 	fun := elts[0].Name
 	sep := "("
@@ -164,7 +168,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	// gc is stripping duplicate errors on variadic functions. This is understandable
 	// but we want to catch all errors.
 	n0, n1, n2 := elts[0].Name, elts[1].Name, elts[2].Name
-	if len(compileErrs) > 0 && n0[:3] == "Var" && n1 == n2 && (n1 == "Float" || n1 == "Bool" || n1 == "IntTyped" || n1 == "SingleFunc") {
+	if len(compileErrs) > 0 && n0[:3] == "Var" && ((n1 == n2 && (n1 == "Float" || n1 == "Bool" || n1 == "IntTyped" || n1 == "SingleFunc")) || (n1 == "X" && n2 == "MultiFunc" || n2 == "X" && n1 == "MultiFunc")) {
 		compileErrs = append(compileErrs[:1], append([]string{compileErrs[0]}, compileErrs[1:]...)...)
 	}
 	// Duplicates of these errors get stripped on all functions

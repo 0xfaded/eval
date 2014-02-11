@@ -87,7 +87,7 @@ func TestCheckStarExprNumber(t *testing.T) {
 	env.Vars["b"] = reflect.ValueOf(&b)
 
 	expectCheckError(t, `*1.4`, env,
-		`invalid indirect of 1.4 (type ideal)`,
+		`invalid indirect of 1.4 (type untyped number)`,
 	)
 
 }
@@ -103,7 +103,7 @@ func TestCheckStarExprRune(t *testing.T) {
 	env.Vars["b"] = reflect.ValueOf(&b)
 
 	expectCheckError(t, `*'a'`, env,
-		`invalid indirect of 'a' (type ideal)`,
+		`invalid indirect of 'a' (type untyped number)`,
 	)
 
 }
@@ -119,7 +119,7 @@ func TestCheckStarExprBool(t *testing.T) {
 	env.Vars["b"] = reflect.ValueOf(&b)
 
 	expectCheckError(t, `*true`, env,
-		`invalid indirect of true (type ideal bool)`,
+		`invalid indirect of true (type untyped bool)`,
 	)
 
 }
@@ -135,7 +135,7 @@ func TestCheckStarExprString(t *testing.T) {
 	env.Vars["b"] = reflect.ValueOf(&b)
 
 	expectCheckError(t, `*"a"`, env,
-		`invalid indirect of "a" (type ideal string)`,
+		`invalid indirect of "a" (type untyped string)`,
 	)
 
 }

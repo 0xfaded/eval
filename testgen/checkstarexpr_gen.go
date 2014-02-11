@@ -62,6 +62,10 @@ func (*Test) Dimensions() []testgen.Dimension {
 	}
 }
 
+func (*Test) Globals(w io.Writer) error {
+	return nil
+}
+
 func (*Test) Comment(w io.Writer, elts ...testgen.Element) error {
 	vars := map[string] interface{} {
 		"Star": elts[0],

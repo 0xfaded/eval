@@ -535,9 +535,6 @@ func nonComparableField(structT reflect.Type) (reflect.StructField, bool) {
 	numField := structT.NumField()
 	for i := 0; i < numField; i += 1 {
 		field := structT.Field(i)
-		if field.Name == "_" {
-			continue
-		}
 		if !isStaticTypeComparable(field.Type) {
 			return field, true
 		}

@@ -277,7 +277,7 @@ func TestCheckBinaryExprIntRemComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 % 8.0i`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -334,7 +334,7 @@ func TestCheckBinaryExprIntAndFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 & 2.0`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -344,7 +344,7 @@ func TestCheckBinaryExprIntAndComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 & 8.0i`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -401,7 +401,7 @@ func TestCheckBinaryExprIntOrFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 | 2.0`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -411,7 +411,7 @@ func TestCheckBinaryExprIntOrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 | 8.0i`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -468,7 +468,7 @@ func TestCheckBinaryExprIntXorFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 ^ 2.0`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -478,7 +478,7 @@ func TestCheckBinaryExprIntXorComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 ^ 8.0i`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -535,7 +535,7 @@ func TestCheckBinaryExprIntAndNotFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 &^ 2.0`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -545,7 +545,7 @@ func TestCheckBinaryExprIntAndNotComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 &^ 8.0i`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -731,7 +731,7 @@ func TestCheckBinaryExprIntLeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 <= 8.0i`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -795,7 +795,7 @@ func TestCheckBinaryExprIntGeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 >= 8.0i`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -859,7 +859,7 @@ func TestCheckBinaryExprIntLssComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 < 8.0i`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -923,7 +923,7 @@ func TestCheckBinaryExprIntGtrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `4 > 8.0i`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -1234,7 +1234,7 @@ func TestCheckBinaryExprRuneRemComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' % 8.0i`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -1291,7 +1291,7 @@ func TestCheckBinaryExprRuneAndFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' & 2.0`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -1301,7 +1301,7 @@ func TestCheckBinaryExprRuneAndComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' & 8.0i`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -1358,7 +1358,7 @@ func TestCheckBinaryExprRuneOrFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' | 2.0`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -1368,7 +1368,7 @@ func TestCheckBinaryExprRuneOrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' | 8.0i`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -1425,7 +1425,7 @@ func TestCheckBinaryExprRuneXorFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' ^ 2.0`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -1435,7 +1435,7 @@ func TestCheckBinaryExprRuneXorComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' ^ 8.0i`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -1492,7 +1492,7 @@ func TestCheckBinaryExprRuneAndNotFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' &^ 2.0`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -1502,7 +1502,7 @@ func TestCheckBinaryExprRuneAndNotComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' &^ 8.0i`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -1688,7 +1688,7 @@ func TestCheckBinaryExprRuneLeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' <= 8.0i`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -1752,7 +1752,7 @@ func TestCheckBinaryExprRuneGeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' >= 8.0i`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -1816,7 +1816,7 @@ func TestCheckBinaryExprRuneLssComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' < 8.0i`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -1880,7 +1880,7 @@ func TestCheckBinaryExprRuneGtrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `'@' > 8.0i`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -2197,7 +2197,7 @@ func TestCheckBinaryExprFloatRemComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 % 8.0i`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -2240,7 +2240,7 @@ func TestCheckBinaryExprFloatAndInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 & 4`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -2250,7 +2250,7 @@ func TestCheckBinaryExprFloatAndRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 & '@'`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -2260,7 +2260,7 @@ func TestCheckBinaryExprFloatAndFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 & 2.0`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -2270,7 +2270,7 @@ func TestCheckBinaryExprFloatAndComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 & 8.0i`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -2313,7 +2313,7 @@ func TestCheckBinaryExprFloatOrInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 | 4`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -2323,7 +2323,7 @@ func TestCheckBinaryExprFloatOrRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 | '@'`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -2333,7 +2333,7 @@ func TestCheckBinaryExprFloatOrFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 | 2.0`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -2343,7 +2343,7 @@ func TestCheckBinaryExprFloatOrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 | 8.0i`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -2386,7 +2386,7 @@ func TestCheckBinaryExprFloatXorInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 ^ 4`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -2396,7 +2396,7 @@ func TestCheckBinaryExprFloatXorRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 ^ '@'`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -2406,7 +2406,7 @@ func TestCheckBinaryExprFloatXorFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 ^ 2.0`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -2416,7 +2416,7 @@ func TestCheckBinaryExprFloatXorComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 ^ 8.0i`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -2459,7 +2459,7 @@ func TestCheckBinaryExprFloatAndNotInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 &^ 4`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -2469,7 +2469,7 @@ func TestCheckBinaryExprFloatAndNotRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 &^ '@'`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -2479,7 +2479,7 @@ func TestCheckBinaryExprFloatAndNotFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 &^ 2.0`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -2489,7 +2489,7 @@ func TestCheckBinaryExprFloatAndNotComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 &^ 8.0i`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -2675,7 +2675,7 @@ func TestCheckBinaryExprFloatLeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 <= 8.0i`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -2739,7 +2739,7 @@ func TestCheckBinaryExprFloatGeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 >= 8.0i`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -2803,7 +2803,7 @@ func TestCheckBinaryExprFloatLssComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 < 8.0i`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -2867,7 +2867,7 @@ func TestCheckBinaryExprFloatGtrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `2.0 > 8.0i`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -3154,7 +3154,7 @@ func TestCheckBinaryExprComplexRemInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i % 4`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -3164,7 +3164,7 @@ func TestCheckBinaryExprComplexRemRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i % '@'`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -3174,7 +3174,7 @@ func TestCheckBinaryExprComplexRemFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i % 2.0`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -3184,7 +3184,7 @@ func TestCheckBinaryExprComplexRemComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i % 8.0i`, env,
-		`illegal constant expression: ideal % ideal`,
+		`illegal constant expression: untyped number % untyped number`,
 	)
 
 }
@@ -3227,7 +3227,7 @@ func TestCheckBinaryExprComplexAndInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i & 4`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -3237,7 +3237,7 @@ func TestCheckBinaryExprComplexAndRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i & '@'`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -3247,7 +3247,7 @@ func TestCheckBinaryExprComplexAndFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i & 2.0`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -3257,7 +3257,7 @@ func TestCheckBinaryExprComplexAndComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i & 8.0i`, env,
-		`illegal constant expression: ideal & ideal`,
+		`illegal constant expression: untyped number & untyped number`,
 	)
 
 }
@@ -3300,7 +3300,7 @@ func TestCheckBinaryExprComplexOrInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i | 4`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -3310,7 +3310,7 @@ func TestCheckBinaryExprComplexOrRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i | '@'`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -3320,7 +3320,7 @@ func TestCheckBinaryExprComplexOrFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i | 2.0`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -3330,7 +3330,7 @@ func TestCheckBinaryExprComplexOrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i | 8.0i`, env,
-		`illegal constant expression: ideal | ideal`,
+		`illegal constant expression: untyped number | untyped number`,
 	)
 
 }
@@ -3373,7 +3373,7 @@ func TestCheckBinaryExprComplexXorInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i ^ 4`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -3383,7 +3383,7 @@ func TestCheckBinaryExprComplexXorRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i ^ '@'`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -3393,7 +3393,7 @@ func TestCheckBinaryExprComplexXorFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i ^ 2.0`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -3403,7 +3403,7 @@ func TestCheckBinaryExprComplexXorComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i ^ 8.0i`, env,
-		`illegal constant expression: ideal ^ ideal`,
+		`illegal constant expression: untyped number ^ untyped number`,
 	)
 
 }
@@ -3446,7 +3446,7 @@ func TestCheckBinaryExprComplexAndNotInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i &^ 4`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -3456,7 +3456,7 @@ func TestCheckBinaryExprComplexAndNotRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i &^ '@'`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -3466,7 +3466,7 @@ func TestCheckBinaryExprComplexAndNotFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i &^ 2.0`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -3476,7 +3476,7 @@ func TestCheckBinaryExprComplexAndNotComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i &^ 8.0i`, env,
-		`illegal constant expression: ideal &^ ideal`,
+		`illegal constant expression: untyped number &^ untyped number`,
 	)
 
 }
@@ -3641,7 +3641,7 @@ func TestCheckBinaryExprComplexLeqInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i <= 4`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -3651,7 +3651,7 @@ func TestCheckBinaryExprComplexLeqRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i <= '@'`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -3661,7 +3661,7 @@ func TestCheckBinaryExprComplexLeqFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i <= 2.0`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -3671,7 +3671,7 @@ func TestCheckBinaryExprComplexLeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i <= 8.0i`, env,
-		`illegal constant expression: ideal <= ideal`,
+		`illegal constant expression: untyped number <= untyped number`,
 	)
 
 }
@@ -3714,7 +3714,7 @@ func TestCheckBinaryExprComplexGeqInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i >= 4`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -3724,7 +3724,7 @@ func TestCheckBinaryExprComplexGeqRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i >= '@'`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -3734,7 +3734,7 @@ func TestCheckBinaryExprComplexGeqFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i >= 2.0`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -3744,7 +3744,7 @@ func TestCheckBinaryExprComplexGeqComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i >= 8.0i`, env,
-		`illegal constant expression: ideal >= ideal`,
+		`illegal constant expression: untyped number >= untyped number`,
 	)
 
 }
@@ -3787,7 +3787,7 @@ func TestCheckBinaryExprComplexLssInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i < 4`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -3797,7 +3797,7 @@ func TestCheckBinaryExprComplexLssRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i < '@'`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -3807,7 +3807,7 @@ func TestCheckBinaryExprComplexLssFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i < 2.0`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -3817,7 +3817,7 @@ func TestCheckBinaryExprComplexLssComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i < 8.0i`, env,
-		`illegal constant expression: ideal < ideal`,
+		`illegal constant expression: untyped number < untyped number`,
 	)
 
 }
@@ -3860,7 +3860,7 @@ func TestCheckBinaryExprComplexGtrInt(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i > 4`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -3870,7 +3870,7 @@ func TestCheckBinaryExprComplexGtrRune(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i > '@'`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -3880,7 +3880,7 @@ func TestCheckBinaryExprComplexGtrFloat(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i > 2.0`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
@@ -3890,7 +3890,7 @@ func TestCheckBinaryExprComplexGtrComplex(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `8.0i > 8.0i`, env,
-		`illegal constant expression: ideal > ideal`,
+		`illegal constant expression: untyped number > untyped number`,
 	)
 
 }
