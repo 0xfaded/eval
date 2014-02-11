@@ -52,8 +52,8 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		v, err := evalStarExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err
 	case *UnaryExpr:
-		v, err := evalUnaryExpr(ctx, node, env)
-		return &[]reflect.Value{v}, true, err
+		vs, err := evalUnaryExpr(ctx, node, env)
+		return &vs, true, err
 	case *BinaryExpr:
 		v, err := evalBinaryExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err

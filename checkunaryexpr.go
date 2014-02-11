@@ -14,7 +14,7 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (*UnaryExpr, []err
 	if errs == nil || x.IsConst() {
 		if t, err := expectSingleType(ctx, x.KnownType(), x); err != nil {
 			errs = append(errs, err)
-		} else if unary.Op == token.AND { // address off
+		} else if unary.Op == token.AND { // address of
 			if !isAddressableOrCompositeLit(x) {
 				printableX := fakeCheckExpr(unary.X, env)
 				printableX.setKnownType(knownType{t})
@@ -33,7 +33,10 @@ func checkUnaryExpr(ctx *Ctx, unary *ast.UnaryExpr, env *Env) (*UnaryExpr, []err
 				aexpr.knownType = knownType{ptrT}
 			}
 			aexpr.X = x
-		// TODO handle <-
+		} else if unary.Op == token.ARROW { // <-
+			if (t.Kind() != reflect.Chan) || (t.ChanDir() | reflect.RecvDir == 0) {
+				errs = append(errs, ErrInvalidRecvFrom{at(ctx, x)})
+			}
 		} else {
 			aexpr.X = x
 			// All numeric and bool unary expressions do not change type

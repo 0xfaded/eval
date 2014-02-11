@@ -6,23 +6,26 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (r reflect.Value, err error) {
+func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (_ []reflect.Value, err error) {
 	if unary.IsConst() {
-		return unary.Const(), nil
+		return []reflect.Value{unary.Const()}, nil
 	}
 
-	var xx *[]reflect.Value
-	if xx, _, err = EvalExpr(ctx, unary.X.(Expr), env); err != nil {
-		return reflect.Value{}, err
+	xx, _, err := EvalExpr(ctx, unary.X.(Expr), env)
+	if err != nil {
+		return []reflect.Value{}, err
 	}
 	x := (*xx)[0]
 
 	// handle & and <- first
 	if unary.Op == token.AND {
-		return x.Addr(), nil
+		return []reflect.Value{x.Addr()}, nil
+	} else if unary.Op == token.ARROW {
+		v, ok := x.Recv()
+		return []reflect.Value{v, reflect.ValueOf(ok)}, nil
 	}
-	// TODO handle <-
 
+	var r reflect.Value
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		r, err = evalUnaryIntExpr(ctx, x, unary.Op)
@@ -35,9 +38,9 @@ func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) (r reflect.Value, err e
 	case reflect.Bool:
 		r, err = evalUnaryBoolExpr(ctx, x, unary.Op)
 	default:
-	        err = ErrInvalidOperand{x, unary.Op}
+		panic("eval: impossible unary op " + unary.Op.String())
 	}
-	return
+	return []reflect.Value{r}, err
 }
 
 func evalUnaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {

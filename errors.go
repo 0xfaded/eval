@@ -131,6 +131,10 @@ type ErrInvalidAddressOf struct {
 	ErrorContext
 }
 
+type ErrInvalidRecvFrom struct {
+	ErrorContext
+}
+
 type ErrBadConversion struct {
 	ErrorContext
 	from reflect.Type
@@ -480,6 +484,18 @@ func (err ErrInvalidUnaryOperation) Error() string {
 
 func (err ErrInvalidAddressOf) Error() string {
 	return fmt.Sprintf("cannot take the address of %v", err.Node)
+}
+
+func (err ErrInvalidRecvFrom) Error() string {
+	operand := err.Node.(Expr)
+	t := operand.KnownType()[0]
+	var cause string
+	if t.Kind() != reflect.Chan {
+		cause = fmt.Sprintf("receive from non-chan type %v", t)
+	} else {
+		cause = fmt.Sprintf("receive from send-only type %v", t)
+	}
+	return fmt.Sprintf("invalid operation: <-%v (%s)", err.Node, cause)
 }
 
 func (err ErrInvalidBinaryOperation) Error() string {
