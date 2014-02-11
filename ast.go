@@ -189,6 +189,7 @@ type MapType struct {
 
 type ChanType struct {
 	*ast.ChanType
+	dir reflect.ChanDir
 	knownType
 }
 
@@ -323,8 +324,8 @@ func (selectorExpr *SelectorExpr) String() string {
 	return fmt.Sprintf("%s.%v", selectorExpr.X, selectorExpr.Sel)
 }
 
-func (indexExpr *IndexExpr) String() string { return "TODO  indexExpr.IndexExpr" }
-func (sliceExpr *SliceExpr) String() string { return "TODO  sliceExpr.SliceExpr" }
+func (indexExpr *IndexExpr) String() string { return "TODO indexExpr.IndexExpr" }
+func (sliceExpr *SliceExpr) String() string { return "TODO sliceExpr.SliceExpr" }
 
 func (assert *TypeAssertExpr) String() string {
 	return fmt.Sprintf("%v.(%s)", assert.X, assert.Type)
@@ -392,7 +393,18 @@ func (structType *StructType) String() string { return "TODO  structType.StructT
 func (funcType *FuncType) String() string { return "TODO  funcType.FuncType" }
 func (interfaceType *InterfaceType) String() string { return "TODO  interfaceType.InterfaceType" }
 func (mapType *MapType) String() string { return "TODO  mapType.MapType" }
-func (chanType *ChanType) String() string { return "TODO  chanType.ChanType" }
+
+func (chanType *ChanType) String() string {
+	value := fmt.Sprint(chanType.Value)
+	switch chanType.dir {
+	case reflect.SendDir:
+		return "chan<- " + value
+	case reflect.RecvDir:
+		return "<-chan " + value
+	default:
+		return "chan " + value
+	}
+}
 
 // Returns a printable interface{} which replaces constant expressions with their constants
 func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {

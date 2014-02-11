@@ -130,7 +130,20 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 		return mapT, nil, true, errs
 	case *ast.ChanType:
 		chanT := &ChanType{ChanType: node}
-		return chanT, nil, true, []error{errors.New("chan types not implemented")}
+		value, valueT, _, errs := checkType(ctx, node.Value, env);
+		chanT.Value = value
+		if errs != nil {
+			return chanT, nil, true, errs
+		} else {
+			if node.Dir == ast.SEND {
+				chanT.dir = reflect.SendDir
+			} else if node.Dir == ast.RECV {
+				chanT.dir = reflect.RecvDir
+			} else {
+				chanT.dir = reflect.BothDir
+			}
+			return chanT, reflect.ChanOf(chanT.dir, valueT), true, nil
+		}
 	}
 	// Note this error should never be shown to the user. It is used to detect
 	// when a CallExpr is a type conversion
