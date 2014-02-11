@@ -24,7 +24,17 @@ func checkIndexExpr(ctx *Ctx, index *ast.IndexExpr, env *Env) (*IndexExpr, []err
 	}
 
 	switch t.Kind() {
-	// case reflect.Map:
+	case reflect.Map:
+		aexpr.knownType = knownType{t.Elem()}
+		i, ok, moreErrs := checkExprAssignableTo(ctx, index.Index, t.Key(), env)
+		aexpr.Index = i
+		if moreErrs != nil {
+			errs = append(errs, moreErrs...)
+		}
+		if !ok {
+			errs = append(errs, ErrBadMapIndex{at(ctx, i), t.Key()})
+		}
+		return aexpr, errs
 	case reflect.String:
 		aexpr.knownType = knownType{u8}
 		i, moreErrs := checkIndexVectorExpr(ctx, x, index.Index, env)

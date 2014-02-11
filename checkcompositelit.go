@@ -63,8 +63,8 @@ func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env)
 			errs = append(errs, ErrMissingMapKey{at(ctx, lit.Elts[i])})
 		} else {
 			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
-			k, conversionFailed, moreErrs := checkExprAssignableTo(ctx, kv.Key, kT, env)
-			if conversionFailed {
+			k, ok, moreErrs := checkExprAssignableTo(ctx, kv.Key, kT, env)
+			if !ok {
 				if len(k.KnownType()) != 0 {
 					kF := fakeCheckExpr(kv.Key, env)
 					kF.setKnownType(knownType(k.KnownType()))
@@ -261,8 +261,8 @@ func checkMapValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, 
 		}
 	}
 
-	aexpr, conversionFailed, errs := checkExprAssignableTo(ctx, expr, eltT, env)
-	if conversionFailed {
+	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, eltT, env)
+	if !ok {
 		// NOTE[crc] this hack removes conversion errors from consts other
 		// than strings and nil to match the output of gc.
 		if ccerr, ok := errs[0].(ErrBadConstConversion); ok {
@@ -287,8 +287,8 @@ func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr
 		}
 	}
 
-	aexpr, conversionFailed, errs := checkExprAssignableTo(ctx, expr, eltT, env)
-	if conversionFailed {
+	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, eltT, env)
+	if !ok {
 		// NOTE[crc] this hack removes conversion errors from consts other
 		// than strings and nil to match the output of gc.
 		if ccerr, ok := errs[0].(ErrBadConstConversion); ok {
@@ -306,8 +306,8 @@ func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr
 }
 
 func checkStructField(ctx *Ctx, expr ast.Expr, field reflect.StructField, env *Env) (Expr, []error) {
-	aexpr, conversionFailed, errs := checkExprAssignableTo(ctx, expr, field.Type, env)
-	if conversionFailed {
+	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, field.Type, env)
+	if !ok {
 		errs = append([]error{}, ErrBadStructValue{at(ctx, aexpr), field.Type})
 	}
 	return aexpr, errs

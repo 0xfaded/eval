@@ -35,12 +35,10 @@ func typeAssignableTo(from, to reflect.Type) bool {
 	return from.AssignableTo(unhackType(to))
 }
 
-// Check expr and then determine if it is assignable to type T. Essentially
 // exprAssignableTo(CheckExpr(expr), t), but errors are accumulated and a
-// bool value is returned indicating if an additional error is needed.
-// The error is needed if expr successfully typechecks but is not
-// assignable to t. In this case, the caller should append an appropriate,
-// use case specific error.
+// bool value is returned indicating if the expr is assignable to t.
+// It will also be true expr failed to type check, indicating that the
+// assignability check was never attempted.
 func checkExprAssignableTo(ctx *Ctx, expr ast.Expr, t reflect.Type, env *Env) (Expr, bool, []error) {
 	var errs []error
 	aexpr, moreErrs := CheckExpr(ctx, expr, env)
@@ -50,13 +48,13 @@ func checkExprAssignableTo(ctx *Ctx, expr ast.Expr, t reflect.Type, env *Env) (E
 		errs = append(errs, err)
 	}
 	if errs != nil {
-		return aexpr, false, errs
+		return aexpr, true, errs
 	}
 	ok, convErrs := exprAssignableTo(ctx, aexpr, t)
 	if convErrs != nil {
 		errs = append(errs, convErrs...)
 	}
-	return aexpr, !ok, errs
+	return aexpr, ok, errs
 }
 
 // Determine if the result of from expr is assignable to type to. to must be a vanilla reflect.Type.

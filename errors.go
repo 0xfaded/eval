@@ -83,6 +83,11 @@ type ErrMultiInSingleContext struct {
 	ErrorContext
 }
 
+type ErrBadMapIndex struct {
+	ErrorContext
+	keyT reflect.Type
+}
+
 type ErrNonIntegerIndex struct {
 	ErrorContext
 }
@@ -381,6 +386,16 @@ func (err ErrMissingValue) Error() string {
 
 func (err ErrMultiInSingleContext) Error() string {
 	return fmt.Sprintf("multiple-value %s in single-value context", err.ErrorContext.Source())
+}
+
+func (err ErrBadMapIndex) Error() string {
+	i := err.Node.(Expr)
+	iT := i.KnownType()[0]
+	if _, ok := iT.(ConstType); ok {
+		return fmt.Sprintf("cannot use %v as type %v in map index", i, err.keyT)
+	} else {
+		return fmt.Sprintf("cannot use %v (type %v) as type %v in map index", uc(i), iT, err.keyT)
+	}
 }
 
 func (err ErrNonIntegerIndex) Error() string {

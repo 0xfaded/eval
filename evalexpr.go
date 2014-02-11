@@ -37,8 +37,8 @@ func EvalExpr(ctx *Ctx, expr Expr, env *Env) (*[]reflect.Value, bool, error) {
 		}
 		return &[]reflect.Value{*v}, true, err
 	case *IndexExpr:
-		v, err := evalIndexExpr(ctx, node, env)
-		return &[]reflect.Value{v}, true, err
+		vs, err := evalIndexExpr(ctx, node, env)
+		return &vs, true, err
 	case *SliceExpr:
 		v, err := evalSliceExpr(ctx, node, env)
 		return &[]reflect.Value{v}, true, err
