@@ -876,7 +876,7 @@ func (err ErrBuiltinInvalidEllipsis) Error() string {
 }
 
 func (err ErrMakeBadType) Error() string {
-	return "TODO ErrMakeBadType"
+	return fmt.Sprintf("cannot make type %v", err.of)
 }
 
 func (err ErrMakeNonIntegerArg) Error() string {

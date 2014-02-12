@@ -57,3 +57,8 @@ func TestCheckBuiltinMakeSliceLenGtrThanCap(t *testing.T) {
 	expectCheckError(t, "make([]int, 3, 2)", env, "len larger than cap in make([]int, 3, 2)")
 }
 
+func TestCheckBuiltinMakeBadType(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectCheckError(t, "make(int)", env, "cannot make type int")
+}
+
