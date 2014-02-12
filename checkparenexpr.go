@@ -4,9 +4,9 @@ import (
 	"go/ast"
 )
 
-func checkParenExpr(ctx *Ctx, paren *ast.ParenExpr, env *Env) (*ParenExpr, []error) {
+func checkParenExpr(paren *ast.ParenExpr, env *Env) (*ParenExpr, []error) {
 	aexpr := &ParenExpr{ParenExpr: paren}
-	x, errs := CheckExpr(ctx, paren.X, env)
+	x, errs := CheckExpr(paren.X, env)
 
 	aexpr.X = x
 	aexpr.knownType = knownType(x.KnownType())

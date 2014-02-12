@@ -6,47 +6,47 @@ import (
 	"go/token"
 )
 
-func checkCallExpr(ctx *Ctx, callExpr *ast.CallExpr, env *Env) (acall *CallExpr, errs []error) {
+func checkCallExpr(callExpr *ast.CallExpr, env *Env) (acall *CallExpr, errs []error) {
 	acall = &CallExpr{CallExpr: callExpr}
 
 	// First check for builtin calls. For new and make, the first argument is
 	// a type, not a value. Therefore, allow the builtin checks to recursively
 	// check their arguments
-	if call, errs, isBuiltin := checkCallBuiltinExpr(ctx, acall, env); isBuiltin {
+	if call, errs, isBuiltin := checkCallBuiltinExpr(acall, env); isBuiltin {
 		return call, errs
 	}
 
 	// Recursively check arguments
 	var moreErrs []error
 	for i := range callExpr.Args {
-		if acall.Args[i], moreErrs = CheckExpr(ctx, callExpr.Args[i], env); moreErrs != nil {
+		if acall.Args[i], moreErrs = CheckExpr(callExpr.Args[i], env); moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
 	}
 
 	// First check if this expression is a type cast
 	// Otherwise, assume a function call
-	if typ, to, isType, moreErrs := checkType(ctx, acall.Fun, env); isType {
+	if typ, to, isType, moreErrs := checkType(acall.Fun, env); isType {
 		if moreErrs != nil {
 			return acall, append(errs, moreErrs...)
 		}
 		acall.Fun = typ
-		return checkCallTypeExpr(ctx, acall, to, env)
+		return checkCallTypeExpr(acall, to, env)
 	} else {
-		return checkCallFunExpr(ctx, acall, env)
+		return checkCallFunExpr(acall, env)
 	}
 }
 
-func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {
+func checkCallTypeExpr(call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {
 	call.knownType = []reflect.Type{to}
 	call.isTypeConversion = true
 
 	if len(call.Args) != 1 {
-		return call, []error{ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)}}
+		return call, []error{ErrWrongNumberOfArgs{call, len(call.Args)}}
 	}
 
 	arg := call.Args[0].(Expr)
-	from, err := expectSingleType(ctx, arg.KnownType(), arg)
+	from, err := expectSingleType(arg.KnownType(), arg)
 	if err != nil {
 		return call, []error{err}
 	}
@@ -60,12 +60,11 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 		// I've separated these into ErrBadConstConversiond and
 		// ErrBadConversion The exception is if the conversion
 		// is from nil
-		v, errs := castConstToTyped(ctx, ct, constValue(arg.Const()), to, arg)
+		v, errs := castConstToTyped(ct, constValue(arg.Const()), to, arg)
 		if ct != ConstNil {
 			if errs != nil {
 				if b, ok := errs[0].(ErrBadConstConversion); ok {
-					err := ErrBadConversion{b.ErrorContext, b.from, b.to, b.v}
-					errs = append(errs, err)
+					errs = append(errs, ErrBadConversion{b.Expr, b.from, b.to})
 				}
 				// Some expr nodes will continue to generate
 				// errors even if their children produce
@@ -84,26 +83,26 @@ func checkCallTypeExpr(ctx *Ctx, call *CallExpr, to reflect.Type, env *Env) (aca
 			}
 			return call, nil
 		} else {
-			return call, []error{ErrBadConstConversion{at(ctx, call), from, to, reflect.Value{}}}
+			return call, []error{ErrBadConstConversion{call, from, to}}
 		}
 	}
 }
 
-func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
-	fun, errs := CheckExpr(ctx, call.Fun, env)
+func checkCallFunExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
+	fun, errs := CheckExpr(call.Fun, env)
 	if errs != nil && !fun.IsConst() {
 		return call, errs
 	}
 	call.Fun = fun
 
-	ftype, err := expectSingleType(ctx, fun.KnownType(), fun)
+	ftype, err := expectSingleType(fun.KnownType(), fun)
 	if err != nil {
 		return call, append(errs, err)
 	// catch nil casts, e.g. nil(1)
 	} else if ftype == ConstNil {
-		return call, []error{ErrUntypedNil{at(ctx, fun)}}
+		return call, []error{ErrUntypedNil{fun}}
 	} else if ftype.Kind() != reflect.Func {
-		return call, []error{ErrCallNonFuncType{at(ctx, fun)}}
+		return call, []error{ErrCallNonFuncType{fun}}
 	}
 
 	call.knownType = make([]reflect.Type, ftype.NumOut())
@@ -121,7 +120,7 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		if numIn == 0 || (variadic && numIn == 1) {
 			return call, nil
 		} else {
-			return call, []error{ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)}}
+			return call, []error{ErrWrongNumberOfArgs{call, len(call.Args)}}
 		}
 	}
 
@@ -130,7 +129,8 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	// from function call is to dig through any ParenExpr and see if at
 	// the bottom is another CallExpr
 	arg0MultiValued := false
-	arg0T := call.Args[0].(Expr).KnownType()
+	arg0 := call.Args[0].(Expr)
+	arg0T := arg0.KnownType()
 	if len(call.Args) == 1 && len(arg0T) > 1 {
 		arg0 := call.Args[0].(Expr)
 		arg0 = skipSuperfluousParens(arg0)
@@ -146,7 +146,7 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		var i int
 		for i = 0; i < len(arg0T) && i < numIn-1; i += 1 {
 			if !typeAssignableTo(arg0T[i], ftype.In(i)) {
-				errs = append(errs, ErrWrongArgType{at(ctx, call.Args[0]), call, i})
+				errs = append(errs, ErrWrongArgType{arg0, call, i})
 			}
 		}
 
@@ -154,12 +154,12 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		// Detect wrong number of args
 		if !variadic {
 			if len(arg0T) != numIn {
-				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(arg0T)})
+				return call, append(errs, ErrWrongNumberOfArgs{call, len(arg0T)})
 			}
 			argNT = ftype.In(i)
 		} else {
 			if len(arg0T) < numIn - 1 {
-				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(arg0T)})
+				return call, append(errs, ErrWrongNumberOfArgs{call, len(arg0T)})
 			}
 			argNT = ftype.In(i).Elem()
 		}
@@ -167,7 +167,7 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		// Check remaining args
 		for ; i < len(arg0T); i += 1 {
 			if !typeAssignableTo(arg0T[i], argNT) {
-				errs = append(errs, ErrWrongArgType{at(ctx, call.Args[0]), call, i})
+				errs = append(errs, ErrWrongArgType{arg0, call, i})
 			}
 		}
 	} else {
@@ -180,7 +180,7 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 		skipTypeCheck := make([]bool, len(call.Args))
 		for i, arg := range call.Args {
 			expr := arg.(Expr)
-			if _, err := expectSingleType(ctx, expr.KnownType(), expr); err != nil {
+			if _, err := expectSingleType(expr.KnownType(), expr); err != nil {
 				errs = append(errs, err)
 				skipTypeCheck[i] = true
 			}
@@ -193,22 +193,22 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, ftype.In(i)); ok {
+			if ok, convErrs := exprAssignableTo(expr, ftype.In(i)); ok {
 				errs = append(errs, convErrs...)
 			} else {
-				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
+				errs = append(errs, ErrWrongArgType{expr, call, i})
 			}
 		}
 
 		var argNT reflect.Type
 		if !variadic || argNEllipsis {
 			if len(call.Args) != numIn {
-				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)})
+				return call, append(errs, ErrWrongNumberOfArgs{call, len(call.Args)})
 			}
 			argNT = ftype.In(numIn - 1)
 		} else {
 			if len(call.Args) < numIn - 1 {
-				return call, append(errs, ErrWrongNumberOfArgs{at(ctx, call), len(call.Args)})
+				return call, append(errs, ErrWrongNumberOfArgs{call, len(call.Args)})
 			} else if len(call.Args) == numIn - 1 {
 				// Variadic function with no ... args
 				return call, errs
@@ -222,16 +222,16 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 				continue
 			}
 			expr := call.Args[i].(Expr)
-			if ok, convErrs := exprAssignableTo(ctx, expr, argNT); ok {
+			if ok, convErrs := exprAssignableTo(expr, argNT); ok {
 				errs = append(errs, convErrs...)
 			} else {
-				errs = append(errs, ErrWrongArgType{at(ctx, expr), call, i})
+				errs = append(errs, ErrWrongArgType{expr, call, i})
 			}
 		}
 
 		// Finally, check for illegal use of the ellipsis
 		if !variadic && argNEllipsis {
-			errs = append(errs, ErrInvalidEllipsisInCall{at(ctx, call)})
+			errs = append(errs, ErrInvalidEllipsisInCall{call})
 		}
 	}
 	return call, errs

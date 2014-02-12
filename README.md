@@ -34,14 +34,13 @@ A skeletal structure is below:
 	// Populate env with a useful evaluation environment
 
     line := `5 * 6 + int32(len("abc"[0:1])))` // something to eval
-	ctx := &eval.Ctx{line}
 	if expr, err := parser.ParseExpr(line); err != nil {
 		fmt.Printf("parse error: %s\n", err)
-	} else if cexpr, errs := eval.CheckExpr(ctx, expr, env); len(errs) != 0 {
+	} else if cexpr, errs := eval.CheckExpr(expr, env); len(errs) != 0 {
 		for _, cerr := range errs {
 			fmt.Printf("%v\n", cerr)
 		}
-	} else if vals, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
+	} else if vals, _, err := eval.EvalExpr(cexpr, env); err != nil {
 		fmt.Printf("eval error: %s\n", err)
 	} else {
 	  // do something with pointer to reflect.Value array vals, e.g.:

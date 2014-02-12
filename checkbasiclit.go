@@ -7,13 +7,13 @@ import (
 	"go/token"
 )
 
-func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
+func checkBasicLit(lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 	aexpr := &BasicLit{BasicLit: lit}
 
 	switch lit.Kind {
 	case token.CHAR:
 		if r, _, tail, err := strconv.UnquoteChar(lit.Value[1:len(lit.Value)-1], '\''); err != nil {
-			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+			return aexpr, []error{ErrBadBasicLit{aexpr}}
 		} else if tail != "" {
 			// parser.ParseExpr() should raise a syntax error before we get here.
 			panic("go-interactive: bad char lit " + lit.Value)
@@ -24,7 +24,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 		}
 	case token.STRING:
 		if str, err := strconv.Unquote(string(lit.Value)); err != nil {
-			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+			return aexpr, []error{ErrBadBasicLit{aexpr}}
 		} else {
 			aexpr.constValue = constValueOf(str)
 			aexpr.knownType = knownType{ConstString}
@@ -32,7 +32,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 		}
 	case token.INT:
 		if i, ok := NewConstInteger(lit.Value); !ok {
-			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+			return aexpr, []error{ErrBadBasicLit{aexpr}}
 		} else {
 			aexpr.constValue = constValueOf(i)
 			aexpr.knownType = knownType{ConstInt}
@@ -40,7 +40,7 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 		}
 	case token.FLOAT:
 		if f, ok := NewConstFloat(lit.Value); !ok {
-			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+			return aexpr, []error{ErrBadBasicLit{aexpr}}
 		} else {
 			aexpr.constValue = constValueOf(f)
 			aexpr.knownType = knownType{ConstFloat}
@@ -48,13 +48,13 @@ func checkBasicLit(ctx *Ctx, lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
 		}
 	case token.IMAG:
 		if i, ok := NewConstImag(lit.Value); !ok {
-			return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+			return aexpr, []error{ErrBadBasicLit{aexpr}}
 		} else {
 			aexpr.constValue = constValueOf(i)
 			aexpr.knownType = knownType{ConstComplex}
 			return aexpr, nil
 		}
 	default:
-		return aexpr, []error{ErrBadBasicLit{at(ctx, lit)}}
+		return aexpr, []error{ErrBadBasicLit{aexpr}}
 	}
 }

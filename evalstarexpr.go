@@ -4,8 +4,8 @@ import (
 	"reflect"
 )
 
-func evalStarExpr(ctx *Ctx, starExpr *StarExpr, env *Env) (reflect.Value, error) {
-	if vs, _, err := EvalExpr(ctx, starExpr.X.(Expr), env); err != nil {
+func evalStarExpr(starExpr *StarExpr, env *Env) (reflect.Value, error) {
+	if vs, _, err := EvalExpr(starExpr.X.(Expr), env); err != nil {
 		return reflect.Value{}, err
 	} else {
 		v := (*vs)[0]

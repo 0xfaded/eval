@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalIdent(ctx *Ctx, ident *Ident, env *Env) (reflect.Value, error) {
+func evalIdent(ident *Ident, env *Env) (reflect.Value, error) {
 	if ident.IsConst() {
 		return ident.Const(), nil
 	}
@@ -21,12 +21,12 @@ func evalIdent(ctx *Ctx, ident *Ident, env *Env) (reflect.Value, error) {
 }
 
 // TODO[crc] Everything below goes with Env interface refactor
-func EvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (*reflect.Value, bool, error) {
-	v, err := evalIdent(ctx, ident, env)
+func EvalIdentExpr(ident *Ident, env *Env) (*reflect.Value, bool, error) {
+	v, err := evalIdent(ident, env)
 	return &v, true, err
 }
 
-type EvalIdentExprFunc func(ctx *Ctx, ident *Ident, env *Env)  (
+type EvalIdentExprFunc func(ident *Ident, env *Env)  (
 	*reflect.Value, bool, error)
 
 func DerefValue(v reflect.Value) reflect.Value {

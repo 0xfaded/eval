@@ -4,14 +4,14 @@ import (
 	"reflect"
 )
 
-func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (reflect.Value, error) {
+func evalSelectorExpr(selector *SelectorExpr, env *Env) (reflect.Value, error) {
 
 	if selector.pkgName != "" {
-		vs, _, err := evalIdentExprCallback(ctx, selector.Sel, env.Pkgs[selector.pkgName])
+		vs, _, err := evalIdentExprCallback(selector.Sel, env.Pkgs[selector.pkgName])
 		return *vs, err
 	}
 
-	vs, _, err := EvalExpr(ctx, selector.X.(Expr), env)
+	vs, _, err := EvalExpr(selector.X.(Expr), env)
 	if err != nil {
 		return reflect.Value{}, err
 	}
@@ -31,12 +31,12 @@ func evalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (reflect.Value
 }
 
 // TODO[crc] Everything below here goes with the Env interface{} refactor
-func EvalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
-	v, err := evalSelectorExpr(ctx, selector, env)
+func EvalSelectorExpr(selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
+	v, err := evalSelectorExpr(selector, env)
 	return &v, true, err
 }
 
-type EvalSelectorExprFunc func(ctx *Ctx, selector *SelectorExpr, env *Env)  (
+type EvalSelectorExprFunc func(selector *SelectorExpr, env *Env)  (
 	*reflect.Value, bool, error)
 
 var evalSelectorExprCallback EvalSelectorExprFunc

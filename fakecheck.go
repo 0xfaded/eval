@@ -66,7 +66,7 @@ func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
 			}
 		}
 		if !c.isBuiltin {
-			if _, t, isType, _ := checkType(&Ctx{""}, uncheckType(c.Fun), env); isType {
+			if _, t, isType, _ := checkType(uncheckType(c.Fun), env); isType {
 				c.isTypeConversion = true
 				c.knownType = knownType{t}
 			}

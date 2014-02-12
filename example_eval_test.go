@@ -34,13 +34,12 @@ func makeEnv() *eval.Env {
 //   3. run eval.EvalExpr (0xfaded/eval)
 func ExpectResult(expr string, expected interface{}) {
 	env := makeEnv() // Create evaluation environment
-	ctx := &eval.Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
-	} else if cexpr, errs := eval.CheckExpr(ctx, e, env); len(errs) != 0 {
+	} else if cexpr, errs := eval.CheckExpr(e, env); len(errs) != 0 {
 		fmt.Printf("Error checking expression '%s' (%v)\n", expr, errs)
-	} else if results, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
+	} else if results, _, err := eval.EvalExpr(cexpr, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {

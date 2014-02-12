@@ -87,24 +87,24 @@ func (ConstBoolType) IsNumeric() bool { return false }
 // promoteConsts returns the ConstType of a binary, a non-boolean,
 // expression involving const types of x and y.  Errors match those
 // produced by gc and are as follows:
-func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
+func promoteConsts(x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 		switch y.(type) {
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 			return promoteConstNumbers(x, y), nil
 		}
-		return nil, []error{ErrBadConstConversion{at(ctx, yexpr), y, x, yval}}
+		return nil, []error{ErrBadConstConversion{yexpr, y, x}}
 	case ConstStringType:
 		switch y.(type) {
 		case ConstStringType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return nil, []error{ErrBadConstConversion{at(ctx, xexpr), x, y, xval}}
+			return nil, []error{ErrBadConstConversion{xexpr, x, y}}
 		default:
 			return nil, []error{
-				ErrBadConstConversion{at(ctx, xexpr), x, ConstInt, xval},
-				ErrBadConstConversion{at(ctx, yexpr), y, ConstInt, yval},
+				ErrBadConstConversion{xexpr, x, ConstInt},
+				ErrBadConstConversion{yexpr, y, ConstInt},
 			}
 		}
 	case ConstNilType:
@@ -112,11 +112,11 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		case ConstNilType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
-			return nil, []error{ErrBadConstConversion{at(ctx, xexpr), x, y, xval}}
+			return nil, []error{ErrBadConstConversion{xexpr, x, y}}
 		default:
 			return nil, []error{
-				ErrBadConstConversion{at(ctx, xexpr), x, ConstInt, xval},
-				ErrBadConstConversion{at(ctx, yexpr), y, ConstInt, yval},
+				ErrBadConstConversion{xexpr, x, ConstInt},
+				ErrBadConstConversion{yexpr, y, ConstInt},
 			}
 		}
 	case ConstBoolType:
@@ -124,7 +124,7 @@ func promoteConsts(ctx *Ctx, x, y ConstType, xexpr, yexpr Expr, xval, yval refle
 		case ConstBoolType:
 			return x, nil
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType, ConstStringType, ConstNilType:
-			return nil, []error{ErrBadConstConversion{at(ctx, yexpr), y, x, yval}}
+			return nil, []error{ErrBadConstConversion{yexpr, y, x}}
 		}
 	}
 	panic("go-interactive: impossible")
@@ -166,16 +166,16 @@ func promoteConstNumbers(x, y ConstType) ConstType {
 
 // Convert an untyped constant to a typed constant, where it would be
 // legal to do using a type cast.
-func castConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
+func castConstToTyped(from ConstType, c constValue, to reflect.Type, expr Expr) (
 	constValue, []error) {
-        return convertConstToTyped(ctx, from, c, to, true, expr)
+        return convertConstToTyped(from, c, to, true, expr)
 }
 
 // Convert an untyped constant to a typed constant, where it would be
 // legal to do so automatically in a binary expression.
-func promoteConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, expr Expr) (
+func promoteConstToTyped(from ConstType, c constValue, to reflect.Type, expr Expr) (
 	constValue, []error) {
-        return convertConstToTyped(ctx, from, c, to, false, expr)
+        return convertConstToTyped(from, c, to, false, expr)
 }
 
 // Convert an untyped constant to a typed constant. If the types from and to are
@@ -187,7 +187,7 @@ func promoteConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 //
 //  reflect.Value(constValue).IsValid()
 //
-func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type, isTypeCast bool, expr Expr) (
+func convertConstToTyped(from ConstType, c constValue, to reflect.Type, isTypeCast bool, expr Expr) (
 	constValue, []error) {
 	v := hackedNew(to).Elem()
 
@@ -199,15 +199,15 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			var errs []error
 			i, truncation, overflow := underlying.Value.Int(to.Bits())
 			if truncation {
-				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
+				errs = append(errs, ErrTruncatedConstant{expr, ConstInt, underlying})
 			}
 			if overflow {
-				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, underlying})
+				errs = append(errs, ErrOverflowedConstant{expr, from, to, underlying})
 			}
 			// For some reason, the errors produced are "complex -> int" then "complex -> real"
 			_, truncation = underlying.Value.Real()
 			if truncation {
-				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
+				errs = append(errs, ErrTruncatedConstant{expr, ConstFloat, underlying})
 			}
 			v.SetInt(i)
 			return constValue(v), errs
@@ -216,15 +216,15 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			var errs []error
 			u, truncation, overflow := underlying.Value.Uint(to.Bits())
 			if truncation {
-				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstInt, underlying})
+				errs = append(errs, ErrTruncatedConstant{expr, ConstInt, underlying})
 			}
 			if overflow {
-				errs = append(errs, ErrOverflowedConstant{at(ctx, expr), from, to, underlying})
+				errs = append(errs, ErrOverflowedConstant{expr, from, to, underlying})
 			}
 			// For some reason, the erros produced are "complex -> int" then "complex -> real"
 			_, truncation = underlying.Value.Real()
 			if truncation {
-				errs = append(errs, ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying})
+				errs = append(errs, ErrTruncatedConstant{expr, ConstFloat, underlying})
 			}
 			v.SetUint(u)
 			return constValue(v), errs
@@ -233,7 +233,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			var errs []error
 			f, truncation, _ := underlying.Value.Float64()
 			if truncation {
-				errs = []error{ErrTruncatedConstant{at(ctx, expr), ConstFloat, underlying}}
+				errs = []error{ErrTruncatedConstant{expr, ConstFloat, underlying}}
 			}
 			v.SetFloat(f)
 			return constValue(v), errs
@@ -249,7 +249,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 			if isTypeCast && from.IsIntegral() {
 				i, _, overflow := underlying.Value.Int(32)
 				if overflow {
-					err := ErrOverflowedConstant{at(ctx, expr), from, ConstString, underlying}
+					err := ErrOverflowedConstant{expr, from, ConstString, underlying}
 					return constValue{}, []error{err}
 				}
 				v.SetString(string(i))
@@ -260,7 +260,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 		case reflect.Interface:
 			if to == emptyInterface {
 				to = underlying.Type.DefaultPromotion()
-				cv, _ := convertConstToTyped(ctx, from, c, to, isTypeCast, expr)
+				cv, _ := convertConstToTyped(from, c, to, isTypeCast, expr)
 				v.Set(reflect.Value(cv).Convert(emptyInterface))
 				return constValue(v), nil
 			}
@@ -295,7 +295,7 @@ func convertConstToTyped(ctx *Ctx, from ConstType, c constValue, to reflect.Type
 		}
 	}
 
-	return constValue{}, []error{ErrBadConstConversion{at(ctx, expr), from, to, reflect.Value(c)}}
+	return constValue{}, []error{ErrBadConstConversion{expr, from, to}}
 }
 
 // Convert a typed numeric value to a const number. Ok is false if v is not numeric

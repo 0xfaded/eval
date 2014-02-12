@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, err error) {
+func evalBinaryExpr(binary *BinaryExpr, env *Env) (r reflect.Value, err error) {
 
         if binary.IsConst() {
                 return binary.Const(), nil
@@ -24,9 +24,9 @@ func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, er
         }
 
         var xs, ys []reflect.Value
-        if xs, err = evalTypedExpr(ctx, xexpr, zt, env); err != nil {
+        if xs, err = evalTypedExpr(xexpr, zt, env); err != nil {
                 return reflect.Value{}, err
-        } else if ys, err = evalTypedExpr(ctx, yexpr, zt, env); err != nil {
+        } else if ys, err = evalTypedExpr(yexpr, zt, env); err != nil {
                 return reflect.Value{}, err
         }
         x, y := xs[0], ys[0]
@@ -34,17 +34,17 @@ func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, er
 	var b bool
 	switch zt[0].Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalBinaryIntExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryIntExpr(x, binary.Op, y)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalBinaryUintExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryUintExpr(x, binary.Op, y)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalBinaryFloatExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryFloatExpr(x, binary.Op, y)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalBinaryComplexExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryComplexExpr(x, binary.Op, y)
 	case reflect.String:
-		r, err = evalBinaryStringExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryStringExpr(x, binary.Op, y)
 	case reflect.Bool:
-		r, err = evalBinaryBoolExpr(ctx, x, binary.Op, y)
+		r, err = evalBinaryBoolExpr(x, binary.Op, y)
 	case reflect.Interface, reflect.Ptr:
 		if xexpr.KnownType()[0] == ConstNil {
 			b = y.IsNil()
@@ -84,7 +84,7 @@ func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, er
 	return r, err
 }
 
-func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryIntExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r int64
 	var err error
 	var b bool
@@ -125,7 +125,7 @@ func evalBinaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Valu
 	}
 }
 
-func evalBinaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryUintExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var err error
 	var r uint64
 	var b bool
@@ -166,7 +166,7 @@ func evalBinaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Val
 	}
 }
 
-func evalBinaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryFloatExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r float64
         var is_bool bool
 	var b bool
@@ -197,7 +197,7 @@ func evalBinaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Va
 	}
 }
 
-func evalBinaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryComplexExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r complex128
         var is_bool bool
 	var b bool
@@ -224,7 +224,7 @@ func evalBinaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.
 	}
 }
 
-func evalBinaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryStringExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	var r string
 	var b bool
 	is_bool := false
@@ -248,7 +248,7 @@ func evalBinaryStringExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.V
 	}
 }
 
-func evalBinaryBoolExpr(ctx *Ctx, x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
+func evalBinaryBoolExpr(x reflect.Value, op token.Token, y reflect.Value) (reflect.Value, error) {
 	xx, yy := x.Bool(), y.Bool()
 	var r bool
 	switch op {

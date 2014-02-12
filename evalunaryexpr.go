@@ -6,12 +6,12 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) ([]reflect.Value, error) {
+func evalUnaryExpr(unary *UnaryExpr, env *Env) ([]reflect.Value, error) {
 	if unary.IsConst() {
 		return []reflect.Value{unary.Const()}, nil
 	}
 
-	xx, _, err := EvalExpr(ctx, unary.X.(Expr), env)
+	xx, _, err := EvalExpr(unary.X.(Expr), env)
 	if err != nil {
 		return []reflect.Value{}, err
 	}
@@ -33,22 +33,22 @@ func evalUnaryExpr(ctx *Ctx, unary *UnaryExpr, env *Env) ([]reflect.Value, error
 	var r reflect.Value
 	switch x.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		r, err = evalUnaryIntExpr(ctx, x, unary.Op)
+		r, err = evalUnaryIntExpr(x, unary.Op)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		r, err = evalUnaryUintExpr(ctx, x, unary.Op)
+		r, err = evalUnaryUintExpr(x, unary.Op)
 	case reflect.Float32, reflect.Float64:
-		r, err = evalUnaryFloatExpr(ctx, x, unary.Op)
+		r, err = evalUnaryFloatExpr(x, unary.Op)
 	case reflect.Complex64, reflect.Complex128:
-		r, err = evalUnaryComplexExpr(ctx, x, unary.Op)
+		r, err = evalUnaryComplexExpr(x, unary.Op)
 	case reflect.Bool:
-		r, err = evalUnaryBoolExpr(ctx, x, unary.Op)
+		r, err = evalUnaryBoolExpr(x, unary.Op)
 	default:
 		panic("eval: impossible unary op " + unary.Op.String())
 	}
 	return []reflect.Value{r}, err
 }
 
-func evalUnaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryIntExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 	var r int64
 	var err error
 
@@ -63,7 +63,7 @@ func evalUnaryIntExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value,
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-func evalUnaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryUintExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r uint64
 
@@ -78,7 +78,7 @@ func evalUnaryUintExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-func evalUnaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryFloatExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r float64
 
@@ -92,7 +92,7 @@ func evalUnaryFloatExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Valu
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-func evalUnaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryComplexExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r complex128
 
@@ -106,7 +106,7 @@ func evalUnaryComplexExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Va
 	return reflect.ValueOf(r).Convert(x.Type()), err
 }
 
-func evalUnaryBoolExpr(ctx *Ctx, x reflect.Value, op token.Token) (reflect.Value, error) {
+func evalUnaryBoolExpr(x reflect.Value, op token.Token) (reflect.Value, error) {
 	var err error
 	var r bool
 

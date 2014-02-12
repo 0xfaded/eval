@@ -36,18 +36,18 @@ func typeAssignableTo(from, to reflect.Type) bool {
 // bool value is returned indicating if the expr is assignable to t.
 // It will also be true expr failed to type check, indicating that the
 // assignability check was never attempted.
-func checkExprAssignableTo(ctx *Ctx, expr ast.Expr, t reflect.Type, env *Env) (Expr, bool, []error) {
+func checkExprAssignableTo(expr ast.Expr, t reflect.Type, env *Env) (Expr, bool, []error) {
 	var errs []error
-	aexpr, moreErrs := CheckExpr(ctx, expr, env)
+	aexpr, moreErrs := CheckExpr(expr, env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
-	} else if _, err := expectSingleType(ctx, aexpr.KnownType(), aexpr); err != nil {
+	} else if _, err := expectSingleType(aexpr.KnownType(), aexpr); err != nil {
 		errs = append(errs, err)
 	}
 	if errs != nil {
 		return aexpr, true, errs
 	}
-	ok, convErrs := exprAssignableTo(ctx, aexpr, t)
+	ok, convErrs := exprAssignableTo(aexpr, t)
 	if convErrs != nil {
 		errs = append(errs, convErrs...)
 	}
@@ -57,7 +57,7 @@ func checkExprAssignableTo(ctx *Ctx, expr ast.Expr, t reflect.Type, env *Env) (E
 // Determine if the result of from expr is assignable to type to. to must be a vanilla reflect.Type.
 // from must have a KnownType() of length 1. Const types that raise overflow and truncation
 // errors will still return true, but the errors will be reflected in the []error slice.
-func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
+func exprAssignableTo(from Expr, to reflect.Type) (bool, []error) {
 	if len(from.KnownType()) != 1 {
 		panic("go-eval: assignableTo called with from.KnownType() != 1")
 	}
@@ -67,18 +67,18 @@ func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
 	if c, ok := fromType.(ConstType); ok && from.IsConst() {
 		// If cv is a valid value, then the types are assignable even if
 		// other conversion errors, such as overflows, are present.
-		cv, errs := promoteConstToTyped(ctx, c, constValue(from.Const()), to, from)
+		cv, errs := promoteConstToTyped(c, constValue(from.Const()), to, from)
 		return reflect.Value(cv).IsValid(), errs
 	}
 
 	return typeAssignableTo(fromType, to), nil
 }
 
-func expectSingleType(ctx *Ctx, types []reflect.Type, srcExpr ast.Expr) (reflect.Type, error) {
+func expectSingleType(types []reflect.Type, srcExpr Expr) (reflect.Type, error) {
 	if len(types) == 0 {
-		return nil, ErrMissingValue{at(ctx, srcExpr)}
+		return nil, ErrMissingValue{srcExpr}
 	} else if len(types) != 1 {
-		return nil, ErrMultiInSingleContext{at(ctx, srcExpr)}
+		return nil, ErrMultiInSingleContext{srcExpr}
 	} else {
 		return types[0], nil
 	}
@@ -256,18 +256,18 @@ func comprisingFloatType(complexType reflect.Type) reflect.Type {
 // untyped constant, it is converted to type t. This function assumes
 // the input is successfully type checked, and therefore is undefined
 // incorrectly typed inputs.
-func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (xs []reflect.Value, err error) {
+func evalTypedExpr(expr Expr, t knownType, env *Env) (xs []reflect.Value, err error) {
         if expr.IsConst() {
                 x := expr.Const()
                 if ct, ok := expr.KnownType()[0].(ConstType); ok {
-                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), t[0], expr)
+                        cx, _ := promoteConstToTyped(ct, constValue(x), t[0], expr)
                         xs = []reflect.Value{reflect.Value(cx)}
                 } else {
                         xs = []reflect.Value{x}
                 }
         } else {
                 var xxs *[]reflect.Value
-                xxs, _, err = EvalExpr(ctx, expr, env)
+                xxs, _, err = EvalExpr(expr, env)
                 xs = *xxs
         }
         return xs, err
@@ -278,19 +278,19 @@ func evalTypedExpr(ctx *Ctx, expr Expr, t knownType, env *Env) (xs []reflect.Val
 // and checkErrs which occur during the type check. It is possible
 // that checkErrs will be non-nil yet ok is still true. In this case
 // the errors are non-fatal, such as integer truncation.
-func checkInteger(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
-	aexpr, checkErrs = CheckExpr(ctx, expr, env)
+func checkInteger(expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+	aexpr, checkErrs = CheckExpr(expr, env)
 	if checkErrs != nil && !aexpr.IsConst() {
 		return aexpr, 0, false, checkErrs
 	}
-	t, err := expectSingleType(ctx, aexpr.KnownType(), aexpr)
+	t, err := expectSingleType(aexpr.KnownType(), aexpr)
 	if err != nil {
 		return aexpr, 0, false, append(checkErrs, err)
 	}
 
 	var ii int64
 	if ct, ok := t.(ConstType); ok {
-		c, moreErrs := promoteConstToTyped(ctx, ct, constValue(aexpr.Const()), intType, aexpr)
+		c, moreErrs := promoteConstToTyped(ct, constValue(aexpr.Const()), intType, aexpr)
 		if moreErrs != nil {
 			checkErrs = append(checkErrs, moreErrs...)
 		}
@@ -318,17 +318,17 @@ func checkInteger(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool
 }
 
 // Eval a node and cast it to an int. expr must be a *ConstNumber or integral type
-func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
+func evalInteger(expr Expr, env *Env) (int, error) {
         if expr.IsConst() {
                 x := expr.Const()
                 if ct, ok := expr.KnownType()[0].(ConstType); ok {
-                        cx, _ := promoteConstToTyped(ctx, ct, constValue(x), intType, expr)
+                        cx, _ := promoteConstToTyped(ct, constValue(x), intType, expr)
 			return int(reflect.Value(cx).Int()), nil
                 } else {
 			panic(dytc("const bool or string evaluated as int"))
                 }
         } else {
-                xs, _, err := EvalExpr(ctx, expr, env);
+                xs, _, err := EvalExpr(expr, env);
 		if err != nil {
 			return 0, err
 		}
@@ -344,15 +344,15 @@ func evalInteger(ctx *Ctx, expr Expr, env *Env) (int, error) {
         }
 }
 
-func checkArrayIndex(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
-	aexpr, checkErrs = CheckExpr(ctx, expr, env)
+func checkArrayIndex(expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+	aexpr, checkErrs = CheckExpr(expr, env)
 	if !aexpr.IsConst() {
 		return aexpr, 0, false, checkErrs
 	}
 	t := aexpr.KnownType()[0]
 	var ii int64
 	if ct, ok := t.(ConstType); ok {
-		c, moreErrs := promoteConstToTyped(ctx, ct, constValue(aexpr.Const()), intType, aexpr)
+		c, moreErrs := promoteConstToTyped(ct, constValue(aexpr.Const()), intType, aexpr)
 		if moreErrs != nil {
 			checkErrs = append(checkErrs, moreErrs...)
 		}

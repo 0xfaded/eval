@@ -4,9 +4,9 @@ import (
 	"reflect"
 )
 
-func evalTypeAssertExpr(ctx *Ctx, assert *TypeAssertExpr, env *Env) (reflect.Value, error) {
+func evalTypeAssertExpr(assert *TypeAssertExpr, env *Env) (reflect.Value, error) {
 	x := assert.X.(Expr)
-	if vs, _, err := EvalExpr(ctx, x, env); err != nil {
+	if vs, _, err := EvalExpr(x, env); err != nil {
 		return reflect.Value{}, err
 	} else {
 		v := (*vs)[0]

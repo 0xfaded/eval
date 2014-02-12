@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalBasicLit(ctx *Ctx, lit *BasicLit) (reflect.Value, error) {
+func evalBasicLit(lit *BasicLit) (reflect.Value, error) {
 	if lit.IsConst() {
 		return lit.Const(), nil
 	}

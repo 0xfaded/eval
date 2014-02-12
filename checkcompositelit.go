@@ -5,45 +5,44 @@ import (
 	"go/ast"
 )
 
-func checkCompositeLit(ctx *Ctx, lit *ast.CompositeLit, env *Env) (*CompositeLit, []error) {
-	return checkCompositeLitR(ctx, lit, nil, env)
+func checkCompositeLit(lit *ast.CompositeLit, env *Env) (*CompositeLit, []error) {
+	return checkCompositeLitR(lit, nil, env)
 }
 
 // Recursively check composite literals, where a child composite lit's type depends the
 // parent's type For example, the expression [][]int{{1,2},{3,4}} contains two
 // slice lits, {1,2} and {3,4}, but their types are inferenced from the parent [][]int{}.
-func checkCompositeLitR(ctx *Ctx, lit *ast.CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitR(lit *ast.CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
 	alit := &CompositeLit{CompositeLit: lit}
 
 	// We won't generate any errors here if the given type does not match lit.Type.
 	// The caller will need to detect the type incompatibility.
 	if lit.Type != nil {
 		var errs []error
-		lit.Type, t, _, errs = checkType(ctx, lit.Type, env)
+		lit.Type, t, _, errs = checkType(lit.Type, env)
 		if errs != nil {
 			return alit, errs
 		}
 	} else if t == nil {
-		return alit, []error{ErrMissingCompositeLitType{at(ctx, alit)}}
+		return alit, []error{ErrMissingCompositeLitType{alit}}
 	}
 
 	alit.knownType = knownType{t}
 
 	switch t.Kind() {
 	case reflect.Map:
-		return checkCompositeLitMap(ctx, alit, t, env)
+		return checkCompositeLitMap(alit, t, env)
 	case reflect.Array, reflect.Slice:
-		return checkCompositeLitArrayOrSlice(ctx, alit, t, env)
+		return checkCompositeLitArrayOrSlice(alit, t, env)
 	case reflect.Struct:
-		return checkCompositeLitStruct(ctx, alit, t, env)
+		return checkCompositeLitStruct(alit, t, env)
 	default:
 		panic("eval: unimplemented composite lit " + t.Kind().String())
 	}
 }
 
-func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
-	var errs, moreErrs []error
-
+func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+	var errs []error
 	kT := t.Key()
 
 	// Don't check for duplicate interface{} keys. This is a gc bug
@@ -56,19 +55,20 @@ func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env)
 
 	for i := range lit.Elts {
 		if kv, ok := lit.Elts[i].(*ast.KeyValueExpr); !ok {
-			lit.Elts[i], moreErrs = CheckExpr(ctx, lit.Elts[i], env)
+			elt, moreErrs := CheckExpr(lit.Elts[i], env)
+			lit.Elts[i] = elt
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
-			errs = append(errs, ErrMissingMapKey{at(ctx, lit.Elts[i])})
+			errs = append(errs, ErrMissingMapKey{elt})
 		} else {
 			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
-			k, ok, moreErrs := checkExprAssignableTo(ctx, kv.Key, kT, env)
+			k, ok, moreErrs := checkExprAssignableTo(kv.Key, kT, env)
 			if !ok {
 				if len(k.KnownType()) != 0 {
 					kF := fakeCheckExpr(kv.Key, env)
 					kF.setKnownType(knownType(k.KnownType()))
-					errs = append(errs, ErrBadMapKey{at(ctx, kF), kT})
+					errs = append(errs, ErrBadMapKey{kF, kT})
 				}
 			} else {
 				errs = append(errs, moreErrs...)
@@ -80,18 +80,18 @@ func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env)
 				if k.KnownType()[0] == ConstNil {
 					constKey = nil
 				} else if cT, ok := k.KnownType()[0].(ConstType); ok {
-					c, _ := promoteConstToTyped(ctx, cT, constValue(k.Const()),
+					c, _ := promoteConstToTyped(cT, constValue(k.Const()),
 						cT.DefaultPromotion(), k)
 					constKey = reflect.Value(c).Interface()
 				} else {
 					constKey = k.Const().Interface()
 				}
 				if seen[constKey] {
-					errs = append(errs, ErrDuplicateMapKey{at(ctx, kv.Key)})
+					errs = append(errs, ErrDuplicateMapKey{k})
 				}
 				seen[constKey] = true
 			}
-			v, moreErrs := checkMapValue(ctx, kv.Value, eltT, env)
+			v, moreErrs := checkMapValue(kv.Value, eltT, env)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
@@ -101,7 +101,7 @@ func checkCompositeLitMap(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env)
 	return lit, errs
 }
 
-func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
 	var errs, moreErrs []error
 	eltT := t.Elem()
 	maxIndex, curIndex := -1, 0
@@ -117,6 +117,7 @@ func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, 
 	// For example, []int{1, 2:1, 1} -> [1, 0, 1, 1]
 	for i := range lit.Elts {
 		var value *ast.Expr
+		skipIndexChecks := false
 		kv, ok := lit.Elts[i].(*ast.KeyValueExpr)
 		if !ok {
 			value = &lit.Elts[i]
@@ -125,7 +126,9 @@ func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, 
 			value = &kv.Value
 			// Check the array key
 			var index int
-			kv.Key, index, ok, moreErrs = checkArrayIndex(ctx, kv.Key, env);
+			var k Expr
+			k, index, ok, moreErrs = checkArrayIndex(kv.Key, env);
+			kv.Key = k
 			if !ok || moreErrs != nil {
 				// NOTE[crc] Haven't checked the gc implementation, but
 				// from experimentation it seems that only undefined
@@ -136,30 +139,36 @@ func checkCompositeLitArrayOrSlice(ctx *Ctx, lit *CompositeLit, t reflect.Type, 
 						errs = append(errs, err)
 					}
 				}
-				errs = append(errs, ErrBadArrayKey{at(ctx, kv.Key)})
+				errs = append(errs, ErrBadArrayKey{k})
 				// Don't include this element in index calculations
 				curIndex -= 1
-				goto check
+				skipIndexChecks = true
+			} else {
+				lit.indices = append(lit.indices, struct{pos, index int}{i, index})
+				curIndex = index
 			}
-			lit.indices = append(lit.indices, struct{pos, index int}{i, index})
-			curIndex = index
 		}
-		if maxIndex < curIndex {
-			maxIndex = curIndex
-		}
-		if !outOfBounds && length != -1 && curIndex >= length {
-			outOfBounds = true
-			errs = append(errs, ErrArrayKeyOutOfBounds{at(ctx, lit.Elts[i]), t, curIndex})
-		}
-		// has this index been used already
-		if used[curIndex] {
-			errs = append(errs, ErrDuplicateArrayKey{at(ctx, kv.Key), curIndex})
-		}
-		used[curIndex] = true
-
-check:
 		// finally check the value
-		*value, moreErrs = checkArrayValue(ctx, *value, eltT, env)
+		v, moreErrs := checkArrayValue(*value, eltT, env)
+		*value = v
+
+		// These errors slide in before the check errors, but we need v
+		if !skipIndexChecks {
+			if maxIndex < curIndex {
+				maxIndex = curIndex
+			}
+			if !outOfBounds && length != -1 && curIndex >= length {
+				outOfBounds = true
+				errs = append(errs, ErrArrayKeyOutOfBounds{v, t, curIndex})
+			}
+			// has this index been used already
+			if used[curIndex] {
+				errs = append(errs, ErrDuplicateArrayKey{fakeCheckExpr(kv.Key, env), curIndex})
+			}
+			used[curIndex] = true
+		}
+
+		// Add the check errors
 		if moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
@@ -175,7 +184,7 @@ check:
 	return lit, errs
 }
 
-func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
 	var errs, moreErrs []error
 
 	// X{} is treated as if it has zero KeyValue'd elements, i.e. unspecified
@@ -198,10 +207,12 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 		for i := 0; i < len(lit.Elts); i += 1 {
 			kv, ok := lit.Elts[i].(*ast.KeyValueExpr)
 			if !ok {
+				elt := fakeCheckExpr(lit.Elts[i], env)
+				lit.Elts[i] = elt
 				if !mixed {
 					// This error only gets reported once
 					mixed = true
-					errs = append(errs, ErrMixedStructValues{at(ctx, lit.Elts[i])})
+					errs = append(errs, ErrMixedStructValues{elt})
 				}
 				continue
 			}
@@ -211,20 +222,26 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 			if ident, ok := kv.Key.(*ast.Ident); !ok {
 				// This check is a hack for making kv.Key printable.
 				// field identifiers should not usually be type checked.
-				kv.Key = fakeCheckExpr(kv.Key, env)
-				errs = append(errs, ErrInvalidStructField{at(ctx, kv.Key)})
-			} else if name := ident.Name; false {
-			} else if field, ok := t.FieldByName(name); !ok {
-				errs = append(errs, ErrUnknownStructField{at(ctx, kv.Key), t, name})
+				k := fakeCheckExpr(kv.Key, env)
+				kv.Key = k
+				errs = append(errs, ErrInvalidStructField{k})
 			} else {
-				if seen[name] {
-					errs = append(errs, ErrDuplicateStructField{at(ctx, kv.Key), name})
-				}
-				seen[name] = true
-				lit.fields = append(lit.fields, field.Index[0])
-				kv.Value, moreErrs = checkStructField(ctx, kv.Value, field, env)
-				if moreErrs != nil {
-					errs = append(errs, moreErrs...)
+				name := ident.Name
+				if field, ok := t.FieldByName(name); !ok {
+					k := fakeCheckExpr(kv.Key, env)
+					kv.Key = k
+					errs = append(errs, ErrUnknownStructField{k, t, name})
+				} else {
+					k := &Ident{Ident: ident}
+					if seen[name] {
+						errs = append(errs, ErrDuplicateStructField{k, name})
+					}
+					seen[name] = true
+					lit.fields = append(lit.fields, field.Index[0])
+					kv.Value, moreErrs = checkStructField(kv.Value, field, env)
+					if moreErrs != nil {
+						errs = append(errs, moreErrs...)
+					}
 				}
 			}
 		}
@@ -233,18 +250,18 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 		var i int
 		for i = 0; i < numFields && i < len(lit.Elts); i += 1 {
 			field := t.Field(i)
-			lit.Elts[i], moreErrs = checkStructField(ctx, lit.Elts[i], field, env)
+			lit.Elts[i], moreErrs = checkStructField(lit.Elts[i], field, env)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
 			lit.fields = append(lit.fields, i)
 		}
 		if numFields != len(lit.Elts) {
-			errs = append(errs, ErrWrongNumberOfStructValues{at(ctx, lit)})
+			errs = append(errs, ErrWrongNumberOfStructValues{lit})
 		}
 		// Remaining fields are type checked reguardless of use
 		for ; i < len(lit.Elts); i += 1 {
-			lit.Elts[i], moreErrs = CheckExpr(ctx, lit.Elts[i], env)
+			lit.Elts[i], moreErrs = CheckExpr(lit.Elts[i], env)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
@@ -253,15 +270,15 @@ func checkCompositeLitStruct(ctx *Ctx, lit *CompositeLit, t reflect.Type, env *E
 	return lit, errs
 }
 
-func checkMapValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+func checkMapValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
 	switch eltT.Kind() {
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
 		if lit, ok := expr.(*ast.CompositeLit); ok {
-			return checkCompositeLitR(ctx, lit, eltT, env)
+			return checkCompositeLitR(lit, eltT, env)
 		}
 	}
 
-	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, eltT, env)
+	aexpr, ok, errs := checkExprAssignableTo(expr, eltT, env)
 	if !ok {
 		// NOTE[crc] this hack removes conversion errors from consts other
 		// than strings and nil to match the output of gc.
@@ -274,20 +291,20 @@ func checkMapValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, 
 				errs = nil
 			}
 		}
-		errs = append(errs, ErrBadMapValue{at(ctx, aexpr), eltT})
+		errs = append(errs, ErrBadMapValue{aexpr, eltT})
 	}
 	return aexpr, errs
 }
 
-func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+func checkArrayValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
 	switch eltT.Kind() {
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
 		if lit, ok := expr.(*ast.CompositeLit); ok {
-			return checkCompositeLitR(ctx, lit, eltT, env)
+			return checkCompositeLitR(lit, eltT, env)
 		}
 	}
 
-	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, eltT, env)
+	aexpr, ok, errs := checkExprAssignableTo(expr, eltT, env)
 	if !ok {
 		// NOTE[crc] this hack removes conversion errors from consts other
 		// than strings and nil to match the output of gc.
@@ -300,15 +317,15 @@ func checkArrayValue(ctx *Ctx, expr ast.Expr, eltT reflect.Type, env *Env) (Expr
 				errs = nil
 			}
 		}
-		errs = append(errs, ErrBadArrayValue{at(ctx, aexpr), eltT})
+		errs = append(errs, ErrBadArrayValue{aexpr, eltT})
 	}
 	return aexpr, errs
 }
 
-func checkStructField(ctx *Ctx, expr ast.Expr, field reflect.StructField, env *Env) (Expr, []error) {
-	aexpr, ok, errs := checkExprAssignableTo(ctx, expr, field.Type, env)
+func checkStructField(expr ast.Expr, field reflect.StructField, env *Env) (Expr, []error) {
+	aexpr, ok, errs := checkExprAssignableTo(expr, field.Type, env)
 	if !ok {
-		errs = append([]error{}, ErrBadStructValue{at(ctx, aexpr), field.Type})
+		errs = append([]error{}, ErrBadStructValue{aexpr, field.Type})
 	}
 	return aexpr, errs
 }

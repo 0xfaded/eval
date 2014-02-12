@@ -17,42 +17,42 @@ import (
 //
 // if expr.IsConst() is true, then the resulting Expr has been successfully
 // checked, regardless of if errors are present.
-func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
-	if t, _, isType, _ := checkType(ctx, expr, env); isType {
-		return t, []error{ErrTypeUsedAsExpression{at(ctx, t)}}
+func CheckExpr(expr ast.Expr, env *Env) (Expr, []error) {
+	if t, _, isType, _ := checkType(expr, env); isType {
+		return t, []error{ErrTypeUsedAsExpression{t}}
 	}
 
 	switch expr := expr.(type) {
 	case *ast.BadExpr:
 		return &BadExpr{BadExpr: expr}, nil
 	case *ast.Ident:
-		return checkIdent(ctx, expr, env)
+		return checkIdent(expr, env)
 	case *ast.Ellipsis:
 		return &Ellipsis{Ellipsis: expr}, nil
 	case *ast.BasicLit:
-		return checkBasicLit(ctx, expr, env)
+		return checkBasicLit(expr, env)
 	case *ast.FuncLit:
 		return &FuncLit{FuncLit: expr}, nil
 	case *ast.CompositeLit:
-		return checkCompositeLit(ctx, expr, env)
+		return checkCompositeLit(expr, env)
 	case *ast.ParenExpr:
-		return checkParenExpr(ctx, expr, env)
+		return checkParenExpr(expr, env)
 	case *ast.SelectorExpr:
-		return checkSelectorExpr(ctx, expr, env)
+		return checkSelectorExpr(expr, env)
 	case *ast.IndexExpr:
-		return checkIndexExpr(ctx, expr, env)
+		return checkIndexExpr(expr, env)
 	case *ast.SliceExpr:
-		return checkSliceExpr(ctx, expr, env)
+		return checkSliceExpr(expr, env)
 	case *ast.TypeAssertExpr:
-		return checkTypeAssertExpr(ctx, expr, env)
+		return checkTypeAssertExpr(expr, env)
 	case *ast.CallExpr:
-		return checkCallExpr(ctx, expr, env)
+		return checkCallExpr(expr, env)
 	case *ast.StarExpr:
-		return checkStarExpr(ctx, expr, env)
+		return checkStarExpr(expr, env)
 	case *ast.UnaryExpr:
-		return checkUnaryExpr(ctx, expr, env)
+		return checkUnaryExpr(expr, env)
 	case *ast.BinaryExpr:
-		return checkBinaryExpr(ctx, expr, env)
+		return checkBinaryExpr(expr, env)
 	case *ast.KeyValueExpr:
 		panic("eval: KeyValueExpr checked")
 	default:
@@ -60,7 +60,7 @@ func CheckExpr(ctx *Ctx, expr ast.Expr, env *Env) (Expr, []error) {
 	}
 }
 
-func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []error) {
+func checkType(expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []error) {
 	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
 		expr = parens.X
 	}
@@ -72,11 +72,11 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 		} else if t, ok := builtinTypes[node.Name]; ok {
 			return ident, t, true, nil
 		} else {
-			return ident, nil, false, []error{ErrUndefined{at(ctx, ident)}}
+			return ident, nil, false, []error{ErrUndefined{ident}}
 		}
 	case *ast.StarExpr:
 		star := &StarExpr{StarExpr: node}
-		elem, elemT, isType, errs := checkType(ctx, node.X, env)
+		elem, elemT, isType, errs := checkType(node.X, env)
 		if isType {
 			// Only set X if X is a type, as * can be part of an expression or type
 			star.X = elem
@@ -91,7 +91,7 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 		if node.Len != nil {
 			return arrayT, nil, true, []error{errors.New("array types not implemented")}
 		} else {
-			elt, eltT, _, errs := checkType(ctx, node.Elt, env);
+			elt, eltT, _, errs := checkType(node.Elt, env);
 			arrayT.Elt = elt
 			if errs != nil {
 				return arrayT, nil, true, errs
@@ -114,12 +114,12 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 		return interfaceT, nil, true, []error{errors.New("interface types not implemented")}
 	case *ast.MapType:
 		mapT := &MapType{MapType: node}
-		keyT, k, _, errs := checkType(ctx, mapT.Key, env)
+		keyT, k, _, errs := checkType(mapT.Key, env)
 		mapT.Key = keyT
 		if k != nil && !isStaticTypeComparable(k) {
-			errs = append(errs, ErrUncomparableMapKey{at(ctx, node), k})
+			errs = append(errs, ErrUncomparableMapKey{mapT, k})
 		}
-		valueT, v, _, moreErrs := checkType(ctx, mapT.Value, env)
+		valueT, v, _, moreErrs := checkType(mapT.Value, env)
 		mapT.Value = valueT
 		if moreErrs != nil {
 			errs = append(errs, moreErrs...)
@@ -130,7 +130,7 @@ func checkType(ctx *Ctx, expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []e
 		return mapT, nil, true, errs
 	case *ast.ChanType:
 		chanT := &ChanType{ChanType: node}
-		value, valueT, _, errs := checkType(ctx, node.Value, env);
+		value, valueT, _, errs := checkType(node.Value, env);
 		chanT.Value = value
 		if errs != nil {
 			return chanT, nil, true, errs

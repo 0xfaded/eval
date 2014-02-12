@@ -5,17 +5,17 @@ import (
 	"go/ast"
 )
 
-func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*SelectorExpr, []error) {
+func checkSelectorExpr(selector *ast.SelectorExpr, env *Env) (*SelectorExpr, []error) {
 	aexpr := &SelectorExpr{SelectorExpr: selector}
 
 	// First check if this is a package identifier
 	if ident, ok := selector.X.(*ast.Ident); ok {
 		if pkg, ok := env.Pkgs[ident.Name]; ok {
 			// Lookup this ident in the context of the package.
-			sel, errs := checkIdent(ctx, aexpr.SelectorExpr.Sel, pkg)
+			sel, errs := checkIdent(aexpr.SelectorExpr.Sel, pkg)
 			if len(errs) == 1 {
 				if undefined, ok := (errs[0]).(ErrUndefined); ok {
-					undefined.Node = aexpr
+					undefined.Expr = aexpr
 					errs[0] = undefined
 				}
 			}
@@ -30,18 +30,18 @@ func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*Selecto
 		}
 	}
 
-	x, errs := CheckExpr(ctx, selector.X, env)
+	x, errs := CheckExpr(selector.X, env)
 	aexpr.X = x
 	aexpr.Sel = &Ident{Ident: selector.Sel}
 	if errs != nil && !x.IsConst() {
 		return aexpr, errs
 	}
 
-	t, err := expectSingleType(ctx, x.KnownType(), x)
+	t, err := expectSingleType(x.KnownType(), x)
 	if err != nil {
 		return aexpr, append(errs, err)
 	} else if t == ConstNil {
-		return aexpr, append(errs, ErrUntypedNil{at(ctx, x)})
+		return aexpr, append(errs, ErrUntypedNil{x})
 	}
 
 	name := aexpr.Sel.Name
@@ -91,5 +91,5 @@ func checkSelectorExpr(ctx *Ctx, selector *ast.SelectorExpr, env *Env) (*Selecto
 		}
 	}
 
-	return aexpr, append(errs, ErrUndefinedFieldOrMethod{at(ctx, aexpr)})
+	return aexpr, append(errs, ErrUndefinedFieldOrMethod{aexpr})
 }

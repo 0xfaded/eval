@@ -11,7 +11,7 @@ import (
 )
 
 // Here's our custom ident lookup.
-func MyEvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (
+func MyEvalIdentExpr(ident *Ident, env *Env) (
 	*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
@@ -33,11 +33,11 @@ func MyEvalIdentExpr(ctx *Ctx, ident *Ident, env *Env) (
 
 
 // Here's our custom selector lookup.
-func MyEvalSelectorExpr(ctx *Ctx, selector *SelectorExpr, env *Env) (
+func MyEvalSelectorExpr(selector *SelectorExpr, env *Env) (
 	*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
-	if x, _, err = EvalExpr(ctx, selector.X.(Expr), env); err != nil {
+	if x, _, err = EvalExpr(selector.X.(Expr), env); err != nil {
 		return nil, true, err
 	}
 	sel   := selector.Sel.Name

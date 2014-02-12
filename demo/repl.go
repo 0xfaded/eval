@@ -70,18 +70,17 @@ func REPL(env *eval.Env) {
 			if err == io.EOF { break }
 			panic(err)
 		}
-		ctx := &eval.Ctx{line}
 		if expr, err := parser.ParseExpr(line); err != nil {
 			if pair := eval.FormatErrorPos(line, err.Error()); len(pair) == 2 {
 				fmt.Println(pair[0])
 				fmt.Println(pair[1])
 			}
 			fmt.Printf("parse error: %s\n", err)
-		} else if cexpr, errs := eval.CheckExpr(ctx, expr, env); len(errs) != 0 {
+		} else if cexpr, errs := eval.CheckExpr(expr, env); len(errs) != 0 {
 			for _, cerr := range errs {
 				fmt.Printf("%v\n", cerr)
 			}
-		} else if vals, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
+		} else if vals, _, err := eval.EvalExpr(cexpr, env); err != nil {
 			fmt.Printf("eval error: %s\n", err)
 		} else if vals == nil {
 			fmt.Printf("Kind=nil\nnil\n")

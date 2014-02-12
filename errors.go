@@ -4,322 +4,314 @@ import (
 	"fmt"
 	"reflect"
 
-	"go/ast"
 	"go/token"
 )
 
 type ErrBadBasicLit struct {
-	ErrorContext
+	*BasicLit
 }
 
 type ErrUndefined struct {
-	ErrorContext
+	Expr
 }
 
 type ErrInvalidIndirect struct {
-	ErrorContext
+	Expr
 }
 
 type ErrUndefinedFieldOrMethod struct {
-	ErrorContext
+	Expr
 }
 
 type ErrCallNonFuncType struct {
-	ErrorContext
+	Expr
 }
 
 type ErrWrongNumberOfArgs struct {
-	ErrorContext
+	*CallExpr
 	numArgs int
 }
 
 type ErrWrongArgType struct {
-	ErrorContext
+	Expr
 	call *CallExpr
 	argPos int
 }
 
 type ErrInvalidEllipsisInCall struct {
-	ErrorContext
+	*CallExpr
 }
 
 type ErrMissingValue struct {
-	ErrorContext
+	Expr
 }
 
 type ErrMultiInSingleContext struct {
-	ErrorContext
+	Expr
 }
 
 type ErrBadMapIndex struct {
-	ErrorContext
+	Expr
 	keyT reflect.Type
 }
 
 type ErrNonIntegerIndex struct {
-	ErrorContext
+	Expr
 }
 
 type ErrIndexOutOfBounds struct {
-	ErrorContext
+	Expr
 	x Expr
 	i int
 }
 
 type ErrInvalidIndexOperation struct {
-	ErrorContext
+	*IndexExpr
 }
 
 type ErrInvalidSliceIndex struct {
-	ErrorContext
+	*SliceExpr
 }
 
 type ErrInvalidSliceOperation struct {
-	ErrorContext
+	*SliceExpr
 }
 
 type ErrUnaddressableSliceOperand struct {
-	ErrorContext
+	*SliceExpr
 }
 
 type ErrInvalidIndex struct {
-	ErrorContext
+	Expr
 	indexValue reflect.Value
 	containerType reflect.Type
 }
 
 type ErrDivideByZero struct {
-	ErrorContext
+	*BinaryExpr
 }
 
 type ErrInvalidBinaryOperation struct {
-	ErrorContext
+	*BinaryExpr
 }
 
 type ErrInvalidUnaryOperation struct {
-	ErrorContext
+	*UnaryExpr
 }
 
 type ErrInvalidAddressOf struct {
-	ErrorContext
+	Expr
 }
 
 type ErrInvalidRecvFrom struct {
-	ErrorContext
+	Expr
 }
 
 type ErrBadConversion struct {
-	ErrorContext
+	Expr
 	from reflect.Type
 	to reflect.Type
-	v reflect.Value
 }
 
 type ErrBadConstConversion struct {
-	ErrorContext
+	Expr
 	from reflect.Type
 	to reflect.Type
-	v reflect.Value
 }
 
 type ErrTruncatedConstant struct {
-	ErrorContext
+	Expr
 	to ConstType
 	constant *ConstNumber
 }
 
 type ErrOverflowedConstant struct {
-	ErrorContext
+	Expr
 	from ConstType
 	to reflect.Type
 	constant *ConstNumber
 }
 
 type ErrUntypedNil struct {
-	ErrorContext
+	Expr
 }
 
 type ErrTypeUsedAsExpression struct {
-	ErrorContext
+	Expr
 }
 
 type ErrUncomparableMapKey struct {
-	ErrorContext
+	Expr
 	keyT reflect.Type
 }
 
 type ErrMissingMapKey struct {
-	ErrorContext
+	Expr
 }
 
 type ErrBadMapKey struct {
-	ErrorContext
+	Expr
 	keyT reflect.Type
 }
 
 type ErrDuplicateMapKey struct {
-	ErrorContext
+	Expr
 }
 
 type ErrBadMapValue struct {
-	ErrorContext
+	Expr
 	eltT reflect.Type
 }
 
 type ErrBadArrayKey struct {
-	ErrorContext
+	Expr
 }
 
 type ErrArrayKeyOutOfBounds struct {
-	ErrorContext
+	Expr
 	arrayT reflect.Type
 	index int
 }
 
 type ErrDuplicateArrayKey struct {
-	ErrorContext
+	Expr
 	index int
 }
 
 type ErrBadArrayValue struct {
-	ErrorContext
+	Expr
 	eltT reflect.Type
 }
 
 type ErrUnknownStructField struct {
-	ErrorContext
+	Expr
 	structT reflect.Type
 	field string
 }
 
 type ErrInvalidStructField struct {
-	ErrorContext
+	Expr
 }
 
 type ErrDuplicateStructField struct {
-	ErrorContext
+	*Ident
 	field string
 }
 
 type ErrMixedStructValues struct {
-	ErrorContext
+	Expr
 }
 
 type ErrWrongNumberOfStructValues struct {
-	ErrorContext
+	*CompositeLit
+}
+
+type ErrMissingCompositeLitType struct {
+	*CompositeLit
 }
 
 type ErrBadStructValue struct {
-	ErrorContext
+	Expr
 	eltT reflect.Type
 }
 
 type ErrInvalidTypeAssert struct {
-	ErrorContext
+	*TypeAssertExpr
 }
 
 type ErrImpossibleTypeAssert struct {
-	ErrorContext
-}
-
-type ErrMissingCompositeLitType struct {
-	ErrorContext
+	*TypeAssertExpr
 }
 
 type ErrBuiltinWrongNumberOfArgs struct {
-	ErrorContext
+	*CallExpr
 }
 
 type ErrBuiltinWrongArgType struct {
-	ErrorContext
+	Expr
 	call *CallExpr
 }
 
 type ErrBuiltinMismatchedArgs struct {
-	ErrorContext
+	*CallExpr
 	x, y reflect.Type
 }
 
 type ErrBuiltinNonTypeArg struct {
-	ErrorContext
+	Expr
 }
 
 type ErrBuiltinInvalidEllipsis struct {
-	ErrorContext
+	*CallExpr
 }
 
 type ErrMakeBadType struct {
-	ErrorContext
+	Expr
 	of reflect.Type
 }
 
 type ErrMakeNonIntegerArg struct {
-	ErrorContext
+	Expr
 	i int
 }
 
 type ErrMakeLenGtrThanCap struct {
-	ErrorContext
+	*CallExpr
 	length, capacity int
 }
 
 type ErrAppendFirstArgNotSlice struct {
-	ErrorContext
+	Expr
 }
 
 type ErrAppendFirstArgNotVariadic struct {
-	ErrorContext
+	Expr
 }
 
 type ErrCopyArgsMustBeSlices struct {
-	ErrorContext
+	*CallExpr
 	xT, yT reflect.Type
 }
 
 type ErrCopyArgsHaveDifferentEltTypes struct {
-	ErrorContext
+	*CallExpr
 	xT, yT reflect.Type
 }
 
 type ErrDeleteFirstArgNotMap struct {
-	ErrorContext
-}
-
-type ErrorContext struct {
-	Input string
-	ast.Node
+	Expr
 }
 
 func (err ErrBadBasicLit) Error() string {
-	return fmt.Sprintf("Bad literal %s", err.Source())
+	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
 
 func (err ErrUndefined) Error() string {
-	return fmt.Sprintf("undefined: %v", err.Node)
+	return fmt.Sprintf("undefined: %v", err.Expr)
 }
 
 func (err ErrInvalidIndexOperation) Error() string {
-	t := err.Node.(*IndexExpr).X.(Expr).KnownType()[0]
-	return fmt.Sprintf("invalid operation: %s (index of type %v)", err.Source(), t)
+	t := err.IndexExpr.X.(Expr).KnownType()[0]
+	return fmt.Sprintf("invalid operation: %v (index of type %v)", err.IndexExpr, t)
 }
 
 func (err ErrInvalidSliceIndex) Error() string {
-	slice := err.Node.(*SliceExpr)
+	slice := err.SliceExpr
 	return fmt.Sprintf("invalid slice index: %v > %v", slice.Low, slice.High)
 }
 
 func (err ErrInvalidSliceOperation) Error() string {
-	x := err.Node.(*SliceExpr).X.(Expr)
+	x := err.SliceExpr.X.(Expr)
 	xT := x.KnownType()[0]
 	return fmt.Sprintf("cannot slice %v (type %v)", x, xT)
 }
 
 func (err ErrUnaddressableSliceOperand) Error() string {
-	return fmt.Sprintf("invalid operation %v (slice of unaddressable value)", err.Node)
+	return fmt.Sprintf("invalid operation %v (slice of unaddressable value)", err.SliceExpr)
 }
 
 func (err ErrInvalidIndirect) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	t := expr.KnownType()[0]
 	if ct, ok := t.(ConstType); ok {
 		if ct == ConstNil {
@@ -332,22 +324,22 @@ func (err ErrInvalidIndirect) Error() string {
 }
 
 func (err ErrUndefinedFieldOrMethod) Error() string {
-	selector := err.Node.(*SelectorExpr)
+	selector := err.Expr.(*SelectorExpr)
 	t := selector.X.(Expr).KnownType()[0]
 	return fmt.Sprintf("%v undefined (type %v has no field or method %v)",
 		selector, t, selector.Sel.Name)
 }
 
 func (err ErrMissingValue) Error() string {
-	return fmt.Sprintf("%s used as value", err.ErrorContext.Source())
+	return fmt.Sprintf("%v used as value", err.Expr)
 }
 
 func (err ErrMultiInSingleContext) Error() string {
-	return fmt.Sprintf("multiple-value %s in single-value context", err.ErrorContext.Source())
+	return fmt.Sprintf("multiple-value %v in single-value context", err.Expr)
 }
 
 func (err ErrBadMapIndex) Error() string {
-	i := err.Node.(Expr)
+	i := err.Expr
 	iT := i.KnownType()[0]
 	if _, ok := iT.(ConstType); ok {
 		return fmt.Sprintf("cannot use %v as type %v in map index", i, err.keyT)
@@ -357,7 +349,7 @@ func (err ErrBadMapIndex) Error() string {
 }
 
 func (err ErrNonIntegerIndex) Error() string {
-	i := err.Node.(Expr)
+	i := err.Expr
 	iT := i.KnownType()[0]
 	var xname string
 	if iT.Kind() == reflect.String {
@@ -369,7 +361,7 @@ func (err ErrNonIntegerIndex) Error() string {
 }
 
 func (err ErrIndexOutOfBounds) Error() string {
-	i := err.Node.(Expr)
+	i := err.Expr
 	x := err.x
 	var xname string
 	var eltname string
@@ -393,13 +385,13 @@ func (err ErrIndexOutOfBounds) Error() string {
 }
 
 func (err ErrCallNonFuncType) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	return fmt.Sprintf("cannot call non-function %v (type %v)",
 		expr, expr.KnownType()[0])
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {
-	call := err.ErrorContext.Node.(*CallExpr)
+	call := err.CallExpr
 	if call.isTypeConversion {
 		to := call.KnownType()[0]
 		if err.numArgs == 0 {
@@ -426,11 +418,11 @@ func (err ErrWrongArgType) Error() string {
 	}
 
 	if err.call.arg0MultiValued {
-		actual := err.Node.(Expr).KnownType()[err.argPos]
+		actual := err.Expr.KnownType()[err.argPos]
 		return fmt.Sprintf("cannot use %v as type %v in argument to %v",
 			actual, expected, err.call.Fun)
 	} else {
-		arg := err.Node.(Expr)
+		arg := err.Expr
 		actual := arg.KnownType()[0]
 		return fmt.Sprintf("cannot use %v (type %v) as type %v in function argument",
 			arg, actual, expected)
@@ -438,12 +430,12 @@ func (err ErrWrongArgType) Error() string {
 }
 
 func (err ErrInvalidEllipsisInCall) Error() string {
-	fun := err.Node.(*CallExpr).Fun
+	fun := err.CallExpr.Fun
 	return fmt.Sprintf("invalid use of ... in call to %v", fun)
 }
 
 func (err ErrInvalidUnaryOperation) Error() string {
-	unary := err.ErrorContext.Node.(*UnaryExpr)
+	unary := err.UnaryExpr
 	x := unary.X.(Expr)
 	t := x.KnownType()[0]
 	if ct, ok := t.(ConstType); ok {
@@ -456,11 +448,11 @@ func (err ErrInvalidUnaryOperation) Error() string {
 }
 
 func (err ErrInvalidAddressOf) Error() string {
-	return fmt.Sprintf("cannot take the address of %v", err.Node)
+	return fmt.Sprintf("cannot take the address of %v", err.Expr)
 }
 
 func (err ErrInvalidRecvFrom) Error() string {
-	operand := err.Node.(Expr)
+	operand := err.Expr
 	t := operand.KnownType()[0]
 	var cause string
 	if t.Kind() != reflect.Chan {
@@ -468,11 +460,11 @@ func (err ErrInvalidRecvFrom) Error() string {
 	} else {
 		cause = fmt.Sprintf("receive from send-only type %v", t)
 	}
-	return fmt.Sprintf("invalid operation: <-%v (%s)", err.Node, cause)
+	return fmt.Sprintf("invalid operation: <-%v (%s)", err.Expr, cause)
 }
 
 func (err ErrInvalidBinaryOperation) Error() string {
-	binary := err.ErrorContext.Node.(*BinaryExpr)
+	binary := err.BinaryExpr
 	op := binary.Op
 	x := binary.X.(Expr)
 	y := binary.Y.(Expr)
@@ -518,7 +510,7 @@ func (err ErrInvalidBinaryOperation) Error() string {
 				xFmt = "nil"
 			}
 		} else {
-			xx, _ := promoteConstToTyped(&Ctx{}, xct, constValue(x.Const()), yt, x)
+			xx, _ := promoteConstToTyped(xct, constValue(x.Const()), yt, x)
 			if reflect.Value(xx).IsValid() {
 				xFmt = sprintConstValue(xt, reflect.Value(xx), false)
 			}
@@ -535,7 +527,7 @@ func (err ErrInvalidBinaryOperation) Error() string {
 				yFmt = "nil"
 			}
 		} else {
-			yy, _ := promoteConstToTyped(&Ctx{}, yct, constValue(y.Const()), xt, y)
+			yy, _ := promoteConstToTyped(yct, constValue(y.Const()), xt, y)
 			if reflect.Value(yy).IsValid() {
 				yFmt = sprintConstValue(yt, reflect.Value(yy), false)
 			}
@@ -596,11 +588,11 @@ func (err ErrDivideByZero) Error() string {
 }
 
 func (err ErrBadConversion) Error() string {
-	return fmt.Sprintf("cannot convert %v (type %v) to type %v", err.Node.(Expr), err.from, err.to)
+	return fmt.Sprintf("cannot convert %v (type %v) to type %v", err.Expr, err.from, err.to)
 }
 
 func (err ErrBadConstConversion) Error() string {
-	return fmt.Sprintf("cannot convert %v to type %v", err.Node.(Expr), err.to)
+	return fmt.Sprintf("cannot convert %v to type %v", err.Expr, err.to)
 }
 
 func (err ErrTruncatedConstant) Error() string {
@@ -634,7 +626,7 @@ func (ErrUntypedNil) Error() string {
 }
 
 func (err ErrTypeUsedAsExpression) Error() string {
-	t := err.Node.(Expr)
+	t := err.Expr
 	return fmt.Sprintf("type %v is not an expression", t)
 }
 
@@ -647,7 +639,7 @@ func (err ErrMissingMapKey) Error() string {
 }
 
 func (err ErrBadMapKey) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	t := expr.KnownType()[0]
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in map key", err.keyT)
@@ -657,12 +649,12 @@ func (err ErrBadMapKey) Error() string {
 }
 
 func (err ErrDuplicateMapKey) Error() string {
-	key := err.Node.(Expr)
+	key := err.Expr
 	return fmt.Sprintf("duplicate key %v in map literal", key)
 }
 
 func (err ErrBadMapValue) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	t := expr.KnownType()[0]
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in map value", err.eltT)
@@ -685,7 +677,7 @@ func (err ErrDuplicateArrayKey) Error() string {
 }
 
 func (err ErrBadArrayValue) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	t := expr.KnownType()[0]
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in array element", err.eltT)
@@ -700,7 +692,7 @@ func (err ErrUnknownStructField) Error() string {
 }
 
 func (err ErrInvalidStructField) Error() string {
-	return fmt.Sprintf("invalid field name %v in struct initializer", err.Node)
+	return fmt.Sprintf("invalid field name %v in struct initializer", err.Expr)
 }
 
 func (err ErrDuplicateStructField) Error() string {
@@ -712,7 +704,7 @@ func (err ErrMixedStructValues) Error() string {
 }
 
 func (err ErrWrongNumberOfStructValues) Error() string {
-	lit := err.Node.(*CompositeLit)
+	lit := err.CompositeLit
 	actual := len(lit.Elts)
 	expected := lit.KnownType()[0].NumField()
 	if actual < expected {
@@ -723,7 +715,7 @@ func (err ErrWrongNumberOfStructValues) Error() string {
 }
 
 func (err ErrBadStructValue) Error() string {
-	expr := err.Node.(Expr)
+	expr := err.Expr
 	t := expr.KnownType()[0]
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in field value", err.eltT)
@@ -733,14 +725,14 @@ func (err ErrBadStructValue) Error() string {
 }
 
 func (err ErrInvalidTypeAssert) Error() string {
-	assert := err.Node.(*TypeAssertExpr)
+	assert := err.TypeAssertExpr
 	xT := assert.X.(Expr).KnownType()[0]
 	return fmt.Sprintf("invalid type assertion: %v (non-interface type %v on left)",
 		assert, xT)
 }
 
 func (err ErrImpossibleTypeAssert) Error() string {
-	assert := err.Node.(*TypeAssertExpr)
+	assert := err.TypeAssertExpr
 	iT := assert.KnownType()[0]
 	xT := assert.X.(Expr).KnownType()[0]
 
@@ -763,7 +755,7 @@ func (err ErrMissingCompositeLitType) Error() string {
 }
 
 func (err ErrBuiltinWrongNumberOfArgs) Error() string {
-	call := err.Node.(*CallExpr)
+	call := err.CallExpr
 	ident := call.Fun.(*Ident)
 	tooMany := false
 	plural := ""
@@ -818,7 +810,7 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 
 func (err ErrBuiltinWrongArgType) Error() string {
 	ident := err.call.Fun.(*Ident)
-	arg := err.Node.(Expr)
+	arg := err.Expr
 	var t string
 	kt := arg.KnownType()[0]
 	if ct, ok := kt.(ConstType); ok {
@@ -851,7 +843,7 @@ func (err ErrBuiltinWrongArgType) Error() string {
 }
 
 func (err ErrBuiltinMismatchedArgs) Error() string {
-	call := err.Node.(*CallExpr)
+	call := err.CallExpr
 	var x, y string
 	cx, cxok := err.x.(ConstType)
 	cy, cyok := err.y.(ConstType)
@@ -875,11 +867,11 @@ func (err ErrBuiltinMismatchedArgs) Error() string {
 }
 
 func (err ErrBuiltinNonTypeArg) Error() string {
-	return fmt.Sprintf("%v is not a type", uc(err.Node.(Expr)))
+	return fmt.Sprintf("%v is not a type", uc(err.Expr))
 }
 
 func (err ErrBuiltinInvalidEllipsis) Error() string {
-	ident := err.Node.(*CallExpr).Fun.(*Ident)
+	ident := err.CallExpr.Fun.(*Ident)
 	return fmt.Sprintf("invalid use of ... with builtin %s", ident.Name)
 }
 
@@ -894,15 +886,15 @@ func (err ErrMakeNonIntegerArg) Error() string {
 	} else {
 		culprit = "cap"
 	}
-	return fmt.Sprintf("make: non-integer %s argument %v", culprit, uc(err.Node.(Expr)))
+	return fmt.Sprintf("make: non-integer %s argument %v", culprit, uc(err.Expr))
 }
 
 func (err ErrMakeLenGtrThanCap) Error() string {
-	return fmt.Sprintf("len larger than cap in %v", err.Node)
+	return fmt.Sprintf("len larger than cap in %v", err.CallExpr)
 }
 
 func (err ErrAppendFirstArgNotSlice) Error() string {
-	arg := err.Node.(Expr)
+	arg := err.Expr
 	t := arg.KnownType()[0]
 	if t == ConstNil {
 		return "first argument to append must be typed slice; have untyped nil"
@@ -936,7 +928,7 @@ func (err ErrCopyArgsHaveDifferentEltTypes) Error() string {
 }
 
 func (err ErrDeleteFirstArgNotMap) Error() string {
-	arg := err.Node.(Expr)
+	arg := err.Expr
 	t := arg.KnownType()[0]
 	var s string
 	if ct, ok := t.(ConstType); ok {
@@ -945,14 +937,6 @@ func (err ErrDeleteFirstArgNotMap) Error() string {
 		s = t.String()
 	}
 	return fmt.Sprintf("first argument to delete must be map; have %s", s)
-}
-
-func at(ctx *Ctx, expr ast.Node) ErrorContext {
-	return ErrorContext{ctx.Input, expr}
-}
-
-func (errCtx ErrorContext) Source() string {
-	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
 }
 
 // For display purposes only, display untyped const nodes as they would be

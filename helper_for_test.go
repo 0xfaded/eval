@@ -11,12 +11,11 @@ import (
 )
 
 func getResults(t *testing.T, expr string, env *Env) *[]reflect.Value {
-	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
-	} else if results, _, err := EvalExpr(ctx, aexpr, env); err != nil {
+	} else if results, _, err := EvalExpr(aexpr, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
 		return results
@@ -49,12 +48,11 @@ func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{})
 }
 
 func expectPanic(t *testing.T, expr string, env *Env, panicString string) {
-	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
-	} else if _, _, err := EvalExpr(ctx, aexpr, env); err == nil {
+	} else if _, _, err := EvalExpr(aexpr, env); err == nil {
 		t.Fatalf("Expected expression '%s' to panic", expr)
 	} else if err.Error() != panicString {
 		t.Fatalf("Panic `%s` != Expected `%s`", err.Error(), panicString)
@@ -62,10 +60,9 @@ func expectPanic(t *testing.T, expr string, env *Env, panicString string) {
 }
 
 func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType reflect.Type) {
-	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
 	} else if !aexpr.IsConst() {
 		t.Fatalf("Expression '%s' did not yield a const node(%+v)", expr, aexpr)
@@ -91,10 +88,9 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 }
 
 func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) {
-	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if aexpr, errs := CheckExpr(ctx, e, env); errs != nil {
+	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
 	} else if aexpr.IsConst() {
 		t.Fatalf("Expression '%s' yielded a const node(%+v)", expr, aexpr)
@@ -105,10 +101,9 @@ func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) 
 	}
 }
 func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {
-	ctx := &Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if _, errs := CheckExpr(ctx, e, env); errs != nil {
+	} else if _, errs := CheckExpr(e, env); errs != nil {
 		var i int
 		out := "\n"
 		ok := true

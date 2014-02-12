@@ -4,8 +4,8 @@ import (
 	"reflect"
 )
 
-func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) ([]reflect.Value, error) {
-	xs, _, err := EvalExpr(ctx, index.X.(Expr), env)
+func evalIndexExpr(index *IndexExpr, env *Env) ([]reflect.Value, error) {
+	xs, _, err := EvalExpr(index.X.(Expr), env)
 	if err != nil {
 		return []reflect.Value{}, err
 	}
@@ -14,7 +14,7 @@ func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) ([]reflect.Value, error
 	t := index.X.(Expr).KnownType()[0]
 	switch t.Kind() {
 	case reflect.Map:
-		k, err := evalTypedExpr(ctx, index.Index.(Expr), knownType{t.Key()}, env)
+		k, err := evalTypedExpr(index.Index.(Expr), knownType{t.Key()}, env)
 		if err != nil {
 			return []reflect.Value{}, err
 		}
@@ -30,7 +30,7 @@ func evalIndexExpr(ctx *Ctx, index *IndexExpr, env *Env) ([]reflect.Value, error
 		x = x.Elem()
 		fallthrough
 	default:
-		i, err := evalInteger(ctx, index.Index.(Expr), env)
+		i, err := evalInteger(index.Index.(Expr), env)
 		if err != nil {
 			return []reflect.Value{}, err
 		}

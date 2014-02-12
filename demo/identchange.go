@@ -11,7 +11,7 @@ import (
 )
 
 // Here's our custom ident lookup.
-func MyEvalIdentExpr(ctx *eval.Ctx, ident *eval.Ident, env *eval.Env) (
+func MyEvalIdentExpr(ident *eval.Ident, env *eval.Env) (
 	*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
@@ -33,13 +33,12 @@ func MyEvalIdentExpr(ctx *eval.Ctx, ident *eval.Ident, env *eval.Env) (
 
 
 func expectResult(expr string, env *eval.Env, expected interface{}) {
-	ctx := &eval.Ctx{expr}
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
-	} else if cexpr, errs := eval.CheckExpr(ctx, e, env); len(errs) != 0 {
+	} else if cexpr, errs := eval.CheckExpr(e, env); len(errs) != 0 {
 		fmt.Printf("Error checking expression '%s' (%v)\n", expr, errs)
-	} else if results, _, err := eval.EvalExpr(ctx, cexpr, env); err != nil {
+	} else if results, _, err := eval.EvalExpr(cexpr, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {

@@ -4,19 +4,19 @@ import (
 	"reflect"
 )
 
-func evalCallExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	if call.IsConst() {
 		return []reflect.Value{call.Const()}, nil
 	} else if call.isBuiltin {
-		return evalCallBuiltinExpr(ctx, call, env)
+		return evalCallBuiltinExpr(call, env)
 	} else if call.isTypeConversion {
-		return evalCallTypeExpr(ctx, call, env)
+		return evalCallTypeExpr(call, env)
 	} else {
-		return evalCallFunExpr(ctx, call, env)
+		return evalCallFunExpr(call, env)
 	}
 }
 
-func evalCallTypeExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallTypeExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	// Arg0 can only be const if it is ConstNil, otherwise the entire expression
 	// would be const and evalCallExpr will have already returned.
 	arg := call.Args[0].(Expr)
@@ -24,7 +24,7 @@ func evalCallTypeExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, erro
 	if t == ConstNil {
 		// This has already been typechecked to be a nil-able type
 		return []reflect.Value{hackedNew(call.KnownType()[0]).Elem()}, nil
-	} else if v, _, err := EvalExpr(ctx, arg, env); err != nil {
+	} else if v, _, err := EvalExpr(arg, env); err != nil {
 		return nil, nil
 	} else {
 		cast := (*v)[0].Convert(unhackType(call.KnownType()[0]))
@@ -32,8 +32,8 @@ func evalCallTypeExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, erro
 	}
 }
 
-func evalCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
-	v, _, err := EvalExpr(ctx, call.Fun.(Expr), env)
+func evalCallFunExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+	v, _, err := EvalExpr(call.Fun.(Expr), env)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func evalCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error
 	// Evaluate arguments
 	args := make([]reflect.Value, len(call.Args))
 	if call.arg0MultiValued {
-		if argp, _, err := EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
+		if argp, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 			return nil, err
 		} else {
 			args = *argp
@@ -55,7 +55,7 @@ func evalCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error
 		for i = 0; i < numIn - 1; i += 1 {
 			arg := call.Args[i].(Expr)
 			argType := knownType{ft.In(i)}
-			if argV, err := evalTypedExpr(ctx, arg, argType, env); err != nil {
+			if argV, err := evalTypedExpr(arg, argType, env); err != nil {
 				return nil, err
 			} else {
 				args[i] = argV[0]
@@ -68,7 +68,7 @@ func evalCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error
 		argNKnownType := knownType{argNT}
 		for ; i < len(call.Args); i += 1 {
 			arg := call.Args[i].(Expr)
-			if argV, err := evalTypedExpr(ctx, arg, argNKnownType, env); err != nil {
+			if argV, err := evalTypedExpr(arg, argNKnownType, env); err != nil {
 				return nil, err
 			} else {
 				args[i] = argV[0]
