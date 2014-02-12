@@ -6918,3 +6918,1010 @@ func TestCheckBuiltinAppendMakeTypeEllipsis(t *testing.T) {
 	)
 
 }
+
+// Test Copy()
+func TestCheckBuiltinCopyXX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy()`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1)
+func TestCheckBuiltinCopyXInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(float32(1))
+func TestCheckBuiltinCopyXFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1))`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy("abc")
+func TestCheckBuiltinCopyXString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc")`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(nil)
+func TestCheckBuiltinCopyXNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1.5)
+func TestCheckBuiltinCopyXFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy([]int{})
+func TestCheckBuiltinCopyXSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{})`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(int)
+func TestCheckBuiltinCopyXType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int)
+func TestCheckBuiltinCopyXMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1, 1)
+func TestCheckBuiltinCopyXDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, 1)`, env,
+		`arguments to copy must be slices; have int, int`,
+	)
+
+}
+
+// Test Copy([]int{1,2}...)
+func TestCheckBuiltinCopyXEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1)
+func TestCheckBuiltinCopyIntX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1, 1)
+func TestCheckBuiltinCopyIntInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, 1)`, env,
+		`arguments to copy must be slices; have int, int`,
+	)
+
+}
+
+// Test Copy(1, float32(1))
+func TestCheckBuiltinCopyIntFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, float32(1))`, env,
+		`arguments to copy must be slices; have int, float32`,
+	)
+
+}
+
+// Test Copy(1, "abc")
+func TestCheckBuiltinCopyIntString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, "abc")`, env,
+		`arguments to copy must be slices; have int, string`,
+	)
+
+}
+
+// Test Copy(1, nil)
+func TestCheckBuiltinCopyIntNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, nil)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have int, <T>`,
+	)
+
+}
+
+// Test Copy(1, 1.5)
+func TestCheckBuiltinCopyIntFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, 1.5)`, env,
+		`arguments to copy must be slices; have int, float64`,
+	)
+
+}
+
+// Test Copy(1, []int{})
+func TestCheckBuiltinCopyIntSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, []int{})`, env,
+		`first argument to copy should be slice; have int`,
+	)
+
+}
+
+// Test Copy(1, int)
+func TestCheckBuiltinCopyIntType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(1, map[int]int)
+func TestCheckBuiltinCopyIntMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(1, 1, 1)
+func TestCheckBuiltinCopyIntDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(1, []int{1,2}...)
+func TestCheckBuiltinCopyIntEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`first argument to copy should be slice; have int`,
+	)
+
+}
+
+// Test Copy(float32(1))
+func TestCheckBuiltinCopyFloat32X(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1))`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(float32(1), 1)
+func TestCheckBuiltinCopyFloat32Int(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), 1)`, env,
+		`arguments to copy must be slices; have float32, int`,
+	)
+
+}
+
+// Test Copy(float32(1), float32(1))
+func TestCheckBuiltinCopyFloat32Float32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), float32(1))`, env,
+		`arguments to copy must be slices; have float32, float32`,
+	)
+
+}
+
+// Test Copy(float32(1), "abc")
+func TestCheckBuiltinCopyFloat32String(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), "abc")`, env,
+		`arguments to copy must be slices; have float32, string`,
+	)
+
+}
+
+// Test Copy(float32(1), nil)
+func TestCheckBuiltinCopyFloat32Nil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), nil)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have float32, <T>`,
+	)
+
+}
+
+// Test Copy(float32(1), 1.5)
+func TestCheckBuiltinCopyFloat32Float(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), 1.5)`, env,
+		`arguments to copy must be slices; have float32, float64`,
+	)
+
+}
+
+// Test Copy(float32(1), []int{})
+func TestCheckBuiltinCopyFloat32Slice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), []int{})`, env,
+		`first argument to copy should be slice; have float32`,
+	)
+
+}
+
+// Test Copy(float32(1), int)
+func TestCheckBuiltinCopyFloat32Type(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(float32(1), map[int]int)
+func TestCheckBuiltinCopyFloat32MakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(float32(1), 1, 1)
+func TestCheckBuiltinCopyFloat32Double(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(float32(1), []int{1,2}...)
+func TestCheckBuiltinCopyFloat32Ellipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`first argument to copy should be slice; have float32`,
+	)
+
+}
+
+// Test Copy("abc")
+func TestCheckBuiltinCopyStringX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc")`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy("abc", 1)
+func TestCheckBuiltinCopyStringInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", 1)`, env,
+		`arguments to copy must be slices; have string, int`,
+	)
+
+}
+
+// Test Copy("abc", float32(1))
+func TestCheckBuiltinCopyStringFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", float32(1))`, env,
+		`arguments to copy must be slices; have string, float32`,
+	)
+
+}
+
+// Test Copy("abc", "abc")
+func TestCheckBuiltinCopyStringString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", "abc")`, env,
+		`arguments to copy must be slices; have string, string`,
+	)
+
+}
+
+// Test Copy("abc", nil)
+func TestCheckBuiltinCopyStringNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", nil)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have string, <T>`,
+	)
+
+}
+
+// Test Copy("abc", 1.5)
+func TestCheckBuiltinCopyStringFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", 1.5)`, env,
+		`arguments to copy must be slices; have string, float64`,
+	)
+
+}
+
+// Test Copy("abc", []int{})
+func TestCheckBuiltinCopyStringSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", []int{})`, env,
+		`first argument to copy should be slice; have string`,
+	)
+
+}
+
+// Test Copy("abc", int)
+func TestCheckBuiltinCopyStringType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy("abc", map[int]int)
+func TestCheckBuiltinCopyStringMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy("abc", 1, 1)
+func TestCheckBuiltinCopyStringDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy("abc", []int{1,2}...)
+func TestCheckBuiltinCopyStringEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`first argument to copy should be slice; have string`,
+	)
+
+}
+
+// Test Copy(nil)
+func TestCheckBuiltinCopyNilX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(nil, 1)
+func TestCheckBuiltinCopyNilInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, 1)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, int`,
+	)
+
+}
+
+// Test Copy(nil, float32(1))
+func TestCheckBuiltinCopyNilFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, float32(1))`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, float32`,
+	)
+
+}
+
+// Test Copy(nil, "abc")
+func TestCheckBuiltinCopyNilString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, "abc")`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, string`,
+	)
+
+}
+
+// Test Copy(nil, nil)
+func TestCheckBuiltinCopyNilNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, nil)`, env,
+		`use of untyped nil`,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, <T>`,
+	)
+
+}
+
+// Test Copy(nil, 1.5)
+func TestCheckBuiltinCopyNilFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, 1.5)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, float64`,
+	)
+
+}
+
+// Test Copy(nil, []int{})
+func TestCheckBuiltinCopyNilSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, []int{})`, env,
+		`use of untyped nil`,
+		`first argument to copy should be slice; have <T>`,
+	)
+
+}
+
+// Test Copy(nil, int)
+func TestCheckBuiltinCopyNilType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(nil, map[int]int)
+func TestCheckBuiltinCopyNilMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(nil, 1, 1)
+func TestCheckBuiltinCopyNilDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(nil, []int{1,2}...)
+func TestCheckBuiltinCopyNilEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`use of untyped nil`,
+		`first argument to copy should be slice; have <T>`,
+	)
+
+}
+
+// Test Copy(1.5)
+func TestCheckBuiltinCopyFloatX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(1.5, 1)
+func TestCheckBuiltinCopyFloatInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, 1)`, env,
+		`arguments to copy must be slices; have float64, int`,
+	)
+
+}
+
+// Test Copy(1.5, float32(1))
+func TestCheckBuiltinCopyFloatFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, float32(1))`, env,
+		`arguments to copy must be slices; have float64, float32`,
+	)
+
+}
+
+// Test Copy(1.5, "abc")
+func TestCheckBuiltinCopyFloatString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, "abc")`, env,
+		`arguments to copy must be slices; have float64, string`,
+	)
+
+}
+
+// Test Copy(1.5, nil)
+func TestCheckBuiltinCopyFloatNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, nil)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have float64, <T>`,
+	)
+
+}
+
+// Test Copy(1.5, 1.5)
+func TestCheckBuiltinCopyFloatFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, 1.5)`, env,
+		`arguments to copy must be slices; have float64, float64`,
+	)
+
+}
+
+// Test Copy(1.5, []int{})
+func TestCheckBuiltinCopyFloatSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, []int{})`, env,
+		`first argument to copy should be slice; have float64`,
+	)
+
+}
+
+// Test Copy(1.5, int)
+func TestCheckBuiltinCopyFloatType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(1.5, map[int]int)
+func TestCheckBuiltinCopyFloatMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(1.5, 1, 1)
+func TestCheckBuiltinCopyFloatDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(1.5, []int{1,2}...)
+func TestCheckBuiltinCopyFloatEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`first argument to copy should be slice; have float64`,
+	)
+
+}
+
+// Test Copy([]int{})
+func TestCheckBuiltinCopySliceX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{})`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy([]int{}, 1)
+func TestCheckBuiltinCopySliceInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, 1)`, env,
+		`second argument to copy should be slice or string; have int`,
+	)
+
+}
+
+// Test Copy([]int{}, float32(1))
+func TestCheckBuiltinCopySliceFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, float32(1))`, env,
+		`second argument to copy should be slice or string; have float32`,
+	)
+
+}
+
+// Test Copy([]int{}, "abc")
+func TestCheckBuiltinCopySliceString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, "abc")`, env,
+		`arguments to copy have different element types: []int and string`,
+	)
+
+}
+
+// Test Copy([]int{}, nil)
+func TestCheckBuiltinCopySliceNil(t *testing.T) {
+	env := makeEnv()
+	_ = env
+
+}
+
+// Test Copy([]int{}, 1.5)
+func TestCheckBuiltinCopySliceFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, 1.5)`, env,
+		`second argument to copy should be slice or string; have float64`,
+	)
+
+}
+
+// Test Copy([]int{}, []int{})
+func TestCheckBuiltinCopySliceSlice(t *testing.T) {
+	env := makeEnv()
+	expectType(t, `copy([]int{}, []int{})`, env, reflect.TypeOf(copy([]int{}, []int{})))
+}
+
+// Test Copy([]int{}, int)
+func TestCheckBuiltinCopySliceType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy([]int{}, map[int]int)
+func TestCheckBuiltinCopySliceMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy([]int{}, 1, 1)
+func TestCheckBuiltinCopySliceDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy([]int{}, []int{1,2}...)
+func TestCheckBuiltinCopySliceEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+	)
+
+}
+
+// Test Copy(int)
+func TestCheckBuiltinCopyTypeX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(int, 1)
+func TestCheckBuiltinCopyTypeInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, 1)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, float32(1))
+func TestCheckBuiltinCopyTypeFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, float32(1))`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, "abc")
+func TestCheckBuiltinCopyTypeString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, "abc")`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, nil)
+func TestCheckBuiltinCopyTypeNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, nil)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, 1.5)
+func TestCheckBuiltinCopyTypeFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, 1.5)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, []int{})
+func TestCheckBuiltinCopyTypeSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, []int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, int)
+func TestCheckBuiltinCopyTypeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, int)`, env,
+		`type int is not an expression`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, map[int]int)
+func TestCheckBuiltinCopyTypeMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, map[int]int)`, env,
+		`type int is not an expression`,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, 1, 1)
+func TestCheckBuiltinCopyTypeDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(int, []int{1,2}...)
+func TestCheckBuiltinCopyTypeEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int)
+func TestCheckBuiltinCopyMakeTypeX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int)`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int, 1)
+func TestCheckBuiltinCopyMakeTypeInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, 1)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, float32(1))
+func TestCheckBuiltinCopyMakeTypeFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, float32(1))`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, "abc")
+func TestCheckBuiltinCopyMakeTypeString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, "abc")`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, nil)
+func TestCheckBuiltinCopyMakeTypeNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, nil)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, 1.5)
+func TestCheckBuiltinCopyMakeTypeFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, 1.5)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, []int{})
+func TestCheckBuiltinCopyMakeTypeSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, []int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, int)
+func TestCheckBuiltinCopyMakeTypeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, int)`, env,
+		`type map[int]int is not an expression`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, map[int]int)
+func TestCheckBuiltinCopyMakeTypeMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int, 1, 1)
+func TestCheckBuiltinCopyMakeTypeDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int, []int{1,2}...)
+func TestCheckBuiltinCopyMakeTypeEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`type map[int]int is not an expression`,
+	)
+
+}
