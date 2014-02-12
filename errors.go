@@ -16,44 +16,12 @@ type ErrUndefined struct {
 	ErrorContext
 }
 
-type ErrInvalidOperand struct {
-	x reflect.Value
-	op token.Token
-}
-
 type ErrInvalidIndirect struct {
 	ErrorContext
 }
 
 type ErrUndefinedFieldOrMethod struct {
 	ErrorContext
-}
-
-type ErrMismatchedTypes struct {
-	x reflect.Value
-	op token.Token
-	y reflect.Value
-}
-
-type ErrInvalidOperands struct {
-	x reflect.Value
-	op token.Token
-	y reflect.Value
-}
-
-type ErrBadFunArgument struct {
-	fun reflect.Value
-	index int
-	value reflect.Value
-}
-
-type ErrBadComplexArguments struct {
-	a, b reflect.Value
-}
-
-type ErrBadBuiltinArgument struct {
-	fun string
-	value reflect.Value
 }
 
 type ErrCallNonFuncType struct {
@@ -328,30 +296,6 @@ func (err ErrBadBasicLit) Error() string {
 
 func (err ErrUndefined) Error() string {
 	return fmt.Sprintf("undefined: %v", err.Node)
-}
-
-func (err ErrInvalidOperand) Error() string {
-	return fmt.Sprintf("invalid unary operation %v %v", err.op, err.x)
-}
-
-func (err ErrInvalidOperands) Error() string {
-	return fmt.Sprintf("invalid binary operation %v %v %v", err.x, err.op, err.y)
-}
-
-func (err ErrMismatchedTypes) Error() string {
-	return fmt.Sprintf("invalid operation %v %v %v (mismatched types %s and %s)", err.x, err.op, err.y, err.x.Kind(), err.y.Kind())
-}
-
-func (err ErrBadFunArgument) Error() string {
-	return fmt.Sprintf("invalid type (%v) for argument %d of %v", err.value.Type(), err.index, err.fun)
-}
-
-func (err ErrBadComplexArguments) Error() string {
-	return fmt.Sprintf("invalid operation: complex(%v, %v)", err.a, err.b)
-}
-
-func (err ErrBadBuiltinArgument) Error() string {
-	return fmt.Sprintf("invalid operation: %s(%v)", err.fun, err.value)
 }
 
 func (err ErrInvalidIndexOperation) Error() string {
@@ -1009,13 +953,6 @@ func at(ctx *Ctx, expr ast.Node) ErrorContext {
 
 func (errCtx ErrorContext) Source() string {
 	return errCtx.Input[errCtx.Node.Pos()-1:errCtx.Node.End()-1]
-}
-
-func drop0i(i interface{}) interface{} {
-	if n, ok := i.(*ConstNumber); ok {
-		return n.StringShow0i(false)
-	}
-	return i
 }
 
 // For display purposes only, display untyped const nodes as they would be

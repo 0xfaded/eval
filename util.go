@@ -1,13 +1,10 @@
 package eval
 
 import (
-	"errors"
-	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode"
 
 	"go/ast"
 	"go/token"
@@ -75,63 +72,6 @@ func exprAssignableTo(ctx *Ctx, from Expr, to reflect.Type) (bool, []error) {
 	}
 
 	return typeAssignableTo(fromType, to), nil
-}
-
-// Only considers untyped kinds produced by our runtime. Assumes input type is unnamed
-func isUntypedNumeral(x reflect.Value) bool {
-	switch x.Kind() {
-	case reflect.Int64, reflect.Float64, reflect.Complex128:
-		return true
-	default:
-		return false
-	}
-}
-
-func promoteUntypedNumeral(untyped reflect.Value, to reflect.Type) (reflect.Value, error) {
-	// The only valid promotion that cannot be directly converted is int|float -> complex
-	if untyped.Type().ConvertibleTo(to) {
-		return untyped.Convert(to), nil
-	} else if to.Kind() == reflect.Complex64 || to.Kind() == reflect.Complex128 {
-		floatType := reflect.TypeOf(float64(0))
-		if untyped.Type().ConvertibleTo(floatType) {
-			return reflect.ValueOf(complex(untyped.Convert(floatType).Float(), 0)), nil
-		}
-	}
-	return reflect.Value{}, errors.New(fmt.Sprintf("cannot convert %v to %v", untyped, to))
-}
-
-// Only considers untyped kinds produced by our runtime. Assumes input type is unnamed
-func promoteUntypedNumerals(x, y reflect.Value) (reflect.Value, reflect.Value) {
-	switch x.Kind() {
-	case reflect.Int64:
-		switch y.Kind() {
-		case reflect.Int64:
-			return x, y
-		case reflect.Float64:
-			return x.Convert(y.Type()), y
-		case reflect.Complex128:
-			return reflect.ValueOf(complex(float64(x.Int()), 0)), y
-		}
-	case reflect.Float64:
-		switch y.Kind() {
-		case reflect.Int64:
-			return x, y.Convert(x.Type())
-		case reflect.Float64:
-			return x, y
-		case reflect.Complex128:
-			return reflect.ValueOf(complex(x.Float(), 0)), y
-		}
-	case reflect.Complex128:
-		switch y.Kind() {
-		case reflect.Int64:
-			return x, reflect.ValueOf(complex(float64(y.Int()), 0))
-		case reflect.Float64:
-			return x, reflect.ValueOf(complex(y.Float(), 0))
-		case reflect.Complex128:
-			return x, y
-		}
-	}
-	panic(fmt.Sprintf("runtime: bad untyped numeras %v and %v", x, y))
 }
 
 func expectSingleType(ctx *Ctx, types []reflect.Type, srcExpr ast.Expr) (reflect.Type, error) {
@@ -436,23 +376,6 @@ func checkArrayIndex(ctx *Ctx, expr ast.Expr, env *Env) (aexpr Expr, i int, ok b
 	// which seems to use this definition whilst type checking.
 	// The actual definition is the "largest value representable by an int"
 	return aexpr, int(ii), 0 <= ii && ii <= 0x7fffffff, checkErrs
-}
-
-func isValidGoName(name string) bool {
-	if name == "" {
-		return false
-	}
-
-	ok := true
-	// TODO[crc] go 1.2 includes unicode.DecodeRuneInString for decoding the first rune
-	for _, r := range name {
-		ok = ok && (r == '_' || unicode.IsLetter(r))
-		break
-	}
-	for _, r := range name {
-		ok = ok && (r == '_' || unicode.IsLetter(r) || unicode.IsNumber(r))
-	}
-	return ok
 }
 
 // spec: addressable, that is, either a

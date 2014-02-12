@@ -24,10 +24,6 @@ func getResults(t *testing.T, expr string, env *Env) *[]reflect.Value {
 	return nil
 }
 
-func expectVoid(t *testing.T, expr string, env *Env) {
-	expectResults(t, expr, env, &[]interface{}{})
-}
-
 func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
 	expect2 := []interface{}{expected}
 	expectResults(t, expr, env, &expect2)
