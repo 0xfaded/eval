@@ -80,14 +80,12 @@ func REPL(env *eval.SimpleEnv) {
 			for _, cerr := range errs {
 				fmt.Printf("check error: %v\n", cerr)
 			}
-		} else if vals, _, err := eval.EvalExpr(cexpr, env); err != nil {
+		} else if vals, err := eval.EvalExpr(cexpr, env); err != nil {
 			fmt.Printf("panic: %s\n", err)
-		} else if vals == nil {
-			fmt.Printf("Kind=nil\nnil\n")
-		} else if len(*vals) == 0 {
+		} else if len(vals) == 0 {
 			fmt.Printf("Kind=Slice\nvoid\n")
-		} else if len(*vals) == 1 {
-			value := (*vals)[0]
+		} else if len(vals) == 1 {
+			value := (vals)[0]
 			if value.IsValid() {
 				kind := value.Kind().String()
 				typ  := value.Type().String()
@@ -99,20 +97,20 @@ func REPL(env *eval.SimpleEnv) {
 				}
 				fmt.Printf("results[%d] = %s\n", exprs, eval.Inspect(value))
 				exprs += 1
-				results = append(results, (*vals)[0].Interface())
+				results = append(results, (vals)[0].Interface())
 			} else {
 				fmt.Printf("%s\n", value)
 			}
 		} else {
 			fmt.Printf("Kind = Multi-Value\n")
-			size := len(*vals)
-			for i, v := range *vals {
+			size := len(vals)
+			for i, v := range vals {
 				fmt.Printf("%s", eval.Inspect(v))
 				if i < size-1 { fmt.Printf(", ") }
 			}
 			fmt.Printf("\n")
 			exprs += 1
-			results = append(results, (*vals))
+			results = append(results, vals)
 		}
 
 		line, err = readline("go> ", in)

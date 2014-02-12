@@ -24,31 +24,31 @@ func evalCallTypeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if t == ConstNil {
 		// This has already been typechecked to be a nil-able type
 		return []reflect.Value{hackedNew(call.KnownType()[0]).Elem()}, nil
-	} else if v, _, err := EvalExpr(arg, env); err != nil {
+	} else if v, err := EvalExpr(arg, env); err != nil {
 		return nil, nil
 	} else {
-		cast := (*v)[0].Convert(unhackType(call.KnownType()[0]))
+		cast := v[0].Convert(unhackType(call.KnownType()[0]))
 		return []reflect.Value{cast}, nil
 	}
 }
 
 func evalCallFunExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	v, _, err := EvalExpr(call.Fun.(Expr), env)
+	v, err := EvalExpr(call.Fun.(Expr), env)
 	if err != nil {
 		return nil, err
 	}
 
-	fun := (*v)[0]
+	fun := v[0]
 	ft := fun.Type()
 	numIn := ft.NumIn()
 
 	// Evaluate arguments
 	args := make([]reflect.Value, len(call.Args))
 	if call.arg0MultiValued {
-		if argp, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+		if argp, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 			return nil, err
 		} else {
-			args = *argp
+			args = argp
 		}
 	} else if len(args) != 0 {
 		var i int

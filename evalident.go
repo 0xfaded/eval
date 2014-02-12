@@ -27,30 +27,3 @@ func evalIdent(ident *Ident, env Env) (reflect.Value, error) {
         panic(dytc("missing identifier"))
 }
 
-// TODO[crc] Everything below goes with Env interface refactor
-func EvalIdentExpr(ident *Ident, env Env) (*reflect.Value, bool, error) {
-	v, err := evalIdent(ident, env)
-	return &v, true, err
-}
-
-type EvalIdentExprFunc func(ident *Ident, env Env)  (
-	*reflect.Value, bool, error)
-
-func DerefValue(v reflect.Value) reflect.Value {
-	switch v.Kind() {
-	case reflect.Interface, reflect.Ptr:
-		return v.Elem()
-	default:
-		return v
-	}
-}
-
-var evalIdentExprCallback EvalIdentExprFunc = EvalIdentExpr
-
-func SetEvalIdentExprCallback(callback EvalIdentExprFunc) {
-	evalIdentExprCallback = callback
-}
-
-func GetEvalIdentExprCallback() EvalIdentExprFunc {
-	return evalIdentExprCallback
-}

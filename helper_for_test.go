@@ -10,12 +10,12 @@ import (
 	"go/parser"
 )
 
-func getResults(t *testing.T, expr string, env Env) *[]reflect.Value {
+func getResults(t *testing.T, expr string, env Env) []reflect.Value {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
-	} else if results, _, err := EvalExpr(aexpr, env); err != nil {
+	} else if results, err := EvalExpr(aexpr, env); err != nil {
 		t.Fatalf("Error evaluating expression '%s' (%v)", expr, err)
 	} else {
 		return results
@@ -25,25 +25,25 @@ func getResults(t *testing.T, expr string, env Env) *[]reflect.Value {
 
 func expectResult(t *testing.T, expr string, env Env, expected interface{}) {
 	expect2 := []interface{}{expected}
-	expectResults(t, expr, env, &expect2)
+	expectResults(t, expr, env, expect2)
 }
 
-func expectResults(t *testing.T, expr string, env Env, expected *[]interface{}) {
+func expectResults(t *testing.T, expr string, env Env, expected []interface{}) {
 	results := getResults(t, expr, env)
 	if nil == results {
 		if expected != nil {
-			t.Fatalf("Expression '%s' is nil but expected '%+v'", expr, *expected)
+			t.Fatalf("Expression '%s' is nil but expected '%+v'", expr, expected)
 		}
 		return
 	} else if expected == nil {
-		t.Fatalf("Expression '%s'expected is '%+v', expected to be nil", expr, *results)
+		t.Fatalf("Expression '%s'expected is '%+v', expected to be nil", expr, results)
 	}
-	resultsi := make([]interface{}, len(*results))
-	for i, result := range *results {
+	resultsi := make([]interface{}, len(results))
+	for i, result := range results {
 		resultsi[i] = result.Interface()
 	}
-	if !reflect.DeepEqual(resultsi, *expected) {
-		t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, resultsi, *expected)
+	if !reflect.DeepEqual(resultsi, expected) {
+		t.Fatalf("Expression '%s' yielded '%+v', expected '%+v'", expr, resultsi, expected)
 	}
 }
 
@@ -52,7 +52,7 @@ func expectPanic(t *testing.T, expr string, env Env, panicString string) {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
 		t.Fatalf("Failed to check expression '%s' (%v)", expr, errs)
-	} else if _, _, err := EvalExpr(aexpr, env); err == nil {
+	} else if _, err := EvalExpr(aexpr, env); err == nil {
 		t.Fatalf("Expected expression '%s' to panic", expr)
 	} else if err.Error() != panicString {
 		t.Fatalf("Panic `%s` != Expected `%s`", err.Error(), panicString)

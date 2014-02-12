@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"errors"
 	"reflect"
 )
 
@@ -11,55 +10,43 @@ import (
 // which to get reflect.Values from. Note however that env can be
 // subverted somewhat by supplying callback hooks routines which
 // access variables and by supplying user-defined conversion routines.
-func EvalExpr(expr Expr, env Env) (*[]reflect.Value, bool, error) {
+func EvalExpr(expr Expr, env Env) ([]reflect.Value, error) {
 	switch node := expr.(type) {
 	case *Ident:
-		v, _, err := evalIdentExprCallback(node, env)
-		if v == nil {
-			return nil, false, err
-		}
-		ret := []reflect.Value{*v}
-		return &ret, true, err
-	case *Ellipsis:
+		v, err := evalIdent(node, env)
+		return []reflect.Value{v}, err
 	case *BasicLit:
 		v, err := evalBasicLit(node)
-		return &[]reflect.Value{v}, true, err
+		return []reflect.Value{v}, err
 	case *FuncLit:
+		panic(dytc("func lits unimplemented"))
 	case *CompositeLit:
 		v, err := evalCompositeLit(node, env)
-		return &[]reflect.Value{v}, true, err
+		return []reflect.Value{v}, err
 	case *ParenExpr:
 		return EvalExpr(node.X.(Expr), env)
 	case *SelectorExpr:
-		v, _, err := evalSelectorExprCallback(node, env)
-		if v == nil {
-			return nil, true, err
-		}
-		return &[]reflect.Value{*v}, true, err
+		v, err := evalSelectorExpr(node, env)
+		return []reflect.Value{v}, err
 	case *IndexExpr:
-		vs, err := evalIndexExpr(node, env)
-		return &vs, true, err
+		return evalIndexExpr(node, env)
 	case *SliceExpr:
 		v, err := evalSliceExpr(node, env)
-		return &[]reflect.Value{v}, true, err
+		return []reflect.Value{v}, err
 	case *TypeAssertExpr:
 		v, err := evalTypeAssertExpr(node, env)
-		return &[]reflect.Value{v}, true, err
+		return []reflect.Value{v}, err
 	case *CallExpr:
-		vs, err := evalCallExpr(node, env)
-		return &vs, true, err
+		return evalCallExpr(node, env)
 	case *StarExpr:
 		v, err := evalStarExpr(node, env)
-		return &[]reflect.Value{v}, true, err
+		return []reflect.Value{v}, err
 	case *UnaryExpr:
-		vs, err := evalUnaryExpr(node, env)
-		return &vs, true, err
+		return evalUnaryExpr(node, env)
 	case *BinaryExpr:
 		v, err := evalBinaryExpr(node, env)
-		return &[]reflect.Value{v}, true, err
-	case *KeyValueExpr:
+		return []reflect.Value{v}, err
 	default:
-		return nil , false, errors.New("undefined type")
+		panic(dytc("unevalutable node"))
 	}
-	return &[]reflect.Value{reflect.ValueOf("Alice")}, true, nil
 }

@@ -75,7 +75,7 @@ func TestBuiltinNew(t *testing.T) {
 	env := MakeSimpleEnv()
 	expr := "new(int)"
 	results := getResults(t, expr, env)
-	returnKind := (*results)[0].Kind().String()
+	returnKind := results[0].Kind().String()
 	if returnKind != "ptr" {
 		t.Fatalf("Error Expecting `%s' return Kind to be `ptr' is `%s`", expr, returnKind)
 	}

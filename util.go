@@ -266,9 +266,7 @@ func evalTypedExpr(expr Expr, t knownType, env Env) (xs []reflect.Value, err err
                         xs = []reflect.Value{x}
                 }
         } else {
-                var xxs *[]reflect.Value
-                xxs, _, err = EvalExpr(expr, env)
-                xs = *xxs
+                xs, err = EvalExpr(expr, env)
         }
         return xs, err
 }
@@ -328,11 +326,11 @@ func evalInteger(expr Expr, env Env) (int, error) {
 			panic(dytc("const bool or string evaluated as int"))
                 }
         } else {
-                xs, _, err := EvalExpr(expr, env);
+                xs, err := EvalExpr(expr, env);
 		if err != nil {
 			return 0, err
 		}
-		x := (*xs)[0]
+		x := xs[0]
 		switch x.Type().Kind() {
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			return int(x.Int()), nil

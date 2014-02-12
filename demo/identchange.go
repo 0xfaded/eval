@@ -17,12 +17,12 @@ func expectResult(expr string, env eval.Env, expected interface{}) {
 		return
 	} else if cexpr, errs := eval.CheckExpr(e, env); len(errs) != 0 {
 		fmt.Printf("Error checking expression '%s' (%v)\n", expr, errs)
-	} else if results, _, err := eval.EvalExpr(cexpr, env); err != nil {
+	} else if results, err := eval.EvalExpr(cexpr, env); err != nil {
 		fmt.Printf("Error evaluating expression '%s' (%v)\n", expr, err)
 		return
 	} else {
 		fmt.Printf("Expression '%s' yielded '%+v', expected '%+v'\n",
-			expr, (*results)[0].Interface(), expected)
+			expr, results[0].Interface(), expected)
 	}
 }
 

@@ -6,11 +6,11 @@ import (
 
 // TODO[crc] support slice[::] syntax after go1.2 upgrade
 func evalSliceExpr(slice *SliceExpr, env Env) (reflect.Value, error) {
-	xs, _, err := EvalExpr(slice.X.(Expr), env)
+	xs, err := EvalExpr(slice.X.(Expr), env)
 	if err != nil {
 		return reflect.Value{}, err
 	}
-	x := (*xs)[0]
+	x := xs[0]
 
 	var l, h int
 	if slice.Low != nil {

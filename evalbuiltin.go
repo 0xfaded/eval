@@ -113,19 +113,19 @@ func evalBuiltinMakeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinLenExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if arg0, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if arg0, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
 	} else {
-		length := builtinLen((*arg0)[0])
+		length := builtinLen(arg0[0])
 		return []reflect.Value{length}, nil
 	}
 }
 
 func evalBuiltinCapExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if arg0, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if arg0, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
 	} else {
-		capacity := builtinCap((*arg0)[0])
+		capacity := builtinCap(arg0[0])
 		return []reflect.Value{capacity}, nil
 	}
 }
@@ -138,11 +138,11 @@ func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	}
 	var tail reflect.Value
 	if call.argNEllipsis {
-		xs, _, err := EvalExpr(call.Args[1].(Expr), env)
+		xs, err := EvalExpr(call.Args[1].(Expr), env)
 		if err != nil {
 			return nil, err
 		}
-		tail = (*xs)[0]
+		tail = xs[0]
 	} else {
 		numXs := len(call.Args) - 1
 		tail = reflect.MakeSlice(sliceT[0], numXs, numXs)
@@ -161,12 +161,12 @@ func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinCopyExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if x, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if x, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
-	} else if y, _, err := EvalExpr(call.Args[1].(Expr), env); err != nil {
+	} else if y, err := EvalExpr(call.Args[1].(Expr), env); err != nil {
 		return nil, err
 	} else {
-		n := builtinCopy((*x)[0], (*y)[0])
+		n := builtinCopy(x[0], y[0])
 		return []reflect.Value{n}, nil
 	}
 }
@@ -174,12 +174,12 @@ func evalBuiltinCopyExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 func evalBuiltinDeleteExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	m := call.Args[0].(Expr)
 	mT := m.KnownType()[0]
-	if x, _, err := EvalExpr(m, env); err != nil {
+	if x, err := EvalExpr(m, env); err != nil {
 		return nil, err
 	} else if y, err := evalTypedExpr(call.Args[1].(Expr), knownType{mT.Key()}, env); err != nil {
 		return nil, err
 	} else {
-		builtinDelete((*x)[0], y[0])
+		builtinDelete(x[0], y[0])
 		return []reflect.Value{}, nil
 	}
 }

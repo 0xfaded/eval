@@ -5,10 +5,10 @@ import (
 )
 
 func evalStarExpr(starExpr *StarExpr, env Env) (reflect.Value, error) {
-	if vs, _, err := EvalExpr(starExpr.X.(Expr), env); err != nil {
+	if vs, err := EvalExpr(starExpr.X.(Expr), env); err != nil {
 		return reflect.Value{}, err
 	} else {
-		v := (*vs)[0]
+		v := vs[0]
 		if v.IsNil() {
 			return reflect.Value{}, PanicInvalidDereference{}
 		}

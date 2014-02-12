@@ -6,10 +6,10 @@ import (
 
 func evalTypeAssertExpr(assert *TypeAssertExpr, env Env) (reflect.Value, error) {
 	x := assert.X.(Expr)
-	if vs, _, err := EvalExpr(x, env); err != nil {
+	if vs, err := EvalExpr(x, env); err != nil {
 		return reflect.Value{}, err
 	} else {
-		v := (*vs)[0]
+		v := vs[0]
 		xT := x.KnownType()[0]
 		aT := assert.KnownType()[0]
 		if v.IsNil() {

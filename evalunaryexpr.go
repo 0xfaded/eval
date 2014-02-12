@@ -11,11 +11,11 @@ func evalUnaryExpr(unary *UnaryExpr, env Env) ([]reflect.Value, error) {
 		return []reflect.Value{unary.Const()}, nil
 	}
 
-	xx, _, err := EvalExpr(unary.X.(Expr), env)
+	xx, err := EvalExpr(unary.X.(Expr), env)
 	if err != nil {
 		return []reflect.Value{}, err
 	}
-	x := (*xx)[0]
+	x := xx[0]
 
 	// handle & and <- first
 	if unary.Op == token.AND {

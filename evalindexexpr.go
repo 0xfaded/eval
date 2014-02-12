@@ -5,11 +5,11 @@ import (
 )
 
 func evalIndexExpr(index *IndexExpr, env Env) ([]reflect.Value, error) {
-	xs, _, err := EvalExpr(index.X.(Expr), env)
+	xs, err := EvalExpr(index.X.(Expr), env)
 	if err != nil {
 		return []reflect.Value{}, err
 	}
-	x := (*xs)[0]
+	x := xs[0]
 
 	t := index.X.(Expr).KnownType()[0]
 	switch t.Kind() {
