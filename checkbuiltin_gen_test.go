@@ -75,6 +75,16 @@ func TestCheckBuiltinComplexXSlice(t *testing.T) {
 
 }
 
+// Test Complex(map[int]int{})
+func TestCheckBuiltinComplexXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{})`, env,
+		`missing argument to complex - complex(composite literal, <N>)`,
+	)
+
+}
+
 // Test Complex(int)
 func TestCheckBuiltinComplexXType(t *testing.T) {
 	env := makeEnv()
@@ -170,6 +180,16 @@ func TestCheckBuiltinComplexIntSlice(t *testing.T) {
 
 	expectCheckError(t, `complex(1, []int{})`, env,
 		`invalid operation: complex(1, []int literal) (mismatched types int and []int)`,
+	)
+
+}
+
+// Test Complex(1, map[int]int{})
+func TestCheckBuiltinComplexIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(1, map[int]int{})`, env,
+		`invalid operation: complex(1, map[int]int literal) (mismatched types int and map[int]int)`,
 	)
 
 }
@@ -273,6 +293,16 @@ func TestCheckBuiltinComplexFloat32Slice(t *testing.T) {
 
 	expectCheckError(t, `complex(float32(1), []int{})`, env,
 		`invalid operation: complex(float32(1), []int literal) (mismatched types float32 and []int)`,
+	)
+
+}
+
+// Test Complex(float32(1), map[int]int{})
+func TestCheckBuiltinComplexFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(float32(1), map[int]int{})`, env,
+		`invalid operation: complex(float32(1), map[int]int literal) (mismatched types float32 and map[int]int)`,
 	)
 
 }
@@ -389,6 +419,16 @@ func TestCheckBuiltinComplexStringSlice(t *testing.T) {
 
 }
 
+// Test Complex("abc", map[int]int{})
+func TestCheckBuiltinComplexStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex("abc", map[int]int{})`, env,
+		`invalid operation: complex("abc", map[int]int literal) (mismatched types string and map[int]int)`,
+	)
+
+}
+
 // Test Complex("abc", int)
 func TestCheckBuiltinComplexStringType(t *testing.T) {
 	env := makeEnv()
@@ -500,6 +540,16 @@ func TestCheckBuiltinComplexNilSlice(t *testing.T) {
 
 }
 
+// Test Complex(nil, map[int]int{})
+func TestCheckBuiltinComplexNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(nil, map[int]int{})`, env,
+		`invalid operation: complex(nil, map[int]int literal) (arguments have type map[int]int, expected floating-point)`,
+	)
+
+}
+
 // Test Complex(nil, int)
 func TestCheckBuiltinComplexNilType(t *testing.T) {
 	env := makeEnv()
@@ -598,6 +648,16 @@ func TestCheckBuiltinComplexFloatSlice(t *testing.T) {
 
 	expectCheckError(t, `complex(1.5, []int{})`, env,
 		`invalid operation: complex(1.5, []int literal) (mismatched types float64 and []int)`,
+	)
+
+}
+
+// Test Complex(1.5, map[int]int{})
+func TestCheckBuiltinComplexFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(1.5, map[int]int{})`, env,
+		`invalid operation: complex(1.5, map[int]int literal) (mismatched types float64 and map[int]int)`,
 	)
 
 }
@@ -713,6 +773,16 @@ func TestCheckBuiltinComplexSliceSlice(t *testing.T) {
 
 }
 
+// Test Complex([]int{}, map[int]int{})
+func TestCheckBuiltinComplexSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex([]int{}, map[int]int{})`, env,
+		`invalid operation: complex([]int literal, map[int]int literal) (mismatched types []int and map[int]int)`,
+	)
+
+}
+
 // Test Complex([]int{}, int)
 func TestCheckBuiltinComplexSliceType(t *testing.T) {
 	env := makeEnv()
@@ -750,6 +820,127 @@ func TestCheckBuiltinComplexSliceEllipsis(t *testing.T) {
 	expectCheckError(t, `complex([]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin complex`,
 		`invalid operation: complex([]int literal, []int literal) (arguments have type []int, expected floating-point)`,
+	)
+
+}
+
+// Test Complex(map[int]int{})
+func TestCheckBuiltinComplexMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{})`, env,
+		`missing argument to complex - complex(composite literal, <N>)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, 1)
+func TestCheckBuiltinComplexMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, 1)`, env,
+		`invalid operation: complex(map[int]int literal, 1) (mismatched types map[int]int and int)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, float32(1))
+func TestCheckBuiltinComplexMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, float32(1))`, env,
+		`invalid operation: complex(map[int]int literal, float32(1)) (mismatched types map[int]int and float32)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, "abc")
+func TestCheckBuiltinComplexMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, "abc")`, env,
+		`invalid operation: complex(map[int]int literal, "abc") (mismatched types map[int]int and string)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, nil)
+func TestCheckBuiltinComplexMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, nil)`, env,
+		`invalid operation: complex(map[int]int literal, nil) (arguments have type map[int]int, expected floating-point)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, 1.5)
+func TestCheckBuiltinComplexMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, 1.5)`, env,
+		`invalid operation: complex(map[int]int literal, 1.5) (mismatched types map[int]int and float64)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, []int{})
+func TestCheckBuiltinComplexMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, []int{})`, env,
+		`invalid operation: complex(map[int]int literal, []int literal) (mismatched types map[int]int and []int)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, map[int]int{})
+func TestCheckBuiltinComplexMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, map[int]int{})`, env,
+		`invalid operation: complex(map[int]int literal, map[int]int literal) (arguments have type map[int]int, expected floating-point)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, int)
+func TestCheckBuiltinComplexMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, map[int]int)
+func TestCheckBuiltinComplexMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, 1, 1)
+func TestCheckBuiltinComplexMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, 1, 1)`, env,
+		`too many arguments to complex - complex(composite literal, <N>)`,
+	)
+
+}
+
+// Test Complex(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinComplexMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin complex`,
+		`invalid operation: complex(map[int]int literal, []int literal) (mismatched types map[int]int and []int)`,
 	)
 
 }
@@ -819,6 +1010,16 @@ func TestCheckBuiltinComplexTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `complex(int, []int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Complex(int, map[int]int{})
+func TestCheckBuiltinComplexTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(int, map[int]int{})`, env,
 		`type int is not an expression`,
 	)
 
@@ -937,6 +1138,16 @@ func TestCheckBuiltinComplexMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Complex(map[int]int, map[int]int{})
+func TestCheckBuiltinComplexMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `complex(map[int]int, map[int]int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
 // Test Complex(map[int]int, int)
 func TestCheckBuiltinComplexMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -1050,6 +1261,16 @@ func TestCheckBuiltinRealXSlice(t *testing.T) {
 
 }
 
+// Test Real(map[int]int{})
+func TestCheckBuiltinRealXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for real`,
+	)
+
+}
+
 // Test Real(int)
 func TestCheckBuiltinRealXType(t *testing.T) {
 	env := makeEnv()
@@ -1156,6 +1377,16 @@ func TestCheckBuiltinRealIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `real(1, []int{})`, env,
+		`too many arguments to real: real(1, composite literal)`,
+	)
+
+}
+
+// Test Real(1, map[int]int{})
+func TestCheckBuiltinRealIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(1, map[int]int{})`, env,
 		`too many arguments to real: real(1, composite literal)`,
 	)
 
@@ -1272,6 +1503,16 @@ func TestCheckBuiltinRealFloat32Slice(t *testing.T) {
 
 }
 
+// Test Real(float32(1), map[int]int{})
+func TestCheckBuiltinRealFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(float32(1), map[int]int{})`, env,
+		`too many arguments to real: real(float32(1), composite literal)`,
+	)
+
+}
+
 // Test Real(float32(1), int)
 func TestCheckBuiltinRealFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -1378,6 +1619,16 @@ func TestCheckBuiltinRealStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `real("abc", []int{})`, env,
+		`too many arguments to real: real("abc", composite literal)`,
+	)
+
+}
+
+// Test Real("abc", map[int]int{})
+func TestCheckBuiltinRealStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real("abc", map[int]int{})`, env,
 		`too many arguments to real: real("abc", composite literal)`,
 	)
 
@@ -1494,6 +1745,16 @@ func TestCheckBuiltinRealNilSlice(t *testing.T) {
 
 }
 
+// Test Real(nil, map[int]int{})
+func TestCheckBuiltinRealNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(nil, map[int]int{})`, env,
+		`too many arguments to real: real(nil, composite literal)`,
+	)
+
+}
+
 // Test Real(nil, int)
 func TestCheckBuiltinRealNilType(t *testing.T) {
 	env := makeEnv()
@@ -1600,6 +1861,16 @@ func TestCheckBuiltinRealFloatSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `real(1.5, []int{})`, env,
+		`too many arguments to real: real(1.5, composite literal)`,
+	)
+
+}
+
+// Test Real(1.5, map[int]int{})
+func TestCheckBuiltinRealFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(1.5, map[int]int{})`, env,
 		`too many arguments to real: real(1.5, composite literal)`,
 	)
 
@@ -1716,6 +1987,16 @@ func TestCheckBuiltinRealSliceSlice(t *testing.T) {
 
 }
 
+// Test Real([]int{}, map[int]int{})
+func TestCheckBuiltinRealSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real([]int{}, map[int]int{})`, env,
+		`too many arguments to real: real(composite literal, composite literal)`,
+	)
+
+}
+
 // Test Real([]int{}, int)
 func TestCheckBuiltinRealSliceType(t *testing.T) {
 	env := makeEnv()
@@ -1751,6 +2032,127 @@ func TestCheckBuiltinRealSliceEllipsis(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `real([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin real`,
+		`too many arguments to real: real(composite literal, composite literal...)`,
+	)
+
+}
+
+// Test Real(map[int]int{})
+func TestCheckBuiltinRealMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for real`,
+	)
+
+}
+
+// Test Real(map[int]int{}, 1)
+func TestCheckBuiltinRealMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, 1)`, env,
+		`too many arguments to real: real(composite literal, 1)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, float32(1))
+func TestCheckBuiltinRealMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, float32(1))`, env,
+		`too many arguments to real: real(composite literal, float32(1))`,
+	)
+
+}
+
+// Test Real(map[int]int{}, "abc")
+func TestCheckBuiltinRealMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, "abc")`, env,
+		`too many arguments to real: real(composite literal, "abc")`,
+	)
+
+}
+
+// Test Real(map[int]int{}, nil)
+func TestCheckBuiltinRealMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, nil)`, env,
+		`too many arguments to real: real(composite literal, nil)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, 1.5)
+func TestCheckBuiltinRealMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, 1.5)`, env,
+		`too many arguments to real: real(composite literal, 1.5)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, []int{})
+func TestCheckBuiltinRealMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, []int{})`, env,
+		`too many arguments to real: real(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, map[int]int{})
+func TestCheckBuiltinRealMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, map[int]int{})`, env,
+		`too many arguments to real: real(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, int)
+func TestCheckBuiltinRealMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, int)`, env,
+		`too many arguments to real: real(composite literal, int)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, map[int]int)
+func TestCheckBuiltinRealMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, map[int]int)`, env,
+		`too many arguments to real: real(composite literal, map[int]int)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, 1, 1)
+func TestCheckBuiltinRealMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, 1, 1)`, env,
+		`too many arguments to real: real(composite literal, 1, 1)`,
+	)
+
+}
+
+// Test Real(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinRealMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin real`,
 		`too many arguments to real: real(composite literal, composite literal...)`,
 	)
@@ -1822,6 +2224,16 @@ func TestCheckBuiltinRealTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `real(int, []int{})`, env,
+		`too many arguments to real: real(int, composite literal)`,
+	)
+
+}
+
+// Test Real(int, map[int]int{})
+func TestCheckBuiltinRealTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(int, map[int]int{})`, env,
 		`too many arguments to real: real(int, composite literal)`,
 	)
 
@@ -1938,6 +2350,16 @@ func TestCheckBuiltinRealMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Real(map[int]int, map[int]int{})
+func TestCheckBuiltinRealMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `real(map[int]int, map[int]int{})`, env,
+		`too many arguments to real: real(map[int]int, composite literal)`,
+	)
+
+}
+
 // Test Real(map[int]int, int)
 func TestCheckBuiltinRealMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -2049,6 +2471,16 @@ func TestCheckBuiltinImagXSlice(t *testing.T) {
 
 }
 
+// Test Imag(map[int]int{})
+func TestCheckBuiltinImagXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for imag`,
+	)
+
+}
+
 // Test Imag(int)
 func TestCheckBuiltinImagXType(t *testing.T) {
 	env := makeEnv()
@@ -2155,6 +2587,16 @@ func TestCheckBuiltinImagIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `imag(1, []int{})`, env,
+		`too many arguments to imag: imag(1, composite literal)`,
+	)
+
+}
+
+// Test Imag(1, map[int]int{})
+func TestCheckBuiltinImagIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(1, map[int]int{})`, env,
 		`too many arguments to imag: imag(1, composite literal)`,
 	)
 
@@ -2271,6 +2713,16 @@ func TestCheckBuiltinImagFloat32Slice(t *testing.T) {
 
 }
 
+// Test Imag(float32(1), map[int]int{})
+func TestCheckBuiltinImagFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(float32(1), map[int]int{})`, env,
+		`too many arguments to imag: imag(float32(1), composite literal)`,
+	)
+
+}
+
 // Test Imag(float32(1), int)
 func TestCheckBuiltinImagFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -2377,6 +2829,16 @@ func TestCheckBuiltinImagStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `imag("abc", []int{})`, env,
+		`too many arguments to imag: imag("abc", composite literal)`,
+	)
+
+}
+
+// Test Imag("abc", map[int]int{})
+func TestCheckBuiltinImagStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag("abc", map[int]int{})`, env,
 		`too many arguments to imag: imag("abc", composite literal)`,
 	)
 
@@ -2493,6 +2955,16 @@ func TestCheckBuiltinImagNilSlice(t *testing.T) {
 
 }
 
+// Test Imag(nil, map[int]int{})
+func TestCheckBuiltinImagNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(nil, map[int]int{})`, env,
+		`too many arguments to imag: imag(nil, composite literal)`,
+	)
+
+}
+
 // Test Imag(nil, int)
 func TestCheckBuiltinImagNilType(t *testing.T) {
 	env := makeEnv()
@@ -2599,6 +3071,16 @@ func TestCheckBuiltinImagFloatSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `imag(1.5, []int{})`, env,
+		`too many arguments to imag: imag(1.5, composite literal)`,
+	)
+
+}
+
+// Test Imag(1.5, map[int]int{})
+func TestCheckBuiltinImagFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(1.5, map[int]int{})`, env,
 		`too many arguments to imag: imag(1.5, composite literal)`,
 	)
 
@@ -2715,6 +3197,16 @@ func TestCheckBuiltinImagSliceSlice(t *testing.T) {
 
 }
 
+// Test Imag([]int{}, map[int]int{})
+func TestCheckBuiltinImagSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag([]int{}, map[int]int{})`, env,
+		`too many arguments to imag: imag(composite literal, composite literal)`,
+	)
+
+}
+
 // Test Imag([]int{}, int)
 func TestCheckBuiltinImagSliceType(t *testing.T) {
 	env := makeEnv()
@@ -2750,6 +3242,127 @@ func TestCheckBuiltinImagSliceEllipsis(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `imag([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin imag`,
+		`too many arguments to imag: imag(composite literal, composite literal...)`,
+	)
+
+}
+
+// Test Imag(map[int]int{})
+func TestCheckBuiltinImagMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for imag`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, 1)
+func TestCheckBuiltinImagMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, 1)`, env,
+		`too many arguments to imag: imag(composite literal, 1)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, float32(1))
+func TestCheckBuiltinImagMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, float32(1))`, env,
+		`too many arguments to imag: imag(composite literal, float32(1))`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, "abc")
+func TestCheckBuiltinImagMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, "abc")`, env,
+		`too many arguments to imag: imag(composite literal, "abc")`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, nil)
+func TestCheckBuiltinImagMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, nil)`, env,
+		`too many arguments to imag: imag(composite literal, nil)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, 1.5)
+func TestCheckBuiltinImagMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, 1.5)`, env,
+		`too many arguments to imag: imag(composite literal, 1.5)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, []int{})
+func TestCheckBuiltinImagMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, []int{})`, env,
+		`too many arguments to imag: imag(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, map[int]int{})
+func TestCheckBuiltinImagMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, map[int]int{})`, env,
+		`too many arguments to imag: imag(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, int)
+func TestCheckBuiltinImagMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, int)`, env,
+		`too many arguments to imag: imag(composite literal, int)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, map[int]int)
+func TestCheckBuiltinImagMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, map[int]int)`, env,
+		`too many arguments to imag: imag(composite literal, map[int]int)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, 1, 1)
+func TestCheckBuiltinImagMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, 1, 1)`, env,
+		`too many arguments to imag: imag(composite literal, 1, 1)`,
+	)
+
+}
+
+// Test Imag(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinImagMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin imag`,
 		`too many arguments to imag: imag(composite literal, composite literal...)`,
 	)
@@ -2821,6 +3434,16 @@ func TestCheckBuiltinImagTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `imag(int, []int{})`, env,
+		`too many arguments to imag: imag(int, composite literal)`,
+	)
+
+}
+
+// Test Imag(int, map[int]int{})
+func TestCheckBuiltinImagTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(int, map[int]int{})`, env,
 		`too many arguments to imag: imag(int, composite literal)`,
 	)
 
@@ -2937,6 +3560,16 @@ func TestCheckBuiltinImagMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Imag(map[int]int, map[int]int{})
+func TestCheckBuiltinImagMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `imag(map[int]int, map[int]int{})`, env,
+		`too many arguments to imag: imag(map[int]int, composite literal)`,
+	)
+
+}
+
 // Test Imag(map[int]int, int)
 func TestCheckBuiltinImagMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -3048,6 +3681,16 @@ func TestCheckBuiltinNewXSlice(t *testing.T) {
 
 }
 
+// Test New(map[int]int{})
+func TestCheckBuiltinNewXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{})`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
 // Test New(int)
 func TestCheckBuiltinNewXType(t *testing.T) {
 	env := makeEnv()
@@ -3146,6 +3789,16 @@ func TestCheckBuiltinNewIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `new(1, []int{})`, env,
+		`1 is not a type`,
+	)
+
+}
+
+// Test New(1, map[int]int{})
+func TestCheckBuiltinNewIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(1, map[int]int{})`, env,
 		`1 is not a type`,
 	)
 
@@ -3262,6 +3915,16 @@ func TestCheckBuiltinNewFloat32Slice(t *testing.T) {
 
 }
 
+// Test New(float32(1), map[int]int{})
+func TestCheckBuiltinNewFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(float32(1), map[int]int{})`, env,
+		`float32(1) is not a type`,
+	)
+
+}
+
 // Test New(float32(1), int)
 func TestCheckBuiltinNewFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -3368,6 +4031,16 @@ func TestCheckBuiltinNewStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `new("abc", []int{})`, env,
+		`"abc" is not a type`,
+	)
+
+}
+
+// Test New("abc", map[int]int{})
+func TestCheckBuiltinNewStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new("abc", map[int]int{})`, env,
 		`"abc" is not a type`,
 	)
 
@@ -3484,6 +4157,16 @@ func TestCheckBuiltinNewNilSlice(t *testing.T) {
 
 }
 
+// Test New(nil, map[int]int{})
+func TestCheckBuiltinNewNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(nil, map[int]int{})`, env,
+		`nil is not a type`,
+	)
+
+}
+
 // Test New(nil, int)
 func TestCheckBuiltinNewNilType(t *testing.T) {
 	env := makeEnv()
@@ -3590,6 +4273,16 @@ func TestCheckBuiltinNewFloatSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `new(1.5, []int{})`, env,
+		`1.5 is not a type`,
+	)
+
+}
+
+// Test New(1.5, map[int]int{})
+func TestCheckBuiltinNewFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(1.5, map[int]int{})`, env,
 		`1.5 is not a type`,
 	)
 
@@ -3706,6 +4399,16 @@ func TestCheckBuiltinNewSliceSlice(t *testing.T) {
 
 }
 
+// Test New([]int{}, map[int]int{})
+func TestCheckBuiltinNewSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new([]int{}, map[int]int{})`, env,
+		`[]int literal is not a type`,
+	)
+
+}
+
 // Test New([]int{}, int)
 func TestCheckBuiltinNewSliceType(t *testing.T) {
 	env := makeEnv()
@@ -3743,6 +4446,127 @@ func TestCheckBuiltinNewSliceEllipsis(t *testing.T) {
 	expectCheckError(t, `new([]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin new`,
 		`[]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{})
+func TestCheckBuiltinNewMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{})`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, 1)
+func TestCheckBuiltinNewMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, 1)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, float32(1))
+func TestCheckBuiltinNewMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, float32(1))`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, "abc")
+func TestCheckBuiltinNewMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, "abc")`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, nil)
+func TestCheckBuiltinNewMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, nil)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, 1.5)
+func TestCheckBuiltinNewMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, 1.5)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, []int{})
+func TestCheckBuiltinNewMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, []int{})`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, map[int]int{})
+func TestCheckBuiltinNewMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, map[int]int{})`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, int)
+func TestCheckBuiltinNewMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, int)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, map[int]int)
+func TestCheckBuiltinNewMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, map[int]int)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, 1, 1)
+func TestCheckBuiltinNewMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, 1, 1)`, env,
+		`map[int]int literal is not a type`,
+	)
+
+}
+
+// Test New(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinNewMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin new`,
+		`map[int]int literal is not a type`,
 	)
 
 }
@@ -3808,6 +4632,16 @@ func TestCheckBuiltinNewTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `new(int, []int{})`, env,
+		`too many arguments to new(int)`,
+	)
+
+}
+
+// Test New(int, map[int]int{})
+func TestCheckBuiltinNewTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(int, map[int]int{})`, env,
 		`too many arguments to new(int)`,
 	)
 
@@ -3920,6 +4754,16 @@ func TestCheckBuiltinNewMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test New(map[int]int, map[int]int{})
+func TestCheckBuiltinNewMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `new(map[int]int, map[int]int{})`, env,
+		`too many arguments to new(map[int]int)`,
+	)
+
+}
+
 // Test New(map[int]int, int)
 func TestCheckBuiltinNewMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -4022,6 +4866,12 @@ func TestCheckBuiltinLenXFloat(t *testing.T) {
 func TestCheckBuiltinLenXSlice(t *testing.T) {
 	env := makeEnv()
 	expectType(t, `len([]int{})`, env, reflect.TypeOf(len([]int{})))
+}
+
+// Test Len(map[int]int{})
+func TestCheckBuiltinLenXMap(t *testing.T) {
+	env := makeEnv()
+	expectType(t, `len(map[int]int{})`, env, reflect.TypeOf(len(map[int]int{})))
 }
 
 // Test Len(int)
@@ -4129,6 +4979,16 @@ func TestCheckBuiltinLenIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `len(1, []int{})`, env,
+		`too many arguments to len: len(1, composite literal)`,
+	)
+
+}
+
+// Test Len(1, map[int]int{})
+func TestCheckBuiltinLenIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(1, map[int]int{})`, env,
 		`too many arguments to len: len(1, composite literal)`,
 	)
 
@@ -4245,6 +5105,16 @@ func TestCheckBuiltinLenFloat32Slice(t *testing.T) {
 
 }
 
+// Test Len(float32(1), map[int]int{})
+func TestCheckBuiltinLenFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(float32(1), map[int]int{})`, env,
+		`too many arguments to len: len(float32(1), composite literal)`,
+	)
+
+}
+
 // Test Len(float32(1), int)
 func TestCheckBuiltinLenFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -4348,6 +5218,16 @@ func TestCheckBuiltinLenStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `len("abc", []int{})`, env,
+		`too many arguments to len: len("abc", composite literal)`,
+	)
+
+}
+
+// Test Len("abc", map[int]int{})
+func TestCheckBuiltinLenStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len("abc", map[int]int{})`, env,
 		`too many arguments to len: len("abc", composite literal)`,
 	)
 
@@ -4464,6 +5344,16 @@ func TestCheckBuiltinLenNilSlice(t *testing.T) {
 
 }
 
+// Test Len(nil, map[int]int{})
+func TestCheckBuiltinLenNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(nil, map[int]int{})`, env,
+		`too many arguments to len: len(nil, composite literal)`,
+	)
+
+}
+
 // Test Len(nil, int)
 func TestCheckBuiltinLenNilType(t *testing.T) {
 	env := makeEnv()
@@ -4570,6 +5460,16 @@ func TestCheckBuiltinLenFloatSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `len(1.5, []int{})`, env,
+		`too many arguments to len: len(1.5, composite literal)`,
+	)
+
+}
+
+// Test Len(1.5, map[int]int{})
+func TestCheckBuiltinLenFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(1.5, map[int]int{})`, env,
 		`too many arguments to len: len(1.5, composite literal)`,
 	)
 
@@ -4682,6 +5582,16 @@ func TestCheckBuiltinLenSliceSlice(t *testing.T) {
 
 }
 
+// Test Len([]int{}, map[int]int{})
+func TestCheckBuiltinLenSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len([]int{}, map[int]int{})`, env,
+		`too many arguments to len: len(composite literal, composite literal)`,
+	)
+
+}
+
 // Test Len([]int{}, int)
 func TestCheckBuiltinLenSliceType(t *testing.T) {
 	env := makeEnv()
@@ -4717,6 +5627,123 @@ func TestCheckBuiltinLenSliceEllipsis(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `len([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin len`,
+		`too many arguments to len: len(composite literal, composite literal...)`,
+	)
+
+}
+
+// Test Len(map[int]int{})
+func TestCheckBuiltinLenMapX(t *testing.T) {
+	env := makeEnv()
+	expectType(t, `len(map[int]int{})`, env, reflect.TypeOf(len(map[int]int{})))
+}
+
+// Test Len(map[int]int{}, 1)
+func TestCheckBuiltinLenMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, 1)`, env,
+		`too many arguments to len: len(composite literal, 1)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, float32(1))
+func TestCheckBuiltinLenMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, float32(1))`, env,
+		`too many arguments to len: len(composite literal, float32(1))`,
+	)
+
+}
+
+// Test Len(map[int]int{}, "abc")
+func TestCheckBuiltinLenMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, "abc")`, env,
+		`too many arguments to len: len(composite literal, "abc")`,
+	)
+
+}
+
+// Test Len(map[int]int{}, nil)
+func TestCheckBuiltinLenMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, nil)`, env,
+		`too many arguments to len: len(composite literal, nil)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, 1.5)
+func TestCheckBuiltinLenMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, 1.5)`, env,
+		`too many arguments to len: len(composite literal, 1.5)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, []int{})
+func TestCheckBuiltinLenMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, []int{})`, env,
+		`too many arguments to len: len(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, map[int]int{})
+func TestCheckBuiltinLenMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, map[int]int{})`, env,
+		`too many arguments to len: len(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, int)
+func TestCheckBuiltinLenMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, int)`, env,
+		`too many arguments to len: len(composite literal, int)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, map[int]int)
+func TestCheckBuiltinLenMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, map[int]int)`, env,
+		`too many arguments to len: len(composite literal, map[int]int)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, 1, 1)
+func TestCheckBuiltinLenMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, 1, 1)`, env,
+		`too many arguments to len: len(composite literal, 1, 1)`,
+	)
+
+}
+
+// Test Len(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinLenMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin len`,
 		`too many arguments to len: len(composite literal, composite literal...)`,
 	)
@@ -4788,6 +5815,16 @@ func TestCheckBuiltinLenTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `len(int, []int{})`, env,
+		`too many arguments to len: len(int, composite literal)`,
+	)
+
+}
+
+// Test Len(int, map[int]int{})
+func TestCheckBuiltinLenTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(int, map[int]int{})`, env,
 		`too many arguments to len: len(int, composite literal)`,
 	)
 
@@ -4904,6 +5941,16 @@ func TestCheckBuiltinLenMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Len(map[int]int, map[int]int{})
+func TestCheckBuiltinLenMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `len(map[int]int, map[int]int{})`, env,
+		`too many arguments to len: len(map[int]int, composite literal)`,
+	)
+
+}
+
 // Test Len(map[int]int, int)
 func TestCheckBuiltinLenMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -5011,6 +6058,16 @@ func TestCheckBuiltinCapXSlice(t *testing.T) {
 	expectType(t, `cap([]int{})`, env, reflect.TypeOf(cap([]int{})))
 }
 
+// Test Cap(map[int]int{})
+func TestCheckBuiltinCapXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for cap`,
+	)
+
+}
+
 // Test Cap(int)
 func TestCheckBuiltinCapXType(t *testing.T) {
 	env := makeEnv()
@@ -5116,6 +6173,16 @@ func TestCheckBuiltinCapIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `cap(1, []int{})`, env,
+		`too many arguments to cap: cap(1, composite literal)`,
+	)
+
+}
+
+// Test Cap(1, map[int]int{})
+func TestCheckBuiltinCapIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(1, map[int]int{})`, env,
 		`too many arguments to cap: cap(1, composite literal)`,
 	)
 
@@ -5232,6 +6299,16 @@ func TestCheckBuiltinCapFloat32Slice(t *testing.T) {
 
 }
 
+// Test Cap(float32(1), map[int]int{})
+func TestCheckBuiltinCapFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(float32(1), map[int]int{})`, env,
+		`too many arguments to cap: cap(float32(1), composite literal)`,
+	)
+
+}
+
 // Test Cap(float32(1), int)
 func TestCheckBuiltinCapFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -5338,6 +6415,16 @@ func TestCheckBuiltinCapStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `cap("abc", []int{})`, env,
+		`too many arguments to cap: cap("abc", composite literal)`,
+	)
+
+}
+
+// Test Cap("abc", map[int]int{})
+func TestCheckBuiltinCapStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap("abc", map[int]int{})`, env,
 		`too many arguments to cap: cap("abc", composite literal)`,
 	)
 
@@ -5454,6 +6541,16 @@ func TestCheckBuiltinCapNilSlice(t *testing.T) {
 
 }
 
+// Test Cap(nil, map[int]int{})
+func TestCheckBuiltinCapNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(nil, map[int]int{})`, env,
+		`too many arguments to cap: cap(nil, composite literal)`,
+	)
+
+}
+
 // Test Cap(nil, int)
 func TestCheckBuiltinCapNilType(t *testing.T) {
 	env := makeEnv()
@@ -5560,6 +6657,16 @@ func TestCheckBuiltinCapFloatSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `cap(1.5, []int{})`, env,
+		`too many arguments to cap: cap(1.5, composite literal)`,
+	)
+
+}
+
+// Test Cap(1.5, map[int]int{})
+func TestCheckBuiltinCapFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(1.5, map[int]int{})`, env,
 		`too many arguments to cap: cap(1.5, composite literal)`,
 	)
 
@@ -5672,6 +6779,16 @@ func TestCheckBuiltinCapSliceSlice(t *testing.T) {
 
 }
 
+// Test Cap([]int{}, map[int]int{})
+func TestCheckBuiltinCapSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap([]int{}, map[int]int{})`, env,
+		`too many arguments to cap: cap(composite literal, composite literal)`,
+	)
+
+}
+
 // Test Cap([]int{}, int)
 func TestCheckBuiltinCapSliceType(t *testing.T) {
 	env := makeEnv()
@@ -5707,6 +6824,127 @@ func TestCheckBuiltinCapSliceEllipsis(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `cap([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin cap`,
+		`too many arguments to cap: cap(composite literal, composite literal...)`,
+	)
+
+}
+
+// Test Cap(map[int]int{})
+func TestCheckBuiltinCapMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{})`, env,
+		`invalid argument map[int]int literal (type map[int]int) for cap`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, 1)
+func TestCheckBuiltinCapMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, 1)`, env,
+		`too many arguments to cap: cap(composite literal, 1)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, float32(1))
+func TestCheckBuiltinCapMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, float32(1))`, env,
+		`too many arguments to cap: cap(composite literal, float32(1))`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, "abc")
+func TestCheckBuiltinCapMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, "abc")`, env,
+		`too many arguments to cap: cap(composite literal, "abc")`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, nil)
+func TestCheckBuiltinCapMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, nil)`, env,
+		`too many arguments to cap: cap(composite literal, nil)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, 1.5)
+func TestCheckBuiltinCapMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, 1.5)`, env,
+		`too many arguments to cap: cap(composite literal, 1.5)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, []int{})
+func TestCheckBuiltinCapMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, []int{})`, env,
+		`too many arguments to cap: cap(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, map[int]int{})
+func TestCheckBuiltinCapMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, map[int]int{})`, env,
+		`too many arguments to cap: cap(composite literal, composite literal)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, int)
+func TestCheckBuiltinCapMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, int)`, env,
+		`too many arguments to cap: cap(composite literal, int)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, map[int]int)
+func TestCheckBuiltinCapMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, map[int]int)`, env,
+		`too many arguments to cap: cap(composite literal, map[int]int)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, 1, 1)
+func TestCheckBuiltinCapMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, 1, 1)`, env,
+		`too many arguments to cap: cap(composite literal, 1, 1)`,
+	)
+
+}
+
+// Test Cap(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinCapMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin cap`,
 		`too many arguments to cap: cap(composite literal, composite literal...)`,
 	)
@@ -5778,6 +7016,16 @@ func TestCheckBuiltinCapTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `cap(int, []int{})`, env,
+		`too many arguments to cap: cap(int, composite literal)`,
+	)
+
+}
+
+// Test Cap(int, map[int]int{})
+func TestCheckBuiltinCapTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(int, map[int]int{})`, env,
 		`too many arguments to cap: cap(int, composite literal)`,
 	)
 
@@ -5894,6 +7142,16 @@ func TestCheckBuiltinCapMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Cap(map[int]int, map[int]int{})
+func TestCheckBuiltinCapMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `cap(map[int]int, map[int]int{})`, env,
+		`too many arguments to cap: cap(map[int]int, composite literal)`,
+	)
+
+}
+
 // Test Cap(map[int]int, int)
 func TestCheckBuiltinCapMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -6001,6 +7259,16 @@ func TestCheckBuiltinAppendXSlice(t *testing.T) {
 	expectType(t, `append([]int{})`, env, reflect.TypeOf(append([]int{})))
 }
 
+// Test Append(map[int]int{})
+func TestCheckBuiltinAppendXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{})`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
 // Test Append(int)
 func TestCheckBuiltinAppendXType(t *testing.T) {
 	env := makeEnv()
@@ -6106,6 +7374,16 @@ func TestCheckBuiltinAppendIntSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `append(1, []int{})`, env,
+		`first argument to append must be slice; have untyped number`,
+	)
+
+}
+
+// Test Append(1, map[int]int{})
+func TestCheckBuiltinAppendIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(1, map[int]int{})`, env,
 		`first argument to append must be slice; have untyped number`,
 	)
 
@@ -6223,6 +7501,16 @@ func TestCheckBuiltinAppendFloat32Slice(t *testing.T) {
 
 }
 
+// Test Append(float32(1), map[int]int{})
+func TestCheckBuiltinAppendFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(float32(1), map[int]int{})`, env,
+		`first argument to append must be slice; have float32`,
+	)
+
+}
+
 // Test Append(float32(1), int)
 func TestCheckBuiltinAppendFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -6330,6 +7618,16 @@ func TestCheckBuiltinAppendStringSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `append("abc", []int{})`, env,
+		`first argument to append must be slice; have untyped string`,
+	)
+
+}
+
+// Test Append("abc", map[int]int{})
+func TestCheckBuiltinAppendStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append("abc", map[int]int{})`, env,
 		`first argument to append must be slice; have untyped string`,
 	)
 
@@ -6447,6 +7745,16 @@ func TestCheckBuiltinAppendNilSlice(t *testing.T) {
 
 }
 
+// Test Append(nil, map[int]int{})
+func TestCheckBuiltinAppendNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(nil, map[int]int{})`, env,
+		`first argument to append must be typed slice; have untyped nil`,
+	)
+
+}
+
 // Test Append(nil, int)
 func TestCheckBuiltinAppendNilType(t *testing.T) {
 	env := makeEnv()
@@ -6559,6 +7867,16 @@ func TestCheckBuiltinAppendFloatSlice(t *testing.T) {
 
 }
 
+// Test Append(1.5, map[int]int{})
+func TestCheckBuiltinAppendFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(1.5, map[int]int{})`, env,
+		`first argument to append must be slice; have untyped number`,
+	)
+
+}
+
 // Test Append(1.5, int)
 func TestCheckBuiltinAppendFloatType(t *testing.T) {
 	env := makeEnv()
@@ -6663,6 +7981,16 @@ func TestCheckBuiltinAppendSliceSlice(t *testing.T) {
 
 }
 
+// Test Append([]int{}, map[int]int{})
+func TestCheckBuiltinAppendSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append([]int{}, map[int]int{})`, env,
+		`cannot use map[int]int literal (type map[int]int) as type int in append`,
+	)
+
+}
+
 // Test Append([]int{}, int)
 func TestCheckBuiltinAppendSliceType(t *testing.T) {
 	env := makeEnv()
@@ -6693,6 +8021,128 @@ func TestCheckBuiltinAppendSliceDouble(t *testing.T) {
 func TestCheckBuiltinAppendSliceEllipsis(t *testing.T) {
 	env := makeEnv()
 	expectType(t, `append([]int{}, []int{1,2}...)`, env, reflect.TypeOf(append([]int{}, []int{1,2}...)))
+}
+
+// Test Append(map[int]int{})
+func TestCheckBuiltinAppendMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{})`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, 1)
+func TestCheckBuiltinAppendMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, 1)`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, float32(1))
+func TestCheckBuiltinAppendMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, float32(1))`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, "abc")
+func TestCheckBuiltinAppendMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, "abc")`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, nil)
+func TestCheckBuiltinAppendMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, nil)`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, 1.5)
+func TestCheckBuiltinAppendMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, 1.5)`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, []int{})
+func TestCheckBuiltinAppendMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, []int{})`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, map[int]int{})
+func TestCheckBuiltinAppendMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, map[int]int{})`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, int)
+func TestCheckBuiltinAppendMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, int)`, env,
+		`type int is not an expression`,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, map[int]int)
+func TestCheckBuiltinAppendMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, 1, 1)
+func TestCheckBuiltinAppendMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, 1, 1)`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
+}
+
+// Test Append(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinAppendMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int{}, []int{1,2}...)`, env,
+		`first argument to append must be slice; have map[int]int`,
+	)
+
 }
 
 // Test Append(int)
@@ -6760,6 +8210,16 @@ func TestCheckBuiltinAppendTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `append(int, []int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Append(int, map[int]int{})
+func TestCheckBuiltinAppendTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(int, map[int]int{})`, env,
 		`type int is not an expression`,
 	)
 
@@ -6877,6 +8337,16 @@ func TestCheckBuiltinAppendMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Append(map[int]int, map[int]int{})
+func TestCheckBuiltinAppendMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `append(map[int]int, map[int]int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
 // Test Append(map[int]int, int)
 func TestCheckBuiltinAppendMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -6984,6 +8454,16 @@ func TestCheckBuiltinCopyXSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `copy([]int{})`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int{})
+func TestCheckBuiltinCopyXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{})`, env,
 		`missing arguments to copy`,
 	)
 
@@ -7101,6 +8581,16 @@ func TestCheckBuiltinCopyIntSlice(t *testing.T) {
 
 }
 
+// Test Copy(1, map[int]int{})
+func TestCheckBuiltinCopyIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1, map[int]int{})`, env,
+		`arguments to copy must be slices; have int, map[int]int`,
+	)
+
+}
+
 // Test Copy(1, int)
 func TestCheckBuiltinCopyIntType(t *testing.T) {
 	env := makeEnv()
@@ -7213,6 +8703,16 @@ func TestCheckBuiltinCopyFloat32Slice(t *testing.T) {
 
 }
 
+// Test Copy(float32(1), map[int]int{})
+func TestCheckBuiltinCopyFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(float32(1), map[int]int{})`, env,
+		`arguments to copy must be slices; have float32, map[int]int`,
+	)
+
+}
+
 // Test Copy(float32(1), int)
 func TestCheckBuiltinCopyFloat32Type(t *testing.T) {
 	env := makeEnv()
@@ -7321,6 +8821,16 @@ func TestCheckBuiltinCopyStringSlice(t *testing.T) {
 
 	expectCheckError(t, `copy("abc", []int{})`, env,
 		`first argument to copy should be slice; have string`,
+	)
+
+}
+
+// Test Copy("abc", map[int]int{})
+func TestCheckBuiltinCopyStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy("abc", map[int]int{})`, env,
+		`arguments to copy must be slices; have string, map[int]int`,
 	)
 
 }
@@ -7443,6 +8953,17 @@ func TestCheckBuiltinCopyNilSlice(t *testing.T) {
 
 }
 
+// Test Copy(nil, map[int]int{})
+func TestCheckBuiltinCopyNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(nil, map[int]int{})`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have <T>, map[int]int`,
+	)
+
+}
+
 // Test Copy(nil, int)
 func TestCheckBuiltinCopyNilType(t *testing.T) {
 	env := makeEnv()
@@ -7556,6 +9077,16 @@ func TestCheckBuiltinCopyFloatSlice(t *testing.T) {
 
 }
 
+// Test Copy(1.5, map[int]int{})
+func TestCheckBuiltinCopyFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(1.5, map[int]int{})`, env,
+		`arguments to copy must be slices; have float64, map[int]int`,
+	)
+
+}
+
 // Test Copy(1.5, int)
 func TestCheckBuiltinCopyFloatType(t *testing.T) {
 	env := makeEnv()
@@ -7660,6 +9191,16 @@ func TestCheckBuiltinCopySliceSlice(t *testing.T) {
 	expectType(t, `copy([]int{}, []int{})`, env, reflect.TypeOf(copy([]int{}, []int{})))
 }
 
+// Test Copy([]int{}, map[int]int{})
+func TestCheckBuiltinCopySliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy([]int{}, map[int]int{})`, env,
+		`second argument to copy should be slice or string; have map[int]int`,
+	)
+
+}
+
 // Test Copy([]int{}, int)
 func TestCheckBuiltinCopySliceType(t *testing.T) {
 	env := makeEnv()
@@ -7696,6 +9237,128 @@ func TestCheckBuiltinCopySliceEllipsis(t *testing.T) {
 
 	expectCheckError(t, `copy([]int{}, []int{1,2}...)`, env,
 		`invalid use of ... with builtin copy`,
+	)
+
+}
+
+// Test Copy(map[int]int{})
+func TestCheckBuiltinCopyMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{})`, env,
+		`missing arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, 1)
+func TestCheckBuiltinCopyMapInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, 1)`, env,
+		`arguments to copy must be slices; have map[int]int, int`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, float32(1))
+func TestCheckBuiltinCopyMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, float32(1))`, env,
+		`arguments to copy must be slices; have map[int]int, float32`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, "abc")
+func TestCheckBuiltinCopyMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, "abc")`, env,
+		`arguments to copy must be slices; have map[int]int, string`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, nil)
+func TestCheckBuiltinCopyMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, nil)`, env,
+		`use of untyped nil`,
+		`arguments to copy must be slices; have map[int]int, <T>`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, 1.5)
+func TestCheckBuiltinCopyMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, 1.5)`, env,
+		`arguments to copy must be slices; have map[int]int, float64`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, []int{})
+func TestCheckBuiltinCopyMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, []int{})`, env,
+		`first argument to copy should be slice; have map[int]int`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, map[int]int{})
+func TestCheckBuiltinCopyMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, map[int]int{})`, env,
+		`arguments to copy must be slices; have map[int]int, map[int]int`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, int)
+func TestCheckBuiltinCopyMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, map[int]int)
+func TestCheckBuiltinCopyMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, 1, 1)
+func TestCheckBuiltinCopyMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, 1, 1)`, env,
+		`too many arguments to copy`,
+	)
+
+}
+
+// Test Copy(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinCopyMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin copy`,
+		`first argument to copy should be slice; have map[int]int`,
 	)
 
 }
@@ -7765,6 +9428,16 @@ func TestCheckBuiltinCopyTypeSlice(t *testing.T) {
 	env := makeEnv()
 
 	expectCheckError(t, `copy(int, []int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Copy(int, map[int]int{})
+func TestCheckBuiltinCopyTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(int, map[int]int{})`, env,
 		`type int is not an expression`,
 	)
 
@@ -7883,6 +9556,16 @@ func TestCheckBuiltinCopyMakeTypeSlice(t *testing.T) {
 
 }
 
+// Test Copy(map[int]int, map[int]int{})
+func TestCheckBuiltinCopyMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `copy(map[int]int, map[int]int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
 // Test Copy(map[int]int, int)
 func TestCheckBuiltinCopyMakeTypeType(t *testing.T) {
 	env := makeEnv()
@@ -7921,6 +9604,1228 @@ func TestCheckBuiltinCopyMakeTypeEllipsis(t *testing.T) {
 
 	expectCheckError(t, `copy(map[int]int, []int{1,2}...)`, env,
 		`invalid use of ... with builtin copy`,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete()
+func TestCheckBuiltinDeleteXX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete()`, env,
+		`missing arguments to delete`,
+	)
+
+}
+
+// Test Delete(1)
+func TestCheckBuiltinDeleteXInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(float32(1))
+func TestCheckBuiltinDeleteXFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1))`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete("abc")
+func TestCheckBuiltinDeleteXString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc")`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(nil)
+func TestCheckBuiltinDeleteXNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(1.5)
+func TestCheckBuiltinDeleteXFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete([]int{})
+func TestCheckBuiltinDeleteXSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{})`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{})
+func TestCheckBuiltinDeleteXMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{})`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(int)
+func TestCheckBuiltinDeleteXType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int)
+func TestCheckBuiltinDeleteXMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(1, 1)
+func TestCheckBuiltinDeleteXDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, 1)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete([]int{1,2}...)
+func TestCheckBuiltinDeleteXEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(1)
+func TestCheckBuiltinDeleteIntX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(1, 1)
+func TestCheckBuiltinDeleteIntInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, 1)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, float32(1))
+func TestCheckBuiltinDeleteIntFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, float32(1))`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, "abc")
+func TestCheckBuiltinDeleteIntString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, "abc")`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, nil)
+func TestCheckBuiltinDeleteIntNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, nil)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, 1.5)
+func TestCheckBuiltinDeleteIntFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, 1.5)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, []int{})
+func TestCheckBuiltinDeleteIntSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, []int{})`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, map[int]int{})
+func TestCheckBuiltinDeleteIntMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, map[int]int{})`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, int)
+func TestCheckBuiltinDeleteIntType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, map[int]int)
+func TestCheckBuiltinDeleteIntMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1, 1, 1)
+func TestCheckBuiltinDeleteIntDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(1, []int{1,2}...)
+func TestCheckBuiltinDeleteIntEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(float32(1))
+func TestCheckBuiltinDeleteFloat32X(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1))`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(float32(1), 1)
+func TestCheckBuiltinDeleteFloat32Int(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), 1)`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), float32(1))
+func TestCheckBuiltinDeleteFloat32Float32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), float32(1))`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), "abc")
+func TestCheckBuiltinDeleteFloat32String(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), "abc")`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), nil)
+func TestCheckBuiltinDeleteFloat32Nil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), nil)`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), 1.5)
+func TestCheckBuiltinDeleteFloat32Float(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), 1.5)`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), []int{})
+func TestCheckBuiltinDeleteFloat32Slice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), []int{})`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), map[int]int{})
+func TestCheckBuiltinDeleteFloat32Map(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), map[int]int{})`, env,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), int)
+func TestCheckBuiltinDeleteFloat32Type(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), map[int]int)
+func TestCheckBuiltinDeleteFloat32MakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete(float32(1), 1, 1)
+func TestCheckBuiltinDeleteFloat32Double(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(float32(1), []int{1,2}...)
+func TestCheckBuiltinDeleteFloat32Ellipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(float32(1), []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have float32`,
+	)
+
+}
+
+// Test Delete("abc")
+func TestCheckBuiltinDeleteStringX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc")`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete("abc", 1)
+func TestCheckBuiltinDeleteStringInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", 1)`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", float32(1))
+func TestCheckBuiltinDeleteStringFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", float32(1))`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", "abc")
+func TestCheckBuiltinDeleteStringString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", "abc")`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", nil)
+func TestCheckBuiltinDeleteStringNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", nil)`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", 1.5)
+func TestCheckBuiltinDeleteStringFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", 1.5)`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", []int{})
+func TestCheckBuiltinDeleteStringSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", []int{})`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", map[int]int{})
+func TestCheckBuiltinDeleteStringMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", map[int]int{})`, env,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", int)
+func TestCheckBuiltinDeleteStringType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", map[int]int)
+func TestCheckBuiltinDeleteStringMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete("abc", 1, 1)
+func TestCheckBuiltinDeleteStringDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete("abc", []int{1,2}...)
+func TestCheckBuiltinDeleteStringEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete("abc", []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have untyped string`,
+	)
+
+}
+
+// Test Delete(nil)
+func TestCheckBuiltinDeleteNilX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(nil, 1)
+func TestCheckBuiltinDeleteNilInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, 1)`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, float32(1))
+func TestCheckBuiltinDeleteNilFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, float32(1))`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, "abc")
+func TestCheckBuiltinDeleteNilString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, "abc")`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, nil)
+func TestCheckBuiltinDeleteNilNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, nil)`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, 1.5)
+func TestCheckBuiltinDeleteNilFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, 1.5)`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, []int{})
+func TestCheckBuiltinDeleteNilSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, []int{})`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, map[int]int{})
+func TestCheckBuiltinDeleteNilMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, map[int]int{})`, env,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, int)
+func TestCheckBuiltinDeleteNilType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, map[int]int)
+func TestCheckBuiltinDeleteNilMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(nil, 1, 1)
+func TestCheckBuiltinDeleteNilDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(nil, []int{1,2}...)
+func TestCheckBuiltinDeleteNilEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(nil, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have nil`,
+	)
+
+}
+
+// Test Delete(1.5)
+func TestCheckBuiltinDeleteFloatX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(1.5, 1)
+func TestCheckBuiltinDeleteFloatInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, 1)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, float32(1))
+func TestCheckBuiltinDeleteFloatFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, float32(1))`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, "abc")
+func TestCheckBuiltinDeleteFloatString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, "abc")`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, nil)
+func TestCheckBuiltinDeleteFloatNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, nil)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, 1.5)
+func TestCheckBuiltinDeleteFloatFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, 1.5)`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, []int{})
+func TestCheckBuiltinDeleteFloatSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, []int{})`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, map[int]int{})
+func TestCheckBuiltinDeleteFloatMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, map[int]int{})`, env,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, int)
+func TestCheckBuiltinDeleteFloatType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, map[int]int)
+func TestCheckBuiltinDeleteFloatMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete(1.5, 1, 1)
+func TestCheckBuiltinDeleteFloatDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(1.5, []int{1,2}...)
+func TestCheckBuiltinDeleteFloatEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(1.5, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have untyped number`,
+	)
+
+}
+
+// Test Delete([]int{})
+func TestCheckBuiltinDeleteSliceX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{})`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete([]int{}, 1)
+func TestCheckBuiltinDeleteSliceInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, 1)`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, float32(1))
+func TestCheckBuiltinDeleteSliceFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, float32(1))`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, "abc")
+func TestCheckBuiltinDeleteSliceString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, "abc")`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, nil)
+func TestCheckBuiltinDeleteSliceNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, nil)`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, 1.5)
+func TestCheckBuiltinDeleteSliceFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, 1.5)`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, []int{})
+func TestCheckBuiltinDeleteSliceSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, []int{})`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, map[int]int{})
+func TestCheckBuiltinDeleteSliceMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, map[int]int{})`, env,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, int)
+func TestCheckBuiltinDeleteSliceType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, int)`, env,
+		`type int is not an expression`,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, map[int]int)
+func TestCheckBuiltinDeleteSliceMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete([]int{}, 1, 1)
+func TestCheckBuiltinDeleteSliceDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete([]int{}, []int{1,2}...)
+func TestCheckBuiltinDeleteSliceEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete([]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`first argument to delete must be map; have []int`,
+	)
+
+}
+
+// Test Delete(map[int]int{})
+func TestCheckBuiltinDeleteMapX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{})`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, 1)
+func TestCheckBuiltinDeleteMapInt(t *testing.T) {
+	env := makeEnv()
+	_ = env
+}
+
+// Test Delete(map[int]int{}, float32(1))
+func TestCheckBuiltinDeleteMapFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, float32(1))`, env,
+		`cannot use float32(1) (type float32) as type int in delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, "abc")
+func TestCheckBuiltinDeleteMapString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, "abc")`, env,
+		`cannot use "abc" (type string) as type int in delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, nil)
+func TestCheckBuiltinDeleteMapNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, nil)`, env,
+		`cannot use nil as type int in delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, 1.5)
+func TestCheckBuiltinDeleteMapFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, 1.5)`, env,
+		`constant 1.5 truncated to integer`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, []int{})
+func TestCheckBuiltinDeleteMapSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, []int{})`, env,
+		`cannot use []int literal (type []int) as type int in delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, map[int]int{})
+func TestCheckBuiltinDeleteMapMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, map[int]int{})`, env,
+		`cannot use map[int]int literal (type map[int]int) as type int in delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, int)
+func TestCheckBuiltinDeleteMapType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, int)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, map[int]int)
+func TestCheckBuiltinDeleteMapMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, 1, 1)
+func TestCheckBuiltinDeleteMapDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int{}, []int{1,2}...)
+func TestCheckBuiltinDeleteMapEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int{}, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`cannot use []int literal (type []int) as type int in delete`,
+	)
+
+}
+
+// Test Delete(int)
+func TestCheckBuiltinDeleteTypeX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(int, 1)
+func TestCheckBuiltinDeleteTypeInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, 1)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, float32(1))
+func TestCheckBuiltinDeleteTypeFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, float32(1))`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, "abc")
+func TestCheckBuiltinDeleteTypeString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, "abc")`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, nil)
+func TestCheckBuiltinDeleteTypeNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, nil)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, 1.5)
+func TestCheckBuiltinDeleteTypeFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, 1.5)`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, []int{})
+func TestCheckBuiltinDeleteTypeSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, []int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, map[int]int{})
+func TestCheckBuiltinDeleteTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, map[int]int{})`, env,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, int)
+func TestCheckBuiltinDeleteTypeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, int)`, env,
+		`type int is not an expression`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, map[int]int)
+func TestCheckBuiltinDeleteTypeMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, map[int]int)`, env,
+		`type int is not an expression`,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(int, 1, 1)
+func TestCheckBuiltinDeleteTypeDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(int, []int{1,2}...)
+func TestCheckBuiltinDeleteTypeEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(int, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int)
+func TestCheckBuiltinDeleteMakeTypeX(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int)`, env,
+		`missing second (key) argument to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int, 1)
+func TestCheckBuiltinDeleteMakeTypeInt(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, 1)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, float32(1))
+func TestCheckBuiltinDeleteMakeTypeFloat32(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, float32(1))`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, "abc")
+func TestCheckBuiltinDeleteMakeTypeString(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, "abc")`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, nil)
+func TestCheckBuiltinDeleteMakeTypeNil(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, nil)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, 1.5)
+func TestCheckBuiltinDeleteMakeTypeFloat(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, 1.5)`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, []int{})
+func TestCheckBuiltinDeleteMakeTypeSlice(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, []int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, map[int]int{})
+func TestCheckBuiltinDeleteMakeTypeMap(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, map[int]int{})`, env,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, int)
+func TestCheckBuiltinDeleteMakeTypeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, int)`, env,
+		`type map[int]int is not an expression`,
+		`type int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, map[int]int)
+func TestCheckBuiltinDeleteMakeTypeMakeType(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, map[int]int)`, env,
+		`type map[int]int is not an expression`,
+		`type map[int]int is not an expression`,
+	)
+
+}
+
+// Test Delete(map[int]int, 1, 1)
+func TestCheckBuiltinDeleteMakeTypeDouble(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, 1, 1)`, env,
+		`too many arguments to delete`,
+	)
+
+}
+
+// Test Delete(map[int]int, []int{1,2}...)
+func TestCheckBuiltinDeleteMakeTypeEllipsis(t *testing.T) {
+	env := makeEnv()
+
+	expectCheckError(t, `delete(map[int]int, []int{1,2}...)`, env,
+		`invalid use of ... with builtin delete`,
 		`type map[int]int is not an expression`,
 	)
 
