@@ -23,22 +23,47 @@ func compileExprWithDefs(expr, defs string) (compileErrors []string, err error) 
 }
 
 func compileExprWithDefsAndGlobals(expr, defs, globals string) (compileErrors []string, err error) {
+	body := `package main
+
+	%s
+
+	func main() {
+	%s
+		(func(...interface{}) {})(%s)
+	}
+`
+	return compile(expr, defs, globals, body)
+}
+
+func compileVoidExpr(expr string) (compileErrors []string, err error) {
+	return compileVoidExprWithDefs(expr, "")
+}
+
+func compileVoidExprWithDefs(expr, defs string) (compileErrors []string, err error) {
+	return compileVoidExprWithDefsAndGlobals(expr, defs, "")
+}
+
+func compileVoidExprWithDefsAndGlobals(expr, defs, globals string) (compileErrors []string, err error) {
+	body := `package main
+
+	%s
+
+	func main() {
+	%s
+		%s
+	}
+`
+	return compile(expr, defs, globals, body)
+}
+
+func compile(expr, defs, globals, body string) (compileErrors []string, err error) {
 	f, err := ioutil.TempFile("/tmp", "testgen")
 	if err != nil {
 		return nil, err
 	}
 	defer os.Remove(f.Name())
 
-	_, err = fmt.Fprintf(f,
-`package main
-
-%s
-
-func main() {
-%s
-	(func(...interface{}) {})(%s)
-}
-`, globals, defs, expr);
+	_, err = fmt.Fprintf(f, body, globals, defs, expr);
 
 	if err != nil {
 		return nil, err

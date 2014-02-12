@@ -67,6 +67,7 @@ var builtinFuncs = map[string] reflect.Value{
 	"len": reflect.ValueOf(builtinLen),
 	"new": reflect.ValueOf(builtinNew),
 	"copy": reflect.ValueOf(builtinCopy),
+	"delete": reflect.ValueOf(builtinDelete),
 	"panic": reflect.ValueOf(builtinPanic),
 }
 
@@ -116,6 +117,11 @@ func builtinNew(t reflect.Type) reflect.Value {
 func builtinCopy(s, t reflect.Value) reflect.Value {
 	n := reflect.Copy(s, t)
 	return reflect.ValueOf(n)
+}
+
+func builtinDelete(m, k reflect.Value) reflect.Value {
+	m.SetMapIndex(k, reflect.Value{})
+	return reflect.Value{}
 }
 
 func builtinPanic(z reflect.Value, zt bool) (reflect.Value, bool, error) {

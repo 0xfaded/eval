@@ -315,6 +315,8 @@ func (lit *CompositeLit) String() string {
 	switch t.Kind() {
 	case reflect.Slice:
 		return fmt.Sprintf("[]%v literal", t.Elem())
+	case reflect.Map:
+		return fmt.Sprintf("map[%v]%v literal", t.Key(), t.Elem())
 	default:
 		return "TODO composite lit"
 	}

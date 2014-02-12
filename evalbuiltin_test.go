@@ -105,3 +105,14 @@ func TestBuiltinCopy(t *testing.T) {
 	expectResult(t, "copy(a, b)", env, copy(a, b))
 	expectResult(t, "copy(b, a)", env, copy(b, a))
 }
+
+func TestBuiltinDelete(t *testing.T) {
+	env := makeEnv()
+	a := map[int]int{1: 2}
+	env.Vars["a"] = reflect.ValueOf(&a)
+	getResults(t, "delete(a, 1)", env)
+	getResults(t, "delete(a, 1)", env)
+	if _, ok := a[1]; ok {
+		t.Fatalf("Failed to delete(a, 1)`")
+	}
+}

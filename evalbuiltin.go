@@ -26,6 +26,8 @@ func evalCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, e
 		return evalBuiltinAppendExpr(ctx, call, env)
 	case "copy":
 		return evalBuiltinCopyExpr(ctx, call, env)
+	case "delete":
+		return evalBuiltinDeleteExpr(ctx, call, env)
 	default:
 		panic("eval: unimplemented builtin " + ident.Name)
 	}
@@ -160,14 +162,26 @@ func evalBuiltinAppendExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value,
 }
 
 func evalBuiltinCopyExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
-	var err error
-	var x, y *[]reflect.Value
-	if x, _, err = EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
+	if x, _, err := EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
 		return nil, err
-	} else if y, _, err = EvalExpr(ctx, call.Args[1].(Expr), env); err != nil {
+	} else if y, _, err := EvalExpr(ctx, call.Args[1].(Expr), env); err != nil {
 		return nil, err
+	} else {
+		n := builtinCopy((*x)[0], (*y)[0])
+		return []reflect.Value{n}, nil
 	}
-	n := builtinCopy((*x)[0], (*y)[0])
-	return []reflect.Value{n}, nil
+}
+
+func evalBuiltinDeleteExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
+	m := call.Args[0].(Expr)
+	mT := m.KnownType()[0]
+	if x, _, err := EvalExpr(ctx, m, env); err != nil {
+		return nil, err
+	} else if y, err := evalTypedExpr(ctx, call.Args[1].(Expr), knownType{mT.Key()}, env); err != nil {
+		return nil, err
+	} else {
+		builtinDelete((*x)[0], y[0])
+		return []reflect.Value{}, nil
+	}
 }
 

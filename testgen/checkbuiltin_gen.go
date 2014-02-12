@@ -18,8 +18,8 @@ var body = template.Must(template.New("Body").Parse(
 	expectCheckError(t, `+"`{{ .Expr }}`"+`, env,{{ range .Errors }}
 		`+"`{{ . }}`"+`,{{ end }}
 	){{ else }}	_ = env{{ end }}
-{{ else }}	{{ if .ExpectConst }}expectConst(t, `+"`{{ .Expr }}`"+`, env, {{ .Expr }}, reflect.TypeOf({{ .Expr}}))
-{{ else }}expectType(t, `+"`{{ .Expr }}`"+`, env, reflect.TypeOf({{ .Expr }})){{ end }}{{ end }}
+{{ else }}	{{ if .TestSuccess }}{{ if .ExpectConst }}expectConst(t, `+"`{{ .Expr }}`"+`, env, {{ .Expr }}, reflect.TypeOf({{ .Expr}}))
+{{ else }}expectType(t, `+"`{{ .Expr }}`"+`, env, reflect.TypeOf({{ .Expr }})){{ end }}{{ else }}_ = env{{ end }}{{ end }}
 `))
 
 func (*Test) Package() string {
@@ -45,7 +45,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Cap", "cap"},
 		{"Append", "append"},
 		{"Copy", "copy"},
-		//{"Delete", "delete"},
+		{"Delete", "delete"},
 		//{"Panic", "panic"},
 	}
 	arg0 := []testgen.Element{
@@ -56,6 +56,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Nil", "nil"},
 		{"Float", "1.5"},
 		{"Slice", "[]int{}"},
+		{"Map", "map[int]int{}"},
 		{"Type", "int"},
 		{"MakeType", "map[int]int"},
 	}
@@ -106,17 +107,23 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	}
 	expr += ")"
 
-	compileErrs, err := compileExpr(expr)
-	if err != nil {
-		return err
-	}
-
 	f := elts[0].Name
 	x := elts[1].Name
 	y := elts[2].Name
 
+	var compileErrs []string
+	var err error
+	if f == "Delete" {
+		compileErrs, err = compileVoidExpr(expr)
+	} else {
+		compileErrs, err = compileExpr(expr)
+	}
+	if err != nil {
+		return err
+	}
+
 	testErrs := true
-	if f == "Complex" || f == "Append" || f == "Copy" {
+	if f == "Complex" || f == "Append" || f == "Copy" || f == "Delete" {
 		if len(compileErrs) == 1 && (x == "Type" || x == "MakeType") {
 			if y == "Type" {
 				compileErrs = append(compileErrs, "type int is not an expression")
@@ -154,6 +161,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		"Expr": expr,
 		"Errors": compileErrs,
 		"TestErrs": testErrs,
+		"TestSuccess": f != "Delete",
 		"ExpectConst": expectConst,
 	}
 

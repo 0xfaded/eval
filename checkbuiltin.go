@@ -33,7 +33,7 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 	case "copy":
 		call, errs = checkBuiltinCopyExpr(ctx, call, env)
 	case "delete":
-		//call, errs = checkBuiltinDeleteExpr(ctx, call, env)
+		call, errs = checkBuiltinDeleteExpr(ctx, call, env)
 	default:
 		return call, nil, false
 	}
@@ -555,6 +555,58 @@ func checkBuiltinCopyExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 			}
 		} else if unhackType(xt.Elem()) != unhackType(yt.Elem()) {
 			errs = append(errs, ErrCopyArgsHaveDifferentEltTypes{at(ctx, call), xt, yt})
+		}
+	}
+	return call, errs
+}
+
+func checkBuiltinDeleteExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	call.knownType = knownType{intType}
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
+	}
+	if len(call.Args) != 2 {
+		fakeCheckRemainingArgs(call, 0, env)
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	}
+	var mapT, keyT reflect.Type
+	m, moreErrs := CheckExpr(ctx, call.Args[0], env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
+	if moreErrs == nil || m.IsConst() {
+		var err error
+		mapT, err = expectSingleType(ctx, m.KnownType(), m)
+		if err != nil {
+			errs = append(errs, moreErrs...)
+		}
+	}
+	call.Args[0] = m
+
+	key, moreErrs := CheckExpr(ctx, call.Args[1], env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
+	call.Args[1] = key
+	if moreErrs == nil || key.IsConst() {
+		var err error
+		keyT, err = expectSingleType(ctx, key.KnownType(), key)
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+
+	if mapT != nil {
+		if mapT == ConstNil || mapT.Kind() != reflect.Map {
+			errs = append(errs, ErrDeleteFirstArgNotMap{at(ctx, m)})
+		} else if keyT != nil {
+			ok, convErrs := exprAssignableTo(ctx, key, mapT.Elem())
+			if !ok {
+				errs = append(errs, ErrBuiltinWrongArgType{at(ctx, key), call})
+			} else if convErrs != nil {
+				errs = append(errs, convErrs...)
+			}
 		}
 	}
 	return call, errs

@@ -313,6 +313,10 @@ type ErrCopyArgsHaveDifferentEltTypes struct {
 	xT, yT reflect.Type
 }
 
+type ErrDeleteFirstArgNotMap struct {
+	ErrorContext
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -846,6 +850,14 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 		} else if len(call.Args) != 0 {
 			tooMany = true
 		}
+	case "delete":
+		if len(call.Args) == 0 {
+			plural = "s"
+		} else if len(call.Args) == 1 {
+			return "missing second (key) argument to delete"
+		} else {
+			tooMany = true
+		}
 	case "append":
 		// Note the s on arguments, which
 		return "missing arguments to append"
@@ -883,8 +895,14 @@ func (err ErrBuiltinWrongArgType) Error() string {
 			return fmt.Sprintf("cannot use nil as type %v in append", expected)
 		}
 		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), kt, expected)
+	case "delete":
+		expected := err.call.Args[0].(Expr).KnownType()[0].Key()
+		if kt == ConstNil {
+			return fmt.Sprintf("cannot use nil as type %v in delete", expected)
+		}
+		return fmt.Sprintf("cannot use %v (type %s) as type %v in delete", uc(arg), kt, expected)
 	default:
-		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(err.call.Args[0].(Expr)), kt, ident.Name)
+		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(arg), kt, ident.Name)
 	}
 }
 
@@ -971,6 +989,18 @@ func (err ErrCopyArgsMustBeSlices) Error() string {
 
 func (err ErrCopyArgsHaveDifferentEltTypes) Error() string {
 	return fmt.Sprintf("arguments to copy have different element types: %v and %v", err.xT, err.yT)
+}
+
+func (err ErrDeleteFirstArgNotMap) Error() string {
+	arg := err.Node.(Expr)
+	t := arg.KnownType()[0]
+	var s string
+	if ct, ok := t.(ConstType); ok {
+		s = ct.ErrorType()
+	} else {
+		s = t.String()
+	}
+	return fmt.Sprintf("first argument to delete must be map; have %s", s)
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {
