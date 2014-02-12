@@ -24,6 +24,8 @@ func evalCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, e
 		return evalBuiltinCapExpr(ctx, call, env)
 	case "append":
 		return evalBuiltinAppendExpr(ctx, call, env)
+	case "copy":
+		return evalBuiltinCopyExpr(ctx, call, env)
 	default:
 		panic("eval: unimplemented builtin " + ident.Name)
 	}
@@ -156,3 +158,16 @@ func evalBuiltinAppendExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value,
 	res := builtinAppend(head[0], tail)
 	return []reflect.Value{res}, nil
 }
+
+func evalBuiltinCopyExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
+	var err error
+	var x, y *[]reflect.Value
+	if x, _, err = EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
+		return nil, err
+	} else if y, _, err = EvalExpr(ctx, call.Args[1].(Expr), env); err != nil {
+		return nil, err
+	}
+	n := builtinCopy((*x)[0], (*y)[0])
+	return []reflect.Value{n}, nil
+}
+

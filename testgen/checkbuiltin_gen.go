@@ -44,8 +44,9 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Len", "len"},
 		{"Cap", "cap"},
 		{"Append", "append"},
-		//{"Copy", "copy"},
+		{"Copy", "copy"},
 		//{"Delete", "delete"},
+		//{"Panic", "panic"},
 	}
 	arg0 := []testgen.Element{
 		{"X", ""},
@@ -114,12 +115,22 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	x := elts[1].Name
 	y := elts[2].Name
 
-	if f == "Complex" || f == "Append" {
+	testErrs := true
+	if f == "Complex" || f == "Append" || f == "Copy" {
 		if len(compileErrs) == 1 && (x == "Type" || x == "MakeType") {
 			if y == "Type" {
 				compileErrs = append(compileErrs, "type int is not an expression")
 			} else if y == "MakeType" {
 				compileErrs = append(compileErrs, "type map[int]int is not an expression")
+			}
+		}
+		if f == "Copy" {
+			if x == "Nil" && y == "Nil" {
+				compileErrs = append(compileErrs[:1], append([]string{compileErrs[0]}, compileErrs[1:]...)...)
+			}
+			if x == "Slice" && y == "Nil" {
+				// http://code.google.com/p/go/issues/detail?id=7310
+				testErrs = false
 			}
 		}
 	}
@@ -142,7 +153,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	vars := map[string] interface{} {
 		"Expr": expr,
 		"Errors": compileErrs,
-		"TestErrs": true,
+		"TestErrs": testErrs,
 		"ExpectConst": expectConst,
 	}
 

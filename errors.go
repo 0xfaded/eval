@@ -303,6 +303,16 @@ type ErrAppendFirstArgNotVariadic struct {
 	ErrorContext
 }
 
+type ErrCopyArgsMustBeSlices struct {
+	ErrorContext
+	xT, yT reflect.Type
+}
+
+type ErrCopyArgsHaveDifferentEltTypes struct {
+	ErrorContext
+	xT, yT reflect.Type
+}
+
 type ErrorContext struct {
 	Input string
 	ast.Node
@@ -808,6 +818,7 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 	call := err.Node.(*CallExpr)
 	ident := call.Fun.(*Ident)
 	tooMany := false
+	plural := ""
 	var cause string
 	switch ident.Name {
 	case "complex":
@@ -829,6 +840,12 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 			tooMany = true
 			cause = fmt.Sprintf(": %v", uc(call))
 		}
+	case "copy":
+		if len(call.Args) < 2 {
+			plural = "s"
+		} else if len(call.Args) != 0 {
+			tooMany = true
+		}
 	case "append":
 		// Note the s on arguments, which
 		return "missing arguments to append"
@@ -839,7 +856,7 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 	if tooMany {
 		return fmt.Sprintf("too many arguments to %s%s", ident.Name, cause)
 	} else {
-		return fmt.Sprintf("missing argument to %s%s", ident.Name, cause)
+		return fmt.Sprintf("missing argument%s to %s%s", plural, ident.Name, cause)
 	}
 }
 
@@ -940,6 +957,20 @@ func (err ErrAppendFirstArgNotSlice) Error() string {
 
 func (err ErrAppendFirstArgNotVariadic) Error() string {
 	return "cannot use ... on first argument to append"
+}
+
+func (err ErrCopyArgsMustBeSlices) Error() string {
+	if err.yT != ConstNil && err.yT.Kind() == reflect.Slice {
+		return fmt.Sprintf("first argument to copy should be slice; have %v", err.xT)
+	} else if err.xT != ConstNil && err.xT.Kind() == reflect.Slice {
+		return fmt.Sprintf("second argument to copy should be slice or string; have %v", err.yT)
+	} else {
+		return fmt.Sprintf("arguments to copy must be slices; have %v, %v", err.xT, err.yT)
+	}
+}
+
+func (err ErrCopyArgsHaveDifferentEltTypes) Error() string {
+	return fmt.Sprintf("arguments to copy have different element types: %v and %v", err.xT, err.yT)
 }
 
 func at(ctx *Ctx, expr ast.Node) ErrorContext {

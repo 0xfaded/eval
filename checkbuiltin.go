@@ -30,12 +30,10 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 		call, errs = checkBuiltinLenCap(ctx, call, env, false)
 	case "append":
 		call, errs = checkBuiltinAppend(ctx, call, env)
-		/*
 	case "copy":
 		call, errs = checkBuiltinCopyExpr(ctx, call, env)
 	case "delete":
-		call, errs = checkBuiltinDeleteExpr(ctx, call, env)
-		*/
+		//call, errs = checkBuiltinDeleteExpr(ctx, call, env)
 	default:
 		return call, nil, false
 	}
@@ -497,6 +495,66 @@ func checkBuiltinAppend(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error)
 			}
 		} else if sliceT != nil {
 			errs = append(errs, ErrAppendFirstArgNotSlice{at(ctx, call.Args[0])})
+		}
+	}
+	return call, errs
+}
+
+func checkBuiltinCopyExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	call.knownType = knownType{intType}
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
+	}
+	if len(call.Args) != 2 {
+		fakeCheckRemainingArgs(call, 0, env)
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	}
+
+	var err error
+	var xt, yt reflect.Type
+	x, xErrs := CheckExpr(ctx, call.Args[0], env)
+	if xErrs != nil {
+		errs = append(errs, xErrs...)
+	}
+	call.Args[0] = x
+	if xErrs == nil || x.IsConst() {
+		xt, err = expectSingleType(ctx, x.KnownType(), x)
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	y, yErrs := CheckExpr(ctx, call.Args[1], env)
+	if yErrs != nil {
+		errs = append(errs, yErrs...)
+	}
+	call.Args[1] = y
+	if yErrs == nil || y.IsConst() {
+		yt, err = expectSingleType(ctx, y.KnownType(), y)
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	if xt != nil && yt != nil {
+		var xk, yk reflect.Kind
+		if xt == ConstNil {
+			errs = append(errs, ErrUntypedNil{at(ctx, x)})
+		} else {
+			xk = xt.Kind()
+		}
+		if yt == ConstNil {
+			errs = append(errs, ErrUntypedNil{at(ctx, y)})
+		} else {
+			yk = yt.Kind()
+		}
+		if xk != reflect.Slice || yk != reflect.Slice && yk != reflect.String {
+			errs = append(errs, ErrCopyArgsMustBeSlices{at(ctx, call), xt, yt})
+		} else if yt.Kind() == reflect.String {
+			if xt != byteSlice {
+				errs = append(errs, ErrCopyArgsHaveDifferentEltTypes{at(ctx, call), xt, yt})
+			}
+		} else if unhackType(xt.Elem()) != unhackType(yt.Elem()) {
+			errs = append(errs, ErrCopyArgsHaveDifferentEltTypes{at(ctx, call), xt, yt})
 		}
 	}
 	return call, errs

@@ -66,6 +66,7 @@ var builtinFuncs = map[string] reflect.Value{
 	"cap": reflect.ValueOf(builtinCap),
 	"len": reflect.ValueOf(builtinLen),
 	"new": reflect.ValueOf(builtinNew),
+	"copy": reflect.ValueOf(builtinCopy),
 	"panic": reflect.ValueOf(builtinPanic),
 }
 
@@ -93,7 +94,7 @@ func builtinImag(cplx reflect.Value) reflect.Value {
 	}
 }
 
-func builtinAppend(s reflect.Value, t reflect.Value) reflect.Value {
+func builtinAppend(s, t reflect.Value) reflect.Value {
 	if s.Type() == byteSlice && t.Type().Kind() == reflect.String {
 		t = reflect.ValueOf([]byte(t.String()))
 	}
@@ -110,6 +111,11 @@ func builtinCap(v reflect.Value) reflect.Value {
 
 func builtinNew(t reflect.Type) reflect.Value {
 	return reflect.New(t)
+}
+
+func builtinCopy(s, t reflect.Value) reflect.Value {
+	n := reflect.Copy(s, t)
+	return reflect.ValueOf(n)
 }
 
 func builtinPanic(z reflect.Value, zt bool) (reflect.Value, bool, error) {

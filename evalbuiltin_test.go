@@ -91,7 +91,17 @@ func TestBuiltinNew(t *testing.T) {
 	expr := "new(int)"
 	results := getResults(t, expr, env)
 	returnKind := (*results)[0].Kind().String()
-	if  returnKind != "ptr" {
+	if returnKind != "ptr" {
 		t.Fatalf("Error Expecting `%s' return Kind to be `ptr' is `%s`", expr, returnKind)
 	}
+}
+
+func TestBuiltinCopy(t *testing.T) {
+	env := makeEnv()
+	a := []int{1,2,3}
+	b := []int{4,5}
+	env.Vars["a"] = reflect.ValueOf(&a)
+	env.Vars["b"] = reflect.ValueOf(&b)
+	expectResult(t, "copy(a, b)", env, copy(a, b))
+	expectResult(t, "copy(b, a)", env, copy(b, a))
 }
