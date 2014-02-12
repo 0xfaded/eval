@@ -20,7 +20,7 @@ func TestCheckCallExprNoArgXX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -52,7 +52,7 @@ func TestCheckCallExprNoArgXInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -87,7 +87,7 @@ func TestCheckCallExprNoArgXFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -122,7 +122,7 @@ func TestCheckCallExprNoArgXBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -157,7 +157,7 @@ func TestCheckCallExprNoArgXIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -192,7 +192,7 @@ func TestCheckCallExprNoArgXInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -227,7 +227,7 @@ func TestCheckCallExprNoArgXEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -263,7 +263,7 @@ func TestCheckCallExprNoArgXSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -298,7 +298,7 @@ func TestCheckCallExprNoArgXMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -333,7 +333,7 @@ func TestCheckCallExprNoArgXMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -368,7 +368,7 @@ func TestCheckCallExprNoArgIntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -403,7 +403,7 @@ func TestCheckCallExprNoArgIntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -438,7 +438,7 @@ func TestCheckCallExprNoArgIntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -473,7 +473,7 @@ func TestCheckCallExprNoArgIntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -508,7 +508,7 @@ func TestCheckCallExprNoArgIntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -543,7 +543,7 @@ func TestCheckCallExprNoArgIntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -578,7 +578,7 @@ func TestCheckCallExprNoArgIntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -614,7 +614,7 @@ func TestCheckCallExprNoArgIntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -649,7 +649,7 @@ func TestCheckCallExprNoArgIntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -685,7 +685,7 @@ func TestCheckCallExprNoArgIntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -721,7 +721,7 @@ func TestCheckCallExprNoArgFloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -756,7 +756,7 @@ func TestCheckCallExprNoArgFloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -791,7 +791,7 @@ func TestCheckCallExprNoArgFloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -826,7 +826,7 @@ func TestCheckCallExprNoArgFloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -861,7 +861,7 @@ func TestCheckCallExprNoArgFloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -896,7 +896,7 @@ func TestCheckCallExprNoArgFloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -931,7 +931,7 @@ func TestCheckCallExprNoArgFloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -967,7 +967,7 @@ func TestCheckCallExprNoArgFloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1002,7 +1002,7 @@ func TestCheckCallExprNoArgFloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1038,7 +1038,7 @@ func TestCheckCallExprNoArgFloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1074,7 +1074,7 @@ func TestCheckCallExprNoArgBoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1109,7 +1109,7 @@ func TestCheckCallExprNoArgBoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1144,7 +1144,7 @@ func TestCheckCallExprNoArgBoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1179,7 +1179,7 @@ func TestCheckCallExprNoArgBoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1214,7 +1214,7 @@ func TestCheckCallExprNoArgBoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1249,7 +1249,7 @@ func TestCheckCallExprNoArgBoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1284,7 +1284,7 @@ func TestCheckCallExprNoArgBoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1320,7 +1320,7 @@ func TestCheckCallExprNoArgBoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1355,7 +1355,7 @@ func TestCheckCallExprNoArgBoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1391,7 +1391,7 @@ func TestCheckCallExprNoArgBoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1427,7 +1427,7 @@ func TestCheckCallExprNoArgIntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1462,7 +1462,7 @@ func TestCheckCallExprNoArgIntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1497,7 +1497,7 @@ func TestCheckCallExprNoArgIntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1532,7 +1532,7 @@ func TestCheckCallExprNoArgIntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1567,7 +1567,7 @@ func TestCheckCallExprNoArgIntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1602,7 +1602,7 @@ func TestCheckCallExprNoArgIntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1637,7 +1637,7 @@ func TestCheckCallExprNoArgIntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1673,7 +1673,7 @@ func TestCheckCallExprNoArgIntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1708,7 +1708,7 @@ func TestCheckCallExprNoArgIntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1744,7 +1744,7 @@ func TestCheckCallExprNoArgIntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1780,7 +1780,7 @@ func TestCheckCallExprNoArgIntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1815,7 +1815,7 @@ func TestCheckCallExprNoArgIntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1847,7 +1847,7 @@ func TestCheckCallExprNoArgIntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1879,7 +1879,7 @@ func TestCheckCallExprNoArgIntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1911,7 +1911,7 @@ func TestCheckCallExprNoArgIntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1943,7 +1943,7 @@ func TestCheckCallExprNoArgIntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -1975,7 +1975,7 @@ func TestCheckCallExprNoArgIntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2007,7 +2007,7 @@ func TestCheckCallExprNoArgIntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2039,7 +2039,7 @@ func TestCheckCallExprNoArgIntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2071,7 +2071,7 @@ func TestCheckCallExprNoArgIntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2103,7 +2103,7 @@ func TestCheckCallExprNoArgEmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2139,7 +2139,7 @@ func TestCheckCallExprNoArgEmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2175,7 +2175,7 @@ func TestCheckCallExprNoArgEmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2211,7 +2211,7 @@ func TestCheckCallExprNoArgEmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2247,7 +2247,7 @@ func TestCheckCallExprNoArgEmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2283,7 +2283,7 @@ func TestCheckCallExprNoArgEmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2319,7 +2319,7 @@ func TestCheckCallExprNoArgEmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2356,7 +2356,7 @@ func TestCheckCallExprNoArgEmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2392,7 +2392,7 @@ func TestCheckCallExprNoArgEmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2429,7 +2429,7 @@ func TestCheckCallExprNoArgEmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2466,7 +2466,7 @@ func TestCheckCallExprNoArgSingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2501,7 +2501,7 @@ func TestCheckCallExprNoArgSingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2536,7 +2536,7 @@ func TestCheckCallExprNoArgSingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2571,7 +2571,7 @@ func TestCheckCallExprNoArgSingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2606,7 +2606,7 @@ func TestCheckCallExprNoArgSingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2641,7 +2641,7 @@ func TestCheckCallExprNoArgSingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2676,7 +2676,7 @@ func TestCheckCallExprNoArgSingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2712,7 +2712,7 @@ func TestCheckCallExprNoArgSingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2747,7 +2747,7 @@ func TestCheckCallExprNoArgSingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2783,7 +2783,7 @@ func TestCheckCallExprNoArgSingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2819,7 +2819,7 @@ func TestCheckCallExprNoArgMultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2854,7 +2854,7 @@ func TestCheckCallExprNoArgMultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2890,7 +2890,7 @@ func TestCheckCallExprNoArgMultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2926,7 +2926,7 @@ func TestCheckCallExprNoArgMultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2962,7 +2962,7 @@ func TestCheckCallExprNoArgMultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -2998,7 +2998,7 @@ func TestCheckCallExprNoArgMultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3034,7 +3034,7 @@ func TestCheckCallExprNoArgMultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3071,7 +3071,7 @@ func TestCheckCallExprNoArgMultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3107,7 +3107,7 @@ func TestCheckCallExprNoArgMultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3144,7 +3144,7 @@ func TestCheckCallExprNoArgMultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3181,7 +3181,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3216,7 +3216,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3252,7 +3252,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3288,7 +3288,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3324,7 +3324,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3360,7 +3360,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3396,7 +3396,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3433,7 +3433,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3469,7 +3469,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3506,7 +3506,7 @@ func TestCheckCallExprNoArgMultiFuncMixedTypesMultiFuncMixedTypes(t *testing.T) 
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3543,7 +3543,7 @@ func TestCheckCallExprFixedXX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3578,7 +3578,7 @@ func TestCheckCallExprFixedXInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3613,7 +3613,7 @@ func TestCheckCallExprFixedXFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3649,7 +3649,7 @@ func TestCheckCallExprFixedXBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3685,7 +3685,7 @@ func TestCheckCallExprFixedXIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3721,7 +3721,7 @@ func TestCheckCallExprFixedXInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3757,7 +3757,7 @@ func TestCheckCallExprFixedXEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3793,7 +3793,7 @@ func TestCheckCallExprFixedXSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3828,7 +3828,7 @@ func TestCheckCallExprFixedXMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3863,7 +3863,7 @@ func TestCheckCallExprFixedXMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3898,7 +3898,7 @@ func TestCheckCallExprFixedIntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3933,7 +3933,7 @@ func TestCheckCallExprFixedIntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -3968,7 +3968,7 @@ func TestCheckCallExprFixedIntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4003,7 +4003,7 @@ func TestCheckCallExprFixedIntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4035,7 +4035,7 @@ func TestCheckCallExprFixedIntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4070,7 +4070,7 @@ func TestCheckCallExprFixedIntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4106,7 +4106,7 @@ func TestCheckCallExprFixedIntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4141,7 +4141,7 @@ func TestCheckCallExprFixedIntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4176,7 +4176,7 @@ func TestCheckCallExprFixedIntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4211,7 +4211,7 @@ func TestCheckCallExprFixedIntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4246,7 +4246,7 @@ func TestCheckCallExprFixedFloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4282,7 +4282,7 @@ func TestCheckCallExprFixedFloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4318,7 +4318,7 @@ func TestCheckCallExprFixedFloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4354,7 +4354,7 @@ func TestCheckCallExprFixedFloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4389,7 +4389,7 @@ func TestCheckCallExprFixedFloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4425,7 +4425,7 @@ func TestCheckCallExprFixedFloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4462,7 +4462,7 @@ func TestCheckCallExprFixedFloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4498,7 +4498,7 @@ func TestCheckCallExprFixedFloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4534,7 +4534,7 @@ func TestCheckCallExprFixedFloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4570,7 +4570,7 @@ func TestCheckCallExprFixedFloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4606,7 +4606,7 @@ func TestCheckCallExprFixedBoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4642,7 +4642,7 @@ func TestCheckCallExprFixedBoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4678,7 +4678,7 @@ func TestCheckCallExprFixedBoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4714,7 +4714,7 @@ func TestCheckCallExprFixedBoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4749,7 +4749,7 @@ func TestCheckCallExprFixedBoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4785,7 +4785,7 @@ func TestCheckCallExprFixedBoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4822,7 +4822,7 @@ func TestCheckCallExprFixedBoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4858,7 +4858,7 @@ func TestCheckCallExprFixedBoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4894,7 +4894,7 @@ func TestCheckCallExprFixedBoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4930,7 +4930,7 @@ func TestCheckCallExprFixedBoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -4966,7 +4966,7 @@ func TestCheckCallExprFixedIntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5002,7 +5002,7 @@ func TestCheckCallExprFixedIntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5038,7 +5038,7 @@ func TestCheckCallExprFixedIntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5074,7 +5074,7 @@ func TestCheckCallExprFixedIntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5109,7 +5109,7 @@ func TestCheckCallExprFixedIntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5145,7 +5145,7 @@ func TestCheckCallExprFixedIntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5182,7 +5182,7 @@ func TestCheckCallExprFixedIntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5218,7 +5218,7 @@ func TestCheckCallExprFixedIntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5254,7 +5254,7 @@ func TestCheckCallExprFixedIntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5290,7 +5290,7 @@ func TestCheckCallExprFixedIntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5326,7 +5326,7 @@ func TestCheckCallExprFixedIntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5362,7 +5362,7 @@ func TestCheckCallExprFixedIntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5394,7 +5394,7 @@ func TestCheckCallExprFixedIntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5426,7 +5426,7 @@ func TestCheckCallExprFixedIntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5458,7 +5458,7 @@ func TestCheckCallExprFixedIntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5490,7 +5490,7 @@ func TestCheckCallExprFixedIntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5522,7 +5522,7 @@ func TestCheckCallExprFixedIntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5554,7 +5554,7 @@ func TestCheckCallExprFixedIntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5586,7 +5586,7 @@ func TestCheckCallExprFixedIntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5618,7 +5618,7 @@ func TestCheckCallExprFixedIntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5650,7 +5650,7 @@ func TestCheckCallExprFixedEmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5686,7 +5686,7 @@ func TestCheckCallExprFixedEmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5722,7 +5722,7 @@ func TestCheckCallExprFixedEmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5758,7 +5758,7 @@ func TestCheckCallExprFixedEmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5793,7 +5793,7 @@ func TestCheckCallExprFixedEmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5829,7 +5829,7 @@ func TestCheckCallExprFixedEmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5866,7 +5866,7 @@ func TestCheckCallExprFixedEmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5902,7 +5902,7 @@ func TestCheckCallExprFixedEmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5938,7 +5938,7 @@ func TestCheckCallExprFixedEmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -5974,7 +5974,7 @@ func TestCheckCallExprFixedEmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6010,7 +6010,7 @@ func TestCheckCallExprFixedSingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6045,7 +6045,7 @@ func TestCheckCallExprFixedSingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6080,7 +6080,7 @@ func TestCheckCallExprFixedSingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6115,7 +6115,7 @@ func TestCheckCallExprFixedSingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6147,7 +6147,7 @@ func TestCheckCallExprFixedSingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6182,7 +6182,7 @@ func TestCheckCallExprFixedSingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6218,7 +6218,7 @@ func TestCheckCallExprFixedSingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6253,7 +6253,7 @@ func TestCheckCallExprFixedSingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6288,7 +6288,7 @@ func TestCheckCallExprFixedSingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6323,7 +6323,7 @@ func TestCheckCallExprFixedSingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6358,7 +6358,7 @@ func TestCheckCallExprFixedMultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6393,7 +6393,7 @@ func TestCheckCallExprFixedMultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6429,7 +6429,7 @@ func TestCheckCallExprFixedMultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6465,7 +6465,7 @@ func TestCheckCallExprFixedMultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6500,7 +6500,7 @@ func TestCheckCallExprFixedMultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6536,7 +6536,7 @@ func TestCheckCallExprFixedMultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6573,7 +6573,7 @@ func TestCheckCallExprFixedMultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6609,7 +6609,7 @@ func TestCheckCallExprFixedMultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6645,7 +6645,7 @@ func TestCheckCallExprFixedMultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6681,7 +6681,7 @@ func TestCheckCallExprFixedMultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6717,7 +6717,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6752,7 +6752,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6788,7 +6788,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6824,7 +6824,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6859,7 +6859,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6895,7 +6895,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6932,7 +6932,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -6968,7 +6968,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7004,7 +7004,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7040,7 +7040,7 @@ func TestCheckCallExprFixedMultiFuncMixedTypesMultiFuncMixedTypes(t *testing.T) 
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7076,7 +7076,7 @@ func TestCheckCallExprFixedTypedXX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7111,7 +7111,7 @@ func TestCheckCallExprFixedTypedXInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7146,7 +7146,7 @@ func TestCheckCallExprFixedTypedXFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7182,7 +7182,7 @@ func TestCheckCallExprFixedTypedXBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7218,7 +7218,7 @@ func TestCheckCallExprFixedTypedXIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7253,7 +7253,7 @@ func TestCheckCallExprFixedTypedXInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7289,7 +7289,7 @@ func TestCheckCallExprFixedTypedXEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7325,7 +7325,7 @@ func TestCheckCallExprFixedTypedXSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7361,7 +7361,7 @@ func TestCheckCallExprFixedTypedXMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7397,7 +7397,7 @@ func TestCheckCallExprFixedTypedXMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7433,7 +7433,7 @@ func TestCheckCallExprFixedTypedIntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7468,7 +7468,7 @@ func TestCheckCallExprFixedTypedIntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7503,7 +7503,7 @@ func TestCheckCallExprFixedTypedIntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7538,7 +7538,7 @@ func TestCheckCallExprFixedTypedIntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7570,7 +7570,7 @@ func TestCheckCallExprFixedTypedIntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7605,7 +7605,7 @@ func TestCheckCallExprFixedTypedIntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7641,7 +7641,7 @@ func TestCheckCallExprFixedTypedIntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7676,7 +7676,7 @@ func TestCheckCallExprFixedTypedIntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7711,7 +7711,7 @@ func TestCheckCallExprFixedTypedIntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7746,7 +7746,7 @@ func TestCheckCallExprFixedTypedIntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7781,7 +7781,7 @@ func TestCheckCallExprFixedTypedFloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7817,7 +7817,7 @@ func TestCheckCallExprFixedTypedFloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7853,7 +7853,7 @@ func TestCheckCallExprFixedTypedFloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7889,7 +7889,7 @@ func TestCheckCallExprFixedTypedFloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7924,7 +7924,7 @@ func TestCheckCallExprFixedTypedFloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7960,7 +7960,7 @@ func TestCheckCallExprFixedTypedFloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -7997,7 +7997,7 @@ func TestCheckCallExprFixedTypedFloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8033,7 +8033,7 @@ func TestCheckCallExprFixedTypedFloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8069,7 +8069,7 @@ func TestCheckCallExprFixedTypedFloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8105,7 +8105,7 @@ func TestCheckCallExprFixedTypedFloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8141,7 +8141,7 @@ func TestCheckCallExprFixedTypedBoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8177,7 +8177,7 @@ func TestCheckCallExprFixedTypedBoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8213,7 +8213,7 @@ func TestCheckCallExprFixedTypedBoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8249,7 +8249,7 @@ func TestCheckCallExprFixedTypedBoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8284,7 +8284,7 @@ func TestCheckCallExprFixedTypedBoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8320,7 +8320,7 @@ func TestCheckCallExprFixedTypedBoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8357,7 +8357,7 @@ func TestCheckCallExprFixedTypedBoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8393,7 +8393,7 @@ func TestCheckCallExprFixedTypedBoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8429,7 +8429,7 @@ func TestCheckCallExprFixedTypedBoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8465,7 +8465,7 @@ func TestCheckCallExprFixedTypedBoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8501,7 +8501,7 @@ func TestCheckCallExprFixedTypedIntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8536,7 +8536,7 @@ func TestCheckCallExprFixedTypedIntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8571,7 +8571,7 @@ func TestCheckCallExprFixedTypedIntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8606,7 +8606,7 @@ func TestCheckCallExprFixedTypedIntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8638,7 +8638,7 @@ func TestCheckCallExprFixedTypedIntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8673,7 +8673,7 @@ func TestCheckCallExprFixedTypedIntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8709,7 +8709,7 @@ func TestCheckCallExprFixedTypedIntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8744,7 +8744,7 @@ func TestCheckCallExprFixedTypedIntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8779,7 +8779,7 @@ func TestCheckCallExprFixedTypedIntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8814,7 +8814,7 @@ func TestCheckCallExprFixedTypedIntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8849,7 +8849,7 @@ func TestCheckCallExprFixedTypedIntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8885,7 +8885,7 @@ func TestCheckCallExprFixedTypedIntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8917,7 +8917,7 @@ func TestCheckCallExprFixedTypedIntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8949,7 +8949,7 @@ func TestCheckCallExprFixedTypedIntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -8981,7 +8981,7 @@ func TestCheckCallExprFixedTypedIntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9013,7 +9013,7 @@ func TestCheckCallExprFixedTypedIntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9045,7 +9045,7 @@ func TestCheckCallExprFixedTypedIntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9077,7 +9077,7 @@ func TestCheckCallExprFixedTypedIntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9109,7 +9109,7 @@ func TestCheckCallExprFixedTypedIntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9141,7 +9141,7 @@ func TestCheckCallExprFixedTypedIntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9173,7 +9173,7 @@ func TestCheckCallExprFixedTypedEmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9209,7 +9209,7 @@ func TestCheckCallExprFixedTypedEmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9245,7 +9245,7 @@ func TestCheckCallExprFixedTypedEmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9281,7 +9281,7 @@ func TestCheckCallExprFixedTypedEmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9316,7 +9316,7 @@ func TestCheckCallExprFixedTypedEmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9352,7 +9352,7 @@ func TestCheckCallExprFixedTypedEmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9389,7 +9389,7 @@ func TestCheckCallExprFixedTypedEmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9425,7 +9425,7 @@ func TestCheckCallExprFixedTypedEmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9461,7 +9461,7 @@ func TestCheckCallExprFixedTypedEmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9497,7 +9497,7 @@ func TestCheckCallExprFixedTypedEmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9533,7 +9533,7 @@ func TestCheckCallExprFixedTypedSingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9569,7 +9569,7 @@ func TestCheckCallExprFixedTypedSingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9605,7 +9605,7 @@ func TestCheckCallExprFixedTypedSingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9641,7 +9641,7 @@ func TestCheckCallExprFixedTypedSingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9676,7 +9676,7 @@ func TestCheckCallExprFixedTypedSingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9712,7 +9712,7 @@ func TestCheckCallExprFixedTypedSingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9749,7 +9749,7 @@ func TestCheckCallExprFixedTypedSingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9785,7 +9785,7 @@ func TestCheckCallExprFixedTypedSingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9821,7 +9821,7 @@ func TestCheckCallExprFixedTypedSingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9857,7 +9857,7 @@ func TestCheckCallExprFixedTypedSingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9893,7 +9893,7 @@ func TestCheckCallExprFixedTypedMultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9929,7 +9929,7 @@ func TestCheckCallExprFixedTypedMultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -9965,7 +9965,7 @@ func TestCheckCallExprFixedTypedMultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10001,7 +10001,7 @@ func TestCheckCallExprFixedTypedMultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10036,7 +10036,7 @@ func TestCheckCallExprFixedTypedMultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10072,7 +10072,7 @@ func TestCheckCallExprFixedTypedMultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10109,7 +10109,7 @@ func TestCheckCallExprFixedTypedMultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10145,7 +10145,7 @@ func TestCheckCallExprFixedTypedMultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10181,7 +10181,7 @@ func TestCheckCallExprFixedTypedMultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10217,7 +10217,7 @@ func TestCheckCallExprFixedTypedMultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10253,7 +10253,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10289,7 +10289,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10325,7 +10325,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10361,7 +10361,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10396,7 +10396,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10432,7 +10432,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10469,7 +10469,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10505,7 +10505,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10541,7 +10541,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10577,7 +10577,7 @@ func TestCheckCallExprFixedTypedMultiFuncMixedTypesMultiFuncMixedTypes(t *testin
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10613,7 +10613,7 @@ func TestCheckCallExprVariadic1XX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10645,7 +10645,7 @@ func TestCheckCallExprVariadic1XInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10677,7 +10677,7 @@ func TestCheckCallExprVariadic1XFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10712,7 +10712,7 @@ func TestCheckCallExprVariadic1XBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10747,7 +10747,7 @@ func TestCheckCallExprVariadic1XIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10782,7 +10782,7 @@ func TestCheckCallExprVariadic1XInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10814,7 +10814,7 @@ func TestCheckCallExprVariadic1XEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10849,7 +10849,7 @@ func TestCheckCallExprVariadic1XSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10881,7 +10881,7 @@ func TestCheckCallExprVariadic1XMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10913,7 +10913,7 @@ func TestCheckCallExprVariadic1XMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10948,7 +10948,7 @@ func TestCheckCallExprVariadic1IntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -10980,7 +10980,7 @@ func TestCheckCallExprVariadic1IntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11012,7 +11012,7 @@ func TestCheckCallExprVariadic1IntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11047,7 +11047,7 @@ func TestCheckCallExprVariadic1IntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11082,7 +11082,7 @@ func TestCheckCallExprVariadic1IntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11117,7 +11117,7 @@ func TestCheckCallExprVariadic1IntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11152,7 +11152,7 @@ func TestCheckCallExprVariadic1IntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11187,7 +11187,7 @@ func TestCheckCallExprVariadic1IntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11219,7 +11219,7 @@ func TestCheckCallExprVariadic1IntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11254,7 +11254,7 @@ func TestCheckCallExprVariadic1IntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11289,7 +11289,7 @@ func TestCheckCallExprVariadic1FloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11324,7 +11324,7 @@ func TestCheckCallExprVariadic1FloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11359,7 +11359,7 @@ func TestCheckCallExprVariadic1FloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11395,7 +11395,7 @@ func TestCheckCallExprVariadic1FloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11431,7 +11431,7 @@ func TestCheckCallExprVariadic1FloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11467,7 +11467,7 @@ func TestCheckCallExprVariadic1FloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11502,7 +11502,7 @@ func TestCheckCallExprVariadic1FloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11538,7 +11538,7 @@ func TestCheckCallExprVariadic1FloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11573,7 +11573,7 @@ func TestCheckCallExprVariadic1FloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11609,7 +11609,7 @@ func TestCheckCallExprVariadic1FloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11645,7 +11645,7 @@ func TestCheckCallExprVariadic1BoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11680,7 +11680,7 @@ func TestCheckCallExprVariadic1BoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11715,7 +11715,7 @@ func TestCheckCallExprVariadic1BoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11751,7 +11751,7 @@ func TestCheckCallExprVariadic1BoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11787,7 +11787,7 @@ func TestCheckCallExprVariadic1BoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11823,7 +11823,7 @@ func TestCheckCallExprVariadic1BoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11858,7 +11858,7 @@ func TestCheckCallExprVariadic1BoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11894,7 +11894,7 @@ func TestCheckCallExprVariadic1BoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11929,7 +11929,7 @@ func TestCheckCallExprVariadic1BoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -11965,7 +11965,7 @@ func TestCheckCallExprVariadic1BoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12001,7 +12001,7 @@ func TestCheckCallExprVariadic1IntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12036,7 +12036,7 @@ func TestCheckCallExprVariadic1IntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12071,7 +12071,7 @@ func TestCheckCallExprVariadic1IntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12107,7 +12107,7 @@ func TestCheckCallExprVariadic1IntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12143,7 +12143,7 @@ func TestCheckCallExprVariadic1IntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12179,7 +12179,7 @@ func TestCheckCallExprVariadic1IntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12214,7 +12214,7 @@ func TestCheckCallExprVariadic1IntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12250,7 +12250,7 @@ func TestCheckCallExprVariadic1IntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12285,7 +12285,7 @@ func TestCheckCallExprVariadic1IntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12321,7 +12321,7 @@ func TestCheckCallExprVariadic1IntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12357,7 +12357,7 @@ func TestCheckCallExprVariadic1IntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12389,7 +12389,7 @@ func TestCheckCallExprVariadic1IntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12421,7 +12421,7 @@ func TestCheckCallExprVariadic1IntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12453,7 +12453,7 @@ func TestCheckCallExprVariadic1IntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12485,7 +12485,7 @@ func TestCheckCallExprVariadic1IntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12517,7 +12517,7 @@ func TestCheckCallExprVariadic1IntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12549,7 +12549,7 @@ func TestCheckCallExprVariadic1IntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12581,7 +12581,7 @@ func TestCheckCallExprVariadic1IntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12613,7 +12613,7 @@ func TestCheckCallExprVariadic1IntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12645,7 +12645,7 @@ func TestCheckCallExprVariadic1IntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12677,7 +12677,7 @@ func TestCheckCallExprVariadic1EmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12712,7 +12712,7 @@ func TestCheckCallExprVariadic1EmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12747,7 +12747,7 @@ func TestCheckCallExprVariadic1EmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12783,7 +12783,7 @@ func TestCheckCallExprVariadic1EmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12819,7 +12819,7 @@ func TestCheckCallExprVariadic1EmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12855,7 +12855,7 @@ func TestCheckCallExprVariadic1EmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12891,7 +12891,7 @@ func TestCheckCallExprVariadic1EmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12927,7 +12927,7 @@ func TestCheckCallExprVariadic1EmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12962,7 +12962,7 @@ func TestCheckCallExprVariadic1EmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -12998,7 +12998,7 @@ func TestCheckCallExprVariadic1EmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13034,7 +13034,7 @@ func TestCheckCallExprVariadic1SingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13066,7 +13066,7 @@ func TestCheckCallExprVariadic1SingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13098,7 +13098,7 @@ func TestCheckCallExprVariadic1SingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13133,7 +13133,7 @@ func TestCheckCallExprVariadic1SingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13168,7 +13168,7 @@ func TestCheckCallExprVariadic1SingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13203,7 +13203,7 @@ func TestCheckCallExprVariadic1SingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13238,7 +13238,7 @@ func TestCheckCallExprVariadic1SingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13273,7 +13273,7 @@ func TestCheckCallExprVariadic1SingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13305,7 +13305,7 @@ func TestCheckCallExprVariadic1SingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13340,7 +13340,7 @@ func TestCheckCallExprVariadic1SingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13375,7 +13375,7 @@ func TestCheckCallExprVariadic1MultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13407,7 +13407,7 @@ func TestCheckCallExprVariadic1MultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13442,7 +13442,7 @@ func TestCheckCallExprVariadic1MultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13478,7 +13478,7 @@ func TestCheckCallExprVariadic1MultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13514,7 +13514,7 @@ func TestCheckCallExprVariadic1MultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13550,7 +13550,7 @@ func TestCheckCallExprVariadic1MultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13586,7 +13586,7 @@ func TestCheckCallExprVariadic1MultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13622,7 +13622,7 @@ func TestCheckCallExprVariadic1MultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13657,7 +13657,7 @@ func TestCheckCallExprVariadic1MultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13693,7 +13693,7 @@ func TestCheckCallExprVariadic1MultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13729,7 +13729,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13764,7 +13764,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13799,7 +13799,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13835,7 +13835,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13871,7 +13871,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13907,7 +13907,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13943,7 +13943,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -13979,7 +13979,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14014,7 +14014,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14050,7 +14050,7 @@ func TestCheckCallExprVariadic1MultiFuncMixedTypesMultiFuncMixedTypes(t *testing
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14086,7 +14086,7 @@ func TestCheckCallExprVariadic2XX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14121,7 +14121,7 @@ func TestCheckCallExprVariadic2XInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14153,7 +14153,7 @@ func TestCheckCallExprVariadic2XFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14188,7 +14188,7 @@ func TestCheckCallExprVariadic2XBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14223,7 +14223,7 @@ func TestCheckCallExprVariadic2XIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14258,7 +14258,7 @@ func TestCheckCallExprVariadic2XInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14294,7 +14294,7 @@ func TestCheckCallExprVariadic2XEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14329,7 +14329,7 @@ func TestCheckCallExprVariadic2XSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14361,7 +14361,7 @@ func TestCheckCallExprVariadic2XMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14393,7 +14393,7 @@ func TestCheckCallExprVariadic2XMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14428,7 +14428,7 @@ func TestCheckCallExprVariadic2IntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14460,7 +14460,7 @@ func TestCheckCallExprVariadic2IntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14492,7 +14492,7 @@ func TestCheckCallExprVariadic2IntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14527,7 +14527,7 @@ func TestCheckCallExprVariadic2IntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14562,7 +14562,7 @@ func TestCheckCallExprVariadic2IntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14597,7 +14597,7 @@ func TestCheckCallExprVariadic2IntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14629,7 +14629,7 @@ func TestCheckCallExprVariadic2IntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14664,7 +14664,7 @@ func TestCheckCallExprVariadic2IntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14696,7 +14696,7 @@ func TestCheckCallExprVariadic2IntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14731,7 +14731,7 @@ func TestCheckCallExprVariadic2IntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14766,7 +14766,7 @@ func TestCheckCallExprVariadic2FloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14801,7 +14801,7 @@ func TestCheckCallExprVariadic2FloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14836,7 +14836,7 @@ func TestCheckCallExprVariadic2FloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14872,7 +14872,7 @@ func TestCheckCallExprVariadic2FloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14908,7 +14908,7 @@ func TestCheckCallExprVariadic2FloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14944,7 +14944,7 @@ func TestCheckCallExprVariadic2FloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -14979,7 +14979,7 @@ func TestCheckCallExprVariadic2FloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15015,7 +15015,7 @@ func TestCheckCallExprVariadic2FloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15050,7 +15050,7 @@ func TestCheckCallExprVariadic2FloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15086,7 +15086,7 @@ func TestCheckCallExprVariadic2FloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15122,7 +15122,7 @@ func TestCheckCallExprVariadic2BoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15157,7 +15157,7 @@ func TestCheckCallExprVariadic2BoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15192,7 +15192,7 @@ func TestCheckCallExprVariadic2BoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15228,7 +15228,7 @@ func TestCheckCallExprVariadic2BoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15264,7 +15264,7 @@ func TestCheckCallExprVariadic2BoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15300,7 +15300,7 @@ func TestCheckCallExprVariadic2BoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15335,7 +15335,7 @@ func TestCheckCallExprVariadic2BoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15371,7 +15371,7 @@ func TestCheckCallExprVariadic2BoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15406,7 +15406,7 @@ func TestCheckCallExprVariadic2BoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15442,7 +15442,7 @@ func TestCheckCallExprVariadic2BoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15478,7 +15478,7 @@ func TestCheckCallExprVariadic2IntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15513,7 +15513,7 @@ func TestCheckCallExprVariadic2IntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15548,7 +15548,7 @@ func TestCheckCallExprVariadic2IntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15584,7 +15584,7 @@ func TestCheckCallExprVariadic2IntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15620,7 +15620,7 @@ func TestCheckCallExprVariadic2IntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15656,7 +15656,7 @@ func TestCheckCallExprVariadic2IntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15691,7 +15691,7 @@ func TestCheckCallExprVariadic2IntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15727,7 +15727,7 @@ func TestCheckCallExprVariadic2IntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15762,7 +15762,7 @@ func TestCheckCallExprVariadic2IntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15798,7 +15798,7 @@ func TestCheckCallExprVariadic2IntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15834,7 +15834,7 @@ func TestCheckCallExprVariadic2IntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15870,7 +15870,7 @@ func TestCheckCallExprVariadic2IntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15902,7 +15902,7 @@ func TestCheckCallExprVariadic2IntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15934,7 +15934,7 @@ func TestCheckCallExprVariadic2IntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15966,7 +15966,7 @@ func TestCheckCallExprVariadic2IntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -15998,7 +15998,7 @@ func TestCheckCallExprVariadic2IntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16030,7 +16030,7 @@ func TestCheckCallExprVariadic2IntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16062,7 +16062,7 @@ func TestCheckCallExprVariadic2IntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16094,7 +16094,7 @@ func TestCheckCallExprVariadic2IntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16126,7 +16126,7 @@ func TestCheckCallExprVariadic2IntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16158,7 +16158,7 @@ func TestCheckCallExprVariadic2EmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16193,7 +16193,7 @@ func TestCheckCallExprVariadic2EmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16228,7 +16228,7 @@ func TestCheckCallExprVariadic2EmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16264,7 +16264,7 @@ func TestCheckCallExprVariadic2EmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16300,7 +16300,7 @@ func TestCheckCallExprVariadic2EmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16336,7 +16336,7 @@ func TestCheckCallExprVariadic2EmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16371,7 +16371,7 @@ func TestCheckCallExprVariadic2EmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16407,7 +16407,7 @@ func TestCheckCallExprVariadic2EmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16442,7 +16442,7 @@ func TestCheckCallExprVariadic2EmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16478,7 +16478,7 @@ func TestCheckCallExprVariadic2EmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16514,7 +16514,7 @@ func TestCheckCallExprVariadic2SingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16546,7 +16546,7 @@ func TestCheckCallExprVariadic2SingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16578,7 +16578,7 @@ func TestCheckCallExprVariadic2SingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16613,7 +16613,7 @@ func TestCheckCallExprVariadic2SingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16648,7 +16648,7 @@ func TestCheckCallExprVariadic2SingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16683,7 +16683,7 @@ func TestCheckCallExprVariadic2SingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16715,7 +16715,7 @@ func TestCheckCallExprVariadic2SingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16750,7 +16750,7 @@ func TestCheckCallExprVariadic2SingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16782,7 +16782,7 @@ func TestCheckCallExprVariadic2SingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16817,7 +16817,7 @@ func TestCheckCallExprVariadic2SingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16852,7 +16852,7 @@ func TestCheckCallExprVariadic2MultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16884,7 +16884,7 @@ func TestCheckCallExprVariadic2MultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16919,7 +16919,7 @@ func TestCheckCallExprVariadic2MultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16955,7 +16955,7 @@ func TestCheckCallExprVariadic2MultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -16991,7 +16991,7 @@ func TestCheckCallExprVariadic2MultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17027,7 +17027,7 @@ func TestCheckCallExprVariadic2MultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17062,7 +17062,7 @@ func TestCheckCallExprVariadic2MultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17098,7 +17098,7 @@ func TestCheckCallExprVariadic2MultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17133,7 +17133,7 @@ func TestCheckCallExprVariadic2MultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17169,7 +17169,7 @@ func TestCheckCallExprVariadic2MultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17205,7 +17205,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17240,7 +17240,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17275,7 +17275,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17311,7 +17311,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17347,7 +17347,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17383,7 +17383,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17418,7 +17418,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17454,7 +17454,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17489,7 +17489,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17525,7 +17525,7 @@ func TestCheckCallExprVariadic2MultiFuncMixedTypesMultiFuncMixedTypes(t *testing
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17561,7 +17561,7 @@ func TestCheckCallExprVariadicTypedXX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17596,7 +17596,7 @@ func TestCheckCallExprVariadicTypedXInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17628,7 +17628,7 @@ func TestCheckCallExprVariadicTypedXFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17663,7 +17663,7 @@ func TestCheckCallExprVariadicTypedXBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17698,7 +17698,7 @@ func TestCheckCallExprVariadicTypedXIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17730,7 +17730,7 @@ func TestCheckCallExprVariadicTypedXInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17766,7 +17766,7 @@ func TestCheckCallExprVariadicTypedXEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17801,7 +17801,7 @@ func TestCheckCallExprVariadicTypedXSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17836,7 +17836,7 @@ func TestCheckCallExprVariadicTypedXMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17872,7 +17872,7 @@ func TestCheckCallExprVariadicTypedXMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17907,7 +17907,7 @@ func TestCheckCallExprVariadicTypedIntX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17939,7 +17939,7 @@ func TestCheckCallExprVariadicTypedIntInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -17971,7 +17971,7 @@ func TestCheckCallExprVariadicTypedIntFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18006,7 +18006,7 @@ func TestCheckCallExprVariadicTypedIntBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18041,7 +18041,7 @@ func TestCheckCallExprVariadicTypedIntIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18073,7 +18073,7 @@ func TestCheckCallExprVariadicTypedIntInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18108,7 +18108,7 @@ func TestCheckCallExprVariadicTypedIntEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18143,7 +18143,7 @@ func TestCheckCallExprVariadicTypedIntSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18178,7 +18178,7 @@ func TestCheckCallExprVariadicTypedIntMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18213,7 +18213,7 @@ func TestCheckCallExprVariadicTypedIntMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18248,7 +18248,7 @@ func TestCheckCallExprVariadicTypedFloatX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18283,7 +18283,7 @@ func TestCheckCallExprVariadicTypedFloatInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18318,7 +18318,7 @@ func TestCheckCallExprVariadicTypedFloatFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18354,7 +18354,7 @@ func TestCheckCallExprVariadicTypedFloatBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18390,7 +18390,7 @@ func TestCheckCallExprVariadicTypedFloatIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18425,7 +18425,7 @@ func TestCheckCallExprVariadicTypedFloatInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18461,7 +18461,7 @@ func TestCheckCallExprVariadicTypedFloatEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18497,7 +18497,7 @@ func TestCheckCallExprVariadicTypedFloatSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18533,7 +18533,7 @@ func TestCheckCallExprVariadicTypedFloatMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18569,7 +18569,7 @@ func TestCheckCallExprVariadicTypedFloatMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18605,7 +18605,7 @@ func TestCheckCallExprVariadicTypedBoolX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18640,7 +18640,7 @@ func TestCheckCallExprVariadicTypedBoolInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18675,7 +18675,7 @@ func TestCheckCallExprVariadicTypedBoolFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18711,7 +18711,7 @@ func TestCheckCallExprVariadicTypedBoolBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18747,7 +18747,7 @@ func TestCheckCallExprVariadicTypedBoolIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18782,7 +18782,7 @@ func TestCheckCallExprVariadicTypedBoolInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18818,7 +18818,7 @@ func TestCheckCallExprVariadicTypedBoolEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18854,7 +18854,7 @@ func TestCheckCallExprVariadicTypedBoolSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18890,7 +18890,7 @@ func TestCheckCallExprVariadicTypedBoolMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18926,7 +18926,7 @@ func TestCheckCallExprVariadicTypedBoolMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18962,7 +18962,7 @@ func TestCheckCallExprVariadicTypedIntTypedX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -18994,7 +18994,7 @@ func TestCheckCallExprVariadicTypedIntTypedInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19026,7 +19026,7 @@ func TestCheckCallExprVariadicTypedIntTypedFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19061,7 +19061,7 @@ func TestCheckCallExprVariadicTypedIntTypedBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19096,7 +19096,7 @@ func TestCheckCallExprVariadicTypedIntTypedIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19128,7 +19128,7 @@ func TestCheckCallExprVariadicTypedIntTypedInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19163,7 +19163,7 @@ func TestCheckCallExprVariadicTypedIntTypedEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19198,7 +19198,7 @@ func TestCheckCallExprVariadicTypedIntTypedSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19233,7 +19233,7 @@ func TestCheckCallExprVariadicTypedIntTypedMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19268,7 +19268,7 @@ func TestCheckCallExprVariadicTypedIntTypedMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19303,7 +19303,7 @@ func TestCheckCallExprVariadicTypedIntsX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19339,7 +19339,7 @@ func TestCheckCallExprVariadicTypedIntsInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19371,7 +19371,7 @@ func TestCheckCallExprVariadicTypedIntsFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19403,7 +19403,7 @@ func TestCheckCallExprVariadicTypedIntsBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19435,7 +19435,7 @@ func TestCheckCallExprVariadicTypedIntsIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19467,7 +19467,7 @@ func TestCheckCallExprVariadicTypedIntsInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19499,7 +19499,7 @@ func TestCheckCallExprVariadicTypedIntsEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19531,7 +19531,7 @@ func TestCheckCallExprVariadicTypedIntsSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19563,7 +19563,7 @@ func TestCheckCallExprVariadicTypedIntsMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19595,7 +19595,7 @@ func TestCheckCallExprVariadicTypedIntsMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19627,7 +19627,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19662,7 +19662,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19697,7 +19697,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19733,7 +19733,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19769,7 +19769,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19804,7 +19804,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19840,7 +19840,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19876,7 +19876,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19912,7 +19912,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19948,7 +19948,7 @@ func TestCheckCallExprVariadicTypedEmptyFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -19984,7 +19984,7 @@ func TestCheckCallExprVariadicTypedSingleFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20019,7 +20019,7 @@ func TestCheckCallExprVariadicTypedSingleFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20054,7 +20054,7 @@ func TestCheckCallExprVariadicTypedSingleFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20090,7 +20090,7 @@ func TestCheckCallExprVariadicTypedSingleFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20126,7 +20126,7 @@ func TestCheckCallExprVariadicTypedSingleFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20161,7 +20161,7 @@ func TestCheckCallExprVariadicTypedSingleFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20197,7 +20197,7 @@ func TestCheckCallExprVariadicTypedSingleFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20233,7 +20233,7 @@ func TestCheckCallExprVariadicTypedSingleFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20269,7 +20269,7 @@ func TestCheckCallExprVariadicTypedSingleFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20305,7 +20305,7 @@ func TestCheckCallExprVariadicTypedSingleFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20341,7 +20341,7 @@ func TestCheckCallExprVariadicTypedMultiFuncX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20377,7 +20377,7 @@ func TestCheckCallExprVariadicTypedMultiFuncInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20412,7 +20412,7 @@ func TestCheckCallExprVariadicTypedMultiFuncFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20448,7 +20448,7 @@ func TestCheckCallExprVariadicTypedMultiFuncBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20484,7 +20484,7 @@ func TestCheckCallExprVariadicTypedMultiFuncIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20519,7 +20519,7 @@ func TestCheckCallExprVariadicTypedMultiFuncInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20555,7 +20555,7 @@ func TestCheckCallExprVariadicTypedMultiFuncEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20591,7 +20591,7 @@ func TestCheckCallExprVariadicTypedMultiFuncSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20627,7 +20627,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20663,7 +20663,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMultiFuncMixedTypes(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20699,7 +20699,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesX(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20734,7 +20734,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesInt(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20769,7 +20769,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesFloat(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20805,7 +20805,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesBool(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20841,7 +20841,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesIntTyped(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20876,7 +20876,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesInts(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20912,7 +20912,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesEmptyFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20948,7 +20948,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesSingleFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -20984,7 +20984,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesMultiFunc(t *testing.T) {
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)
@@ -21020,7 +21020,7 @@ func TestCheckCallExprVariadicTypedMultiFuncMixedTypesMultiFuncMixedTypes(t *tes
 	mt := func() (int, I) { return 1, 1 }
 
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)

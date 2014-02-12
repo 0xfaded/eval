@@ -53,13 +53,13 @@ To quit, enter: "quit" or Ctrl-D (EOF).
 }
 
 // REPL is the a read, eval, and print loop.
-func REPL(env *eval.Env) {
+func REPL(env *eval.SimpleEnv) {
 
 	var err error
 
 	// A place to store result values of expressions entered
 	// interactively
-	results := make([] interface{}, 0, 10)
+	results := make([]interface{}, 0, 10)
 	env.Vars["results"] = reflect.ValueOf(&results)
 
 	exprs := 0
@@ -78,10 +78,10 @@ func REPL(env *eval.Env) {
 			fmt.Printf("parse error: %s\n", err)
 		} else if cexpr, errs := eval.CheckExpr(expr, env); len(errs) != 0 {
 			for _, cerr := range errs {
-				fmt.Printf("%v\n", cerr)
+				fmt.Printf("check error: %v\n", cerr)
 			}
 		} else if vals, _, err := eval.EvalExpr(cexpr, env); err != nil {
-			fmt.Printf("eval error: %s\n", err)
+			fmt.Printf("panic: %s\n", err)
 		} else if vals == nil {
 			fmt.Printf("Kind=nil\nnil\n")
 		} else if len(*vals) == 0 {
@@ -148,7 +148,7 @@ func (Z) x() {}
 //
 // See make_env in github.com/rocky/go-fish for an automated way to
 // create more complete environment from a starting import.
-func makeBogusEnv() eval.Env {
+func makeBogusEnv() *eval.SimpleEnv {
 
 	// A copule of things from the fmt package.
 	var fmt_funcs    map[string] reflect.Value = make(map[string] reflect.Value)
@@ -161,18 +161,14 @@ func makeBogusEnv() eval.Env {
 	// A stripped down package environment.  See
 	// http://github.com/rocky/go-fish and repl_imports.go for a more
 	// complete environment.
-	pkgs := map[string] eval.Pkg {
-			"fmt": &eval.Env {
-				Name:   "fmt",
-				Path:   "fmt",
+	pkgs := map[string] eval.Env {
+			"fmt": &eval.SimpleEnv {
 				Vars:   make(map[string] reflect.Value),
 				Consts: make(map[string] reflect.Value),
 				Funcs:  fmt_funcs,
 				Types : make(map[string] reflect.Type),
-				Pkgs:   make(map[string] eval.Pkg),
-			}, "os": &eval.Env {
-				Name:   "os",
-				Path:   "os",
+				Pkgs:   nil,
+			}, "os": &eval.SimpleEnv {
 				Vars:   map[string] reflect.Value {
 					"Stdout": reflect.ValueOf(&os.Stdout),
 					"Args"  : reflect.ValueOf(&os.Args)},
@@ -180,20 +176,12 @@ func makeBogusEnv() eval.Env {
 				Funcs:  make(map[string] reflect.Value),
 				Types:  map[string] reflect.Type{
 					"MyInt": reflect.TypeOf(*new(MyInt))},
-				Pkgs:   make(map[string] eval.Pkg),
+				Pkgs:   nil,
 			},
 		}
 
-	mainEnv := eval.Env {
-		Name:   ".",
-		Path:   "",
-		Consts: make(map[string] reflect.Value),
-		Funcs : make(map[string] reflect.Value),
-		Types : make(map[string] reflect.Type),
-		Vars  : make(map[string] reflect.Value),
-		Pkgs:   pkgs,
-	}
-
+	mainEnv := eval.MakeSimpleEnv()
+	mainEnv.Pkgs = pkgs
 
 	// Some "alice" things for testing
 	type Alice struct {
@@ -247,5 +235,5 @@ func makeBogusEnv() eval.Env {
 func main() {
 	env := makeBogusEnv()
 	intro_text()
-	REPL(&env)
+	REPL(env)
 }

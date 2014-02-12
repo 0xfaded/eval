@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-func evalBinaryExpr(binary *BinaryExpr, env *Env) (r reflect.Value, err error) {
+func evalBinaryExpr(binary *BinaryExpr, env Env) (r reflect.Value, err error) {
 
         if binary.IsConst() {
                 return binary.Const(), nil

@@ -6,7 +6,7 @@ import (
 	"go/token"
 )
 
-func evalUnaryExpr(unary *UnaryExpr, env *Env) ([]reflect.Value, error) {
+func evalUnaryExpr(unary *UnaryExpr, env Env) ([]reflect.Value, error) {
 	if unary.IsConst() {
 		return []reflect.Value{unary.Const()}, nil
 	}

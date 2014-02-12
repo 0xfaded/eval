@@ -20,7 +20,7 @@ var defs =
 	_ = b
 `
 var body = template.Must(template.New("Body").Parse(defs +
-`	env := makeEnv()
+`	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 {{ if .Errors }}

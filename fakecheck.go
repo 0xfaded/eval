@@ -6,7 +6,7 @@ import (
 
 // convert an ast.Expr to an Expr without actually checking it. This
 // is useful for avoiding special cases in error messages.
-func fakeCheckExpr(expr ast.Expr, env *Env) Expr {
+func fakeCheckExpr(expr ast.Expr, env Env) Expr {
 	if expr == nil {
 		return nil
 	}

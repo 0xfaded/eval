@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalStarExpr(starExpr *StarExpr, env *Env) (reflect.Value, error) {
+func evalStarExpr(starExpr *StarExpr, env Env) (reflect.Value, error) {
 	if vs, _, err := EvalExpr(starExpr.X.(Expr), env); err != nil {
 		return reflect.Value{}, err
 	} else {

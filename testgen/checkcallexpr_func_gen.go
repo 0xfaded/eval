@@ -41,7 +41,7 @@ var underscores string =
 var body = template.Must(template.New("Body").Parse(
 defs + `
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["I"] = reflect.TypeOf(I(0))
 	env.Vars["is"] = reflect.ValueOf(&is)
 	env.Funcs["f"] = reflect.ValueOf(f)

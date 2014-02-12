@@ -11,7 +11,7 @@ func TestCheckAddrExprA(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectType(t, `&a`, env, reflect.TypeOf(&a))
@@ -23,7 +23,7 @@ func TestCheckAddrExprInt(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&int(1)`, env,
@@ -38,7 +38,7 @@ func TestCheckAddrExprNumber(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&1.4`, env,
@@ -53,7 +53,7 @@ func TestCheckAddrExprRune(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&'a'`, env,
@@ -68,7 +68,7 @@ func TestCheckAddrExprBool(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&true`, env,
@@ -83,7 +83,7 @@ func TestCheckAddrExprString(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&"a"`, env,
@@ -98,7 +98,7 @@ func TestCheckAddrExprNil(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `&nil`, env,
@@ -114,7 +114,7 @@ func TestCheckAddrExprAtA(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `& &a`, env,
@@ -129,7 +129,7 @@ func TestCheckAddrExprStarB(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectCheckError(t, `& *a`, env,
@@ -144,8 +144,20 @@ func TestCheckAddrExprSlice(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expectType(t, `&[]int{1}`, env, reflect.TypeOf(&[]int{1}))
+}
+
+// Test []int{1}[0]
+func TestCheckAddrExprSliceElt(t *testing.T) {
+
+	a := 1
+	b := &a
+	_ = b
+	env := MakeSimpleEnv()
+	env.Vars["a"] = reflect.ValueOf(&a)
+
+	expectType(t, `&[]int{1}[0]`, env, reflect.TypeOf(&[]int{1}[0]))
 }

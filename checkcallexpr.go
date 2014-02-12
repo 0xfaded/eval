@@ -6,7 +6,7 @@ import (
 	"go/token"
 )
 
-func checkCallExpr(callExpr *ast.CallExpr, env *Env) (acall *CallExpr, errs []error) {
+func checkCallExpr(callExpr *ast.CallExpr, env Env) (acall *CallExpr, errs []error) {
 	acall = &CallExpr{CallExpr: callExpr}
 
 	// First check for builtin calls. For new and make, the first argument is
@@ -37,7 +37,7 @@ func checkCallExpr(callExpr *ast.CallExpr, env *Env) (acall *CallExpr, errs []er
 	}
 }
 
-func checkCallTypeExpr(call *CallExpr, to reflect.Type, env *Env) (acall *CallExpr, errs []error) {
+func checkCallTypeExpr(call *CallExpr, to reflect.Type, env Env) (acall *CallExpr, errs []error) {
 	call.knownType = []reflect.Type{to}
 	call.isTypeConversion = true
 
@@ -88,7 +88,7 @@ func checkCallTypeExpr(call *CallExpr, to reflect.Type, env *Env) (acall *CallEx
 	}
 }
 
-func checkCallFunExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	fun, errs := CheckExpr(call.Fun, env)
 	if errs != nil && !fun.IsConst() {
 		return call, errs

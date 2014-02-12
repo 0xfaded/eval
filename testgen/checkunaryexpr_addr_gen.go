@@ -20,7 +20,7 @@ var defs =
 	_ = b
 `
 var body = template.Must(template.New("Body").Parse(defs +
-`	env := makeEnv()
+`	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 {{ if .Errors }}
 	expectCheckError(t, `+"`{{ .Expr }}`"+`, env,{{ range .Errors }}
@@ -54,7 +54,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"AtA", " &a"},
 		{"StarB", " *a"},
 		{"Slice", "[]int{1}"},
-		{"Slice", "[]int{1}[0]"},
+		{"SliceElt", "[]int{1}[0]"},
 	}
 	return []testgen.Dimension{
 		stars,

@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalCallExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if call.IsConst() {
 		return []reflect.Value{call.Const()}, nil
 	} else if call.isBuiltin {
@@ -16,7 +16,7 @@ func evalCallExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalCallTypeExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallTypeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	// Arg0 can only be const if it is ConstNil, otherwise the entire expression
 	// would be const and evalCallExpr will have already returned.
 	arg := call.Args[0].(Expr)
@@ -32,7 +32,7 @@ func evalCallTypeExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalCallFunExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallFunExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	v, _, err := EvalExpr(call.Fun.(Expr), env)
 	if err != nil {
 		return nil, err

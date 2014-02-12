@@ -11,7 +11,7 @@ import (
 // which to get reflect.Values from. Note however that env can be
 // subverted somewhat by supplying callback hooks routines which
 // access variables and by supplying user-defined conversion routines.
-func EvalExpr(expr Expr, env *Env) (*[]reflect.Value, bool, error) {
+func EvalExpr(expr Expr, env Env) (*[]reflect.Value, bool, error) {
 	switch node := expr.(type) {
 	case *Ident:
 		v, _, err := evalIdentExprCallback(node, env)

@@ -8,7 +8,7 @@ import (
 func TestSliceArray(t *testing.T) {
 	a := [3]int{1, 2, 3}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1:1]
@@ -25,7 +25,7 @@ func TestSliceArray(t *testing.T) {
 func TestSliceSlice(t *testing.T) {
 	a := []int{1, 2, 3}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[0:2]
@@ -43,7 +43,7 @@ func TestSliceSlice(t *testing.T) {
 func TestSliceString(t *testing.T) {
 	a := "abc"
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1:1]

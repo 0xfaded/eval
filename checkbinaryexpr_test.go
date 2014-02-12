@@ -20,7 +20,7 @@ import (
 
 // integer op X tests
 func TestBasicCheckConstBinaryIntegerInteger(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "5 / 2", env, NewConstInt64(5 / 2), ConstInt)
@@ -31,7 +31,7 @@ func TestBasicCheckConstBinaryIntegerInteger(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "5 - 'a'", env, NewConstInt64(5 - 'a'), ConstRune)
@@ -42,7 +42,7 @@ func TestBasicCheckConstBinaryIntegerRune(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerFloating(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "5 / 2.0", env, NewConstFloat64(5 / 2.0), ConstFloat)
@@ -55,7 +55,7 @@ func TestBasicCheckConstBinaryIntegerFloating(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Vaild
 	expectConst(t, "5 / 1.25i", env, NewConstComplex128(5 / 1.25i), ConstComplex)
@@ -68,7 +68,7 @@ func TestBasicCheckConstBinaryIntegerComplex(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "5 + true", env,
@@ -94,7 +94,7 @@ func TestBasicCheckConstBinaryIntegerBool(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, `5 + "abc"`, env,
@@ -120,7 +120,7 @@ func TestBasicCheckConstBinaryIntegerString(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryIntegerNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "5 + nil", env,
@@ -147,7 +147,7 @@ func TestBasicCheckConstBinaryIntegerNil(t *testing.T) {
 
 // rune op X tests
 func TestBasicCheckConstBinaryRuneInteger(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "'a' / 2", env, NewConstRune('a' / 2), ConstRune)
@@ -158,7 +158,7 @@ func TestBasicCheckConstBinaryRuneInteger(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, "'a' / '\\x04'", env, NewConstRune('a' / '\x04'), ConstRune)
 	expectConst(t, "'a' % '\\x04'", env, NewConstRune('a' % '\x04'), ConstRune)
@@ -168,7 +168,7 @@ func TestBasicCheckConstBinaryRuneRune(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneFloating(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "'d' * 1.25", env, NewConstFloat64('d' * 1.25), ConstFloat)
@@ -181,7 +181,7 @@ func TestBasicCheckConstBinaryRuneFloating(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "'d' / 4i", env, NewConstComplex128('d' / 4i), ConstComplex)
@@ -194,7 +194,7 @@ func TestBasicCheckConstBinaryRuneComplex(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "'a' + true", env,
@@ -220,7 +220,7 @@ func TestBasicCheckConstBinaryRuneBool(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, `'a' + "abc"`, env,
@@ -246,7 +246,7 @@ func TestBasicCheckConstBinaryRuneString(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryRuneNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "'a' + nil", env,
@@ -273,7 +273,7 @@ func TestBasicCheckConstBinaryRuneNil(t *testing.T) {
 
 // floating op X tests
 func TestBasicCheckConstBinaryFloatingInteger(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "1.5 + 2", env, NewConstFloat64(1.5 + 2), ConstFloat)
@@ -286,7 +286,7 @@ func TestBasicCheckConstBinaryFloatingInteger(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatingRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "1.5 - 'a'", env, NewConstFloat64(1.5 - 'a'), ConstFloat)
@@ -299,7 +299,7 @@ func TestBasicCheckConstBinaryFloatingRune(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatingFloating(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "2.5 * 1.25", env, NewConstFloat64(2.5 * 1.25), ConstFloat)
@@ -312,7 +312,7 @@ func TestBasicCheckConstBinaryFloatingFloating(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Valid
 	expectConst(t, "2.5 / 4i", env, NewConstComplex128(2.5 / 4i), ConstComplex)
@@ -325,7 +325,7 @@ func TestBasicCheckConstBinaryFloatingComplex(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "1.0 + true", env,
@@ -351,7 +351,7 @@ func TestBasicCheckConstBinaryFloatBool(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, `1.0 + "abc"`, env,
@@ -377,7 +377,7 @@ func TestBasicCheckConstBinaryFloatString(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryFloatNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "1.0 + nil", env,
@@ -404,7 +404,7 @@ func TestBasicCheckConstBinaryFloatNil(t *testing.T) {
 
 // complex op X tests
 func TestBasicCheckConstBinaryComplexInteger(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectConst(t, "2.5i + 2", env, NewConstComplex128(2.5i + 2), ConstComplex)
@@ -417,7 +417,7 @@ func TestBasicCheckConstBinaryComplexInteger(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, "2.5i - 'a'", env, NewConstComplex128(2.5i - 'a'), ConstComplex)
 	expectConst(t, "2.5i == 'a'", env, 2.5i == 'a', ConstBool)
@@ -429,7 +429,7 @@ func TestBasicCheckConstBinaryComplexRune(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexComplexing(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, "2.5i * 1.25", env, NewConstComplex128(2.5i * 1.25), ConstComplex)
 	expectConst(t, "2.5i == 2.0", env, 2.5i == 2.0, ConstBool)
@@ -441,7 +441,7 @@ func TestBasicCheckConstBinaryComplexComplexing(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, "3i / 4i", env, NewConstComplex128(3i / 4i), ConstComplex)
 	expectConst(t, "2.5i == 2i", env, 2.5i == 2i, ConstBool)
@@ -453,7 +453,7 @@ func TestBasicCheckConstBinaryComplexComplex(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "1.0i + true", env,
@@ -479,7 +479,7 @@ func TestBasicCheckConstBinaryComplexBool(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, `1.0i + "abc"`, env,
@@ -505,7 +505,7 @@ func TestBasicCheckConstBinaryComplexString(t *testing.T) {
 }
 
 func TestBasicCheckConstBinaryComplexNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// Invalid
 	expectCheckError(t, "1.0i + nil", env,
@@ -532,7 +532,7 @@ func TestBasicCheckConstBinaryComplexNil(t *testing.T) {
 
 // bool op X tests
 func TestBasicCheckConstBinaryBoolBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, "true == true", env, true, ConstBool)
 	expectConst(t, "true != true", env, false, ConstBool)

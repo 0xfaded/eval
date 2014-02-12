@@ -7,7 +7,7 @@ import (
 	"go/token"
 )
 
-func checkCallBuiltinExpr(call *CallExpr, env *Env) (*CallExpr, []error, bool) {
+func checkCallBuiltinExpr(call *CallExpr, env Env) (*CallExpr, []error, bool) {
 	var errs []error
 	ident, ok := call.Fun.(*ast.Ident)
 	if !ok {
@@ -44,7 +44,7 @@ func checkCallBuiltinExpr(call *CallExpr, env *Env) (*CallExpr, []error, bool) {
 	return call, errs, true
 }
 
-func checkBuiltinComplex(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinComplex(call *CallExpr, env Env) (*CallExpr, []error) {
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
@@ -184,7 +184,7 @@ func checkBuiltinComplex(call *CallExpr, env *Env) (*CallExpr, []error) {
 	return call, errs
 }
 
-func checkBuiltinRealImag(call *CallExpr, env *Env, isReal bool) (*CallExpr, []error) {
+func checkBuiltinRealImag(call *CallExpr, env Env, isReal bool) (*CallExpr, []error) {
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
@@ -254,7 +254,7 @@ func checkBuiltinRealImag(call *CallExpr, env *Env, isReal bool) (*CallExpr, []e
 	return call, errs
 }
 
-func checkBuiltinNew(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinNew(call *CallExpr, env Env) (*CallExpr, []error) {
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
@@ -286,7 +286,7 @@ func checkBuiltinNew(call *CallExpr, env *Env) (*CallExpr, []error) {
 	}
 }
 
-func checkBuiltinMake(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinMake(call *CallExpr, env Env) (*CallExpr, []error) {
 	if len(call.Args) == 0 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{call}}
 	}
@@ -355,7 +355,7 @@ func (found *callRecvWalker) visit(expr Expr) bool {
 	return true
 }
 
-func checkBuiltinLenCap(call *CallExpr, env *Env, isLen bool) (*CallExpr, []error) {
+func checkBuiltinLenCap(call *CallExpr, env Env, isLen bool) (*CallExpr, []error) {
 	call.knownType = knownType{intType}
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
@@ -411,7 +411,7 @@ func checkBuiltinLenCap(call *CallExpr, env *Env, isLen bool) (*CallExpr, []erro
 	return call, errs
 }
 
-func checkBuiltinAppend(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 	if len(call.Args) < 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, []error{ErrBuiltinWrongNumberOfArgs{call}}
@@ -503,7 +503,7 @@ func checkBuiltinAppend(call *CallExpr, env *Env) (*CallExpr, []error) {
 	return call, errs
 }
 
-func checkBuiltinCopyExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinCopyExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	call.knownType = knownType{intType}
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
@@ -563,7 +563,7 @@ func checkBuiltinCopyExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
 	return call, errs
 }
 
-func checkBuiltinDeleteExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinDeleteExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	call.knownType = knownType{intType}
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
@@ -615,7 +615,7 @@ func checkBuiltinDeleteExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
 	return call, errs
 }
 
-func checkBuiltinPanicExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
+func checkBuiltinPanicExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	var errs []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
@@ -639,7 +639,7 @@ func checkBuiltinPanicExpr(call *CallExpr, env *Env) (*CallExpr, []error) {
 	return call, errs
 }
 
-func fakeCheckRemainingArgs(call *CallExpr, from int, env *Env) {
+func fakeCheckRemainingArgs(call *CallExpr, from int, env Env) {
 	for i := from; i < len(call.Args); i += 1 {
 		call.Args[i] = fakeCheckExpr(call.Args[i], env)
 	}

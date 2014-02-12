@@ -7,7 +7,7 @@ import (
 	"go/token"
 )
 
-func checkBasicLit(lit *ast.BasicLit, env *Env) (*BasicLit, []error) {
+func checkBasicLit(lit *ast.BasicLit, env Env) (*BasicLit, []error) {
 	aexpr := &BasicLit{BasicLit: lit}
 
 	switch lit.Kind {

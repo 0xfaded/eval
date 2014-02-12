@@ -17,7 +17,7 @@ import (
 //
 // if expr.IsConst() is true, then the resulting Expr has been successfully
 // checked, regardless of if errors are present.
-func CheckExpr(expr ast.Expr, env *Env) (Expr, []error) {
+func CheckExpr(expr ast.Expr, env Env) (Expr, []error) {
 	if t, _, isType, _ := checkType(expr, env); isType {
 		return t, []error{ErrTypeUsedAsExpression{t}}
 	}
@@ -60,14 +60,14 @@ func CheckExpr(expr ast.Expr, env *Env) (Expr, []error) {
 	}
 }
 
-func checkType(expr ast.Expr, env *Env) (Expr, reflect.Type, bool, []error) {
+func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 	for parens, ok := expr.(*ast.ParenExpr); ok; parens, ok = expr.(*ast.ParenExpr) {
 		expr = parens.X
 	}
 	switch node := expr.(type) {
 	case *ast.Ident:
 		ident := &Ident{Ident: node}
-		if t, ok := env.Types[node.Name]; ok {
+		if t := env.Type(node.Name); t != nil {
 			return ident, t, true, nil
 		} else if t, ok := builtinTypes[node.Name]; ok {
 			return ident, t, true, nil

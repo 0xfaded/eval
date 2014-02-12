@@ -6,7 +6,7 @@ import (
 )
 
 // TODO[crc] support [::] syntax after go1.2 upgrade
-func checkSliceExpr(slice *ast.SliceExpr, env *Env) (*SliceExpr, []error) {
+func checkSliceExpr(slice *ast.SliceExpr, env Env) (*SliceExpr, []error) {
 	aexpr := &SliceExpr{SliceExpr: slice}
 	x, errs := CheckExpr(slice.X, env)
 	aexpr.X = x
@@ -68,7 +68,7 @@ func checkSliceExpr(slice *ast.SliceExpr, env *Env) (*SliceExpr, []error) {
 	}
 }
 
-func checkSliceVectorExpr(x Expr, index ast.Expr, env *Env) (Expr, int, []error) {
+func checkSliceVectorExpr(x Expr, index ast.Expr, env Env) (Expr, int, []error) {
 	t := x.KnownType()[0]
 	i, iint, ok, errs := checkInteger(index, env)
 	if errs != nil && !i.IsConst() {

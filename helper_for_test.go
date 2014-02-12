@@ -10,7 +10,7 @@ import (
 	"go/parser"
 )
 
-func getResults(t *testing.T, expr string, env *Env) *[]reflect.Value {
+func getResults(t *testing.T, expr string, env Env) *[]reflect.Value {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
@@ -23,12 +23,12 @@ func getResults(t *testing.T, expr string, env *Env) *[]reflect.Value {
 	return nil
 }
 
-func expectResult(t *testing.T, expr string, env *Env, expected interface{}) {
+func expectResult(t *testing.T, expr string, env Env, expected interface{}) {
 	expect2 := []interface{}{expected}
 	expectResults(t, expr, env, &expect2)
 }
 
-func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{}) {
+func expectResults(t *testing.T, expr string, env Env, expected *[]interface{}) {
 	results := getResults(t, expr, env)
 	if nil == results {
 		if expected != nil {
@@ -47,7 +47,7 @@ func expectResults(t *testing.T, expr string, env *Env, expected *[]interface{})
 	}
 }
 
-func expectPanic(t *testing.T, expr string, env *Env, panicString string) {
+func expectPanic(t *testing.T, expr string, env Env, panicString string) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
@@ -59,7 +59,7 @@ func expectPanic(t *testing.T, expr string, env *Env, panicString string) {
 	}
 }
 
-func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expectedType reflect.Type) {
+func expectConst(t *testing.T, expr string, env Env, expected interface{}, expectedType reflect.Type) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
@@ -87,7 +87,7 @@ func expectConst(t *testing.T, expr string, env *Env, expected interface{}, expe
 	}
 }
 
-func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) {
+func expectType(t *testing.T, expr string, env Env, expectedType reflect.Type) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if aexpr, errs := CheckExpr(e, env); errs != nil {
@@ -100,7 +100,7 @@ func expectType(t *testing.T, expr string, env *Env, expectedType reflect.Type) 
 		t.Fatalf("Expression '%s' has type '%v', expected '%v'", expr, aexpr.KnownType()[0], expectedType)
 	}
 }
-func expectCheckError(t *testing.T, expr string, env *Env, errorString ...string) {
+func expectCheckError(t *testing.T, expr string, env Env, errorString ...string) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
 	} else if _, errs := CheckExpr(e, env); errs != nil {
@@ -144,12 +144,3 @@ func typesEqual(expected, actual reflect.Type) bool {
 	return reflect.DeepEqual(expected, unwrapped)
 }
 
-func makeEnv() *Env {
-	return &Env {
-		Vars: make(map[string] reflect.Value),
-		Consts: make(map[string] reflect.Value),
-		Funcs: make(map[string] reflect.Value),
-		Types: make(map[string] reflect.Type),
-		Pkgs: make(map[string] Pkg),
-	}
-}

@@ -5,7 +5,7 @@ import (
 	"go/ast"
 )
 
-func checkIndexExpr(index *ast.IndexExpr, env *Env) (*IndexExpr, []error) {
+func checkIndexExpr(index *ast.IndexExpr, env Env) (*IndexExpr, []error) {
 	aexpr := &IndexExpr{IndexExpr: index}
 	x, errs := CheckExpr(index.X, env)
 	aexpr.X = x
@@ -56,7 +56,7 @@ func checkIndexExpr(index *ast.IndexExpr, env *Env) (*IndexExpr, []error) {
 	}
 }
 
-func checkIndexVectorExpr(x Expr, index ast.Expr, env *Env) (Expr, []error) {
+func checkIndexVectorExpr(x Expr, index ast.Expr, env Env) (Expr, []error) {
 	t := x.KnownType()[0]
 	i, iint, ok, errs := checkInteger(index, env)
 	if errs != nil && !i.IsConst() {

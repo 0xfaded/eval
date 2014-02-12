@@ -11,7 +11,7 @@ func TestCheckCompositeLitExprA1XX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -27,7 +27,7 @@ func TestCheckCompositeLitExprA1XInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -43,7 +43,7 @@ func TestCheckCompositeLitExprA1XString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -63,7 +63,7 @@ func TestCheckCompositeLitExprA1XNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -82,7 +82,7 @@ func TestCheckCompositeLitExprA1XIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -101,7 +101,7 @@ func TestCheckCompositeLitExprA1XIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -122,7 +122,7 @@ func TestCheckCompositeLitExprA1XFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -141,7 +141,7 @@ func TestCheckCompositeLitExprA1XAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -161,7 +161,7 @@ func TestCheckCompositeLitExprA1XAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -183,7 +183,7 @@ func TestCheckCompositeLitExprA1XBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -203,7 +203,7 @@ func TestCheckCompositeLitExprA1XCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -223,7 +223,7 @@ func TestCheckCompositeLitExprA1IntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -239,7 +239,7 @@ func TestCheckCompositeLitExprA1IntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -258,7 +258,7 @@ func TestCheckCompositeLitExprA1IntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -279,7 +279,7 @@ func TestCheckCompositeLitExprA1IntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -299,7 +299,7 @@ func TestCheckCompositeLitExprA1IntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -318,7 +318,7 @@ func TestCheckCompositeLitExprA1IntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -339,7 +339,7 @@ func TestCheckCompositeLitExprA1IntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -358,7 +358,7 @@ func TestCheckCompositeLitExprA1IntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -378,7 +378,7 @@ func TestCheckCompositeLitExprA1IntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -400,7 +400,7 @@ func TestCheckCompositeLitExprA1IntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -420,7 +420,7 @@ func TestCheckCompositeLitExprA1IntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -440,7 +440,7 @@ func TestCheckCompositeLitExprA1NilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -459,7 +459,7 @@ func TestCheckCompositeLitExprA1NilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -479,7 +479,7 @@ func TestCheckCompositeLitExprA1NilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -501,7 +501,7 @@ func TestCheckCompositeLitExprA1NilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -522,7 +522,7 @@ func TestCheckCompositeLitExprA1NilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -542,7 +542,7 @@ func TestCheckCompositeLitExprA1NilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -564,7 +564,7 @@ func TestCheckCompositeLitExprA1NilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -584,7 +584,7 @@ func TestCheckCompositeLitExprA1NilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -605,7 +605,7 @@ func TestCheckCompositeLitExprA1NilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -628,7 +628,7 @@ func TestCheckCompositeLitExprA1NilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -649,7 +649,7 @@ func TestCheckCompositeLitExprA1NilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -670,7 +670,7 @@ func TestCheckCompositeLitExprA1BoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -689,7 +689,7 @@ func TestCheckCompositeLitExprA1BoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -709,7 +709,7 @@ func TestCheckCompositeLitExprA1BoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -731,7 +731,7 @@ func TestCheckCompositeLitExprA1BoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -752,7 +752,7 @@ func TestCheckCompositeLitExprA1BoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -772,7 +772,7 @@ func TestCheckCompositeLitExprA1BoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -794,7 +794,7 @@ func TestCheckCompositeLitExprA1BoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -814,7 +814,7 @@ func TestCheckCompositeLitExprA1BoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -835,7 +835,7 @@ func TestCheckCompositeLitExprA1BoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -858,7 +858,7 @@ func TestCheckCompositeLitExprA1BoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -879,7 +879,7 @@ func TestCheckCompositeLitExprA1BoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -900,7 +900,7 @@ func TestCheckCompositeLitExprA1IntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -919,7 +919,7 @@ func TestCheckCompositeLitExprA1IntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -938,7 +938,7 @@ func TestCheckCompositeLitExprA1IntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -959,7 +959,7 @@ func TestCheckCompositeLitExprA1IntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -979,7 +979,7 @@ func TestCheckCompositeLitExprA1IntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -999,7 +999,7 @@ func TestCheckCompositeLitExprA1IntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1021,7 +1021,7 @@ func TestCheckCompositeLitExprA1IntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1041,7 +1041,7 @@ func TestCheckCompositeLitExprA1IntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1062,7 +1062,7 @@ func TestCheckCompositeLitExprA1IntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1085,7 +1085,7 @@ func TestCheckCompositeLitExprA1IntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1106,7 +1106,7 @@ func TestCheckCompositeLitExprA1IntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1127,7 +1127,7 @@ func TestCheckCompositeLitExprA1IntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1147,7 +1147,7 @@ func TestCheckCompositeLitExprA1IntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1167,7 +1167,7 @@ func TestCheckCompositeLitExprA1IntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1189,7 +1189,7 @@ func TestCheckCompositeLitExprA1IntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1210,7 +1210,7 @@ func TestCheckCompositeLitExprA1IntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1231,7 +1231,7 @@ func TestCheckCompositeLitExprA1IntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1254,7 +1254,7 @@ func TestCheckCompositeLitExprA1IntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1275,7 +1275,7 @@ func TestCheckCompositeLitExprA1IntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1297,7 +1297,7 @@ func TestCheckCompositeLitExprA1IntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1321,7 +1321,7 @@ func TestCheckCompositeLitExprA1IntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1343,7 +1343,7 @@ func TestCheckCompositeLitExprA1IntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1365,7 +1365,7 @@ func TestCheckCompositeLitExprA1FloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1384,7 +1384,7 @@ func TestCheckCompositeLitExprA1FloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1403,7 +1403,7 @@ func TestCheckCompositeLitExprA1FloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1424,7 +1424,7 @@ func TestCheckCompositeLitExprA1FloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1444,7 +1444,7 @@ func TestCheckCompositeLitExprA1FloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1464,7 +1464,7 @@ func TestCheckCompositeLitExprA1FloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1486,7 +1486,7 @@ func TestCheckCompositeLitExprA1FloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1506,7 +1506,7 @@ func TestCheckCompositeLitExprA1FloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1527,7 +1527,7 @@ func TestCheckCompositeLitExprA1FloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1550,7 +1550,7 @@ func TestCheckCompositeLitExprA1FloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1571,7 +1571,7 @@ func TestCheckCompositeLitExprA1FloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1592,7 +1592,7 @@ func TestCheckCompositeLitExprA1AKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1612,7 +1612,7 @@ func TestCheckCompositeLitExprA1AKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1632,7 +1632,7 @@ func TestCheckCompositeLitExprA1AKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1654,7 +1654,7 @@ func TestCheckCompositeLitExprA1AKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1675,7 +1675,7 @@ func TestCheckCompositeLitExprA1AKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1696,7 +1696,7 @@ func TestCheckCompositeLitExprA1AKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1719,7 +1719,7 @@ func TestCheckCompositeLitExprA1AKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1740,7 +1740,7 @@ func TestCheckCompositeLitExprA1AKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1762,7 +1762,7 @@ func TestCheckCompositeLitExprA1AKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1786,7 +1786,7 @@ func TestCheckCompositeLitExprA1AKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1808,7 +1808,7 @@ func TestCheckCompositeLitExprA1AKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1830,7 +1830,7 @@ func TestCheckCompositeLitExprA1AKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1851,7 +1851,7 @@ func TestCheckCompositeLitExprA1AKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1872,7 +1872,7 @@ func TestCheckCompositeLitExprA1AKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1895,7 +1895,7 @@ func TestCheckCompositeLitExprA1AKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1917,7 +1917,7 @@ func TestCheckCompositeLitExprA1AKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1939,7 +1939,7 @@ func TestCheckCompositeLitExprA1AKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1963,7 +1963,7 @@ func TestCheckCompositeLitExprA1AKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -1985,7 +1985,7 @@ func TestCheckCompositeLitExprA1AKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2008,7 +2008,7 @@ func TestCheckCompositeLitExprA1AKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2033,7 +2033,7 @@ func TestCheckCompositeLitExprA1AKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2056,7 +2056,7 @@ func TestCheckCompositeLitExprA1AKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2079,7 +2079,7 @@ func TestCheckCompositeLitExprA1BKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2099,7 +2099,7 @@ func TestCheckCompositeLitExprA1BKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2119,7 +2119,7 @@ func TestCheckCompositeLitExprA1BKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2141,7 +2141,7 @@ func TestCheckCompositeLitExprA1BKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2162,7 +2162,7 @@ func TestCheckCompositeLitExprA1BKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2183,7 +2183,7 @@ func TestCheckCompositeLitExprA1BKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2206,7 +2206,7 @@ func TestCheckCompositeLitExprA1BKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2227,7 +2227,7 @@ func TestCheckCompositeLitExprA1BKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2249,7 +2249,7 @@ func TestCheckCompositeLitExprA1BKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2273,7 +2273,7 @@ func TestCheckCompositeLitExprA1BKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2295,7 +2295,7 @@ func TestCheckCompositeLitExprA1BKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2317,7 +2317,7 @@ func TestCheckCompositeLitExprA1CKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2337,7 +2337,7 @@ func TestCheckCompositeLitExprA1CKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2357,7 +2357,7 @@ func TestCheckCompositeLitExprA1CKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2379,7 +2379,7 @@ func TestCheckCompositeLitExprA1CKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2400,7 +2400,7 @@ func TestCheckCompositeLitExprA1CKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2421,7 +2421,7 @@ func TestCheckCompositeLitExprA1CKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2444,7 +2444,7 @@ func TestCheckCompositeLitExprA1CKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2465,7 +2465,7 @@ func TestCheckCompositeLitExprA1CKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2487,7 +2487,7 @@ func TestCheckCompositeLitExprA1CKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2511,7 +2511,7 @@ func TestCheckCompositeLitExprA1CKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2533,7 +2533,7 @@ func TestCheckCompositeLitExprA1CKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2555,7 +2555,7 @@ func TestCheckCompositeLitExprA2XX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2571,7 +2571,7 @@ func TestCheckCompositeLitExprA2XInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2587,7 +2587,7 @@ func TestCheckCompositeLitExprA2XString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2607,7 +2607,7 @@ func TestCheckCompositeLitExprA2XNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2626,7 +2626,7 @@ func TestCheckCompositeLitExprA2XIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2642,7 +2642,7 @@ func TestCheckCompositeLitExprA2XIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2662,7 +2662,7 @@ func TestCheckCompositeLitExprA2XFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2681,7 +2681,7 @@ func TestCheckCompositeLitExprA2XAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2701,7 +2701,7 @@ func TestCheckCompositeLitExprA2XAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2723,7 +2723,7 @@ func TestCheckCompositeLitExprA2XBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2743,7 +2743,7 @@ func TestCheckCompositeLitExprA2XCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2763,7 +2763,7 @@ func TestCheckCompositeLitExprA2IntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2779,7 +2779,7 @@ func TestCheckCompositeLitExprA2IntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2795,7 +2795,7 @@ func TestCheckCompositeLitExprA2IntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2815,7 +2815,7 @@ func TestCheckCompositeLitExprA2IntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2834,7 +2834,7 @@ func TestCheckCompositeLitExprA2IntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2850,7 +2850,7 @@ func TestCheckCompositeLitExprA2IntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2870,7 +2870,7 @@ func TestCheckCompositeLitExprA2IntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2889,7 +2889,7 @@ func TestCheckCompositeLitExprA2IntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2909,7 +2909,7 @@ func TestCheckCompositeLitExprA2IntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2931,7 +2931,7 @@ func TestCheckCompositeLitExprA2IntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2951,7 +2951,7 @@ func TestCheckCompositeLitExprA2IntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2971,7 +2971,7 @@ func TestCheckCompositeLitExprA2NilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -2990,7 +2990,7 @@ func TestCheckCompositeLitExprA2NilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3009,7 +3009,7 @@ func TestCheckCompositeLitExprA2NilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3030,7 +3030,7 @@ func TestCheckCompositeLitExprA2NilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3050,7 +3050,7 @@ func TestCheckCompositeLitExprA2NilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3069,7 +3069,7 @@ func TestCheckCompositeLitExprA2NilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3090,7 +3090,7 @@ func TestCheckCompositeLitExprA2NilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3110,7 +3110,7 @@ func TestCheckCompositeLitExprA2NilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3131,7 +3131,7 @@ func TestCheckCompositeLitExprA2NilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3154,7 +3154,7 @@ func TestCheckCompositeLitExprA2NilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3175,7 +3175,7 @@ func TestCheckCompositeLitExprA2NilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3196,7 +3196,7 @@ func TestCheckCompositeLitExprA2BoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3215,7 +3215,7 @@ func TestCheckCompositeLitExprA2BoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3234,7 +3234,7 @@ func TestCheckCompositeLitExprA2BoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3255,7 +3255,7 @@ func TestCheckCompositeLitExprA2BoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3275,7 +3275,7 @@ func TestCheckCompositeLitExprA2BoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3294,7 +3294,7 @@ func TestCheckCompositeLitExprA2BoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3315,7 +3315,7 @@ func TestCheckCompositeLitExprA2BoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3335,7 +3335,7 @@ func TestCheckCompositeLitExprA2BoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3356,7 +3356,7 @@ func TestCheckCompositeLitExprA2BoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3379,7 +3379,7 @@ func TestCheckCompositeLitExprA2BoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3400,7 +3400,7 @@ func TestCheckCompositeLitExprA2BoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3421,7 +3421,7 @@ func TestCheckCompositeLitExprA2IntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3437,7 +3437,7 @@ func TestCheckCompositeLitExprA2IntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3456,7 +3456,7 @@ func TestCheckCompositeLitExprA2IntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3477,7 +3477,7 @@ func TestCheckCompositeLitExprA2IntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3497,7 +3497,7 @@ func TestCheckCompositeLitExprA2IntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3516,7 +3516,7 @@ func TestCheckCompositeLitExprA2IntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3537,7 +3537,7 @@ func TestCheckCompositeLitExprA2IntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3556,7 +3556,7 @@ func TestCheckCompositeLitExprA2IntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3576,7 +3576,7 @@ func TestCheckCompositeLitExprA2IntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3598,7 +3598,7 @@ func TestCheckCompositeLitExprA2IntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3618,7 +3618,7 @@ func TestCheckCompositeLitExprA2IntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3638,7 +3638,7 @@ func TestCheckCompositeLitExprA2IntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3657,7 +3657,7 @@ func TestCheckCompositeLitExprA2IntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3677,7 +3677,7 @@ func TestCheckCompositeLitExprA2IntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3699,7 +3699,7 @@ func TestCheckCompositeLitExprA2IntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3720,7 +3720,7 @@ func TestCheckCompositeLitExprA2IntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3740,7 +3740,7 @@ func TestCheckCompositeLitExprA2IntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3762,7 +3762,7 @@ func TestCheckCompositeLitExprA2IntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3782,7 +3782,7 @@ func TestCheckCompositeLitExprA2IntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3803,7 +3803,7 @@ func TestCheckCompositeLitExprA2IntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3826,7 +3826,7 @@ func TestCheckCompositeLitExprA2IntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3847,7 +3847,7 @@ func TestCheckCompositeLitExprA2IntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3868,7 +3868,7 @@ func TestCheckCompositeLitExprA2FloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3887,7 +3887,7 @@ func TestCheckCompositeLitExprA2FloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3906,7 +3906,7 @@ func TestCheckCompositeLitExprA2FloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3927,7 +3927,7 @@ func TestCheckCompositeLitExprA2FloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3947,7 +3947,7 @@ func TestCheckCompositeLitExprA2FloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3966,7 +3966,7 @@ func TestCheckCompositeLitExprA2FloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -3987,7 +3987,7 @@ func TestCheckCompositeLitExprA2FloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4007,7 +4007,7 @@ func TestCheckCompositeLitExprA2FloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4028,7 +4028,7 @@ func TestCheckCompositeLitExprA2FloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4051,7 +4051,7 @@ func TestCheckCompositeLitExprA2FloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4072,7 +4072,7 @@ func TestCheckCompositeLitExprA2FloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4093,7 +4093,7 @@ func TestCheckCompositeLitExprA2AKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4113,7 +4113,7 @@ func TestCheckCompositeLitExprA2AKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4133,7 +4133,7 @@ func TestCheckCompositeLitExprA2AKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4155,7 +4155,7 @@ func TestCheckCompositeLitExprA2AKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4176,7 +4176,7 @@ func TestCheckCompositeLitExprA2AKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4196,7 +4196,7 @@ func TestCheckCompositeLitExprA2AKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4218,7 +4218,7 @@ func TestCheckCompositeLitExprA2AKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4239,7 +4239,7 @@ func TestCheckCompositeLitExprA2AKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4261,7 +4261,7 @@ func TestCheckCompositeLitExprA2AKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4285,7 +4285,7 @@ func TestCheckCompositeLitExprA2AKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4307,7 +4307,7 @@ func TestCheckCompositeLitExprA2AKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4329,7 +4329,7 @@ func TestCheckCompositeLitExprA2AKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4350,7 +4350,7 @@ func TestCheckCompositeLitExprA2AKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4371,7 +4371,7 @@ func TestCheckCompositeLitExprA2AKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4394,7 +4394,7 @@ func TestCheckCompositeLitExprA2AKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4416,7 +4416,7 @@ func TestCheckCompositeLitExprA2AKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4437,7 +4437,7 @@ func TestCheckCompositeLitExprA2AKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4460,7 +4460,7 @@ func TestCheckCompositeLitExprA2AKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4482,7 +4482,7 @@ func TestCheckCompositeLitExprA2AKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4505,7 +4505,7 @@ func TestCheckCompositeLitExprA2AKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4530,7 +4530,7 @@ func TestCheckCompositeLitExprA2AKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4553,7 +4553,7 @@ func TestCheckCompositeLitExprA2AKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4576,7 +4576,7 @@ func TestCheckCompositeLitExprA2BKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4596,7 +4596,7 @@ func TestCheckCompositeLitExprA2BKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4616,7 +4616,7 @@ func TestCheckCompositeLitExprA2BKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4638,7 +4638,7 @@ func TestCheckCompositeLitExprA2BKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4659,7 +4659,7 @@ func TestCheckCompositeLitExprA2BKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4679,7 +4679,7 @@ func TestCheckCompositeLitExprA2BKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4701,7 +4701,7 @@ func TestCheckCompositeLitExprA2BKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4722,7 +4722,7 @@ func TestCheckCompositeLitExprA2BKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4744,7 +4744,7 @@ func TestCheckCompositeLitExprA2BKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4768,7 +4768,7 @@ func TestCheckCompositeLitExprA2BKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4790,7 +4790,7 @@ func TestCheckCompositeLitExprA2BKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4812,7 +4812,7 @@ func TestCheckCompositeLitExprA2CKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4832,7 +4832,7 @@ func TestCheckCompositeLitExprA2CKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4852,7 +4852,7 @@ func TestCheckCompositeLitExprA2CKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4874,7 +4874,7 @@ func TestCheckCompositeLitExprA2CKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4895,7 +4895,7 @@ func TestCheckCompositeLitExprA2CKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4915,7 +4915,7 @@ func TestCheckCompositeLitExprA2CKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4937,7 +4937,7 @@ func TestCheckCompositeLitExprA2CKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4958,7 +4958,7 @@ func TestCheckCompositeLitExprA2CKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -4980,7 +4980,7 @@ func TestCheckCompositeLitExprA2CKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5004,7 +5004,7 @@ func TestCheckCompositeLitExprA2CKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5026,7 +5026,7 @@ func TestCheckCompositeLitExprA2CKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5048,7 +5048,7 @@ func TestCheckCompositeLitExprS1XX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5064,7 +5064,7 @@ func TestCheckCompositeLitExprS1XInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5080,7 +5080,7 @@ func TestCheckCompositeLitExprS1XString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5099,7 +5099,7 @@ func TestCheckCompositeLitExprS1XNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5118,7 +5118,7 @@ func TestCheckCompositeLitExprS1XIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5137,7 +5137,7 @@ func TestCheckCompositeLitExprS1XIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5156,7 +5156,7 @@ func TestCheckCompositeLitExprS1XFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5175,7 +5175,7 @@ func TestCheckCompositeLitExprS1XAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5191,7 +5191,7 @@ func TestCheckCompositeLitExprS1XAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5210,7 +5210,7 @@ func TestCheckCompositeLitExprS1XBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5229,7 +5229,7 @@ func TestCheckCompositeLitExprS1XCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5248,7 +5248,7 @@ func TestCheckCompositeLitExprS1IntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5264,7 +5264,7 @@ func TestCheckCompositeLitExprS1IntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5283,7 +5283,7 @@ func TestCheckCompositeLitExprS1IntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5302,7 +5302,7 @@ func TestCheckCompositeLitExprS1IntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5321,7 +5321,7 @@ func TestCheckCompositeLitExprS1IntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5341,7 +5341,7 @@ func TestCheckCompositeLitExprS1IntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5361,7 +5361,7 @@ func TestCheckCompositeLitExprS1IntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5381,7 +5381,7 @@ func TestCheckCompositeLitExprS1IntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5400,7 +5400,7 @@ func TestCheckCompositeLitExprS1IntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5420,7 +5420,7 @@ func TestCheckCompositeLitExprS1IntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5440,7 +5440,7 @@ func TestCheckCompositeLitExprS1IntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5460,7 +5460,7 @@ func TestCheckCompositeLitExprS1NilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5479,7 +5479,7 @@ func TestCheckCompositeLitExprS1NilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5499,7 +5499,7 @@ func TestCheckCompositeLitExprS1NilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5519,7 +5519,7 @@ func TestCheckCompositeLitExprS1NilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5539,7 +5539,7 @@ func TestCheckCompositeLitExprS1NilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5559,7 +5559,7 @@ func TestCheckCompositeLitExprS1NilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5579,7 +5579,7 @@ func TestCheckCompositeLitExprS1NilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5599,7 +5599,7 @@ func TestCheckCompositeLitExprS1NilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5618,7 +5618,7 @@ func TestCheckCompositeLitExprS1NilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5638,7 +5638,7 @@ func TestCheckCompositeLitExprS1NilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5658,7 +5658,7 @@ func TestCheckCompositeLitExprS1NilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5678,7 +5678,7 @@ func TestCheckCompositeLitExprS1BoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5697,7 +5697,7 @@ func TestCheckCompositeLitExprS1BoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5717,7 +5717,7 @@ func TestCheckCompositeLitExprS1BoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5737,7 +5737,7 @@ func TestCheckCompositeLitExprS1BoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5757,7 +5757,7 @@ func TestCheckCompositeLitExprS1BoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5777,7 +5777,7 @@ func TestCheckCompositeLitExprS1BoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5797,7 +5797,7 @@ func TestCheckCompositeLitExprS1BoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5817,7 +5817,7 @@ func TestCheckCompositeLitExprS1BoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5836,7 +5836,7 @@ func TestCheckCompositeLitExprS1BoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5856,7 +5856,7 @@ func TestCheckCompositeLitExprS1BoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5876,7 +5876,7 @@ func TestCheckCompositeLitExprS1BoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5896,7 +5896,7 @@ func TestCheckCompositeLitExprS1IntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5915,7 +5915,7 @@ func TestCheckCompositeLitExprS1IntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5935,7 +5935,7 @@ func TestCheckCompositeLitExprS1IntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5955,7 +5955,7 @@ func TestCheckCompositeLitExprS1IntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5975,7 +5975,7 @@ func TestCheckCompositeLitExprS1IntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -5995,7 +5995,7 @@ func TestCheckCompositeLitExprS1IntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6015,7 +6015,7 @@ func TestCheckCompositeLitExprS1IntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6035,7 +6035,7 @@ func TestCheckCompositeLitExprS1IntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6054,7 +6054,7 @@ func TestCheckCompositeLitExprS1IntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6074,7 +6074,7 @@ func TestCheckCompositeLitExprS1IntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6094,7 +6094,7 @@ func TestCheckCompositeLitExprS1IntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6114,7 +6114,7 @@ func TestCheckCompositeLitExprS1IntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6133,7 +6133,7 @@ func TestCheckCompositeLitExprS1IntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6153,7 +6153,7 @@ func TestCheckCompositeLitExprS1IntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6173,7 +6173,7 @@ func TestCheckCompositeLitExprS1IntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6193,7 +6193,7 @@ func TestCheckCompositeLitExprS1IntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6213,7 +6213,7 @@ func TestCheckCompositeLitExprS1IntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6233,7 +6233,7 @@ func TestCheckCompositeLitExprS1IntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6253,7 +6253,7 @@ func TestCheckCompositeLitExprS1IntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6272,7 +6272,7 @@ func TestCheckCompositeLitExprS1IntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6292,7 +6292,7 @@ func TestCheckCompositeLitExprS1IntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6312,7 +6312,7 @@ func TestCheckCompositeLitExprS1IntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6332,7 +6332,7 @@ func TestCheckCompositeLitExprS1FloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6351,7 +6351,7 @@ func TestCheckCompositeLitExprS1FloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6371,7 +6371,7 @@ func TestCheckCompositeLitExprS1FloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6391,7 +6391,7 @@ func TestCheckCompositeLitExprS1FloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6411,7 +6411,7 @@ func TestCheckCompositeLitExprS1FloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6431,7 +6431,7 @@ func TestCheckCompositeLitExprS1FloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6451,7 +6451,7 @@ func TestCheckCompositeLitExprS1FloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6471,7 +6471,7 @@ func TestCheckCompositeLitExprS1FloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6490,7 +6490,7 @@ func TestCheckCompositeLitExprS1FloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6510,7 +6510,7 @@ func TestCheckCompositeLitExprS1FloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6530,7 +6530,7 @@ func TestCheckCompositeLitExprS1FloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6550,7 +6550,7 @@ func TestCheckCompositeLitExprS1AKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6566,7 +6566,7 @@ func TestCheckCompositeLitExprS1AKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6585,7 +6585,7 @@ func TestCheckCompositeLitExprS1AKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6604,7 +6604,7 @@ func TestCheckCompositeLitExprS1AKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6623,7 +6623,7 @@ func TestCheckCompositeLitExprS1AKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6642,7 +6642,7 @@ func TestCheckCompositeLitExprS1AKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6661,7 +6661,7 @@ func TestCheckCompositeLitExprS1AKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6680,7 +6680,7 @@ func TestCheckCompositeLitExprS1AKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6699,7 +6699,7 @@ func TestCheckCompositeLitExprS1AKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6719,7 +6719,7 @@ func TestCheckCompositeLitExprS1AKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6738,7 +6738,7 @@ func TestCheckCompositeLitExprS1AKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6757,7 +6757,7 @@ func TestCheckCompositeLitExprS1AKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6776,7 +6776,7 @@ func TestCheckCompositeLitExprS1AKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6796,7 +6796,7 @@ func TestCheckCompositeLitExprS1AKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6816,7 +6816,7 @@ func TestCheckCompositeLitExprS1AKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6836,7 +6836,7 @@ func TestCheckCompositeLitExprS1AKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6856,7 +6856,7 @@ func TestCheckCompositeLitExprS1AKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6876,7 +6876,7 @@ func TestCheckCompositeLitExprS1AKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6896,7 +6896,7 @@ func TestCheckCompositeLitExprS1AKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6916,7 +6916,7 @@ func TestCheckCompositeLitExprS1AKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6937,7 +6937,7 @@ func TestCheckCompositeLitExprS1AKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6957,7 +6957,7 @@ func TestCheckCompositeLitExprS1AKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6977,7 +6977,7 @@ func TestCheckCompositeLitExprS1BKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -6996,7 +6996,7 @@ func TestCheckCompositeLitExprS1BKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7016,7 +7016,7 @@ func TestCheckCompositeLitExprS1BKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7036,7 +7036,7 @@ func TestCheckCompositeLitExprS1BKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7056,7 +7056,7 @@ func TestCheckCompositeLitExprS1BKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7076,7 +7076,7 @@ func TestCheckCompositeLitExprS1BKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7096,7 +7096,7 @@ func TestCheckCompositeLitExprS1BKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7116,7 +7116,7 @@ func TestCheckCompositeLitExprS1BKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7135,7 +7135,7 @@ func TestCheckCompositeLitExprS1BKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7155,7 +7155,7 @@ func TestCheckCompositeLitExprS1BKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7175,7 +7175,7 @@ func TestCheckCompositeLitExprS1BKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7195,7 +7195,7 @@ func TestCheckCompositeLitExprS1CKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7214,7 +7214,7 @@ func TestCheckCompositeLitExprS1CKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7234,7 +7234,7 @@ func TestCheckCompositeLitExprS1CKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7254,7 +7254,7 @@ func TestCheckCompositeLitExprS1CKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7274,7 +7274,7 @@ func TestCheckCompositeLitExprS1CKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7294,7 +7294,7 @@ func TestCheckCompositeLitExprS1CKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7314,7 +7314,7 @@ func TestCheckCompositeLitExprS1CKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7334,7 +7334,7 @@ func TestCheckCompositeLitExprS1CKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7353,7 +7353,7 @@ func TestCheckCompositeLitExprS1CKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7373,7 +7373,7 @@ func TestCheckCompositeLitExprS1CKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7393,7 +7393,7 @@ func TestCheckCompositeLitExprS1CKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7413,7 +7413,7 @@ func TestCheckCompositeLitExprS2XX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7429,7 +7429,7 @@ func TestCheckCompositeLitExprS2XInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7448,7 +7448,7 @@ func TestCheckCompositeLitExprS2XString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7468,7 +7468,7 @@ func TestCheckCompositeLitExprS2XNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7488,7 +7488,7 @@ func TestCheckCompositeLitExprS2XIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7507,7 +7507,7 @@ func TestCheckCompositeLitExprS2XIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7526,7 +7526,7 @@ func TestCheckCompositeLitExprS2XFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7545,7 +7545,7 @@ func TestCheckCompositeLitExprS2XAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7561,7 +7561,7 @@ func TestCheckCompositeLitExprS2XAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7580,7 +7580,7 @@ func TestCheckCompositeLitExprS2XBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7596,7 +7596,7 @@ func TestCheckCompositeLitExprS2XCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7615,7 +7615,7 @@ func TestCheckCompositeLitExprS2IntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7634,7 +7634,7 @@ func TestCheckCompositeLitExprS2IntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7650,7 +7650,7 @@ func TestCheckCompositeLitExprS2IntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7669,7 +7669,7 @@ func TestCheckCompositeLitExprS2IntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7688,7 +7688,7 @@ func TestCheckCompositeLitExprS2IntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7708,7 +7708,7 @@ func TestCheckCompositeLitExprS2IntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7728,7 +7728,7 @@ func TestCheckCompositeLitExprS2IntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7748,7 +7748,7 @@ func TestCheckCompositeLitExprS2IntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7767,7 +7767,7 @@ func TestCheckCompositeLitExprS2IntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7787,7 +7787,7 @@ func TestCheckCompositeLitExprS2IntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7806,7 +7806,7 @@ func TestCheckCompositeLitExprS2IntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7826,7 +7826,7 @@ func TestCheckCompositeLitExprS2NilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7846,7 +7846,7 @@ func TestCheckCompositeLitExprS2NilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7865,7 +7865,7 @@ func TestCheckCompositeLitExprS2NilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7885,7 +7885,7 @@ func TestCheckCompositeLitExprS2NilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7905,7 +7905,7 @@ func TestCheckCompositeLitExprS2NilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7925,7 +7925,7 @@ func TestCheckCompositeLitExprS2NilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7945,7 +7945,7 @@ func TestCheckCompositeLitExprS2NilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7965,7 +7965,7 @@ func TestCheckCompositeLitExprS2NilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -7984,7 +7984,7 @@ func TestCheckCompositeLitExprS2NilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8004,7 +8004,7 @@ func TestCheckCompositeLitExprS2NilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8023,7 +8023,7 @@ func TestCheckCompositeLitExprS2NilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8043,7 +8043,7 @@ func TestCheckCompositeLitExprS2BoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8063,7 +8063,7 @@ func TestCheckCompositeLitExprS2BoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8082,7 +8082,7 @@ func TestCheckCompositeLitExprS2BoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8102,7 +8102,7 @@ func TestCheckCompositeLitExprS2BoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8122,7 +8122,7 @@ func TestCheckCompositeLitExprS2BoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8142,7 +8142,7 @@ func TestCheckCompositeLitExprS2BoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8162,7 +8162,7 @@ func TestCheckCompositeLitExprS2BoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8182,7 +8182,7 @@ func TestCheckCompositeLitExprS2BoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8201,7 +8201,7 @@ func TestCheckCompositeLitExprS2BoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8221,7 +8221,7 @@ func TestCheckCompositeLitExprS2BoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8240,7 +8240,7 @@ func TestCheckCompositeLitExprS2BoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8260,7 +8260,7 @@ func TestCheckCompositeLitExprS2IntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8279,7 +8279,7 @@ func TestCheckCompositeLitExprS2IntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8299,7 +8299,7 @@ func TestCheckCompositeLitExprS2IntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8319,7 +8319,7 @@ func TestCheckCompositeLitExprS2IntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8339,7 +8339,7 @@ func TestCheckCompositeLitExprS2IntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8359,7 +8359,7 @@ func TestCheckCompositeLitExprS2IntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8379,7 +8379,7 @@ func TestCheckCompositeLitExprS2IntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8399,7 +8399,7 @@ func TestCheckCompositeLitExprS2IntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8418,7 +8418,7 @@ func TestCheckCompositeLitExprS2IntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8438,7 +8438,7 @@ func TestCheckCompositeLitExprS2IntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8457,7 +8457,7 @@ func TestCheckCompositeLitExprS2IntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8477,7 +8477,7 @@ func TestCheckCompositeLitExprS2IntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8496,7 +8496,7 @@ func TestCheckCompositeLitExprS2IntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8516,7 +8516,7 @@ func TestCheckCompositeLitExprS2IntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8536,7 +8536,7 @@ func TestCheckCompositeLitExprS2IntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8556,7 +8556,7 @@ func TestCheckCompositeLitExprS2IntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8576,7 +8576,7 @@ func TestCheckCompositeLitExprS2IntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8596,7 +8596,7 @@ func TestCheckCompositeLitExprS2IntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8616,7 +8616,7 @@ func TestCheckCompositeLitExprS2IntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8635,7 +8635,7 @@ func TestCheckCompositeLitExprS2IntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8655,7 +8655,7 @@ func TestCheckCompositeLitExprS2IntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8674,7 +8674,7 @@ func TestCheckCompositeLitExprS2IntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8694,7 +8694,7 @@ func TestCheckCompositeLitExprS2FloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8713,7 +8713,7 @@ func TestCheckCompositeLitExprS2FloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8733,7 +8733,7 @@ func TestCheckCompositeLitExprS2FloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8753,7 +8753,7 @@ func TestCheckCompositeLitExprS2FloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8773,7 +8773,7 @@ func TestCheckCompositeLitExprS2FloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8793,7 +8793,7 @@ func TestCheckCompositeLitExprS2FloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8813,7 +8813,7 @@ func TestCheckCompositeLitExprS2FloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8833,7 +8833,7 @@ func TestCheckCompositeLitExprS2FloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8852,7 +8852,7 @@ func TestCheckCompositeLitExprS2FloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8872,7 +8872,7 @@ func TestCheckCompositeLitExprS2FloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8891,7 +8891,7 @@ func TestCheckCompositeLitExprS2FloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8911,7 +8911,7 @@ func TestCheckCompositeLitExprS2AKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8927,7 +8927,7 @@ func TestCheckCompositeLitExprS2AKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8946,7 +8946,7 @@ func TestCheckCompositeLitExprS2AKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8965,7 +8965,7 @@ func TestCheckCompositeLitExprS2AKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -8984,7 +8984,7 @@ func TestCheckCompositeLitExprS2AKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9003,7 +9003,7 @@ func TestCheckCompositeLitExprS2AKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9022,7 +9022,7 @@ func TestCheckCompositeLitExprS2AKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9041,7 +9041,7 @@ func TestCheckCompositeLitExprS2AKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9060,7 +9060,7 @@ func TestCheckCompositeLitExprS2AKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9080,7 +9080,7 @@ func TestCheckCompositeLitExprS2AKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9096,7 +9096,7 @@ func TestCheckCompositeLitExprS2AKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9115,7 +9115,7 @@ func TestCheckCompositeLitExprS2AKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9134,7 +9134,7 @@ func TestCheckCompositeLitExprS2AKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9154,7 +9154,7 @@ func TestCheckCompositeLitExprS2AKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9174,7 +9174,7 @@ func TestCheckCompositeLitExprS2AKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9194,7 +9194,7 @@ func TestCheckCompositeLitExprS2AKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9214,7 +9214,7 @@ func TestCheckCompositeLitExprS2AKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9234,7 +9234,7 @@ func TestCheckCompositeLitExprS2AKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9254,7 +9254,7 @@ func TestCheckCompositeLitExprS2AKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9274,7 +9274,7 @@ func TestCheckCompositeLitExprS2AKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9295,7 +9295,7 @@ func TestCheckCompositeLitExprS2AKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9314,7 +9314,7 @@ func TestCheckCompositeLitExprS2AKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9334,7 +9334,7 @@ func TestCheckCompositeLitExprS2BKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9350,7 +9350,7 @@ func TestCheckCompositeLitExprS2BKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9369,7 +9369,7 @@ func TestCheckCompositeLitExprS2BKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9388,7 +9388,7 @@ func TestCheckCompositeLitExprS2BKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9407,7 +9407,7 @@ func TestCheckCompositeLitExprS2BKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9426,7 +9426,7 @@ func TestCheckCompositeLitExprS2BKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9445,7 +9445,7 @@ func TestCheckCompositeLitExprS2BKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9464,7 +9464,7 @@ func TestCheckCompositeLitExprS2BKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9480,7 +9480,7 @@ func TestCheckCompositeLitExprS2BKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9499,7 +9499,7 @@ func TestCheckCompositeLitExprS2BKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9518,7 +9518,7 @@ func TestCheckCompositeLitExprS2BKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9537,7 +9537,7 @@ func TestCheckCompositeLitExprS2CKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9556,7 +9556,7 @@ func TestCheckCompositeLitExprS2CKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9576,7 +9576,7 @@ func TestCheckCompositeLitExprS2CKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9596,7 +9596,7 @@ func TestCheckCompositeLitExprS2CKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9616,7 +9616,7 @@ func TestCheckCompositeLitExprS2CKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9636,7 +9636,7 @@ func TestCheckCompositeLitExprS2CKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9656,7 +9656,7 @@ func TestCheckCompositeLitExprS2CKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9676,7 +9676,7 @@ func TestCheckCompositeLitExprS2CKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9695,7 +9695,7 @@ func TestCheckCompositeLitExprS2CKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9715,7 +9715,7 @@ func TestCheckCompositeLitExprS2CKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9734,7 +9734,7 @@ func TestCheckCompositeLitExprS2CKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9754,7 +9754,7 @@ func TestCheckCompositeLitExprSliceXX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9770,7 +9770,7 @@ func TestCheckCompositeLitExprSliceXInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9786,7 +9786,7 @@ func TestCheckCompositeLitExprSliceXString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9806,7 +9806,7 @@ func TestCheckCompositeLitExprSliceXNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9825,7 +9825,7 @@ func TestCheckCompositeLitExprSliceXIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9841,7 +9841,7 @@ func TestCheckCompositeLitExprSliceXIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9861,7 +9861,7 @@ func TestCheckCompositeLitExprSliceXFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9880,7 +9880,7 @@ func TestCheckCompositeLitExprSliceXAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9900,7 +9900,7 @@ func TestCheckCompositeLitExprSliceXAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9922,7 +9922,7 @@ func TestCheckCompositeLitExprSliceXBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9942,7 +9942,7 @@ func TestCheckCompositeLitExprSliceXCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9962,7 +9962,7 @@ func TestCheckCompositeLitExprSliceIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9978,7 +9978,7 @@ func TestCheckCompositeLitExprSliceIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -9994,7 +9994,7 @@ func TestCheckCompositeLitExprSliceIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10014,7 +10014,7 @@ func TestCheckCompositeLitExprSliceIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10033,7 +10033,7 @@ func TestCheckCompositeLitExprSliceIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10049,7 +10049,7 @@ func TestCheckCompositeLitExprSliceIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10069,7 +10069,7 @@ func TestCheckCompositeLitExprSliceIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10088,7 +10088,7 @@ func TestCheckCompositeLitExprSliceIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10108,7 +10108,7 @@ func TestCheckCompositeLitExprSliceIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10130,7 +10130,7 @@ func TestCheckCompositeLitExprSliceIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10150,7 +10150,7 @@ func TestCheckCompositeLitExprSliceIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10170,7 +10170,7 @@ func TestCheckCompositeLitExprSliceNilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10189,7 +10189,7 @@ func TestCheckCompositeLitExprSliceNilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10208,7 +10208,7 @@ func TestCheckCompositeLitExprSliceNilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10229,7 +10229,7 @@ func TestCheckCompositeLitExprSliceNilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10249,7 +10249,7 @@ func TestCheckCompositeLitExprSliceNilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10268,7 +10268,7 @@ func TestCheckCompositeLitExprSliceNilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10289,7 +10289,7 @@ func TestCheckCompositeLitExprSliceNilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10309,7 +10309,7 @@ func TestCheckCompositeLitExprSliceNilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10330,7 +10330,7 @@ func TestCheckCompositeLitExprSliceNilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10353,7 +10353,7 @@ func TestCheckCompositeLitExprSliceNilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10374,7 +10374,7 @@ func TestCheckCompositeLitExprSliceNilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10395,7 +10395,7 @@ func TestCheckCompositeLitExprSliceBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10414,7 +10414,7 @@ func TestCheckCompositeLitExprSliceBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10433,7 +10433,7 @@ func TestCheckCompositeLitExprSliceBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10454,7 +10454,7 @@ func TestCheckCompositeLitExprSliceBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10474,7 +10474,7 @@ func TestCheckCompositeLitExprSliceBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10493,7 +10493,7 @@ func TestCheckCompositeLitExprSliceBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10514,7 +10514,7 @@ func TestCheckCompositeLitExprSliceBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10534,7 +10534,7 @@ func TestCheckCompositeLitExprSliceBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10555,7 +10555,7 @@ func TestCheckCompositeLitExprSliceBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10578,7 +10578,7 @@ func TestCheckCompositeLitExprSliceBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10599,7 +10599,7 @@ func TestCheckCompositeLitExprSliceBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10620,7 +10620,7 @@ func TestCheckCompositeLitExprSliceIntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10636,7 +10636,7 @@ func TestCheckCompositeLitExprSliceIntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10652,7 +10652,7 @@ func TestCheckCompositeLitExprSliceIntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10672,7 +10672,7 @@ func TestCheckCompositeLitExprSliceIntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10691,7 +10691,7 @@ func TestCheckCompositeLitExprSliceIntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10710,7 +10710,7 @@ func TestCheckCompositeLitExprSliceIntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10731,7 +10731,7 @@ func TestCheckCompositeLitExprSliceIntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10750,7 +10750,7 @@ func TestCheckCompositeLitExprSliceIntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10770,7 +10770,7 @@ func TestCheckCompositeLitExprSliceIntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10792,7 +10792,7 @@ func TestCheckCompositeLitExprSliceIntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10812,7 +10812,7 @@ func TestCheckCompositeLitExprSliceIntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10832,7 +10832,7 @@ func TestCheckCompositeLitExprSliceIntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10851,7 +10851,7 @@ func TestCheckCompositeLitExprSliceIntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10870,7 +10870,7 @@ func TestCheckCompositeLitExprSliceIntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10891,7 +10891,7 @@ func TestCheckCompositeLitExprSliceIntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10911,7 +10911,7 @@ func TestCheckCompositeLitExprSliceIntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10931,7 +10931,7 @@ func TestCheckCompositeLitExprSliceIntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10953,7 +10953,7 @@ func TestCheckCompositeLitExprSliceIntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10973,7 +10973,7 @@ func TestCheckCompositeLitExprSliceIntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -10994,7 +10994,7 @@ func TestCheckCompositeLitExprSliceIntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11017,7 +11017,7 @@ func TestCheckCompositeLitExprSliceIntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11038,7 +11038,7 @@ func TestCheckCompositeLitExprSliceIntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11059,7 +11059,7 @@ func TestCheckCompositeLitExprSliceFloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11078,7 +11078,7 @@ func TestCheckCompositeLitExprSliceFloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11097,7 +11097,7 @@ func TestCheckCompositeLitExprSliceFloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11118,7 +11118,7 @@ func TestCheckCompositeLitExprSliceFloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11138,7 +11138,7 @@ func TestCheckCompositeLitExprSliceFloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11157,7 +11157,7 @@ func TestCheckCompositeLitExprSliceFloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11178,7 +11178,7 @@ func TestCheckCompositeLitExprSliceFloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11198,7 +11198,7 @@ func TestCheckCompositeLitExprSliceFloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11219,7 +11219,7 @@ func TestCheckCompositeLitExprSliceFloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11242,7 +11242,7 @@ func TestCheckCompositeLitExprSliceFloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11263,7 +11263,7 @@ func TestCheckCompositeLitExprSliceFloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11284,7 +11284,7 @@ func TestCheckCompositeLitExprSliceAKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11304,7 +11304,7 @@ func TestCheckCompositeLitExprSliceAKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11324,7 +11324,7 @@ func TestCheckCompositeLitExprSliceAKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11346,7 +11346,7 @@ func TestCheckCompositeLitExprSliceAKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11367,7 +11367,7 @@ func TestCheckCompositeLitExprSliceAKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11387,7 +11387,7 @@ func TestCheckCompositeLitExprSliceAKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11409,7 +11409,7 @@ func TestCheckCompositeLitExprSliceAKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11430,7 +11430,7 @@ func TestCheckCompositeLitExprSliceAKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11452,7 +11452,7 @@ func TestCheckCompositeLitExprSliceAKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11476,7 +11476,7 @@ func TestCheckCompositeLitExprSliceAKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11498,7 +11498,7 @@ func TestCheckCompositeLitExprSliceAKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11520,7 +11520,7 @@ func TestCheckCompositeLitExprSliceAKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11541,7 +11541,7 @@ func TestCheckCompositeLitExprSliceAKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11562,7 +11562,7 @@ func TestCheckCompositeLitExprSliceAKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11585,7 +11585,7 @@ func TestCheckCompositeLitExprSliceAKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11607,7 +11607,7 @@ func TestCheckCompositeLitExprSliceAKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11628,7 +11628,7 @@ func TestCheckCompositeLitExprSliceAKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11651,7 +11651,7 @@ func TestCheckCompositeLitExprSliceAKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11673,7 +11673,7 @@ func TestCheckCompositeLitExprSliceAKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11696,7 +11696,7 @@ func TestCheckCompositeLitExprSliceAKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11721,7 +11721,7 @@ func TestCheckCompositeLitExprSliceAKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11744,7 +11744,7 @@ func TestCheckCompositeLitExprSliceAKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11767,7 +11767,7 @@ func TestCheckCompositeLitExprSliceBKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11787,7 +11787,7 @@ func TestCheckCompositeLitExprSliceBKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11807,7 +11807,7 @@ func TestCheckCompositeLitExprSliceBKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11829,7 +11829,7 @@ func TestCheckCompositeLitExprSliceBKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11850,7 +11850,7 @@ func TestCheckCompositeLitExprSliceBKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11870,7 +11870,7 @@ func TestCheckCompositeLitExprSliceBKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11892,7 +11892,7 @@ func TestCheckCompositeLitExprSliceBKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11913,7 +11913,7 @@ func TestCheckCompositeLitExprSliceBKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11935,7 +11935,7 @@ func TestCheckCompositeLitExprSliceBKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11959,7 +11959,7 @@ func TestCheckCompositeLitExprSliceBKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -11981,7 +11981,7 @@ func TestCheckCompositeLitExprSliceBKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12003,7 +12003,7 @@ func TestCheckCompositeLitExprSliceCKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12023,7 +12023,7 @@ func TestCheckCompositeLitExprSliceCKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12043,7 +12043,7 @@ func TestCheckCompositeLitExprSliceCKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12065,7 +12065,7 @@ func TestCheckCompositeLitExprSliceCKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12086,7 +12086,7 @@ func TestCheckCompositeLitExprSliceCKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12106,7 +12106,7 @@ func TestCheckCompositeLitExprSliceCKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12128,7 +12128,7 @@ func TestCheckCompositeLitExprSliceCKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12149,7 +12149,7 @@ func TestCheckCompositeLitExprSliceCKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12171,7 +12171,7 @@ func TestCheckCompositeLitExprSliceCKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12195,7 +12195,7 @@ func TestCheckCompositeLitExprSliceCKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12217,7 +12217,7 @@ func TestCheckCompositeLitExprSliceCKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12239,7 +12239,7 @@ func TestCheckCompositeLitExprMapXX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12255,7 +12255,7 @@ func TestCheckCompositeLitExprMapXInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12274,7 +12274,7 @@ func TestCheckCompositeLitExprMapXString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12293,7 +12293,7 @@ func TestCheckCompositeLitExprMapXNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12312,7 +12312,7 @@ func TestCheckCompositeLitExprMapXIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12328,7 +12328,7 @@ func TestCheckCompositeLitExprMapXIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12348,7 +12348,7 @@ func TestCheckCompositeLitExprMapXFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12367,7 +12367,7 @@ func TestCheckCompositeLitExprMapXAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12386,7 +12386,7 @@ func TestCheckCompositeLitExprMapXAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12407,7 +12407,7 @@ func TestCheckCompositeLitExprMapXBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12426,7 +12426,7 @@ func TestCheckCompositeLitExprMapXCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12445,7 +12445,7 @@ func TestCheckCompositeLitExprMapIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12464,7 +12464,7 @@ func TestCheckCompositeLitExprMapIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12484,7 +12484,7 @@ func TestCheckCompositeLitExprMapIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12504,7 +12504,7 @@ func TestCheckCompositeLitExprMapIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12524,7 +12524,7 @@ func TestCheckCompositeLitExprMapIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12543,7 +12543,7 @@ func TestCheckCompositeLitExprMapIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12564,7 +12564,7 @@ func TestCheckCompositeLitExprMapIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12584,7 +12584,7 @@ func TestCheckCompositeLitExprMapIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12604,7 +12604,7 @@ func TestCheckCompositeLitExprMapIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12626,7 +12626,7 @@ func TestCheckCompositeLitExprMapIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12646,7 +12646,7 @@ func TestCheckCompositeLitExprMapIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12666,7 +12666,7 @@ func TestCheckCompositeLitExprMapNilX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12685,7 +12685,7 @@ func TestCheckCompositeLitExprMapNilInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12705,7 +12705,7 @@ func TestCheckCompositeLitExprMapNilString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12725,7 +12725,7 @@ func TestCheckCompositeLitExprMapNilNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12745,7 +12745,7 @@ func TestCheckCompositeLitExprMapNilIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12764,7 +12764,7 @@ func TestCheckCompositeLitExprMapNilIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12785,7 +12785,7 @@ func TestCheckCompositeLitExprMapNilFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12805,7 +12805,7 @@ func TestCheckCompositeLitExprMapNilAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12825,7 +12825,7 @@ func TestCheckCompositeLitExprMapNilAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12847,7 +12847,7 @@ func TestCheckCompositeLitExprMapNilBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12867,7 +12867,7 @@ func TestCheckCompositeLitExprMapNilCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12887,7 +12887,7 @@ func TestCheckCompositeLitExprMapBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12906,7 +12906,7 @@ func TestCheckCompositeLitExprMapBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12926,7 +12926,7 @@ func TestCheckCompositeLitExprMapBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12946,7 +12946,7 @@ func TestCheckCompositeLitExprMapBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12966,7 +12966,7 @@ func TestCheckCompositeLitExprMapBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -12985,7 +12985,7 @@ func TestCheckCompositeLitExprMapBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13006,7 +13006,7 @@ func TestCheckCompositeLitExprMapBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13026,7 +13026,7 @@ func TestCheckCompositeLitExprMapBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13046,7 +13046,7 @@ func TestCheckCompositeLitExprMapBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13068,7 +13068,7 @@ func TestCheckCompositeLitExprMapBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13088,7 +13088,7 @@ func TestCheckCompositeLitExprMapBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13108,7 +13108,7 @@ func TestCheckCompositeLitExprMapIntKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13124,7 +13124,7 @@ func TestCheckCompositeLitExprMapIntKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13143,7 +13143,7 @@ func TestCheckCompositeLitExprMapIntKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13162,7 +13162,7 @@ func TestCheckCompositeLitExprMapIntKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13181,7 +13181,7 @@ func TestCheckCompositeLitExprMapIntKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13200,7 +13200,7 @@ func TestCheckCompositeLitExprMapIntKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13221,7 +13221,7 @@ func TestCheckCompositeLitExprMapIntKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13240,7 +13240,7 @@ func TestCheckCompositeLitExprMapIntKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13259,7 +13259,7 @@ func TestCheckCompositeLitExprMapIntKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13280,7 +13280,7 @@ func TestCheckCompositeLitExprMapIntKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13299,7 +13299,7 @@ func TestCheckCompositeLitExprMapIntKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13318,7 +13318,7 @@ func TestCheckCompositeLitExprMapIntKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13337,7 +13337,7 @@ func TestCheckCompositeLitExprMapIntKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13357,7 +13357,7 @@ func TestCheckCompositeLitExprMapIntKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13377,7 +13377,7 @@ func TestCheckCompositeLitExprMapIntKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13397,7 +13397,7 @@ func TestCheckCompositeLitExprMapIntKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13417,7 +13417,7 @@ func TestCheckCompositeLitExprMapIntKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13439,7 +13439,7 @@ func TestCheckCompositeLitExprMapIntKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13459,7 +13459,7 @@ func TestCheckCompositeLitExprMapIntKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13479,7 +13479,7 @@ func TestCheckCompositeLitExprMapIntKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13501,7 +13501,7 @@ func TestCheckCompositeLitExprMapIntKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13521,7 +13521,7 @@ func TestCheckCompositeLitExprMapIntKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13541,7 +13541,7 @@ func TestCheckCompositeLitExprMapFloatKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13560,7 +13560,7 @@ func TestCheckCompositeLitExprMapFloatKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13580,7 +13580,7 @@ func TestCheckCompositeLitExprMapFloatKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13600,7 +13600,7 @@ func TestCheckCompositeLitExprMapFloatKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13620,7 +13620,7 @@ func TestCheckCompositeLitExprMapFloatKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13639,7 +13639,7 @@ func TestCheckCompositeLitExprMapFloatKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13660,7 +13660,7 @@ func TestCheckCompositeLitExprMapFloatKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13680,7 +13680,7 @@ func TestCheckCompositeLitExprMapFloatKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13700,7 +13700,7 @@ func TestCheckCompositeLitExprMapFloatKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13722,7 +13722,7 @@ func TestCheckCompositeLitExprMapFloatKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13742,7 +13742,7 @@ func TestCheckCompositeLitExprMapFloatKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13762,7 +13762,7 @@ func TestCheckCompositeLitExprMapAKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13781,7 +13781,7 @@ func TestCheckCompositeLitExprMapAKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13801,7 +13801,7 @@ func TestCheckCompositeLitExprMapAKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13821,7 +13821,7 @@ func TestCheckCompositeLitExprMapAKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13841,7 +13841,7 @@ func TestCheckCompositeLitExprMapAKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13860,7 +13860,7 @@ func TestCheckCompositeLitExprMapAKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13881,7 +13881,7 @@ func TestCheckCompositeLitExprMapAKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13901,7 +13901,7 @@ func TestCheckCompositeLitExprMapAKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13921,7 +13921,7 @@ func TestCheckCompositeLitExprMapAKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13943,7 +13943,7 @@ func TestCheckCompositeLitExprMapAKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13963,7 +13963,7 @@ func TestCheckCompositeLitExprMapAKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -13983,7 +13983,7 @@ func TestCheckCompositeLitExprMapAKBoolX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14003,7 +14003,7 @@ func TestCheckCompositeLitExprMapAKBoolInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14024,7 +14024,7 @@ func TestCheckCompositeLitExprMapAKBoolString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14045,7 +14045,7 @@ func TestCheckCompositeLitExprMapAKBoolNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14066,7 +14066,7 @@ func TestCheckCompositeLitExprMapAKBoolIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14086,7 +14086,7 @@ func TestCheckCompositeLitExprMapAKBoolIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14108,7 +14108,7 @@ func TestCheckCompositeLitExprMapAKBoolFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14129,7 +14129,7 @@ func TestCheckCompositeLitExprMapAKBoolAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14150,7 +14150,7 @@ func TestCheckCompositeLitExprMapAKBoolAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14173,7 +14173,7 @@ func TestCheckCompositeLitExprMapAKBoolBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14194,7 +14194,7 @@ func TestCheckCompositeLitExprMapAKBoolCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14215,7 +14215,7 @@ func TestCheckCompositeLitExprMapBKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14234,7 +14234,7 @@ func TestCheckCompositeLitExprMapBKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14254,7 +14254,7 @@ func TestCheckCompositeLitExprMapBKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14274,7 +14274,7 @@ func TestCheckCompositeLitExprMapBKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14294,7 +14294,7 @@ func TestCheckCompositeLitExprMapBKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14313,7 +14313,7 @@ func TestCheckCompositeLitExprMapBKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14334,7 +14334,7 @@ func TestCheckCompositeLitExprMapBKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14354,7 +14354,7 @@ func TestCheckCompositeLitExprMapBKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14374,7 +14374,7 @@ func TestCheckCompositeLitExprMapBKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14396,7 +14396,7 @@ func TestCheckCompositeLitExprMapBKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14416,7 +14416,7 @@ func TestCheckCompositeLitExprMapBKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14436,7 +14436,7 @@ func TestCheckCompositeLitExprMapCKIntX(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14455,7 +14455,7 @@ func TestCheckCompositeLitExprMapCKIntInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14475,7 +14475,7 @@ func TestCheckCompositeLitExprMapCKIntString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14495,7 +14495,7 @@ func TestCheckCompositeLitExprMapCKIntNil(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14515,7 +14515,7 @@ func TestCheckCompositeLitExprMapCKIntIntKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14534,7 +14534,7 @@ func TestCheckCompositeLitExprMapCKIntIntKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14555,7 +14555,7 @@ func TestCheckCompositeLitExprMapCKIntFloatKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14575,7 +14575,7 @@ func TestCheckCompositeLitExprMapCKIntAKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14595,7 +14595,7 @@ func TestCheckCompositeLitExprMapCKIntAKString(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14617,7 +14617,7 @@ func TestCheckCompositeLitExprMapCKIntBKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})
@@ -14637,7 +14637,7 @@ func TestCheckCompositeLitExprMapCKIntCKInt(t *testing.T) {
 	type a2 [2]int
 	type s1 struct{ a int }
 	type s2 struct{ a, b int }
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})

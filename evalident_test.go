@@ -6,7 +6,7 @@ import (
 )
 
 func TestStringVar(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
         s := "abc"
 	env.Vars["arg0"] = reflect.ValueOf(&s)
 	expectResult(t, "arg0", env, "abc")

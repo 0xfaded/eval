@@ -7,7 +7,7 @@ import (
 	"go/token"
 )
 
-func checkBinaryExpr(binary *ast.BinaryExpr, env *Env) (*BinaryExpr, []error) {
+func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 	aexpr := &BinaryExpr{BinaryExpr: binary}
 	x, y, ok, errs := checkBinaryOperands(binary.X, binary.Y, env)
 	binary.X, binary.Y = x, y
@@ -463,7 +463,7 @@ func evalConstTypedBinaryExpr(binary *BinaryExpr, xexpr, yexpr Expr) (constValue
 	panic("go-interactive: impossible")
 }
 
-func checkBinaryOperands(xexpr, yexpr ast.Expr, env *Env) (Expr, Expr, bool, []error) {
+func checkBinaryOperands(xexpr, yexpr ast.Expr, env Env) (Expr, Expr, bool, []error) {
 	var xok, yok bool
 	var err error
 

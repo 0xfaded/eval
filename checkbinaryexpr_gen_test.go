@@ -6,35 +6,35 @@ import (
 
 // Test Int + Int
 func TestCheckBinaryExprIntAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 + 4`, env, NewConstInt64(4 + 4), ConstInt)
 }
 
 // Test Int + Rune
 func TestCheckBinaryExprIntAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 + '@'`, env, NewConstRune(4 + '@'), ConstRune)
 }
 
 // Test Int + Float
 func TestCheckBinaryExprIntAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 + 2.0`, env, NewConstFloat64(4 + 2.0), ConstFloat)
 }
 
 // Test Int + Complex
 func TestCheckBinaryExprIntAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 + 8.0i`, env, NewConstComplex128(4 + 8.0i), ConstComplex)
 }
 
 // Test Int + Bool
 func TestCheckBinaryExprIntAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 + true`, env,
 		`cannot convert true to type int`,
@@ -45,7 +45,7 @@ func TestCheckBinaryExprIntAddBool(t *testing.T) {
 
 // Test Int + String
 func TestCheckBinaryExprIntAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 + "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -56,7 +56,7 @@ func TestCheckBinaryExprIntAddString(t *testing.T) {
 
 // Test Int + Nil
 func TestCheckBinaryExprIntAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 + nil`, env,
 		`cannot convert nil to type int`,
@@ -67,35 +67,35 @@ func TestCheckBinaryExprIntAddNil(t *testing.T) {
 
 // Test Int - Int
 func TestCheckBinaryExprIntSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 - 4`, env, NewConstInt64(4 - 4), ConstInt)
 }
 
 // Test Int - Rune
 func TestCheckBinaryExprIntSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 - '@'`, env, NewConstRune(4 - '@'), ConstRune)
 }
 
 // Test Int - Float
 func TestCheckBinaryExprIntSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 - 2.0`, env, NewConstFloat64(4 - 2.0), ConstFloat)
 }
 
 // Test Int - Complex
 func TestCheckBinaryExprIntSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 - 8.0i`, env, NewConstComplex128(4 - 8.0i), ConstComplex)
 }
 
 // Test Int - Bool
 func TestCheckBinaryExprIntSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 - true`, env,
 		`cannot convert true to type int`,
@@ -106,7 +106,7 @@ func TestCheckBinaryExprIntSubBool(t *testing.T) {
 
 // Test Int - String
 func TestCheckBinaryExprIntSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 - "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -117,7 +117,7 @@ func TestCheckBinaryExprIntSubString(t *testing.T) {
 
 // Test Int - Nil
 func TestCheckBinaryExprIntSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 - nil`, env,
 		`cannot convert nil to type int`,
@@ -128,35 +128,35 @@ func TestCheckBinaryExprIntSubNil(t *testing.T) {
 
 // Test Int * Int
 func TestCheckBinaryExprIntMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 * 4`, env, NewConstInt64(4 * 4), ConstInt)
 }
 
 // Test Int * Rune
 func TestCheckBinaryExprIntMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 * '@'`, env, NewConstRune(4 * '@'), ConstRune)
 }
 
 // Test Int * Float
 func TestCheckBinaryExprIntMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 * 2.0`, env, NewConstFloat64(4 * 2.0), ConstFloat)
 }
 
 // Test Int * Complex
 func TestCheckBinaryExprIntMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 * 8.0i`, env, NewConstComplex128(4 * 8.0i), ConstComplex)
 }
 
 // Test Int * Bool
 func TestCheckBinaryExprIntMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 * true`, env,
 		`cannot convert true to type int`,
@@ -167,7 +167,7 @@ func TestCheckBinaryExprIntMulBool(t *testing.T) {
 
 // Test Int * String
 func TestCheckBinaryExprIntMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 * "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -178,7 +178,7 @@ func TestCheckBinaryExprIntMulString(t *testing.T) {
 
 // Test Int * Nil
 func TestCheckBinaryExprIntMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 * nil`, env,
 		`cannot convert nil to type int`,
@@ -189,35 +189,35 @@ func TestCheckBinaryExprIntMulNil(t *testing.T) {
 
 // Test Int / Int
 func TestCheckBinaryExprIntQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 / 4`, env, NewConstInt64(4 / 4), ConstInt)
 }
 
 // Test Int / Rune
 func TestCheckBinaryExprIntQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 / '@'`, env, NewConstRune(4 / '@'), ConstRune)
 }
 
 // Test Int / Float
 func TestCheckBinaryExprIntQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 / 2.0`, env, NewConstFloat64(4 / 2.0), ConstFloat)
 }
 
 // Test Int / Complex
 func TestCheckBinaryExprIntQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 / 8.0i`, env, NewConstComplex128(4 / 8.0i), ConstComplex)
 }
 
 // Test Int / Bool
 func TestCheckBinaryExprIntQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 / true`, env,
 		`cannot convert true to type int`,
@@ -228,7 +228,7 @@ func TestCheckBinaryExprIntQuoBool(t *testing.T) {
 
 // Test Int / String
 func TestCheckBinaryExprIntQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 / "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -239,7 +239,7 @@ func TestCheckBinaryExprIntQuoString(t *testing.T) {
 
 // Test Int / Nil
 func TestCheckBinaryExprIntQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 / nil`, env,
 		`cannot convert nil to type int`,
@@ -250,21 +250,21 @@ func TestCheckBinaryExprIntQuoNil(t *testing.T) {
 
 // Test Int % Int
 func TestCheckBinaryExprIntRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 % 4`, env, NewConstInt64(4 % 4), ConstInt)
 }
 
 // Test Int % Rune
 func TestCheckBinaryExprIntRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 % '@'`, env, NewConstRune(4 % '@'), ConstRune)
 }
 
 // Test Int % Float
 func TestCheckBinaryExprIntRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 % 2.0`, env,
 		`illegal constant expression: floating-point % operation`,
@@ -274,7 +274,7 @@ func TestCheckBinaryExprIntRemFloat(t *testing.T) {
 
 // Test Int % Complex
 func TestCheckBinaryExprIntRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 % 8.0i`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -284,7 +284,7 @@ func TestCheckBinaryExprIntRemComplex(t *testing.T) {
 
 // Test Int % Bool
 func TestCheckBinaryExprIntRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 % true`, env,
 		`cannot convert true to type int`,
@@ -295,7 +295,7 @@ func TestCheckBinaryExprIntRemBool(t *testing.T) {
 
 // Test Int % String
 func TestCheckBinaryExprIntRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 % "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -306,7 +306,7 @@ func TestCheckBinaryExprIntRemString(t *testing.T) {
 
 // Test Int % Nil
 func TestCheckBinaryExprIntRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 % nil`, env,
 		`cannot convert nil to type int`,
@@ -317,21 +317,21 @@ func TestCheckBinaryExprIntRemNil(t *testing.T) {
 
 // Test Int & Int
 func TestCheckBinaryExprIntAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 & 4`, env, NewConstInt64(4 & 4), ConstInt)
 }
 
 // Test Int & Rune
 func TestCheckBinaryExprIntAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 & '@'`, env, NewConstRune(4 & '@'), ConstRune)
 }
 
 // Test Int & Float
 func TestCheckBinaryExprIntAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 & 2.0`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -341,7 +341,7 @@ func TestCheckBinaryExprIntAndFloat(t *testing.T) {
 
 // Test Int & Complex
 func TestCheckBinaryExprIntAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 & 8.0i`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -351,7 +351,7 @@ func TestCheckBinaryExprIntAndComplex(t *testing.T) {
 
 // Test Int & Bool
 func TestCheckBinaryExprIntAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 & true`, env,
 		`cannot convert true to type int`,
@@ -362,7 +362,7 @@ func TestCheckBinaryExprIntAndBool(t *testing.T) {
 
 // Test Int & String
 func TestCheckBinaryExprIntAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 & "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -373,7 +373,7 @@ func TestCheckBinaryExprIntAndString(t *testing.T) {
 
 // Test Int & Nil
 func TestCheckBinaryExprIntAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 & nil`, env,
 		`cannot convert nil to type int`,
@@ -384,21 +384,21 @@ func TestCheckBinaryExprIntAndNil(t *testing.T) {
 
 // Test Int | Int
 func TestCheckBinaryExprIntOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 | 4`, env, NewConstInt64(4 | 4), ConstInt)
 }
 
 // Test Int | Rune
 func TestCheckBinaryExprIntOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 | '@'`, env, NewConstRune(4 | '@'), ConstRune)
 }
 
 // Test Int | Float
 func TestCheckBinaryExprIntOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 | 2.0`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -408,7 +408,7 @@ func TestCheckBinaryExprIntOrFloat(t *testing.T) {
 
 // Test Int | Complex
 func TestCheckBinaryExprIntOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 | 8.0i`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -418,7 +418,7 @@ func TestCheckBinaryExprIntOrComplex(t *testing.T) {
 
 // Test Int | Bool
 func TestCheckBinaryExprIntOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 | true`, env,
 		`cannot convert true to type int`,
@@ -429,7 +429,7 @@ func TestCheckBinaryExprIntOrBool(t *testing.T) {
 
 // Test Int | String
 func TestCheckBinaryExprIntOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 | "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -440,7 +440,7 @@ func TestCheckBinaryExprIntOrString(t *testing.T) {
 
 // Test Int | Nil
 func TestCheckBinaryExprIntOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 | nil`, env,
 		`cannot convert nil to type int`,
@@ -451,21 +451,21 @@ func TestCheckBinaryExprIntOrNil(t *testing.T) {
 
 // Test Int ^ Int
 func TestCheckBinaryExprIntXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 ^ 4`, env, NewConstInt64(4 ^ 4), ConstInt)
 }
 
 // Test Int ^ Rune
 func TestCheckBinaryExprIntXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 ^ '@'`, env, NewConstRune(4 ^ '@'), ConstRune)
 }
 
 // Test Int ^ Float
 func TestCheckBinaryExprIntXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 ^ 2.0`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -475,7 +475,7 @@ func TestCheckBinaryExprIntXorFloat(t *testing.T) {
 
 // Test Int ^ Complex
 func TestCheckBinaryExprIntXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 ^ 8.0i`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -485,7 +485,7 @@ func TestCheckBinaryExprIntXorComplex(t *testing.T) {
 
 // Test Int ^ Bool
 func TestCheckBinaryExprIntXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 ^ true`, env,
 		`cannot convert true to type int`,
@@ -496,7 +496,7 @@ func TestCheckBinaryExprIntXorBool(t *testing.T) {
 
 // Test Int ^ String
 func TestCheckBinaryExprIntXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 ^ "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -507,7 +507,7 @@ func TestCheckBinaryExprIntXorString(t *testing.T) {
 
 // Test Int ^ Nil
 func TestCheckBinaryExprIntXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 ^ nil`, env,
 		`cannot convert nil to type int`,
@@ -518,21 +518,21 @@ func TestCheckBinaryExprIntXorNil(t *testing.T) {
 
 // Test Int &^ Int
 func TestCheckBinaryExprIntAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 &^ 4`, env, NewConstInt64(4 &^ 4), ConstInt)
 }
 
 // Test Int &^ Rune
 func TestCheckBinaryExprIntAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 &^ '@'`, env, NewConstRune(4 &^ '@'), ConstRune)
 }
 
 // Test Int &^ Float
 func TestCheckBinaryExprIntAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 &^ 2.0`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -542,7 +542,7 @@ func TestCheckBinaryExprIntAndNotFloat(t *testing.T) {
 
 // Test Int &^ Complex
 func TestCheckBinaryExprIntAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 &^ 8.0i`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -552,7 +552,7 @@ func TestCheckBinaryExprIntAndNotComplex(t *testing.T) {
 
 // Test Int &^ Bool
 func TestCheckBinaryExprIntAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 &^ true`, env,
 		`cannot convert true to type int`,
@@ -563,7 +563,7 @@ func TestCheckBinaryExprIntAndNotBool(t *testing.T) {
 
 // Test Int &^ String
 func TestCheckBinaryExprIntAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 &^ "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -574,7 +574,7 @@ func TestCheckBinaryExprIntAndNotString(t *testing.T) {
 
 // Test Int &^ Nil
 func TestCheckBinaryExprIntAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 &^ nil`, env,
 		`cannot convert nil to type int`,
@@ -585,35 +585,35 @@ func TestCheckBinaryExprIntAndNotNil(t *testing.T) {
 
 // Test Int == Int
 func TestCheckBinaryExprIntEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 == 4`, env, (4 == 4), ConstBool)
 }
 
 // Test Int == Rune
 func TestCheckBinaryExprIntEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 == '@'`, env, (4 == '@'), ConstBool)
 }
 
 // Test Int == Float
 func TestCheckBinaryExprIntEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 == 2.0`, env, (4 == 2.0), ConstBool)
 }
 
 // Test Int == Complex
 func TestCheckBinaryExprIntEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 == 8.0i`, env, (4 == 8.0i), ConstBool)
 }
 
 // Test Int == Bool
 func TestCheckBinaryExprIntEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 == true`, env,
 		`cannot convert true to type int`,
@@ -624,7 +624,7 @@ func TestCheckBinaryExprIntEqlBool(t *testing.T) {
 
 // Test Int == String
 func TestCheckBinaryExprIntEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 == "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -635,7 +635,7 @@ func TestCheckBinaryExprIntEqlString(t *testing.T) {
 
 // Test Int == Nil
 func TestCheckBinaryExprIntEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 == nil`, env,
 		`cannot convert nil to type int`,
@@ -646,35 +646,35 @@ func TestCheckBinaryExprIntEqlNil(t *testing.T) {
 
 // Test Int != Int
 func TestCheckBinaryExprIntNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 != 4`, env, (4 != 4), ConstBool)
 }
 
 // Test Int != Rune
 func TestCheckBinaryExprIntNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 != '@'`, env, (4 != '@'), ConstBool)
 }
 
 // Test Int != Float
 func TestCheckBinaryExprIntNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 != 2.0`, env, (4 != 2.0), ConstBool)
 }
 
 // Test Int != Complex
 func TestCheckBinaryExprIntNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 != 8.0i`, env, (4 != 8.0i), ConstBool)
 }
 
 // Test Int != Bool
 func TestCheckBinaryExprIntNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 != true`, env,
 		`cannot convert true to type int`,
@@ -685,7 +685,7 @@ func TestCheckBinaryExprIntNeqBool(t *testing.T) {
 
 // Test Int != String
 func TestCheckBinaryExprIntNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 != "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -696,7 +696,7 @@ func TestCheckBinaryExprIntNeqString(t *testing.T) {
 
 // Test Int != Nil
 func TestCheckBinaryExprIntNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 != nil`, env,
 		`cannot convert nil to type int`,
@@ -707,28 +707,28 @@ func TestCheckBinaryExprIntNeqNil(t *testing.T) {
 
 // Test Int <= Int
 func TestCheckBinaryExprIntLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 <= 4`, env, (4 <= 4), ConstBool)
 }
 
 // Test Int <= Rune
 func TestCheckBinaryExprIntLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 <= '@'`, env, (4 <= '@'), ConstBool)
 }
 
 // Test Int <= Float
 func TestCheckBinaryExprIntLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 <= 2.0`, env, (4 <= 2.0), ConstBool)
 }
 
 // Test Int <= Complex
 func TestCheckBinaryExprIntLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 <= 8.0i`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -738,7 +738,7 @@ func TestCheckBinaryExprIntLeqComplex(t *testing.T) {
 
 // Test Int <= Bool
 func TestCheckBinaryExprIntLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 <= true`, env,
 		`cannot convert true to type int`,
@@ -749,7 +749,7 @@ func TestCheckBinaryExprIntLeqBool(t *testing.T) {
 
 // Test Int <= String
 func TestCheckBinaryExprIntLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 <= "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -760,7 +760,7 @@ func TestCheckBinaryExprIntLeqString(t *testing.T) {
 
 // Test Int <= Nil
 func TestCheckBinaryExprIntLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 <= nil`, env,
 		`cannot convert nil to type int`,
@@ -771,28 +771,28 @@ func TestCheckBinaryExprIntLeqNil(t *testing.T) {
 
 // Test Int >= Int
 func TestCheckBinaryExprIntGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 >= 4`, env, (4 >= 4), ConstBool)
 }
 
 // Test Int >= Rune
 func TestCheckBinaryExprIntGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 >= '@'`, env, (4 >= '@'), ConstBool)
 }
 
 // Test Int >= Float
 func TestCheckBinaryExprIntGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 >= 2.0`, env, (4 >= 2.0), ConstBool)
 }
 
 // Test Int >= Complex
 func TestCheckBinaryExprIntGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 >= 8.0i`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -802,7 +802,7 @@ func TestCheckBinaryExprIntGeqComplex(t *testing.T) {
 
 // Test Int >= Bool
 func TestCheckBinaryExprIntGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 >= true`, env,
 		`cannot convert true to type int`,
@@ -813,7 +813,7 @@ func TestCheckBinaryExprIntGeqBool(t *testing.T) {
 
 // Test Int >= String
 func TestCheckBinaryExprIntGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 >= "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -824,7 +824,7 @@ func TestCheckBinaryExprIntGeqString(t *testing.T) {
 
 // Test Int >= Nil
 func TestCheckBinaryExprIntGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 >= nil`, env,
 		`cannot convert nil to type int`,
@@ -835,28 +835,28 @@ func TestCheckBinaryExprIntGeqNil(t *testing.T) {
 
 // Test Int < Int
 func TestCheckBinaryExprIntLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 < 4`, env, (4 < 4), ConstBool)
 }
 
 // Test Int < Rune
 func TestCheckBinaryExprIntLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 < '@'`, env, (4 < '@'), ConstBool)
 }
 
 // Test Int < Float
 func TestCheckBinaryExprIntLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 < 2.0`, env, (4 < 2.0), ConstBool)
 }
 
 // Test Int < Complex
 func TestCheckBinaryExprIntLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 < 8.0i`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -866,7 +866,7 @@ func TestCheckBinaryExprIntLssComplex(t *testing.T) {
 
 // Test Int < Bool
 func TestCheckBinaryExprIntLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 < true`, env,
 		`cannot convert true to type int`,
@@ -877,7 +877,7 @@ func TestCheckBinaryExprIntLssBool(t *testing.T) {
 
 // Test Int < String
 func TestCheckBinaryExprIntLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 < "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -888,7 +888,7 @@ func TestCheckBinaryExprIntLssString(t *testing.T) {
 
 // Test Int < Nil
 func TestCheckBinaryExprIntLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 < nil`, env,
 		`cannot convert nil to type int`,
@@ -899,28 +899,28 @@ func TestCheckBinaryExprIntLssNil(t *testing.T) {
 
 // Test Int > Int
 func TestCheckBinaryExprIntGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 > 4`, env, (4 > 4), ConstBool)
 }
 
 // Test Int > Rune
 func TestCheckBinaryExprIntGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 > '@'`, env, (4 > '@'), ConstBool)
 }
 
 // Test Int > Float
 func TestCheckBinaryExprIntGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `4 > 2.0`, env, (4 > 2.0), ConstBool)
 }
 
 // Test Int > Complex
 func TestCheckBinaryExprIntGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 > 8.0i`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -930,7 +930,7 @@ func TestCheckBinaryExprIntGtrComplex(t *testing.T) {
 
 // Test Int > Bool
 func TestCheckBinaryExprIntGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 > true`, env,
 		`cannot convert true to type int`,
@@ -941,7 +941,7 @@ func TestCheckBinaryExprIntGtrBool(t *testing.T) {
 
 // Test Int > String
 func TestCheckBinaryExprIntGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 > "abc"`, env,
 		`cannot convert "abc" to type int`,
@@ -952,7 +952,7 @@ func TestCheckBinaryExprIntGtrString(t *testing.T) {
 
 // Test Int > Nil
 func TestCheckBinaryExprIntGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `4 > nil`, env,
 		`cannot convert nil to type int`,
@@ -963,35 +963,35 @@ func TestCheckBinaryExprIntGtrNil(t *testing.T) {
 
 // Test Rune + Int
 func TestCheckBinaryExprRuneAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' + 4`, env, NewConstRune('@' + 4), ConstRune)
 }
 
 // Test Rune + Rune
 func TestCheckBinaryExprRuneAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' + '@'`, env, NewConstRune('@' + '@'), ConstRune)
 }
 
 // Test Rune + Float
 func TestCheckBinaryExprRuneAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' + 2.0`, env, NewConstFloat64('@' + 2.0), ConstFloat)
 }
 
 // Test Rune + Complex
 func TestCheckBinaryExprRuneAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' + 8.0i`, env, NewConstComplex128('@' + 8.0i), ConstComplex)
 }
 
 // Test Rune + Bool
 func TestCheckBinaryExprRuneAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' + true`, env,
 		`cannot convert true to type rune`,
@@ -1002,7 +1002,7 @@ func TestCheckBinaryExprRuneAddBool(t *testing.T) {
 
 // Test Rune + String
 func TestCheckBinaryExprRuneAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' + "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1013,7 +1013,7 @@ func TestCheckBinaryExprRuneAddString(t *testing.T) {
 
 // Test Rune + Nil
 func TestCheckBinaryExprRuneAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' + nil`, env,
 		`cannot convert nil to type rune`,
@@ -1024,35 +1024,35 @@ func TestCheckBinaryExprRuneAddNil(t *testing.T) {
 
 // Test Rune - Int
 func TestCheckBinaryExprRuneSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' - 4`, env, NewConstRune('@' - 4), ConstRune)
 }
 
 // Test Rune - Rune
 func TestCheckBinaryExprRuneSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' - '@'`, env, NewConstRune('@' - '@'), ConstRune)
 }
 
 // Test Rune - Float
 func TestCheckBinaryExprRuneSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' - 2.0`, env, NewConstFloat64('@' - 2.0), ConstFloat)
 }
 
 // Test Rune - Complex
 func TestCheckBinaryExprRuneSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' - 8.0i`, env, NewConstComplex128('@' - 8.0i), ConstComplex)
 }
 
 // Test Rune - Bool
 func TestCheckBinaryExprRuneSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' - true`, env,
 		`cannot convert true to type rune`,
@@ -1063,7 +1063,7 @@ func TestCheckBinaryExprRuneSubBool(t *testing.T) {
 
 // Test Rune - String
 func TestCheckBinaryExprRuneSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' - "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1074,7 +1074,7 @@ func TestCheckBinaryExprRuneSubString(t *testing.T) {
 
 // Test Rune - Nil
 func TestCheckBinaryExprRuneSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' - nil`, env,
 		`cannot convert nil to type rune`,
@@ -1085,35 +1085,35 @@ func TestCheckBinaryExprRuneSubNil(t *testing.T) {
 
 // Test Rune * Int
 func TestCheckBinaryExprRuneMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' * 4`, env, NewConstRune('@' * 4), ConstRune)
 }
 
 // Test Rune * Rune
 func TestCheckBinaryExprRuneMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' * '@'`, env, NewConstRune('@' * '@'), ConstRune)
 }
 
 // Test Rune * Float
 func TestCheckBinaryExprRuneMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' * 2.0`, env, NewConstFloat64('@' * 2.0), ConstFloat)
 }
 
 // Test Rune * Complex
 func TestCheckBinaryExprRuneMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' * 8.0i`, env, NewConstComplex128('@' * 8.0i), ConstComplex)
 }
 
 // Test Rune * Bool
 func TestCheckBinaryExprRuneMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' * true`, env,
 		`cannot convert true to type rune`,
@@ -1124,7 +1124,7 @@ func TestCheckBinaryExprRuneMulBool(t *testing.T) {
 
 // Test Rune * String
 func TestCheckBinaryExprRuneMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' * "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1135,7 +1135,7 @@ func TestCheckBinaryExprRuneMulString(t *testing.T) {
 
 // Test Rune * Nil
 func TestCheckBinaryExprRuneMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' * nil`, env,
 		`cannot convert nil to type rune`,
@@ -1146,35 +1146,35 @@ func TestCheckBinaryExprRuneMulNil(t *testing.T) {
 
 // Test Rune / Int
 func TestCheckBinaryExprRuneQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' / 4`, env, NewConstRune('@' / 4), ConstRune)
 }
 
 // Test Rune / Rune
 func TestCheckBinaryExprRuneQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' / '@'`, env, NewConstRune('@' / '@'), ConstRune)
 }
 
 // Test Rune / Float
 func TestCheckBinaryExprRuneQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' / 2.0`, env, NewConstFloat64('@' / 2.0), ConstFloat)
 }
 
 // Test Rune / Complex
 func TestCheckBinaryExprRuneQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' / 8.0i`, env, NewConstComplex128('@' / 8.0i), ConstComplex)
 }
 
 // Test Rune / Bool
 func TestCheckBinaryExprRuneQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' / true`, env,
 		`cannot convert true to type rune`,
@@ -1185,7 +1185,7 @@ func TestCheckBinaryExprRuneQuoBool(t *testing.T) {
 
 // Test Rune / String
 func TestCheckBinaryExprRuneQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' / "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1196,7 +1196,7 @@ func TestCheckBinaryExprRuneQuoString(t *testing.T) {
 
 // Test Rune / Nil
 func TestCheckBinaryExprRuneQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' / nil`, env,
 		`cannot convert nil to type rune`,
@@ -1207,21 +1207,21 @@ func TestCheckBinaryExprRuneQuoNil(t *testing.T) {
 
 // Test Rune % Int
 func TestCheckBinaryExprRuneRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' % 4`, env, NewConstRune('@' % 4), ConstRune)
 }
 
 // Test Rune % Rune
 func TestCheckBinaryExprRuneRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' % '@'`, env, NewConstRune('@' % '@'), ConstRune)
 }
 
 // Test Rune % Float
 func TestCheckBinaryExprRuneRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' % 2.0`, env,
 		`illegal constant expression: floating-point % operation`,
@@ -1231,7 +1231,7 @@ func TestCheckBinaryExprRuneRemFloat(t *testing.T) {
 
 // Test Rune % Complex
 func TestCheckBinaryExprRuneRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' % 8.0i`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -1241,7 +1241,7 @@ func TestCheckBinaryExprRuneRemComplex(t *testing.T) {
 
 // Test Rune % Bool
 func TestCheckBinaryExprRuneRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' % true`, env,
 		`cannot convert true to type rune`,
@@ -1252,7 +1252,7 @@ func TestCheckBinaryExprRuneRemBool(t *testing.T) {
 
 // Test Rune % String
 func TestCheckBinaryExprRuneRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' % "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1263,7 +1263,7 @@ func TestCheckBinaryExprRuneRemString(t *testing.T) {
 
 // Test Rune % Nil
 func TestCheckBinaryExprRuneRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' % nil`, env,
 		`cannot convert nil to type rune`,
@@ -1274,21 +1274,21 @@ func TestCheckBinaryExprRuneRemNil(t *testing.T) {
 
 // Test Rune & Int
 func TestCheckBinaryExprRuneAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' & 4`, env, NewConstRune('@' & 4), ConstRune)
 }
 
 // Test Rune & Rune
 func TestCheckBinaryExprRuneAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' & '@'`, env, NewConstRune('@' & '@'), ConstRune)
 }
 
 // Test Rune & Float
 func TestCheckBinaryExprRuneAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' & 2.0`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -1298,7 +1298,7 @@ func TestCheckBinaryExprRuneAndFloat(t *testing.T) {
 
 // Test Rune & Complex
 func TestCheckBinaryExprRuneAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' & 8.0i`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -1308,7 +1308,7 @@ func TestCheckBinaryExprRuneAndComplex(t *testing.T) {
 
 // Test Rune & Bool
 func TestCheckBinaryExprRuneAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' & true`, env,
 		`cannot convert true to type rune`,
@@ -1319,7 +1319,7 @@ func TestCheckBinaryExprRuneAndBool(t *testing.T) {
 
 // Test Rune & String
 func TestCheckBinaryExprRuneAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' & "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1330,7 +1330,7 @@ func TestCheckBinaryExprRuneAndString(t *testing.T) {
 
 // Test Rune & Nil
 func TestCheckBinaryExprRuneAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' & nil`, env,
 		`cannot convert nil to type rune`,
@@ -1341,21 +1341,21 @@ func TestCheckBinaryExprRuneAndNil(t *testing.T) {
 
 // Test Rune | Int
 func TestCheckBinaryExprRuneOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' | 4`, env, NewConstRune('@' | 4), ConstRune)
 }
 
 // Test Rune | Rune
 func TestCheckBinaryExprRuneOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' | '@'`, env, NewConstRune('@' | '@'), ConstRune)
 }
 
 // Test Rune | Float
 func TestCheckBinaryExprRuneOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' | 2.0`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -1365,7 +1365,7 @@ func TestCheckBinaryExprRuneOrFloat(t *testing.T) {
 
 // Test Rune | Complex
 func TestCheckBinaryExprRuneOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' | 8.0i`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -1375,7 +1375,7 @@ func TestCheckBinaryExprRuneOrComplex(t *testing.T) {
 
 // Test Rune | Bool
 func TestCheckBinaryExprRuneOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' | true`, env,
 		`cannot convert true to type rune`,
@@ -1386,7 +1386,7 @@ func TestCheckBinaryExprRuneOrBool(t *testing.T) {
 
 // Test Rune | String
 func TestCheckBinaryExprRuneOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' | "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1397,7 +1397,7 @@ func TestCheckBinaryExprRuneOrString(t *testing.T) {
 
 // Test Rune | Nil
 func TestCheckBinaryExprRuneOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' | nil`, env,
 		`cannot convert nil to type rune`,
@@ -1408,21 +1408,21 @@ func TestCheckBinaryExprRuneOrNil(t *testing.T) {
 
 // Test Rune ^ Int
 func TestCheckBinaryExprRuneXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' ^ 4`, env, NewConstRune('@' ^ 4), ConstRune)
 }
 
 // Test Rune ^ Rune
 func TestCheckBinaryExprRuneXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' ^ '@'`, env, NewConstRune('@' ^ '@'), ConstRune)
 }
 
 // Test Rune ^ Float
 func TestCheckBinaryExprRuneXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' ^ 2.0`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -1432,7 +1432,7 @@ func TestCheckBinaryExprRuneXorFloat(t *testing.T) {
 
 // Test Rune ^ Complex
 func TestCheckBinaryExprRuneXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' ^ 8.0i`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -1442,7 +1442,7 @@ func TestCheckBinaryExprRuneXorComplex(t *testing.T) {
 
 // Test Rune ^ Bool
 func TestCheckBinaryExprRuneXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' ^ true`, env,
 		`cannot convert true to type rune`,
@@ -1453,7 +1453,7 @@ func TestCheckBinaryExprRuneXorBool(t *testing.T) {
 
 // Test Rune ^ String
 func TestCheckBinaryExprRuneXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' ^ "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1464,7 +1464,7 @@ func TestCheckBinaryExprRuneXorString(t *testing.T) {
 
 // Test Rune ^ Nil
 func TestCheckBinaryExprRuneXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' ^ nil`, env,
 		`cannot convert nil to type rune`,
@@ -1475,21 +1475,21 @@ func TestCheckBinaryExprRuneXorNil(t *testing.T) {
 
 // Test Rune &^ Int
 func TestCheckBinaryExprRuneAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' &^ 4`, env, NewConstRune('@' &^ 4), ConstRune)
 }
 
 // Test Rune &^ Rune
 func TestCheckBinaryExprRuneAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' &^ '@'`, env, NewConstRune('@' &^ '@'), ConstRune)
 }
 
 // Test Rune &^ Float
 func TestCheckBinaryExprRuneAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' &^ 2.0`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -1499,7 +1499,7 @@ func TestCheckBinaryExprRuneAndNotFloat(t *testing.T) {
 
 // Test Rune &^ Complex
 func TestCheckBinaryExprRuneAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' &^ 8.0i`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -1509,7 +1509,7 @@ func TestCheckBinaryExprRuneAndNotComplex(t *testing.T) {
 
 // Test Rune &^ Bool
 func TestCheckBinaryExprRuneAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' &^ true`, env,
 		`cannot convert true to type rune`,
@@ -1520,7 +1520,7 @@ func TestCheckBinaryExprRuneAndNotBool(t *testing.T) {
 
 // Test Rune &^ String
 func TestCheckBinaryExprRuneAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' &^ "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1531,7 +1531,7 @@ func TestCheckBinaryExprRuneAndNotString(t *testing.T) {
 
 // Test Rune &^ Nil
 func TestCheckBinaryExprRuneAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' &^ nil`, env,
 		`cannot convert nil to type rune`,
@@ -1542,35 +1542,35 @@ func TestCheckBinaryExprRuneAndNotNil(t *testing.T) {
 
 // Test Rune == Int
 func TestCheckBinaryExprRuneEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' == 4`, env, ('@' == 4), ConstBool)
 }
 
 // Test Rune == Rune
 func TestCheckBinaryExprRuneEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' == '@'`, env, ('@' == '@'), ConstBool)
 }
 
 // Test Rune == Float
 func TestCheckBinaryExprRuneEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' == 2.0`, env, ('@' == 2.0), ConstBool)
 }
 
 // Test Rune == Complex
 func TestCheckBinaryExprRuneEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' == 8.0i`, env, ('@' == 8.0i), ConstBool)
 }
 
 // Test Rune == Bool
 func TestCheckBinaryExprRuneEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' == true`, env,
 		`cannot convert true to type rune`,
@@ -1581,7 +1581,7 @@ func TestCheckBinaryExprRuneEqlBool(t *testing.T) {
 
 // Test Rune == String
 func TestCheckBinaryExprRuneEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' == "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1592,7 +1592,7 @@ func TestCheckBinaryExprRuneEqlString(t *testing.T) {
 
 // Test Rune == Nil
 func TestCheckBinaryExprRuneEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' == nil`, env,
 		`cannot convert nil to type rune`,
@@ -1603,35 +1603,35 @@ func TestCheckBinaryExprRuneEqlNil(t *testing.T) {
 
 // Test Rune != Int
 func TestCheckBinaryExprRuneNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' != 4`, env, ('@' != 4), ConstBool)
 }
 
 // Test Rune != Rune
 func TestCheckBinaryExprRuneNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' != '@'`, env, ('@' != '@'), ConstBool)
 }
 
 // Test Rune != Float
 func TestCheckBinaryExprRuneNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' != 2.0`, env, ('@' != 2.0), ConstBool)
 }
 
 // Test Rune != Complex
 func TestCheckBinaryExprRuneNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' != 8.0i`, env, ('@' != 8.0i), ConstBool)
 }
 
 // Test Rune != Bool
 func TestCheckBinaryExprRuneNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' != true`, env,
 		`cannot convert true to type rune`,
@@ -1642,7 +1642,7 @@ func TestCheckBinaryExprRuneNeqBool(t *testing.T) {
 
 // Test Rune != String
 func TestCheckBinaryExprRuneNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' != "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1653,7 +1653,7 @@ func TestCheckBinaryExprRuneNeqString(t *testing.T) {
 
 // Test Rune != Nil
 func TestCheckBinaryExprRuneNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' != nil`, env,
 		`cannot convert nil to type rune`,
@@ -1664,28 +1664,28 @@ func TestCheckBinaryExprRuneNeqNil(t *testing.T) {
 
 // Test Rune <= Int
 func TestCheckBinaryExprRuneLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' <= 4`, env, ('@' <= 4), ConstBool)
 }
 
 // Test Rune <= Rune
 func TestCheckBinaryExprRuneLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' <= '@'`, env, ('@' <= '@'), ConstBool)
 }
 
 // Test Rune <= Float
 func TestCheckBinaryExprRuneLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' <= 2.0`, env, ('@' <= 2.0), ConstBool)
 }
 
 // Test Rune <= Complex
 func TestCheckBinaryExprRuneLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' <= 8.0i`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -1695,7 +1695,7 @@ func TestCheckBinaryExprRuneLeqComplex(t *testing.T) {
 
 // Test Rune <= Bool
 func TestCheckBinaryExprRuneLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' <= true`, env,
 		`cannot convert true to type rune`,
@@ -1706,7 +1706,7 @@ func TestCheckBinaryExprRuneLeqBool(t *testing.T) {
 
 // Test Rune <= String
 func TestCheckBinaryExprRuneLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' <= "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1717,7 +1717,7 @@ func TestCheckBinaryExprRuneLeqString(t *testing.T) {
 
 // Test Rune <= Nil
 func TestCheckBinaryExprRuneLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' <= nil`, env,
 		`cannot convert nil to type rune`,
@@ -1728,28 +1728,28 @@ func TestCheckBinaryExprRuneLeqNil(t *testing.T) {
 
 // Test Rune >= Int
 func TestCheckBinaryExprRuneGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' >= 4`, env, ('@' >= 4), ConstBool)
 }
 
 // Test Rune >= Rune
 func TestCheckBinaryExprRuneGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' >= '@'`, env, ('@' >= '@'), ConstBool)
 }
 
 // Test Rune >= Float
 func TestCheckBinaryExprRuneGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' >= 2.0`, env, ('@' >= 2.0), ConstBool)
 }
 
 // Test Rune >= Complex
 func TestCheckBinaryExprRuneGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' >= 8.0i`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -1759,7 +1759,7 @@ func TestCheckBinaryExprRuneGeqComplex(t *testing.T) {
 
 // Test Rune >= Bool
 func TestCheckBinaryExprRuneGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' >= true`, env,
 		`cannot convert true to type rune`,
@@ -1770,7 +1770,7 @@ func TestCheckBinaryExprRuneGeqBool(t *testing.T) {
 
 // Test Rune >= String
 func TestCheckBinaryExprRuneGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' >= "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1781,7 +1781,7 @@ func TestCheckBinaryExprRuneGeqString(t *testing.T) {
 
 // Test Rune >= Nil
 func TestCheckBinaryExprRuneGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' >= nil`, env,
 		`cannot convert nil to type rune`,
@@ -1792,28 +1792,28 @@ func TestCheckBinaryExprRuneGeqNil(t *testing.T) {
 
 // Test Rune < Int
 func TestCheckBinaryExprRuneLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' < 4`, env, ('@' < 4), ConstBool)
 }
 
 // Test Rune < Rune
 func TestCheckBinaryExprRuneLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' < '@'`, env, ('@' < '@'), ConstBool)
 }
 
 // Test Rune < Float
 func TestCheckBinaryExprRuneLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' < 2.0`, env, ('@' < 2.0), ConstBool)
 }
 
 // Test Rune < Complex
 func TestCheckBinaryExprRuneLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' < 8.0i`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -1823,7 +1823,7 @@ func TestCheckBinaryExprRuneLssComplex(t *testing.T) {
 
 // Test Rune < Bool
 func TestCheckBinaryExprRuneLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' < true`, env,
 		`cannot convert true to type rune`,
@@ -1834,7 +1834,7 @@ func TestCheckBinaryExprRuneLssBool(t *testing.T) {
 
 // Test Rune < String
 func TestCheckBinaryExprRuneLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' < "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1845,7 +1845,7 @@ func TestCheckBinaryExprRuneLssString(t *testing.T) {
 
 // Test Rune < Nil
 func TestCheckBinaryExprRuneLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' < nil`, env,
 		`cannot convert nil to type rune`,
@@ -1856,28 +1856,28 @@ func TestCheckBinaryExprRuneLssNil(t *testing.T) {
 
 // Test Rune > Int
 func TestCheckBinaryExprRuneGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' > 4`, env, ('@' > 4), ConstBool)
 }
 
 // Test Rune > Rune
 func TestCheckBinaryExprRuneGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' > '@'`, env, ('@' > '@'), ConstBool)
 }
 
 // Test Rune > Float
 func TestCheckBinaryExprRuneGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `'@' > 2.0`, env, ('@' > 2.0), ConstBool)
 }
 
 // Test Rune > Complex
 func TestCheckBinaryExprRuneGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' > 8.0i`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -1887,7 +1887,7 @@ func TestCheckBinaryExprRuneGtrComplex(t *testing.T) {
 
 // Test Rune > Bool
 func TestCheckBinaryExprRuneGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' > true`, env,
 		`cannot convert true to type rune`,
@@ -1898,7 +1898,7 @@ func TestCheckBinaryExprRuneGtrBool(t *testing.T) {
 
 // Test Rune > String
 func TestCheckBinaryExprRuneGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' > "abc"`, env,
 		`cannot convert "abc" to type rune`,
@@ -1909,7 +1909,7 @@ func TestCheckBinaryExprRuneGtrString(t *testing.T) {
 
 // Test Rune > Nil
 func TestCheckBinaryExprRuneGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `'@' > nil`, env,
 		`cannot convert nil to type rune`,
@@ -1920,35 +1920,35 @@ func TestCheckBinaryExprRuneGtrNil(t *testing.T) {
 
 // Test Float + Int
 func TestCheckBinaryExprFloatAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 + 4`, env, NewConstFloat64(2.0 + 4), ConstFloat)
 }
 
 // Test Float + Rune
 func TestCheckBinaryExprFloatAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 + '@'`, env, NewConstFloat64(2.0 + '@'), ConstFloat)
 }
 
 // Test Float + Float
 func TestCheckBinaryExprFloatAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 + 2.0`, env, NewConstFloat64(2.0 + 2.0), ConstFloat)
 }
 
 // Test Float + Complex
 func TestCheckBinaryExprFloatAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 + 8.0i`, env, NewConstComplex128(2.0 + 8.0i), ConstComplex)
 }
 
 // Test Float + Bool
 func TestCheckBinaryExprFloatAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 + true`, env,
 		`cannot convert true to type float64`,
@@ -1959,7 +1959,7 @@ func TestCheckBinaryExprFloatAddBool(t *testing.T) {
 
 // Test Float + String
 func TestCheckBinaryExprFloatAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 + "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -1970,7 +1970,7 @@ func TestCheckBinaryExprFloatAddString(t *testing.T) {
 
 // Test Float + Nil
 func TestCheckBinaryExprFloatAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 + nil`, env,
 		`cannot convert nil to type float64`,
@@ -1981,35 +1981,35 @@ func TestCheckBinaryExprFloatAddNil(t *testing.T) {
 
 // Test Float - Int
 func TestCheckBinaryExprFloatSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 - 4`, env, NewConstFloat64(2.0 - 4), ConstFloat)
 }
 
 // Test Float - Rune
 func TestCheckBinaryExprFloatSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 - '@'`, env, NewConstFloat64(2.0 - '@'), ConstFloat)
 }
 
 // Test Float - Float
 func TestCheckBinaryExprFloatSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 - 2.0`, env, NewConstFloat64(2.0 - 2.0), ConstFloat)
 }
 
 // Test Float - Complex
 func TestCheckBinaryExprFloatSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 - 8.0i`, env, NewConstComplex128(2.0 - 8.0i), ConstComplex)
 }
 
 // Test Float - Bool
 func TestCheckBinaryExprFloatSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 - true`, env,
 		`cannot convert true to type float64`,
@@ -2020,7 +2020,7 @@ func TestCheckBinaryExprFloatSubBool(t *testing.T) {
 
 // Test Float - String
 func TestCheckBinaryExprFloatSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 - "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2031,7 +2031,7 @@ func TestCheckBinaryExprFloatSubString(t *testing.T) {
 
 // Test Float - Nil
 func TestCheckBinaryExprFloatSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 - nil`, env,
 		`cannot convert nil to type float64`,
@@ -2042,35 +2042,35 @@ func TestCheckBinaryExprFloatSubNil(t *testing.T) {
 
 // Test Float * Int
 func TestCheckBinaryExprFloatMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 * 4`, env, NewConstFloat64(2.0 * 4), ConstFloat)
 }
 
 // Test Float * Rune
 func TestCheckBinaryExprFloatMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 * '@'`, env, NewConstFloat64(2.0 * '@'), ConstFloat)
 }
 
 // Test Float * Float
 func TestCheckBinaryExprFloatMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 * 2.0`, env, NewConstFloat64(2.0 * 2.0), ConstFloat)
 }
 
 // Test Float * Complex
 func TestCheckBinaryExprFloatMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 * 8.0i`, env, NewConstComplex128(2.0 * 8.0i), ConstComplex)
 }
 
 // Test Float * Bool
 func TestCheckBinaryExprFloatMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 * true`, env,
 		`cannot convert true to type float64`,
@@ -2081,7 +2081,7 @@ func TestCheckBinaryExprFloatMulBool(t *testing.T) {
 
 // Test Float * String
 func TestCheckBinaryExprFloatMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 * "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2092,7 +2092,7 @@ func TestCheckBinaryExprFloatMulString(t *testing.T) {
 
 // Test Float * Nil
 func TestCheckBinaryExprFloatMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 * nil`, env,
 		`cannot convert nil to type float64`,
@@ -2103,35 +2103,35 @@ func TestCheckBinaryExprFloatMulNil(t *testing.T) {
 
 // Test Float / Int
 func TestCheckBinaryExprFloatQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 / 4`, env, NewConstFloat64(2.0 / 4), ConstFloat)
 }
 
 // Test Float / Rune
 func TestCheckBinaryExprFloatQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 / '@'`, env, NewConstFloat64(2.0 / '@'), ConstFloat)
 }
 
 // Test Float / Float
 func TestCheckBinaryExprFloatQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 / 2.0`, env, NewConstFloat64(2.0 / 2.0), ConstFloat)
 }
 
 // Test Float / Complex
 func TestCheckBinaryExprFloatQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 / 8.0i`, env, NewConstComplex128(2.0 / 8.0i), ConstComplex)
 }
 
 // Test Float / Bool
 func TestCheckBinaryExprFloatQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 / true`, env,
 		`cannot convert true to type float64`,
@@ -2142,7 +2142,7 @@ func TestCheckBinaryExprFloatQuoBool(t *testing.T) {
 
 // Test Float / String
 func TestCheckBinaryExprFloatQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 / "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2153,7 +2153,7 @@ func TestCheckBinaryExprFloatQuoString(t *testing.T) {
 
 // Test Float / Nil
 func TestCheckBinaryExprFloatQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 / nil`, env,
 		`cannot convert nil to type float64`,
@@ -2164,7 +2164,7 @@ func TestCheckBinaryExprFloatQuoNil(t *testing.T) {
 
 // Test Float % Int
 func TestCheckBinaryExprFloatRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % 4`, env,
 		`illegal constant expression: floating-point % operation`,
@@ -2174,7 +2174,7 @@ func TestCheckBinaryExprFloatRemInt(t *testing.T) {
 
 // Test Float % Rune
 func TestCheckBinaryExprFloatRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % '@'`, env,
 		`illegal constant expression: floating-point % operation`,
@@ -2184,7 +2184,7 @@ func TestCheckBinaryExprFloatRemRune(t *testing.T) {
 
 // Test Float % Float
 func TestCheckBinaryExprFloatRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % 2.0`, env,
 		`illegal constant expression: floating-point % operation`,
@@ -2194,7 +2194,7 @@ func TestCheckBinaryExprFloatRemFloat(t *testing.T) {
 
 // Test Float % Complex
 func TestCheckBinaryExprFloatRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % 8.0i`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -2204,7 +2204,7 @@ func TestCheckBinaryExprFloatRemComplex(t *testing.T) {
 
 // Test Float % Bool
 func TestCheckBinaryExprFloatRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % true`, env,
 		`cannot convert true to type float64`,
@@ -2215,7 +2215,7 @@ func TestCheckBinaryExprFloatRemBool(t *testing.T) {
 
 // Test Float % String
 func TestCheckBinaryExprFloatRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2226,7 +2226,7 @@ func TestCheckBinaryExprFloatRemString(t *testing.T) {
 
 // Test Float % Nil
 func TestCheckBinaryExprFloatRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 % nil`, env,
 		`cannot convert nil to type float64`,
@@ -2237,7 +2237,7 @@ func TestCheckBinaryExprFloatRemNil(t *testing.T) {
 
 // Test Float & Int
 func TestCheckBinaryExprFloatAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & 4`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -2247,7 +2247,7 @@ func TestCheckBinaryExprFloatAndInt(t *testing.T) {
 
 // Test Float & Rune
 func TestCheckBinaryExprFloatAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & '@'`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -2257,7 +2257,7 @@ func TestCheckBinaryExprFloatAndRune(t *testing.T) {
 
 // Test Float & Float
 func TestCheckBinaryExprFloatAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & 2.0`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -2267,7 +2267,7 @@ func TestCheckBinaryExprFloatAndFloat(t *testing.T) {
 
 // Test Float & Complex
 func TestCheckBinaryExprFloatAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & 8.0i`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -2277,7 +2277,7 @@ func TestCheckBinaryExprFloatAndComplex(t *testing.T) {
 
 // Test Float & Bool
 func TestCheckBinaryExprFloatAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & true`, env,
 		`cannot convert true to type float64`,
@@ -2288,7 +2288,7 @@ func TestCheckBinaryExprFloatAndBool(t *testing.T) {
 
 // Test Float & String
 func TestCheckBinaryExprFloatAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2299,7 +2299,7 @@ func TestCheckBinaryExprFloatAndString(t *testing.T) {
 
 // Test Float & Nil
 func TestCheckBinaryExprFloatAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 & nil`, env,
 		`cannot convert nil to type float64`,
@@ -2310,7 +2310,7 @@ func TestCheckBinaryExprFloatAndNil(t *testing.T) {
 
 // Test Float | Int
 func TestCheckBinaryExprFloatOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | 4`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -2320,7 +2320,7 @@ func TestCheckBinaryExprFloatOrInt(t *testing.T) {
 
 // Test Float | Rune
 func TestCheckBinaryExprFloatOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | '@'`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -2330,7 +2330,7 @@ func TestCheckBinaryExprFloatOrRune(t *testing.T) {
 
 // Test Float | Float
 func TestCheckBinaryExprFloatOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | 2.0`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -2340,7 +2340,7 @@ func TestCheckBinaryExprFloatOrFloat(t *testing.T) {
 
 // Test Float | Complex
 func TestCheckBinaryExprFloatOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | 8.0i`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -2350,7 +2350,7 @@ func TestCheckBinaryExprFloatOrComplex(t *testing.T) {
 
 // Test Float | Bool
 func TestCheckBinaryExprFloatOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | true`, env,
 		`cannot convert true to type float64`,
@@ -2361,7 +2361,7 @@ func TestCheckBinaryExprFloatOrBool(t *testing.T) {
 
 // Test Float | String
 func TestCheckBinaryExprFloatOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2372,7 +2372,7 @@ func TestCheckBinaryExprFloatOrString(t *testing.T) {
 
 // Test Float | Nil
 func TestCheckBinaryExprFloatOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 | nil`, env,
 		`cannot convert nil to type float64`,
@@ -2383,7 +2383,7 @@ func TestCheckBinaryExprFloatOrNil(t *testing.T) {
 
 // Test Float ^ Int
 func TestCheckBinaryExprFloatXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ 4`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -2393,7 +2393,7 @@ func TestCheckBinaryExprFloatXorInt(t *testing.T) {
 
 // Test Float ^ Rune
 func TestCheckBinaryExprFloatXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ '@'`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -2403,7 +2403,7 @@ func TestCheckBinaryExprFloatXorRune(t *testing.T) {
 
 // Test Float ^ Float
 func TestCheckBinaryExprFloatXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ 2.0`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -2413,7 +2413,7 @@ func TestCheckBinaryExprFloatXorFloat(t *testing.T) {
 
 // Test Float ^ Complex
 func TestCheckBinaryExprFloatXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ 8.0i`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -2423,7 +2423,7 @@ func TestCheckBinaryExprFloatXorComplex(t *testing.T) {
 
 // Test Float ^ Bool
 func TestCheckBinaryExprFloatXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ true`, env,
 		`cannot convert true to type float64`,
@@ -2434,7 +2434,7 @@ func TestCheckBinaryExprFloatXorBool(t *testing.T) {
 
 // Test Float ^ String
 func TestCheckBinaryExprFloatXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2445,7 +2445,7 @@ func TestCheckBinaryExprFloatXorString(t *testing.T) {
 
 // Test Float ^ Nil
 func TestCheckBinaryExprFloatXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 ^ nil`, env,
 		`cannot convert nil to type float64`,
@@ -2456,7 +2456,7 @@ func TestCheckBinaryExprFloatXorNil(t *testing.T) {
 
 // Test Float &^ Int
 func TestCheckBinaryExprFloatAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ 4`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -2466,7 +2466,7 @@ func TestCheckBinaryExprFloatAndNotInt(t *testing.T) {
 
 // Test Float &^ Rune
 func TestCheckBinaryExprFloatAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ '@'`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -2476,7 +2476,7 @@ func TestCheckBinaryExprFloatAndNotRune(t *testing.T) {
 
 // Test Float &^ Float
 func TestCheckBinaryExprFloatAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ 2.0`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -2486,7 +2486,7 @@ func TestCheckBinaryExprFloatAndNotFloat(t *testing.T) {
 
 // Test Float &^ Complex
 func TestCheckBinaryExprFloatAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ 8.0i`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -2496,7 +2496,7 @@ func TestCheckBinaryExprFloatAndNotComplex(t *testing.T) {
 
 // Test Float &^ Bool
 func TestCheckBinaryExprFloatAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ true`, env,
 		`cannot convert true to type float64`,
@@ -2507,7 +2507,7 @@ func TestCheckBinaryExprFloatAndNotBool(t *testing.T) {
 
 // Test Float &^ String
 func TestCheckBinaryExprFloatAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2518,7 +2518,7 @@ func TestCheckBinaryExprFloatAndNotString(t *testing.T) {
 
 // Test Float &^ Nil
 func TestCheckBinaryExprFloatAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 &^ nil`, env,
 		`cannot convert nil to type float64`,
@@ -2529,35 +2529,35 @@ func TestCheckBinaryExprFloatAndNotNil(t *testing.T) {
 
 // Test Float == Int
 func TestCheckBinaryExprFloatEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 == 4`, env, (2.0 == 4), ConstBool)
 }
 
 // Test Float == Rune
 func TestCheckBinaryExprFloatEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 == '@'`, env, (2.0 == '@'), ConstBool)
 }
 
 // Test Float == Float
 func TestCheckBinaryExprFloatEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 == 2.0`, env, (2.0 == 2.0), ConstBool)
 }
 
 // Test Float == Complex
 func TestCheckBinaryExprFloatEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 == 8.0i`, env, (2.0 == 8.0i), ConstBool)
 }
 
 // Test Float == Bool
 func TestCheckBinaryExprFloatEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 == true`, env,
 		`cannot convert true to type float64`,
@@ -2568,7 +2568,7 @@ func TestCheckBinaryExprFloatEqlBool(t *testing.T) {
 
 // Test Float == String
 func TestCheckBinaryExprFloatEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 == "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2579,7 +2579,7 @@ func TestCheckBinaryExprFloatEqlString(t *testing.T) {
 
 // Test Float == Nil
 func TestCheckBinaryExprFloatEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 == nil`, env,
 		`cannot convert nil to type float64`,
@@ -2590,35 +2590,35 @@ func TestCheckBinaryExprFloatEqlNil(t *testing.T) {
 
 // Test Float != Int
 func TestCheckBinaryExprFloatNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 != 4`, env, (2.0 != 4), ConstBool)
 }
 
 // Test Float != Rune
 func TestCheckBinaryExprFloatNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 != '@'`, env, (2.0 != '@'), ConstBool)
 }
 
 // Test Float != Float
 func TestCheckBinaryExprFloatNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 != 2.0`, env, (2.0 != 2.0), ConstBool)
 }
 
 // Test Float != Complex
 func TestCheckBinaryExprFloatNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 != 8.0i`, env, (2.0 != 8.0i), ConstBool)
 }
 
 // Test Float != Bool
 func TestCheckBinaryExprFloatNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 != true`, env,
 		`cannot convert true to type float64`,
@@ -2629,7 +2629,7 @@ func TestCheckBinaryExprFloatNeqBool(t *testing.T) {
 
 // Test Float != String
 func TestCheckBinaryExprFloatNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 != "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2640,7 +2640,7 @@ func TestCheckBinaryExprFloatNeqString(t *testing.T) {
 
 // Test Float != Nil
 func TestCheckBinaryExprFloatNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 != nil`, env,
 		`cannot convert nil to type float64`,
@@ -2651,28 +2651,28 @@ func TestCheckBinaryExprFloatNeqNil(t *testing.T) {
 
 // Test Float <= Int
 func TestCheckBinaryExprFloatLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 <= 4`, env, (2.0 <= 4), ConstBool)
 }
 
 // Test Float <= Rune
 func TestCheckBinaryExprFloatLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 <= '@'`, env, (2.0 <= '@'), ConstBool)
 }
 
 // Test Float <= Float
 func TestCheckBinaryExprFloatLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 <= 2.0`, env, (2.0 <= 2.0), ConstBool)
 }
 
 // Test Float <= Complex
 func TestCheckBinaryExprFloatLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 <= 8.0i`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -2682,7 +2682,7 @@ func TestCheckBinaryExprFloatLeqComplex(t *testing.T) {
 
 // Test Float <= Bool
 func TestCheckBinaryExprFloatLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 <= true`, env,
 		`cannot convert true to type float64`,
@@ -2693,7 +2693,7 @@ func TestCheckBinaryExprFloatLeqBool(t *testing.T) {
 
 // Test Float <= String
 func TestCheckBinaryExprFloatLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 <= "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2704,7 +2704,7 @@ func TestCheckBinaryExprFloatLeqString(t *testing.T) {
 
 // Test Float <= Nil
 func TestCheckBinaryExprFloatLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 <= nil`, env,
 		`cannot convert nil to type float64`,
@@ -2715,28 +2715,28 @@ func TestCheckBinaryExprFloatLeqNil(t *testing.T) {
 
 // Test Float >= Int
 func TestCheckBinaryExprFloatGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 >= 4`, env, (2.0 >= 4), ConstBool)
 }
 
 // Test Float >= Rune
 func TestCheckBinaryExprFloatGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 >= '@'`, env, (2.0 >= '@'), ConstBool)
 }
 
 // Test Float >= Float
 func TestCheckBinaryExprFloatGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 >= 2.0`, env, (2.0 >= 2.0), ConstBool)
 }
 
 // Test Float >= Complex
 func TestCheckBinaryExprFloatGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 >= 8.0i`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -2746,7 +2746,7 @@ func TestCheckBinaryExprFloatGeqComplex(t *testing.T) {
 
 // Test Float >= Bool
 func TestCheckBinaryExprFloatGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 >= true`, env,
 		`cannot convert true to type float64`,
@@ -2757,7 +2757,7 @@ func TestCheckBinaryExprFloatGeqBool(t *testing.T) {
 
 // Test Float >= String
 func TestCheckBinaryExprFloatGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 >= "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2768,7 +2768,7 @@ func TestCheckBinaryExprFloatGeqString(t *testing.T) {
 
 // Test Float >= Nil
 func TestCheckBinaryExprFloatGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 >= nil`, env,
 		`cannot convert nil to type float64`,
@@ -2779,28 +2779,28 @@ func TestCheckBinaryExprFloatGeqNil(t *testing.T) {
 
 // Test Float < Int
 func TestCheckBinaryExprFloatLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 < 4`, env, (2.0 < 4), ConstBool)
 }
 
 // Test Float < Rune
 func TestCheckBinaryExprFloatLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 < '@'`, env, (2.0 < '@'), ConstBool)
 }
 
 // Test Float < Float
 func TestCheckBinaryExprFloatLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 < 2.0`, env, (2.0 < 2.0), ConstBool)
 }
 
 // Test Float < Complex
 func TestCheckBinaryExprFloatLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 < 8.0i`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -2810,7 +2810,7 @@ func TestCheckBinaryExprFloatLssComplex(t *testing.T) {
 
 // Test Float < Bool
 func TestCheckBinaryExprFloatLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 < true`, env,
 		`cannot convert true to type float64`,
@@ -2821,7 +2821,7 @@ func TestCheckBinaryExprFloatLssBool(t *testing.T) {
 
 // Test Float < String
 func TestCheckBinaryExprFloatLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 < "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2832,7 +2832,7 @@ func TestCheckBinaryExprFloatLssString(t *testing.T) {
 
 // Test Float < Nil
 func TestCheckBinaryExprFloatLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 < nil`, env,
 		`cannot convert nil to type float64`,
@@ -2843,28 +2843,28 @@ func TestCheckBinaryExprFloatLssNil(t *testing.T) {
 
 // Test Float > Int
 func TestCheckBinaryExprFloatGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 > 4`, env, (2.0 > 4), ConstBool)
 }
 
 // Test Float > Rune
 func TestCheckBinaryExprFloatGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 > '@'`, env, (2.0 > '@'), ConstBool)
 }
 
 // Test Float > Float
 func TestCheckBinaryExprFloatGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `2.0 > 2.0`, env, (2.0 > 2.0), ConstBool)
 }
 
 // Test Float > Complex
 func TestCheckBinaryExprFloatGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 > 8.0i`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -2874,7 +2874,7 @@ func TestCheckBinaryExprFloatGtrComplex(t *testing.T) {
 
 // Test Float > Bool
 func TestCheckBinaryExprFloatGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 > true`, env,
 		`cannot convert true to type float64`,
@@ -2885,7 +2885,7 @@ func TestCheckBinaryExprFloatGtrBool(t *testing.T) {
 
 // Test Float > String
 func TestCheckBinaryExprFloatGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 > "abc"`, env,
 		`cannot convert "abc" to type float64`,
@@ -2896,7 +2896,7 @@ func TestCheckBinaryExprFloatGtrString(t *testing.T) {
 
 // Test Float > Nil
 func TestCheckBinaryExprFloatGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `2.0 > nil`, env,
 		`cannot convert nil to type float64`,
@@ -2907,35 +2907,35 @@ func TestCheckBinaryExprFloatGtrNil(t *testing.T) {
 
 // Test Complex + Int
 func TestCheckBinaryExprComplexAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i + 4`, env, NewConstComplex128(8.0i + 4), ConstComplex)
 }
 
 // Test Complex + Rune
 func TestCheckBinaryExprComplexAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i + '@'`, env, NewConstComplex128(8.0i + '@'), ConstComplex)
 }
 
 // Test Complex + Float
 func TestCheckBinaryExprComplexAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i + 2.0`, env, NewConstComplex128(8.0i + 2.0), ConstComplex)
 }
 
 // Test Complex + Complex
 func TestCheckBinaryExprComplexAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i + 8.0i`, env, NewConstComplex128(8.0i + 8.0i), ConstComplex)
 }
 
 // Test Complex + Bool
 func TestCheckBinaryExprComplexAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i + true`, env,
 		`cannot convert true to type complex128`,
@@ -2946,7 +2946,7 @@ func TestCheckBinaryExprComplexAddBool(t *testing.T) {
 
 // Test Complex + String
 func TestCheckBinaryExprComplexAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i + "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -2957,7 +2957,7 @@ func TestCheckBinaryExprComplexAddString(t *testing.T) {
 
 // Test Complex + Nil
 func TestCheckBinaryExprComplexAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i + nil`, env,
 		`cannot convert nil to type complex128`,
@@ -2968,35 +2968,35 @@ func TestCheckBinaryExprComplexAddNil(t *testing.T) {
 
 // Test Complex - Int
 func TestCheckBinaryExprComplexSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i - 4`, env, NewConstComplex128(8.0i - 4), ConstComplex)
 }
 
 // Test Complex - Rune
 func TestCheckBinaryExprComplexSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i - '@'`, env, NewConstComplex128(8.0i - '@'), ConstComplex)
 }
 
 // Test Complex - Float
 func TestCheckBinaryExprComplexSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i - 2.0`, env, NewConstComplex128(8.0i - 2.0), ConstComplex)
 }
 
 // Test Complex - Complex
 func TestCheckBinaryExprComplexSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i - 8.0i`, env, NewConstComplex128(8.0i - 8.0i), ConstComplex)
 }
 
 // Test Complex - Bool
 func TestCheckBinaryExprComplexSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i - true`, env,
 		`cannot convert true to type complex128`,
@@ -3007,7 +3007,7 @@ func TestCheckBinaryExprComplexSubBool(t *testing.T) {
 
 // Test Complex - String
 func TestCheckBinaryExprComplexSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i - "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3018,7 +3018,7 @@ func TestCheckBinaryExprComplexSubString(t *testing.T) {
 
 // Test Complex - Nil
 func TestCheckBinaryExprComplexSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i - nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3029,35 +3029,35 @@ func TestCheckBinaryExprComplexSubNil(t *testing.T) {
 
 // Test Complex * Int
 func TestCheckBinaryExprComplexMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i * 4`, env, NewConstComplex128(8.0i * 4), ConstComplex)
 }
 
 // Test Complex * Rune
 func TestCheckBinaryExprComplexMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i * '@'`, env, NewConstComplex128(8.0i * '@'), ConstComplex)
 }
 
 // Test Complex * Float
 func TestCheckBinaryExprComplexMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i * 2.0`, env, NewConstComplex128(8.0i * 2.0), ConstComplex)
 }
 
 // Test Complex * Complex
 func TestCheckBinaryExprComplexMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i * 8.0i`, env, NewConstComplex128(8.0i * 8.0i), ConstComplex)
 }
 
 // Test Complex * Bool
 func TestCheckBinaryExprComplexMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i * true`, env,
 		`cannot convert true to type complex128`,
@@ -3068,7 +3068,7 @@ func TestCheckBinaryExprComplexMulBool(t *testing.T) {
 
 // Test Complex * String
 func TestCheckBinaryExprComplexMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i * "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3079,7 +3079,7 @@ func TestCheckBinaryExprComplexMulString(t *testing.T) {
 
 // Test Complex * Nil
 func TestCheckBinaryExprComplexMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i * nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3090,35 +3090,35 @@ func TestCheckBinaryExprComplexMulNil(t *testing.T) {
 
 // Test Complex / Int
 func TestCheckBinaryExprComplexQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i / 4`, env, NewConstComplex128(8.0i / 4), ConstComplex)
 }
 
 // Test Complex / Rune
 func TestCheckBinaryExprComplexQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i / '@'`, env, NewConstComplex128(8.0i / '@'), ConstComplex)
 }
 
 // Test Complex / Float
 func TestCheckBinaryExprComplexQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i / 2.0`, env, NewConstComplex128(8.0i / 2.0), ConstComplex)
 }
 
 // Test Complex / Complex
 func TestCheckBinaryExprComplexQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i / 8.0i`, env, NewConstComplex128(8.0i / 8.0i), ConstComplex)
 }
 
 // Test Complex / Bool
 func TestCheckBinaryExprComplexQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i / true`, env,
 		`cannot convert true to type complex128`,
@@ -3129,7 +3129,7 @@ func TestCheckBinaryExprComplexQuoBool(t *testing.T) {
 
 // Test Complex / String
 func TestCheckBinaryExprComplexQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i / "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3140,7 +3140,7 @@ func TestCheckBinaryExprComplexQuoString(t *testing.T) {
 
 // Test Complex / Nil
 func TestCheckBinaryExprComplexQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i / nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3151,7 +3151,7 @@ func TestCheckBinaryExprComplexQuoNil(t *testing.T) {
 
 // Test Complex % Int
 func TestCheckBinaryExprComplexRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % 4`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -3161,7 +3161,7 @@ func TestCheckBinaryExprComplexRemInt(t *testing.T) {
 
 // Test Complex % Rune
 func TestCheckBinaryExprComplexRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % '@'`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -3171,7 +3171,7 @@ func TestCheckBinaryExprComplexRemRune(t *testing.T) {
 
 // Test Complex % Float
 func TestCheckBinaryExprComplexRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % 2.0`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -3181,7 +3181,7 @@ func TestCheckBinaryExprComplexRemFloat(t *testing.T) {
 
 // Test Complex % Complex
 func TestCheckBinaryExprComplexRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % 8.0i`, env,
 		`illegal constant expression: untyped number % untyped number`,
@@ -3191,7 +3191,7 @@ func TestCheckBinaryExprComplexRemComplex(t *testing.T) {
 
 // Test Complex % Bool
 func TestCheckBinaryExprComplexRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % true`, env,
 		`cannot convert true to type complex128`,
@@ -3202,7 +3202,7 @@ func TestCheckBinaryExprComplexRemBool(t *testing.T) {
 
 // Test Complex % String
 func TestCheckBinaryExprComplexRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3213,7 +3213,7 @@ func TestCheckBinaryExprComplexRemString(t *testing.T) {
 
 // Test Complex % Nil
 func TestCheckBinaryExprComplexRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i % nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3224,7 +3224,7 @@ func TestCheckBinaryExprComplexRemNil(t *testing.T) {
 
 // Test Complex & Int
 func TestCheckBinaryExprComplexAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & 4`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -3234,7 +3234,7 @@ func TestCheckBinaryExprComplexAndInt(t *testing.T) {
 
 // Test Complex & Rune
 func TestCheckBinaryExprComplexAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & '@'`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -3244,7 +3244,7 @@ func TestCheckBinaryExprComplexAndRune(t *testing.T) {
 
 // Test Complex & Float
 func TestCheckBinaryExprComplexAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & 2.0`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -3254,7 +3254,7 @@ func TestCheckBinaryExprComplexAndFloat(t *testing.T) {
 
 // Test Complex & Complex
 func TestCheckBinaryExprComplexAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & 8.0i`, env,
 		`illegal constant expression: untyped number & untyped number`,
@@ -3264,7 +3264,7 @@ func TestCheckBinaryExprComplexAndComplex(t *testing.T) {
 
 // Test Complex & Bool
 func TestCheckBinaryExprComplexAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & true`, env,
 		`cannot convert true to type complex128`,
@@ -3275,7 +3275,7 @@ func TestCheckBinaryExprComplexAndBool(t *testing.T) {
 
 // Test Complex & String
 func TestCheckBinaryExprComplexAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3286,7 +3286,7 @@ func TestCheckBinaryExprComplexAndString(t *testing.T) {
 
 // Test Complex & Nil
 func TestCheckBinaryExprComplexAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i & nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3297,7 +3297,7 @@ func TestCheckBinaryExprComplexAndNil(t *testing.T) {
 
 // Test Complex | Int
 func TestCheckBinaryExprComplexOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | 4`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -3307,7 +3307,7 @@ func TestCheckBinaryExprComplexOrInt(t *testing.T) {
 
 // Test Complex | Rune
 func TestCheckBinaryExprComplexOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | '@'`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -3317,7 +3317,7 @@ func TestCheckBinaryExprComplexOrRune(t *testing.T) {
 
 // Test Complex | Float
 func TestCheckBinaryExprComplexOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | 2.0`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -3327,7 +3327,7 @@ func TestCheckBinaryExprComplexOrFloat(t *testing.T) {
 
 // Test Complex | Complex
 func TestCheckBinaryExprComplexOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | 8.0i`, env,
 		`illegal constant expression: untyped number | untyped number`,
@@ -3337,7 +3337,7 @@ func TestCheckBinaryExprComplexOrComplex(t *testing.T) {
 
 // Test Complex | Bool
 func TestCheckBinaryExprComplexOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | true`, env,
 		`cannot convert true to type complex128`,
@@ -3348,7 +3348,7 @@ func TestCheckBinaryExprComplexOrBool(t *testing.T) {
 
 // Test Complex | String
 func TestCheckBinaryExprComplexOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3359,7 +3359,7 @@ func TestCheckBinaryExprComplexOrString(t *testing.T) {
 
 // Test Complex | Nil
 func TestCheckBinaryExprComplexOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i | nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3370,7 +3370,7 @@ func TestCheckBinaryExprComplexOrNil(t *testing.T) {
 
 // Test Complex ^ Int
 func TestCheckBinaryExprComplexXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ 4`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -3380,7 +3380,7 @@ func TestCheckBinaryExprComplexXorInt(t *testing.T) {
 
 // Test Complex ^ Rune
 func TestCheckBinaryExprComplexXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ '@'`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -3390,7 +3390,7 @@ func TestCheckBinaryExprComplexXorRune(t *testing.T) {
 
 // Test Complex ^ Float
 func TestCheckBinaryExprComplexXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ 2.0`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -3400,7 +3400,7 @@ func TestCheckBinaryExprComplexXorFloat(t *testing.T) {
 
 // Test Complex ^ Complex
 func TestCheckBinaryExprComplexXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ 8.0i`, env,
 		`illegal constant expression: untyped number ^ untyped number`,
@@ -3410,7 +3410,7 @@ func TestCheckBinaryExprComplexXorComplex(t *testing.T) {
 
 // Test Complex ^ Bool
 func TestCheckBinaryExprComplexXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ true`, env,
 		`cannot convert true to type complex128`,
@@ -3421,7 +3421,7 @@ func TestCheckBinaryExprComplexXorBool(t *testing.T) {
 
 // Test Complex ^ String
 func TestCheckBinaryExprComplexXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3432,7 +3432,7 @@ func TestCheckBinaryExprComplexXorString(t *testing.T) {
 
 // Test Complex ^ Nil
 func TestCheckBinaryExprComplexXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i ^ nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3443,7 +3443,7 @@ func TestCheckBinaryExprComplexXorNil(t *testing.T) {
 
 // Test Complex &^ Int
 func TestCheckBinaryExprComplexAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ 4`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -3453,7 +3453,7 @@ func TestCheckBinaryExprComplexAndNotInt(t *testing.T) {
 
 // Test Complex &^ Rune
 func TestCheckBinaryExprComplexAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ '@'`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -3463,7 +3463,7 @@ func TestCheckBinaryExprComplexAndNotRune(t *testing.T) {
 
 // Test Complex &^ Float
 func TestCheckBinaryExprComplexAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ 2.0`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -3473,7 +3473,7 @@ func TestCheckBinaryExprComplexAndNotFloat(t *testing.T) {
 
 // Test Complex &^ Complex
 func TestCheckBinaryExprComplexAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ 8.0i`, env,
 		`illegal constant expression: untyped number &^ untyped number`,
@@ -3483,7 +3483,7 @@ func TestCheckBinaryExprComplexAndNotComplex(t *testing.T) {
 
 // Test Complex &^ Bool
 func TestCheckBinaryExprComplexAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ true`, env,
 		`cannot convert true to type complex128`,
@@ -3494,7 +3494,7 @@ func TestCheckBinaryExprComplexAndNotBool(t *testing.T) {
 
 // Test Complex &^ String
 func TestCheckBinaryExprComplexAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3505,7 +3505,7 @@ func TestCheckBinaryExprComplexAndNotString(t *testing.T) {
 
 // Test Complex &^ Nil
 func TestCheckBinaryExprComplexAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i &^ nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3516,35 +3516,35 @@ func TestCheckBinaryExprComplexAndNotNil(t *testing.T) {
 
 // Test Complex == Int
 func TestCheckBinaryExprComplexEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i == 4`, env, (8.0i == 4), ConstBool)
 }
 
 // Test Complex == Rune
 func TestCheckBinaryExprComplexEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i == '@'`, env, (8.0i == '@'), ConstBool)
 }
 
 // Test Complex == Float
 func TestCheckBinaryExprComplexEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i == 2.0`, env, (8.0i == 2.0), ConstBool)
 }
 
 // Test Complex == Complex
 func TestCheckBinaryExprComplexEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i == 8.0i`, env, (8.0i == 8.0i), ConstBool)
 }
 
 // Test Complex == Bool
 func TestCheckBinaryExprComplexEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i == true`, env,
 		`cannot convert true to type complex128`,
@@ -3555,7 +3555,7 @@ func TestCheckBinaryExprComplexEqlBool(t *testing.T) {
 
 // Test Complex == String
 func TestCheckBinaryExprComplexEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i == "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3566,7 +3566,7 @@ func TestCheckBinaryExprComplexEqlString(t *testing.T) {
 
 // Test Complex == Nil
 func TestCheckBinaryExprComplexEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i == nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3577,35 +3577,35 @@ func TestCheckBinaryExprComplexEqlNil(t *testing.T) {
 
 // Test Complex != Int
 func TestCheckBinaryExprComplexNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i != 4`, env, (8.0i != 4), ConstBool)
 }
 
 // Test Complex != Rune
 func TestCheckBinaryExprComplexNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i != '@'`, env, (8.0i != '@'), ConstBool)
 }
 
 // Test Complex != Float
 func TestCheckBinaryExprComplexNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i != 2.0`, env, (8.0i != 2.0), ConstBool)
 }
 
 // Test Complex != Complex
 func TestCheckBinaryExprComplexNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `8.0i != 8.0i`, env, (8.0i != 8.0i), ConstBool)
 }
 
 // Test Complex != Bool
 func TestCheckBinaryExprComplexNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i != true`, env,
 		`cannot convert true to type complex128`,
@@ -3616,7 +3616,7 @@ func TestCheckBinaryExprComplexNeqBool(t *testing.T) {
 
 // Test Complex != String
 func TestCheckBinaryExprComplexNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i != "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3627,7 +3627,7 @@ func TestCheckBinaryExprComplexNeqString(t *testing.T) {
 
 // Test Complex != Nil
 func TestCheckBinaryExprComplexNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i != nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3638,7 +3638,7 @@ func TestCheckBinaryExprComplexNeqNil(t *testing.T) {
 
 // Test Complex <= Int
 func TestCheckBinaryExprComplexLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= 4`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -3648,7 +3648,7 @@ func TestCheckBinaryExprComplexLeqInt(t *testing.T) {
 
 // Test Complex <= Rune
 func TestCheckBinaryExprComplexLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= '@'`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -3658,7 +3658,7 @@ func TestCheckBinaryExprComplexLeqRune(t *testing.T) {
 
 // Test Complex <= Float
 func TestCheckBinaryExprComplexLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= 2.0`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -3668,7 +3668,7 @@ func TestCheckBinaryExprComplexLeqFloat(t *testing.T) {
 
 // Test Complex <= Complex
 func TestCheckBinaryExprComplexLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= 8.0i`, env,
 		`illegal constant expression: untyped number <= untyped number`,
@@ -3678,7 +3678,7 @@ func TestCheckBinaryExprComplexLeqComplex(t *testing.T) {
 
 // Test Complex <= Bool
 func TestCheckBinaryExprComplexLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= true`, env,
 		`cannot convert true to type complex128`,
@@ -3689,7 +3689,7 @@ func TestCheckBinaryExprComplexLeqBool(t *testing.T) {
 
 // Test Complex <= String
 func TestCheckBinaryExprComplexLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3700,7 +3700,7 @@ func TestCheckBinaryExprComplexLeqString(t *testing.T) {
 
 // Test Complex <= Nil
 func TestCheckBinaryExprComplexLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i <= nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3711,7 +3711,7 @@ func TestCheckBinaryExprComplexLeqNil(t *testing.T) {
 
 // Test Complex >= Int
 func TestCheckBinaryExprComplexGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= 4`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -3721,7 +3721,7 @@ func TestCheckBinaryExprComplexGeqInt(t *testing.T) {
 
 // Test Complex >= Rune
 func TestCheckBinaryExprComplexGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= '@'`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -3731,7 +3731,7 @@ func TestCheckBinaryExprComplexGeqRune(t *testing.T) {
 
 // Test Complex >= Float
 func TestCheckBinaryExprComplexGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= 2.0`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -3741,7 +3741,7 @@ func TestCheckBinaryExprComplexGeqFloat(t *testing.T) {
 
 // Test Complex >= Complex
 func TestCheckBinaryExprComplexGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= 8.0i`, env,
 		`illegal constant expression: untyped number >= untyped number`,
@@ -3751,7 +3751,7 @@ func TestCheckBinaryExprComplexGeqComplex(t *testing.T) {
 
 // Test Complex >= Bool
 func TestCheckBinaryExprComplexGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= true`, env,
 		`cannot convert true to type complex128`,
@@ -3762,7 +3762,7 @@ func TestCheckBinaryExprComplexGeqBool(t *testing.T) {
 
 // Test Complex >= String
 func TestCheckBinaryExprComplexGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3773,7 +3773,7 @@ func TestCheckBinaryExprComplexGeqString(t *testing.T) {
 
 // Test Complex >= Nil
 func TestCheckBinaryExprComplexGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i >= nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3784,7 +3784,7 @@ func TestCheckBinaryExprComplexGeqNil(t *testing.T) {
 
 // Test Complex < Int
 func TestCheckBinaryExprComplexLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < 4`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -3794,7 +3794,7 @@ func TestCheckBinaryExprComplexLssInt(t *testing.T) {
 
 // Test Complex < Rune
 func TestCheckBinaryExprComplexLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < '@'`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -3804,7 +3804,7 @@ func TestCheckBinaryExprComplexLssRune(t *testing.T) {
 
 // Test Complex < Float
 func TestCheckBinaryExprComplexLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < 2.0`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -3814,7 +3814,7 @@ func TestCheckBinaryExprComplexLssFloat(t *testing.T) {
 
 // Test Complex < Complex
 func TestCheckBinaryExprComplexLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < 8.0i`, env,
 		`illegal constant expression: untyped number < untyped number`,
@@ -3824,7 +3824,7 @@ func TestCheckBinaryExprComplexLssComplex(t *testing.T) {
 
 // Test Complex < Bool
 func TestCheckBinaryExprComplexLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < true`, env,
 		`cannot convert true to type complex128`,
@@ -3835,7 +3835,7 @@ func TestCheckBinaryExprComplexLssBool(t *testing.T) {
 
 // Test Complex < String
 func TestCheckBinaryExprComplexLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3846,7 +3846,7 @@ func TestCheckBinaryExprComplexLssString(t *testing.T) {
 
 // Test Complex < Nil
 func TestCheckBinaryExprComplexLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i < nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3857,7 +3857,7 @@ func TestCheckBinaryExprComplexLssNil(t *testing.T) {
 
 // Test Complex > Int
 func TestCheckBinaryExprComplexGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > 4`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -3867,7 +3867,7 @@ func TestCheckBinaryExprComplexGtrInt(t *testing.T) {
 
 // Test Complex > Rune
 func TestCheckBinaryExprComplexGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > '@'`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -3877,7 +3877,7 @@ func TestCheckBinaryExprComplexGtrRune(t *testing.T) {
 
 // Test Complex > Float
 func TestCheckBinaryExprComplexGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > 2.0`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -3887,7 +3887,7 @@ func TestCheckBinaryExprComplexGtrFloat(t *testing.T) {
 
 // Test Complex > Complex
 func TestCheckBinaryExprComplexGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > 8.0i`, env,
 		`illegal constant expression: untyped number > untyped number`,
@@ -3897,7 +3897,7 @@ func TestCheckBinaryExprComplexGtrComplex(t *testing.T) {
 
 // Test Complex > Bool
 func TestCheckBinaryExprComplexGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > true`, env,
 		`cannot convert true to type complex128`,
@@ -3908,7 +3908,7 @@ func TestCheckBinaryExprComplexGtrBool(t *testing.T) {
 
 // Test Complex > String
 func TestCheckBinaryExprComplexGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > "abc"`, env,
 		`cannot convert "abc" to type complex128`,
@@ -3919,7 +3919,7 @@ func TestCheckBinaryExprComplexGtrString(t *testing.T) {
 
 // Test Complex > Nil
 func TestCheckBinaryExprComplexGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `8.0i > nil`, env,
 		`cannot convert nil to type complex128`,
@@ -3930,7 +3930,7 @@ func TestCheckBinaryExprComplexGtrNil(t *testing.T) {
 
 // Test Bool + Int
 func TestCheckBinaryExprBoolAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + 4`, env,
 		`cannot convert 4 to type bool`,
@@ -3941,7 +3941,7 @@ func TestCheckBinaryExprBoolAddInt(t *testing.T) {
 
 // Test Bool + Rune
 func TestCheckBinaryExprBoolAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -3952,7 +3952,7 @@ func TestCheckBinaryExprBoolAddRune(t *testing.T) {
 
 // Test Bool + Float
 func TestCheckBinaryExprBoolAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -3963,7 +3963,7 @@ func TestCheckBinaryExprBoolAddFloat(t *testing.T) {
 
 // Test Bool + Complex
 func TestCheckBinaryExprBoolAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -3974,7 +3974,7 @@ func TestCheckBinaryExprBoolAddComplex(t *testing.T) {
 
 // Test Bool + Bool
 func TestCheckBinaryExprBoolAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + true`, env,
 		`invalid operation: true + true (operator + not defined on bool)`,
@@ -3984,7 +3984,7 @@ func TestCheckBinaryExprBoolAddBool(t *testing.T) {
 
 // Test Bool + String
 func TestCheckBinaryExprBoolAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -3995,7 +3995,7 @@ func TestCheckBinaryExprBoolAddString(t *testing.T) {
 
 // Test Bool + Nil
 func TestCheckBinaryExprBoolAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true + nil`, env,
 		`cannot convert nil to type bool`,
@@ -4006,7 +4006,7 @@ func TestCheckBinaryExprBoolAddNil(t *testing.T) {
 
 // Test Bool - Int
 func TestCheckBinaryExprBoolSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4017,7 +4017,7 @@ func TestCheckBinaryExprBoolSubInt(t *testing.T) {
 
 // Test Bool - Rune
 func TestCheckBinaryExprBoolSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4028,7 +4028,7 @@ func TestCheckBinaryExprBoolSubRune(t *testing.T) {
 
 // Test Bool - Float
 func TestCheckBinaryExprBoolSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4039,7 +4039,7 @@ func TestCheckBinaryExprBoolSubFloat(t *testing.T) {
 
 // Test Bool - Complex
 func TestCheckBinaryExprBoolSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4050,7 +4050,7 @@ func TestCheckBinaryExprBoolSubComplex(t *testing.T) {
 
 // Test Bool - Bool
 func TestCheckBinaryExprBoolSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - true`, env,
 		`invalid operation: true - true (operator - not defined on bool)`,
@@ -4060,7 +4060,7 @@ func TestCheckBinaryExprBoolSubBool(t *testing.T) {
 
 // Test Bool - String
 func TestCheckBinaryExprBoolSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4071,7 +4071,7 @@ func TestCheckBinaryExprBoolSubString(t *testing.T) {
 
 // Test Bool - Nil
 func TestCheckBinaryExprBoolSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true - nil`, env,
 		`cannot convert nil to type bool`,
@@ -4082,7 +4082,7 @@ func TestCheckBinaryExprBoolSubNil(t *testing.T) {
 
 // Test Bool * Int
 func TestCheckBinaryExprBoolMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4093,7 +4093,7 @@ func TestCheckBinaryExprBoolMulInt(t *testing.T) {
 
 // Test Bool * Rune
 func TestCheckBinaryExprBoolMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4104,7 +4104,7 @@ func TestCheckBinaryExprBoolMulRune(t *testing.T) {
 
 // Test Bool * Float
 func TestCheckBinaryExprBoolMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4115,7 +4115,7 @@ func TestCheckBinaryExprBoolMulFloat(t *testing.T) {
 
 // Test Bool * Complex
 func TestCheckBinaryExprBoolMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4126,7 +4126,7 @@ func TestCheckBinaryExprBoolMulComplex(t *testing.T) {
 
 // Test Bool * Bool
 func TestCheckBinaryExprBoolMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * true`, env,
 		`invalid operation: true * true (operator * not defined on bool)`,
@@ -4136,7 +4136,7 @@ func TestCheckBinaryExprBoolMulBool(t *testing.T) {
 
 // Test Bool * String
 func TestCheckBinaryExprBoolMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4147,7 +4147,7 @@ func TestCheckBinaryExprBoolMulString(t *testing.T) {
 
 // Test Bool * Nil
 func TestCheckBinaryExprBoolMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true * nil`, env,
 		`cannot convert nil to type bool`,
@@ -4158,7 +4158,7 @@ func TestCheckBinaryExprBoolMulNil(t *testing.T) {
 
 // Test Bool / Int
 func TestCheckBinaryExprBoolQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4169,7 +4169,7 @@ func TestCheckBinaryExprBoolQuoInt(t *testing.T) {
 
 // Test Bool / Rune
 func TestCheckBinaryExprBoolQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4180,7 +4180,7 @@ func TestCheckBinaryExprBoolQuoRune(t *testing.T) {
 
 // Test Bool / Float
 func TestCheckBinaryExprBoolQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4191,7 +4191,7 @@ func TestCheckBinaryExprBoolQuoFloat(t *testing.T) {
 
 // Test Bool / Complex
 func TestCheckBinaryExprBoolQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4202,7 +4202,7 @@ func TestCheckBinaryExprBoolQuoComplex(t *testing.T) {
 
 // Test Bool / Bool
 func TestCheckBinaryExprBoolQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / true`, env,
 		`invalid operation: true / true (operator / not defined on bool)`,
@@ -4212,7 +4212,7 @@ func TestCheckBinaryExprBoolQuoBool(t *testing.T) {
 
 // Test Bool / String
 func TestCheckBinaryExprBoolQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4223,7 +4223,7 @@ func TestCheckBinaryExprBoolQuoString(t *testing.T) {
 
 // Test Bool / Nil
 func TestCheckBinaryExprBoolQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true / nil`, env,
 		`cannot convert nil to type bool`,
@@ -4234,7 +4234,7 @@ func TestCheckBinaryExprBoolQuoNil(t *testing.T) {
 
 // Test Bool % Int
 func TestCheckBinaryExprBoolRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4245,7 +4245,7 @@ func TestCheckBinaryExprBoolRemInt(t *testing.T) {
 
 // Test Bool % Rune
 func TestCheckBinaryExprBoolRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4256,7 +4256,7 @@ func TestCheckBinaryExprBoolRemRune(t *testing.T) {
 
 // Test Bool % Float
 func TestCheckBinaryExprBoolRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4267,7 +4267,7 @@ func TestCheckBinaryExprBoolRemFloat(t *testing.T) {
 
 // Test Bool % Complex
 func TestCheckBinaryExprBoolRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4278,7 +4278,7 @@ func TestCheckBinaryExprBoolRemComplex(t *testing.T) {
 
 // Test Bool % Bool
 func TestCheckBinaryExprBoolRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % true`, env,
 		`invalid operation: true % true (operator % not defined on bool)`,
@@ -4288,7 +4288,7 @@ func TestCheckBinaryExprBoolRemBool(t *testing.T) {
 
 // Test Bool % String
 func TestCheckBinaryExprBoolRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4299,7 +4299,7 @@ func TestCheckBinaryExprBoolRemString(t *testing.T) {
 
 // Test Bool % Nil
 func TestCheckBinaryExprBoolRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true % nil`, env,
 		`cannot convert nil to type bool`,
@@ -4310,7 +4310,7 @@ func TestCheckBinaryExprBoolRemNil(t *testing.T) {
 
 // Test Bool & Int
 func TestCheckBinaryExprBoolAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4321,7 +4321,7 @@ func TestCheckBinaryExprBoolAndInt(t *testing.T) {
 
 // Test Bool & Rune
 func TestCheckBinaryExprBoolAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4332,7 +4332,7 @@ func TestCheckBinaryExprBoolAndRune(t *testing.T) {
 
 // Test Bool & Float
 func TestCheckBinaryExprBoolAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4343,7 +4343,7 @@ func TestCheckBinaryExprBoolAndFloat(t *testing.T) {
 
 // Test Bool & Complex
 func TestCheckBinaryExprBoolAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4354,7 +4354,7 @@ func TestCheckBinaryExprBoolAndComplex(t *testing.T) {
 
 // Test Bool & Bool
 func TestCheckBinaryExprBoolAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & true`, env,
 		`invalid operation: true & true (operator & not defined on bool)`,
@@ -4364,7 +4364,7 @@ func TestCheckBinaryExprBoolAndBool(t *testing.T) {
 
 // Test Bool & String
 func TestCheckBinaryExprBoolAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4375,7 +4375,7 @@ func TestCheckBinaryExprBoolAndString(t *testing.T) {
 
 // Test Bool & Nil
 func TestCheckBinaryExprBoolAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true & nil`, env,
 		`cannot convert nil to type bool`,
@@ -4386,7 +4386,7 @@ func TestCheckBinaryExprBoolAndNil(t *testing.T) {
 
 // Test Bool | Int
 func TestCheckBinaryExprBoolOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4397,7 +4397,7 @@ func TestCheckBinaryExprBoolOrInt(t *testing.T) {
 
 // Test Bool | Rune
 func TestCheckBinaryExprBoolOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4408,7 +4408,7 @@ func TestCheckBinaryExprBoolOrRune(t *testing.T) {
 
 // Test Bool | Float
 func TestCheckBinaryExprBoolOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4419,7 +4419,7 @@ func TestCheckBinaryExprBoolOrFloat(t *testing.T) {
 
 // Test Bool | Complex
 func TestCheckBinaryExprBoolOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4430,7 +4430,7 @@ func TestCheckBinaryExprBoolOrComplex(t *testing.T) {
 
 // Test Bool | Bool
 func TestCheckBinaryExprBoolOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | true`, env,
 		`invalid operation: true | true (operator | not defined on bool)`,
@@ -4440,7 +4440,7 @@ func TestCheckBinaryExprBoolOrBool(t *testing.T) {
 
 // Test Bool | String
 func TestCheckBinaryExprBoolOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4451,7 +4451,7 @@ func TestCheckBinaryExprBoolOrString(t *testing.T) {
 
 // Test Bool | Nil
 func TestCheckBinaryExprBoolOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true | nil`, env,
 		`cannot convert nil to type bool`,
@@ -4462,7 +4462,7 @@ func TestCheckBinaryExprBoolOrNil(t *testing.T) {
 
 // Test Bool ^ Int
 func TestCheckBinaryExprBoolXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4473,7 +4473,7 @@ func TestCheckBinaryExprBoolXorInt(t *testing.T) {
 
 // Test Bool ^ Rune
 func TestCheckBinaryExprBoolXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4484,7 +4484,7 @@ func TestCheckBinaryExprBoolXorRune(t *testing.T) {
 
 // Test Bool ^ Float
 func TestCheckBinaryExprBoolXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4495,7 +4495,7 @@ func TestCheckBinaryExprBoolXorFloat(t *testing.T) {
 
 // Test Bool ^ Complex
 func TestCheckBinaryExprBoolXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4506,7 +4506,7 @@ func TestCheckBinaryExprBoolXorComplex(t *testing.T) {
 
 // Test Bool ^ Bool
 func TestCheckBinaryExprBoolXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ true`, env,
 		`invalid operation: true ^ true (operator ^ not defined on bool)`,
@@ -4516,7 +4516,7 @@ func TestCheckBinaryExprBoolXorBool(t *testing.T) {
 
 // Test Bool ^ String
 func TestCheckBinaryExprBoolXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4527,7 +4527,7 @@ func TestCheckBinaryExprBoolXorString(t *testing.T) {
 
 // Test Bool ^ Nil
 func TestCheckBinaryExprBoolXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true ^ nil`, env,
 		`cannot convert nil to type bool`,
@@ -4538,7 +4538,7 @@ func TestCheckBinaryExprBoolXorNil(t *testing.T) {
 
 // Test Bool &^ Int
 func TestCheckBinaryExprBoolAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4549,7 +4549,7 @@ func TestCheckBinaryExprBoolAndNotInt(t *testing.T) {
 
 // Test Bool &^ Rune
 func TestCheckBinaryExprBoolAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4560,7 +4560,7 @@ func TestCheckBinaryExprBoolAndNotRune(t *testing.T) {
 
 // Test Bool &^ Float
 func TestCheckBinaryExprBoolAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4571,7 +4571,7 @@ func TestCheckBinaryExprBoolAndNotFloat(t *testing.T) {
 
 // Test Bool &^ Complex
 func TestCheckBinaryExprBoolAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4582,7 +4582,7 @@ func TestCheckBinaryExprBoolAndNotComplex(t *testing.T) {
 
 // Test Bool &^ Bool
 func TestCheckBinaryExprBoolAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ true`, env,
 		`invalid operation: true &^ true (operator &^ not defined on bool)`,
@@ -4592,7 +4592,7 @@ func TestCheckBinaryExprBoolAndNotBool(t *testing.T) {
 
 // Test Bool &^ String
 func TestCheckBinaryExprBoolAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4603,7 +4603,7 @@ func TestCheckBinaryExprBoolAndNotString(t *testing.T) {
 
 // Test Bool &^ Nil
 func TestCheckBinaryExprBoolAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true &^ nil`, env,
 		`cannot convert nil to type bool`,
@@ -4614,7 +4614,7 @@ func TestCheckBinaryExprBoolAndNotNil(t *testing.T) {
 
 // Test Bool == Int
 func TestCheckBinaryExprBoolEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4625,7 +4625,7 @@ func TestCheckBinaryExprBoolEqlInt(t *testing.T) {
 
 // Test Bool == Rune
 func TestCheckBinaryExprBoolEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4636,7 +4636,7 @@ func TestCheckBinaryExprBoolEqlRune(t *testing.T) {
 
 // Test Bool == Float
 func TestCheckBinaryExprBoolEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4647,7 +4647,7 @@ func TestCheckBinaryExprBoolEqlFloat(t *testing.T) {
 
 // Test Bool == Complex
 func TestCheckBinaryExprBoolEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4658,14 +4658,14 @@ func TestCheckBinaryExprBoolEqlComplex(t *testing.T) {
 
 // Test Bool == Bool
 func TestCheckBinaryExprBoolEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `true == true`, env, (true == true), ConstBool)
 }
 
 // Test Bool == String
 func TestCheckBinaryExprBoolEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4676,7 +4676,7 @@ func TestCheckBinaryExprBoolEqlString(t *testing.T) {
 
 // Test Bool == Nil
 func TestCheckBinaryExprBoolEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true == nil`, env,
 		`cannot convert nil to type bool`,
@@ -4687,7 +4687,7 @@ func TestCheckBinaryExprBoolEqlNil(t *testing.T) {
 
 // Test Bool != Int
 func TestCheckBinaryExprBoolNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4698,7 +4698,7 @@ func TestCheckBinaryExprBoolNeqInt(t *testing.T) {
 
 // Test Bool != Rune
 func TestCheckBinaryExprBoolNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4709,7 +4709,7 @@ func TestCheckBinaryExprBoolNeqRune(t *testing.T) {
 
 // Test Bool != Float
 func TestCheckBinaryExprBoolNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4720,7 +4720,7 @@ func TestCheckBinaryExprBoolNeqFloat(t *testing.T) {
 
 // Test Bool != Complex
 func TestCheckBinaryExprBoolNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4731,14 +4731,14 @@ func TestCheckBinaryExprBoolNeqComplex(t *testing.T) {
 
 // Test Bool != Bool
 func TestCheckBinaryExprBoolNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `true != true`, env, (true != true), ConstBool)
 }
 
 // Test Bool != String
 func TestCheckBinaryExprBoolNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4749,7 +4749,7 @@ func TestCheckBinaryExprBoolNeqString(t *testing.T) {
 
 // Test Bool != Nil
 func TestCheckBinaryExprBoolNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true != nil`, env,
 		`cannot convert nil to type bool`,
@@ -4760,7 +4760,7 @@ func TestCheckBinaryExprBoolNeqNil(t *testing.T) {
 
 // Test Bool <= Int
 func TestCheckBinaryExprBoolLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4771,7 +4771,7 @@ func TestCheckBinaryExprBoolLeqInt(t *testing.T) {
 
 // Test Bool <= Rune
 func TestCheckBinaryExprBoolLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4782,7 +4782,7 @@ func TestCheckBinaryExprBoolLeqRune(t *testing.T) {
 
 // Test Bool <= Float
 func TestCheckBinaryExprBoolLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4793,7 +4793,7 @@ func TestCheckBinaryExprBoolLeqFloat(t *testing.T) {
 
 // Test Bool <= Complex
 func TestCheckBinaryExprBoolLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4804,7 +4804,7 @@ func TestCheckBinaryExprBoolLeqComplex(t *testing.T) {
 
 // Test Bool <= Bool
 func TestCheckBinaryExprBoolLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= true`, env,
 		`invalid operation: true <= true (operator <= not defined on bool)`,
@@ -4814,7 +4814,7 @@ func TestCheckBinaryExprBoolLeqBool(t *testing.T) {
 
 // Test Bool <= String
 func TestCheckBinaryExprBoolLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4825,7 +4825,7 @@ func TestCheckBinaryExprBoolLeqString(t *testing.T) {
 
 // Test Bool <= Nil
 func TestCheckBinaryExprBoolLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true <= nil`, env,
 		`cannot convert nil to type bool`,
@@ -4836,7 +4836,7 @@ func TestCheckBinaryExprBoolLeqNil(t *testing.T) {
 
 // Test Bool >= Int
 func TestCheckBinaryExprBoolGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4847,7 +4847,7 @@ func TestCheckBinaryExprBoolGeqInt(t *testing.T) {
 
 // Test Bool >= Rune
 func TestCheckBinaryExprBoolGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4858,7 +4858,7 @@ func TestCheckBinaryExprBoolGeqRune(t *testing.T) {
 
 // Test Bool >= Float
 func TestCheckBinaryExprBoolGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4869,7 +4869,7 @@ func TestCheckBinaryExprBoolGeqFloat(t *testing.T) {
 
 // Test Bool >= Complex
 func TestCheckBinaryExprBoolGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4880,7 +4880,7 @@ func TestCheckBinaryExprBoolGeqComplex(t *testing.T) {
 
 // Test Bool >= Bool
 func TestCheckBinaryExprBoolGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= true`, env,
 		`invalid operation: true >= true (operator >= not defined on bool)`,
@@ -4890,7 +4890,7 @@ func TestCheckBinaryExprBoolGeqBool(t *testing.T) {
 
 // Test Bool >= String
 func TestCheckBinaryExprBoolGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4901,7 +4901,7 @@ func TestCheckBinaryExprBoolGeqString(t *testing.T) {
 
 // Test Bool >= Nil
 func TestCheckBinaryExprBoolGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true >= nil`, env,
 		`cannot convert nil to type bool`,
@@ -4912,7 +4912,7 @@ func TestCheckBinaryExprBoolGeqNil(t *testing.T) {
 
 // Test Bool < Int
 func TestCheckBinaryExprBoolLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4923,7 +4923,7 @@ func TestCheckBinaryExprBoolLssInt(t *testing.T) {
 
 // Test Bool < Rune
 func TestCheckBinaryExprBoolLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -4934,7 +4934,7 @@ func TestCheckBinaryExprBoolLssRune(t *testing.T) {
 
 // Test Bool < Float
 func TestCheckBinaryExprBoolLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -4945,7 +4945,7 @@ func TestCheckBinaryExprBoolLssFloat(t *testing.T) {
 
 // Test Bool < Complex
 func TestCheckBinaryExprBoolLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -4956,7 +4956,7 @@ func TestCheckBinaryExprBoolLssComplex(t *testing.T) {
 
 // Test Bool < Bool
 func TestCheckBinaryExprBoolLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < true`, env,
 		`invalid operation: true < true (operator < not defined on bool)`,
@@ -4966,7 +4966,7 @@ func TestCheckBinaryExprBoolLssBool(t *testing.T) {
 
 // Test Bool < String
 func TestCheckBinaryExprBoolLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -4977,7 +4977,7 @@ func TestCheckBinaryExprBoolLssString(t *testing.T) {
 
 // Test Bool < Nil
 func TestCheckBinaryExprBoolLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true < nil`, env,
 		`cannot convert nil to type bool`,
@@ -4988,7 +4988,7 @@ func TestCheckBinaryExprBoolLssNil(t *testing.T) {
 
 // Test Bool > Int
 func TestCheckBinaryExprBoolGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > 4`, env,
 		`cannot convert 4 to type bool`,
@@ -4999,7 +4999,7 @@ func TestCheckBinaryExprBoolGtrInt(t *testing.T) {
 
 // Test Bool > Rune
 func TestCheckBinaryExprBoolGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > '@'`, env,
 		`cannot convert '@' to type bool`,
@@ -5010,7 +5010,7 @@ func TestCheckBinaryExprBoolGtrRune(t *testing.T) {
 
 // Test Bool > Float
 func TestCheckBinaryExprBoolGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > 2.0`, env,
 		`cannot convert 2 to type bool`,
@@ -5021,7 +5021,7 @@ func TestCheckBinaryExprBoolGtrFloat(t *testing.T) {
 
 // Test Bool > Complex
 func TestCheckBinaryExprBoolGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > 8.0i`, env,
 		`cannot convert 8i to type bool`,
@@ -5032,7 +5032,7 @@ func TestCheckBinaryExprBoolGtrComplex(t *testing.T) {
 
 // Test Bool > Bool
 func TestCheckBinaryExprBoolGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > true`, env,
 		`invalid operation: true > true (operator > not defined on bool)`,
@@ -5042,7 +5042,7 @@ func TestCheckBinaryExprBoolGtrBool(t *testing.T) {
 
 // Test Bool > String
 func TestCheckBinaryExprBoolGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > "abc"`, env,
 		`cannot convert "abc" to type bool`,
@@ -5053,7 +5053,7 @@ func TestCheckBinaryExprBoolGtrString(t *testing.T) {
 
 // Test Bool > Nil
 func TestCheckBinaryExprBoolGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `true > nil`, env,
 		`cannot convert nil to type bool`,
@@ -5064,7 +5064,7 @@ func TestCheckBinaryExprBoolGtrNil(t *testing.T) {
 
 // Test String + Int
 func TestCheckBinaryExprStringAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5075,7 +5075,7 @@ func TestCheckBinaryExprStringAddInt(t *testing.T) {
 
 // Test String + Rune
 func TestCheckBinaryExprStringAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5086,7 +5086,7 @@ func TestCheckBinaryExprStringAddRune(t *testing.T) {
 
 // Test String + Float
 func TestCheckBinaryExprStringAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5097,7 +5097,7 @@ func TestCheckBinaryExprStringAddFloat(t *testing.T) {
 
 // Test String + Complex
 func TestCheckBinaryExprStringAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5108,7 +5108,7 @@ func TestCheckBinaryExprStringAddComplex(t *testing.T) {
 
 // Test String + Bool
 func TestCheckBinaryExprStringAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + true`, env,
 		`cannot convert "abc" to type int`,
@@ -5120,14 +5120,14 @@ func TestCheckBinaryExprStringAddBool(t *testing.T) {
 
 // Test String + String
 func TestCheckBinaryExprStringAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" + "abc"`, env, ("abc" + "abc"), ConstString)
 }
 
 // Test String + Nil
 func TestCheckBinaryExprStringAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" + nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5139,7 +5139,7 @@ func TestCheckBinaryExprStringAddNil(t *testing.T) {
 
 // Test String - Int
 func TestCheckBinaryExprStringSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5150,7 +5150,7 @@ func TestCheckBinaryExprStringSubInt(t *testing.T) {
 
 // Test String - Rune
 func TestCheckBinaryExprStringSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5161,7 +5161,7 @@ func TestCheckBinaryExprStringSubRune(t *testing.T) {
 
 // Test String - Float
 func TestCheckBinaryExprStringSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5172,7 +5172,7 @@ func TestCheckBinaryExprStringSubFloat(t *testing.T) {
 
 // Test String - Complex
 func TestCheckBinaryExprStringSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5183,7 +5183,7 @@ func TestCheckBinaryExprStringSubComplex(t *testing.T) {
 
 // Test String - Bool
 func TestCheckBinaryExprStringSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - true`, env,
 		`cannot convert "abc" to type int`,
@@ -5195,7 +5195,7 @@ func TestCheckBinaryExprStringSubBool(t *testing.T) {
 
 // Test String - String
 func TestCheckBinaryExprStringSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - "abc"`, env,
 		`invalid operation: "abc" - "abc" (operator - not defined on string)`,
@@ -5205,7 +5205,7 @@ func TestCheckBinaryExprStringSubString(t *testing.T) {
 
 // Test String - Nil
 func TestCheckBinaryExprStringSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" - nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5217,7 +5217,7 @@ func TestCheckBinaryExprStringSubNil(t *testing.T) {
 
 // Test String * Int
 func TestCheckBinaryExprStringMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5228,7 +5228,7 @@ func TestCheckBinaryExprStringMulInt(t *testing.T) {
 
 // Test String * Rune
 func TestCheckBinaryExprStringMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5239,7 +5239,7 @@ func TestCheckBinaryExprStringMulRune(t *testing.T) {
 
 // Test String * Float
 func TestCheckBinaryExprStringMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5250,7 +5250,7 @@ func TestCheckBinaryExprStringMulFloat(t *testing.T) {
 
 // Test String * Complex
 func TestCheckBinaryExprStringMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5261,7 +5261,7 @@ func TestCheckBinaryExprStringMulComplex(t *testing.T) {
 
 // Test String * Bool
 func TestCheckBinaryExprStringMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * true`, env,
 		`cannot convert "abc" to type int`,
@@ -5273,7 +5273,7 @@ func TestCheckBinaryExprStringMulBool(t *testing.T) {
 
 // Test String * String
 func TestCheckBinaryExprStringMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * "abc"`, env,
 		`invalid operation: "abc" * "abc" (operator * not defined on string)`,
@@ -5283,7 +5283,7 @@ func TestCheckBinaryExprStringMulString(t *testing.T) {
 
 // Test String * Nil
 func TestCheckBinaryExprStringMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" * nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5295,7 +5295,7 @@ func TestCheckBinaryExprStringMulNil(t *testing.T) {
 
 // Test String / Int
 func TestCheckBinaryExprStringQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5306,7 +5306,7 @@ func TestCheckBinaryExprStringQuoInt(t *testing.T) {
 
 // Test String / Rune
 func TestCheckBinaryExprStringQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5317,7 +5317,7 @@ func TestCheckBinaryExprStringQuoRune(t *testing.T) {
 
 // Test String / Float
 func TestCheckBinaryExprStringQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5328,7 +5328,7 @@ func TestCheckBinaryExprStringQuoFloat(t *testing.T) {
 
 // Test String / Complex
 func TestCheckBinaryExprStringQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5339,7 +5339,7 @@ func TestCheckBinaryExprStringQuoComplex(t *testing.T) {
 
 // Test String / Bool
 func TestCheckBinaryExprStringQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / true`, env,
 		`cannot convert "abc" to type int`,
@@ -5351,7 +5351,7 @@ func TestCheckBinaryExprStringQuoBool(t *testing.T) {
 
 // Test String / String
 func TestCheckBinaryExprStringQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / "abc"`, env,
 		`invalid operation: "abc" / "abc" (operator / not defined on string)`,
@@ -5361,7 +5361,7 @@ func TestCheckBinaryExprStringQuoString(t *testing.T) {
 
 // Test String / Nil
 func TestCheckBinaryExprStringQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" / nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5373,7 +5373,7 @@ func TestCheckBinaryExprStringQuoNil(t *testing.T) {
 
 // Test String % Int
 func TestCheckBinaryExprStringRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5384,7 +5384,7 @@ func TestCheckBinaryExprStringRemInt(t *testing.T) {
 
 // Test String % Rune
 func TestCheckBinaryExprStringRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5395,7 +5395,7 @@ func TestCheckBinaryExprStringRemRune(t *testing.T) {
 
 // Test String % Float
 func TestCheckBinaryExprStringRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5406,7 +5406,7 @@ func TestCheckBinaryExprStringRemFloat(t *testing.T) {
 
 // Test String % Complex
 func TestCheckBinaryExprStringRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5417,7 +5417,7 @@ func TestCheckBinaryExprStringRemComplex(t *testing.T) {
 
 // Test String % Bool
 func TestCheckBinaryExprStringRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % true`, env,
 		`cannot convert "abc" to type int`,
@@ -5429,7 +5429,7 @@ func TestCheckBinaryExprStringRemBool(t *testing.T) {
 
 // Test String % String
 func TestCheckBinaryExprStringRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % "abc"`, env,
 		`invalid operation: "abc" % "abc" (operator % not defined on string)`,
@@ -5439,7 +5439,7 @@ func TestCheckBinaryExprStringRemString(t *testing.T) {
 
 // Test String % Nil
 func TestCheckBinaryExprStringRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" % nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5451,7 +5451,7 @@ func TestCheckBinaryExprStringRemNil(t *testing.T) {
 
 // Test String & Int
 func TestCheckBinaryExprStringAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5462,7 +5462,7 @@ func TestCheckBinaryExprStringAndInt(t *testing.T) {
 
 // Test String & Rune
 func TestCheckBinaryExprStringAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5473,7 +5473,7 @@ func TestCheckBinaryExprStringAndRune(t *testing.T) {
 
 // Test String & Float
 func TestCheckBinaryExprStringAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5484,7 +5484,7 @@ func TestCheckBinaryExprStringAndFloat(t *testing.T) {
 
 // Test String & Complex
 func TestCheckBinaryExprStringAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5495,7 +5495,7 @@ func TestCheckBinaryExprStringAndComplex(t *testing.T) {
 
 // Test String & Bool
 func TestCheckBinaryExprStringAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & true`, env,
 		`cannot convert "abc" to type int`,
@@ -5507,7 +5507,7 @@ func TestCheckBinaryExprStringAndBool(t *testing.T) {
 
 // Test String & String
 func TestCheckBinaryExprStringAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & "abc"`, env,
 		`invalid operation: "abc" & "abc" (operator & not defined on string)`,
@@ -5517,7 +5517,7 @@ func TestCheckBinaryExprStringAndString(t *testing.T) {
 
 // Test String & Nil
 func TestCheckBinaryExprStringAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" & nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5529,7 +5529,7 @@ func TestCheckBinaryExprStringAndNil(t *testing.T) {
 
 // Test String | Int
 func TestCheckBinaryExprStringOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5540,7 +5540,7 @@ func TestCheckBinaryExprStringOrInt(t *testing.T) {
 
 // Test String | Rune
 func TestCheckBinaryExprStringOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5551,7 +5551,7 @@ func TestCheckBinaryExprStringOrRune(t *testing.T) {
 
 // Test String | Float
 func TestCheckBinaryExprStringOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5562,7 +5562,7 @@ func TestCheckBinaryExprStringOrFloat(t *testing.T) {
 
 // Test String | Complex
 func TestCheckBinaryExprStringOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5573,7 +5573,7 @@ func TestCheckBinaryExprStringOrComplex(t *testing.T) {
 
 // Test String | Bool
 func TestCheckBinaryExprStringOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | true`, env,
 		`cannot convert "abc" to type int`,
@@ -5585,7 +5585,7 @@ func TestCheckBinaryExprStringOrBool(t *testing.T) {
 
 // Test String | String
 func TestCheckBinaryExprStringOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | "abc"`, env,
 		`invalid operation: "abc" | "abc" (operator | not defined on string)`,
@@ -5595,7 +5595,7 @@ func TestCheckBinaryExprStringOrString(t *testing.T) {
 
 // Test String | Nil
 func TestCheckBinaryExprStringOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" | nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5607,7 +5607,7 @@ func TestCheckBinaryExprStringOrNil(t *testing.T) {
 
 // Test String ^ Int
 func TestCheckBinaryExprStringXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5618,7 +5618,7 @@ func TestCheckBinaryExprStringXorInt(t *testing.T) {
 
 // Test String ^ Rune
 func TestCheckBinaryExprStringXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5629,7 +5629,7 @@ func TestCheckBinaryExprStringXorRune(t *testing.T) {
 
 // Test String ^ Float
 func TestCheckBinaryExprStringXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5640,7 +5640,7 @@ func TestCheckBinaryExprStringXorFloat(t *testing.T) {
 
 // Test String ^ Complex
 func TestCheckBinaryExprStringXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5651,7 +5651,7 @@ func TestCheckBinaryExprStringXorComplex(t *testing.T) {
 
 // Test String ^ Bool
 func TestCheckBinaryExprStringXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ true`, env,
 		`cannot convert "abc" to type int`,
@@ -5663,7 +5663,7 @@ func TestCheckBinaryExprStringXorBool(t *testing.T) {
 
 // Test String ^ String
 func TestCheckBinaryExprStringXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ "abc"`, env,
 		`invalid operation: "abc" ^ "abc" (operator ^ not defined on string)`,
@@ -5673,7 +5673,7 @@ func TestCheckBinaryExprStringXorString(t *testing.T) {
 
 // Test String ^ Nil
 func TestCheckBinaryExprStringXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" ^ nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5685,7 +5685,7 @@ func TestCheckBinaryExprStringXorNil(t *testing.T) {
 
 // Test String &^ Int
 func TestCheckBinaryExprStringAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5696,7 +5696,7 @@ func TestCheckBinaryExprStringAndNotInt(t *testing.T) {
 
 // Test String &^ Rune
 func TestCheckBinaryExprStringAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5707,7 +5707,7 @@ func TestCheckBinaryExprStringAndNotRune(t *testing.T) {
 
 // Test String &^ Float
 func TestCheckBinaryExprStringAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5718,7 +5718,7 @@ func TestCheckBinaryExprStringAndNotFloat(t *testing.T) {
 
 // Test String &^ Complex
 func TestCheckBinaryExprStringAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5729,7 +5729,7 @@ func TestCheckBinaryExprStringAndNotComplex(t *testing.T) {
 
 // Test String &^ Bool
 func TestCheckBinaryExprStringAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ true`, env,
 		`cannot convert "abc" to type int`,
@@ -5741,7 +5741,7 @@ func TestCheckBinaryExprStringAndNotBool(t *testing.T) {
 
 // Test String &^ String
 func TestCheckBinaryExprStringAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ "abc"`, env,
 		`invalid operation: "abc" &^ "abc" (operator &^ not defined on string)`,
@@ -5751,7 +5751,7 @@ func TestCheckBinaryExprStringAndNotString(t *testing.T) {
 
 // Test String &^ Nil
 func TestCheckBinaryExprStringAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" &^ nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5763,7 +5763,7 @@ func TestCheckBinaryExprStringAndNotNil(t *testing.T) {
 
 // Test String == Int
 func TestCheckBinaryExprStringEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5774,7 +5774,7 @@ func TestCheckBinaryExprStringEqlInt(t *testing.T) {
 
 // Test String == Rune
 func TestCheckBinaryExprStringEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5785,7 +5785,7 @@ func TestCheckBinaryExprStringEqlRune(t *testing.T) {
 
 // Test String == Float
 func TestCheckBinaryExprStringEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5796,7 +5796,7 @@ func TestCheckBinaryExprStringEqlFloat(t *testing.T) {
 
 // Test String == Complex
 func TestCheckBinaryExprStringEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5807,7 +5807,7 @@ func TestCheckBinaryExprStringEqlComplex(t *testing.T) {
 
 // Test String == Bool
 func TestCheckBinaryExprStringEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == true`, env,
 		`cannot convert "abc" to type int`,
@@ -5819,14 +5819,14 @@ func TestCheckBinaryExprStringEqlBool(t *testing.T) {
 
 // Test String == String
 func TestCheckBinaryExprStringEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" == "abc"`, env, ("abc" == "abc"), ConstBool)
 }
 
 // Test String == Nil
 func TestCheckBinaryExprStringEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" == nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5838,7 +5838,7 @@ func TestCheckBinaryExprStringEqlNil(t *testing.T) {
 
 // Test String != Int
 func TestCheckBinaryExprStringNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5849,7 +5849,7 @@ func TestCheckBinaryExprStringNeqInt(t *testing.T) {
 
 // Test String != Rune
 func TestCheckBinaryExprStringNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5860,7 +5860,7 @@ func TestCheckBinaryExprStringNeqRune(t *testing.T) {
 
 // Test String != Float
 func TestCheckBinaryExprStringNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5871,7 +5871,7 @@ func TestCheckBinaryExprStringNeqFloat(t *testing.T) {
 
 // Test String != Complex
 func TestCheckBinaryExprStringNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5882,7 +5882,7 @@ func TestCheckBinaryExprStringNeqComplex(t *testing.T) {
 
 // Test String != Bool
 func TestCheckBinaryExprStringNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != true`, env,
 		`cannot convert "abc" to type int`,
@@ -5894,14 +5894,14 @@ func TestCheckBinaryExprStringNeqBool(t *testing.T) {
 
 // Test String != String
 func TestCheckBinaryExprStringNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" != "abc"`, env, ("abc" != "abc"), ConstBool)
 }
 
 // Test String != Nil
 func TestCheckBinaryExprStringNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" != nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5913,7 +5913,7 @@ func TestCheckBinaryExprStringNeqNil(t *testing.T) {
 
 // Test String <= Int
 func TestCheckBinaryExprStringLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5924,7 +5924,7 @@ func TestCheckBinaryExprStringLeqInt(t *testing.T) {
 
 // Test String <= Rune
 func TestCheckBinaryExprStringLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -5935,7 +5935,7 @@ func TestCheckBinaryExprStringLeqRune(t *testing.T) {
 
 // Test String <= Float
 func TestCheckBinaryExprStringLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -5946,7 +5946,7 @@ func TestCheckBinaryExprStringLeqFloat(t *testing.T) {
 
 // Test String <= Complex
 func TestCheckBinaryExprStringLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -5957,7 +5957,7 @@ func TestCheckBinaryExprStringLeqComplex(t *testing.T) {
 
 // Test String <= Bool
 func TestCheckBinaryExprStringLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= true`, env,
 		`cannot convert "abc" to type int`,
@@ -5969,14 +5969,14 @@ func TestCheckBinaryExprStringLeqBool(t *testing.T) {
 
 // Test String <= String
 func TestCheckBinaryExprStringLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" <= "abc"`, env, ("abc" <= "abc"), ConstBool)
 }
 
 // Test String <= Nil
 func TestCheckBinaryExprStringLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" <= nil`, env,
 		`cannot convert "abc" to type int`,
@@ -5988,7 +5988,7 @@ func TestCheckBinaryExprStringLeqNil(t *testing.T) {
 
 // Test String >= Int
 func TestCheckBinaryExprStringGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= 4`, env,
 		`cannot convert "abc" to type int`,
@@ -5999,7 +5999,7 @@ func TestCheckBinaryExprStringGeqInt(t *testing.T) {
 
 // Test String >= Rune
 func TestCheckBinaryExprStringGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -6010,7 +6010,7 @@ func TestCheckBinaryExprStringGeqRune(t *testing.T) {
 
 // Test String >= Float
 func TestCheckBinaryExprStringGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -6021,7 +6021,7 @@ func TestCheckBinaryExprStringGeqFloat(t *testing.T) {
 
 // Test String >= Complex
 func TestCheckBinaryExprStringGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -6032,7 +6032,7 @@ func TestCheckBinaryExprStringGeqComplex(t *testing.T) {
 
 // Test String >= Bool
 func TestCheckBinaryExprStringGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= true`, env,
 		`cannot convert "abc" to type int`,
@@ -6044,14 +6044,14 @@ func TestCheckBinaryExprStringGeqBool(t *testing.T) {
 
 // Test String >= String
 func TestCheckBinaryExprStringGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" >= "abc"`, env, ("abc" >= "abc"), ConstBool)
 }
 
 // Test String >= Nil
 func TestCheckBinaryExprStringGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" >= nil`, env,
 		`cannot convert "abc" to type int`,
@@ -6063,7 +6063,7 @@ func TestCheckBinaryExprStringGeqNil(t *testing.T) {
 
 // Test String < Int
 func TestCheckBinaryExprStringLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < 4`, env,
 		`cannot convert "abc" to type int`,
@@ -6074,7 +6074,7 @@ func TestCheckBinaryExprStringLssInt(t *testing.T) {
 
 // Test String < Rune
 func TestCheckBinaryExprStringLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -6085,7 +6085,7 @@ func TestCheckBinaryExprStringLssRune(t *testing.T) {
 
 // Test String < Float
 func TestCheckBinaryExprStringLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -6096,7 +6096,7 @@ func TestCheckBinaryExprStringLssFloat(t *testing.T) {
 
 // Test String < Complex
 func TestCheckBinaryExprStringLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -6107,7 +6107,7 @@ func TestCheckBinaryExprStringLssComplex(t *testing.T) {
 
 // Test String < Bool
 func TestCheckBinaryExprStringLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < true`, env,
 		`cannot convert "abc" to type int`,
@@ -6119,14 +6119,14 @@ func TestCheckBinaryExprStringLssBool(t *testing.T) {
 
 // Test String < String
 func TestCheckBinaryExprStringLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" < "abc"`, env, ("abc" < "abc"), ConstBool)
 }
 
 // Test String < Nil
 func TestCheckBinaryExprStringLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" < nil`, env,
 		`cannot convert "abc" to type int`,
@@ -6138,7 +6138,7 @@ func TestCheckBinaryExprStringLssNil(t *testing.T) {
 
 // Test String > Int
 func TestCheckBinaryExprStringGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > 4`, env,
 		`cannot convert "abc" to type int`,
@@ -6149,7 +6149,7 @@ func TestCheckBinaryExprStringGtrInt(t *testing.T) {
 
 // Test String > Rune
 func TestCheckBinaryExprStringGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > '@'`, env,
 		`cannot convert "abc" to type rune`,
@@ -6160,7 +6160,7 @@ func TestCheckBinaryExprStringGtrRune(t *testing.T) {
 
 // Test String > Float
 func TestCheckBinaryExprStringGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > 2.0`, env,
 		`cannot convert "abc" to type float64`,
@@ -6171,7 +6171,7 @@ func TestCheckBinaryExprStringGtrFloat(t *testing.T) {
 
 // Test String > Complex
 func TestCheckBinaryExprStringGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > 8.0i`, env,
 		`cannot convert "abc" to type complex128`,
@@ -6182,7 +6182,7 @@ func TestCheckBinaryExprStringGtrComplex(t *testing.T) {
 
 // Test String > Bool
 func TestCheckBinaryExprStringGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > true`, env,
 		`cannot convert "abc" to type int`,
@@ -6194,14 +6194,14 @@ func TestCheckBinaryExprStringGtrBool(t *testing.T) {
 
 // Test String > String
 func TestCheckBinaryExprStringGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `"abc" > "abc"`, env, ("abc" > "abc"), ConstBool)
 }
 
 // Test String > Nil
 func TestCheckBinaryExprStringGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `"abc" > nil`, env,
 		`cannot convert "abc" to type int`,
@@ -6213,7 +6213,7 @@ func TestCheckBinaryExprStringGtrNil(t *testing.T) {
 
 // Test Nil + Int
 func TestCheckBinaryExprNilAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + 4`, env,
 		`cannot convert nil to type int`,
@@ -6224,7 +6224,7 @@ func TestCheckBinaryExprNilAddInt(t *testing.T) {
 
 // Test Nil + Rune
 func TestCheckBinaryExprNilAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6235,7 +6235,7 @@ func TestCheckBinaryExprNilAddRune(t *testing.T) {
 
 // Test Nil + Float
 func TestCheckBinaryExprNilAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6246,7 +6246,7 @@ func TestCheckBinaryExprNilAddFloat(t *testing.T) {
 
 // Test Nil + Complex
 func TestCheckBinaryExprNilAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6257,7 +6257,7 @@ func TestCheckBinaryExprNilAddComplex(t *testing.T) {
 
 // Test Nil + Bool
 func TestCheckBinaryExprNilAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + true`, env,
 		`cannot convert nil to type int`,
@@ -6269,7 +6269,7 @@ func TestCheckBinaryExprNilAddBool(t *testing.T) {
 
 // Test Nil + String
 func TestCheckBinaryExprNilAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6281,7 +6281,7 @@ func TestCheckBinaryExprNilAddString(t *testing.T) {
 
 // Test Nil + Nil
 func TestCheckBinaryExprNilAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil + nil`, env,
 		`invalid operation: nil + nil (operator + not defined on nil)`,
@@ -6291,7 +6291,7 @@ func TestCheckBinaryExprNilAddNil(t *testing.T) {
 
 // Test Nil - Int
 func TestCheckBinaryExprNilSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - 4`, env,
 		`cannot convert nil to type int`,
@@ -6302,7 +6302,7 @@ func TestCheckBinaryExprNilSubInt(t *testing.T) {
 
 // Test Nil - Rune
 func TestCheckBinaryExprNilSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6313,7 +6313,7 @@ func TestCheckBinaryExprNilSubRune(t *testing.T) {
 
 // Test Nil - Float
 func TestCheckBinaryExprNilSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6324,7 +6324,7 @@ func TestCheckBinaryExprNilSubFloat(t *testing.T) {
 
 // Test Nil - Complex
 func TestCheckBinaryExprNilSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6335,7 +6335,7 @@ func TestCheckBinaryExprNilSubComplex(t *testing.T) {
 
 // Test Nil - Bool
 func TestCheckBinaryExprNilSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - true`, env,
 		`cannot convert nil to type int`,
@@ -6347,7 +6347,7 @@ func TestCheckBinaryExprNilSubBool(t *testing.T) {
 
 // Test Nil - String
 func TestCheckBinaryExprNilSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6359,7 +6359,7 @@ func TestCheckBinaryExprNilSubString(t *testing.T) {
 
 // Test Nil - Nil
 func TestCheckBinaryExprNilSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil - nil`, env,
 		`invalid operation: nil - nil (operator - not defined on nil)`,
@@ -6369,7 +6369,7 @@ func TestCheckBinaryExprNilSubNil(t *testing.T) {
 
 // Test Nil * Int
 func TestCheckBinaryExprNilMulInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * 4`, env,
 		`cannot convert nil to type int`,
@@ -6380,7 +6380,7 @@ func TestCheckBinaryExprNilMulInt(t *testing.T) {
 
 // Test Nil * Rune
 func TestCheckBinaryExprNilMulRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6391,7 +6391,7 @@ func TestCheckBinaryExprNilMulRune(t *testing.T) {
 
 // Test Nil * Float
 func TestCheckBinaryExprNilMulFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6402,7 +6402,7 @@ func TestCheckBinaryExprNilMulFloat(t *testing.T) {
 
 // Test Nil * Complex
 func TestCheckBinaryExprNilMulComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6413,7 +6413,7 @@ func TestCheckBinaryExprNilMulComplex(t *testing.T) {
 
 // Test Nil * Bool
 func TestCheckBinaryExprNilMulBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * true`, env,
 		`cannot convert nil to type int`,
@@ -6425,7 +6425,7 @@ func TestCheckBinaryExprNilMulBool(t *testing.T) {
 
 // Test Nil * String
 func TestCheckBinaryExprNilMulString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6437,7 +6437,7 @@ func TestCheckBinaryExprNilMulString(t *testing.T) {
 
 // Test Nil * Nil
 func TestCheckBinaryExprNilMulNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil * nil`, env,
 		`invalid operation: nil * nil (operator * not defined on nil)`,
@@ -6447,7 +6447,7 @@ func TestCheckBinaryExprNilMulNil(t *testing.T) {
 
 // Test Nil / Int
 func TestCheckBinaryExprNilQuoInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / 4`, env,
 		`cannot convert nil to type int`,
@@ -6458,7 +6458,7 @@ func TestCheckBinaryExprNilQuoInt(t *testing.T) {
 
 // Test Nil / Rune
 func TestCheckBinaryExprNilQuoRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6469,7 +6469,7 @@ func TestCheckBinaryExprNilQuoRune(t *testing.T) {
 
 // Test Nil / Float
 func TestCheckBinaryExprNilQuoFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6480,7 +6480,7 @@ func TestCheckBinaryExprNilQuoFloat(t *testing.T) {
 
 // Test Nil / Complex
 func TestCheckBinaryExprNilQuoComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6491,7 +6491,7 @@ func TestCheckBinaryExprNilQuoComplex(t *testing.T) {
 
 // Test Nil / Bool
 func TestCheckBinaryExprNilQuoBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / true`, env,
 		`cannot convert nil to type int`,
@@ -6503,7 +6503,7 @@ func TestCheckBinaryExprNilQuoBool(t *testing.T) {
 
 // Test Nil / String
 func TestCheckBinaryExprNilQuoString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6515,7 +6515,7 @@ func TestCheckBinaryExprNilQuoString(t *testing.T) {
 
 // Test Nil / Nil
 func TestCheckBinaryExprNilQuoNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil / nil`, env,
 		`invalid operation: nil / nil (operator / not defined on nil)`,
@@ -6525,7 +6525,7 @@ func TestCheckBinaryExprNilQuoNil(t *testing.T) {
 
 // Test Nil % Int
 func TestCheckBinaryExprNilRemInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % 4`, env,
 		`cannot convert nil to type int`,
@@ -6536,7 +6536,7 @@ func TestCheckBinaryExprNilRemInt(t *testing.T) {
 
 // Test Nil % Rune
 func TestCheckBinaryExprNilRemRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6547,7 +6547,7 @@ func TestCheckBinaryExprNilRemRune(t *testing.T) {
 
 // Test Nil % Float
 func TestCheckBinaryExprNilRemFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6558,7 +6558,7 @@ func TestCheckBinaryExprNilRemFloat(t *testing.T) {
 
 // Test Nil % Complex
 func TestCheckBinaryExprNilRemComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6569,7 +6569,7 @@ func TestCheckBinaryExprNilRemComplex(t *testing.T) {
 
 // Test Nil % Bool
 func TestCheckBinaryExprNilRemBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % true`, env,
 		`cannot convert nil to type int`,
@@ -6581,7 +6581,7 @@ func TestCheckBinaryExprNilRemBool(t *testing.T) {
 
 // Test Nil % String
 func TestCheckBinaryExprNilRemString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6593,7 +6593,7 @@ func TestCheckBinaryExprNilRemString(t *testing.T) {
 
 // Test Nil % Nil
 func TestCheckBinaryExprNilRemNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil % nil`, env,
 		`invalid operation: nil % nil (operator % not defined on nil)`,
@@ -6603,7 +6603,7 @@ func TestCheckBinaryExprNilRemNil(t *testing.T) {
 
 // Test Nil & Int
 func TestCheckBinaryExprNilAndInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & 4`, env,
 		`cannot convert nil to type int`,
@@ -6614,7 +6614,7 @@ func TestCheckBinaryExprNilAndInt(t *testing.T) {
 
 // Test Nil & Rune
 func TestCheckBinaryExprNilAndRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6625,7 +6625,7 @@ func TestCheckBinaryExprNilAndRune(t *testing.T) {
 
 // Test Nil & Float
 func TestCheckBinaryExprNilAndFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6636,7 +6636,7 @@ func TestCheckBinaryExprNilAndFloat(t *testing.T) {
 
 // Test Nil & Complex
 func TestCheckBinaryExprNilAndComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6647,7 +6647,7 @@ func TestCheckBinaryExprNilAndComplex(t *testing.T) {
 
 // Test Nil & Bool
 func TestCheckBinaryExprNilAndBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & true`, env,
 		`cannot convert nil to type int`,
@@ -6659,7 +6659,7 @@ func TestCheckBinaryExprNilAndBool(t *testing.T) {
 
 // Test Nil & String
 func TestCheckBinaryExprNilAndString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6671,7 +6671,7 @@ func TestCheckBinaryExprNilAndString(t *testing.T) {
 
 // Test Nil & Nil
 func TestCheckBinaryExprNilAndNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil & nil`, env,
 		`invalid operation: nil & nil (operator & not defined on nil)`,
@@ -6681,7 +6681,7 @@ func TestCheckBinaryExprNilAndNil(t *testing.T) {
 
 // Test Nil | Int
 func TestCheckBinaryExprNilOrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | 4`, env,
 		`cannot convert nil to type int`,
@@ -6692,7 +6692,7 @@ func TestCheckBinaryExprNilOrInt(t *testing.T) {
 
 // Test Nil | Rune
 func TestCheckBinaryExprNilOrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6703,7 +6703,7 @@ func TestCheckBinaryExprNilOrRune(t *testing.T) {
 
 // Test Nil | Float
 func TestCheckBinaryExprNilOrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6714,7 +6714,7 @@ func TestCheckBinaryExprNilOrFloat(t *testing.T) {
 
 // Test Nil | Complex
 func TestCheckBinaryExprNilOrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6725,7 +6725,7 @@ func TestCheckBinaryExprNilOrComplex(t *testing.T) {
 
 // Test Nil | Bool
 func TestCheckBinaryExprNilOrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | true`, env,
 		`cannot convert nil to type int`,
@@ -6737,7 +6737,7 @@ func TestCheckBinaryExprNilOrBool(t *testing.T) {
 
 // Test Nil | String
 func TestCheckBinaryExprNilOrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6749,7 +6749,7 @@ func TestCheckBinaryExprNilOrString(t *testing.T) {
 
 // Test Nil | Nil
 func TestCheckBinaryExprNilOrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil | nil`, env,
 		`invalid operation: nil | nil (operator | not defined on nil)`,
@@ -6759,7 +6759,7 @@ func TestCheckBinaryExprNilOrNil(t *testing.T) {
 
 // Test Nil ^ Int
 func TestCheckBinaryExprNilXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ 4`, env,
 		`cannot convert nil to type int`,
@@ -6770,7 +6770,7 @@ func TestCheckBinaryExprNilXorInt(t *testing.T) {
 
 // Test Nil ^ Rune
 func TestCheckBinaryExprNilXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6781,7 +6781,7 @@ func TestCheckBinaryExprNilXorRune(t *testing.T) {
 
 // Test Nil ^ Float
 func TestCheckBinaryExprNilXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6792,7 +6792,7 @@ func TestCheckBinaryExprNilXorFloat(t *testing.T) {
 
 // Test Nil ^ Complex
 func TestCheckBinaryExprNilXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6803,7 +6803,7 @@ func TestCheckBinaryExprNilXorComplex(t *testing.T) {
 
 // Test Nil ^ Bool
 func TestCheckBinaryExprNilXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ true`, env,
 		`cannot convert nil to type int`,
@@ -6815,7 +6815,7 @@ func TestCheckBinaryExprNilXorBool(t *testing.T) {
 
 // Test Nil ^ String
 func TestCheckBinaryExprNilXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6827,7 +6827,7 @@ func TestCheckBinaryExprNilXorString(t *testing.T) {
 
 // Test Nil ^ Nil
 func TestCheckBinaryExprNilXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil ^ nil`, env,
 		`invalid operation: nil ^ nil (operator ^ not defined on nil)`,
@@ -6837,7 +6837,7 @@ func TestCheckBinaryExprNilXorNil(t *testing.T) {
 
 // Test Nil &^ Int
 func TestCheckBinaryExprNilAndNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ 4`, env,
 		`cannot convert nil to type int`,
@@ -6848,7 +6848,7 @@ func TestCheckBinaryExprNilAndNotInt(t *testing.T) {
 
 // Test Nil &^ Rune
 func TestCheckBinaryExprNilAndNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6859,7 +6859,7 @@ func TestCheckBinaryExprNilAndNotRune(t *testing.T) {
 
 // Test Nil &^ Float
 func TestCheckBinaryExprNilAndNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6870,7 +6870,7 @@ func TestCheckBinaryExprNilAndNotFloat(t *testing.T) {
 
 // Test Nil &^ Complex
 func TestCheckBinaryExprNilAndNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6881,7 +6881,7 @@ func TestCheckBinaryExprNilAndNotComplex(t *testing.T) {
 
 // Test Nil &^ Bool
 func TestCheckBinaryExprNilAndNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ true`, env,
 		`cannot convert nil to type int`,
@@ -6893,7 +6893,7 @@ func TestCheckBinaryExprNilAndNotBool(t *testing.T) {
 
 // Test Nil &^ String
 func TestCheckBinaryExprNilAndNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6905,7 +6905,7 @@ func TestCheckBinaryExprNilAndNotString(t *testing.T) {
 
 // Test Nil &^ Nil
 func TestCheckBinaryExprNilAndNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil &^ nil`, env,
 		`invalid operation: nil &^ nil (operator &^ not defined on nil)`,
@@ -6915,7 +6915,7 @@ func TestCheckBinaryExprNilAndNotNil(t *testing.T) {
 
 // Test Nil == Int
 func TestCheckBinaryExprNilEqlInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == 4`, env,
 		`cannot convert nil to type int`,
@@ -6926,7 +6926,7 @@ func TestCheckBinaryExprNilEqlInt(t *testing.T) {
 
 // Test Nil == Rune
 func TestCheckBinaryExprNilEqlRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == '@'`, env,
 		`cannot convert nil to type rune`,
@@ -6937,7 +6937,7 @@ func TestCheckBinaryExprNilEqlRune(t *testing.T) {
 
 // Test Nil == Float
 func TestCheckBinaryExprNilEqlFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -6948,7 +6948,7 @@ func TestCheckBinaryExprNilEqlFloat(t *testing.T) {
 
 // Test Nil == Complex
 func TestCheckBinaryExprNilEqlComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -6959,7 +6959,7 @@ func TestCheckBinaryExprNilEqlComplex(t *testing.T) {
 
 // Test Nil == Bool
 func TestCheckBinaryExprNilEqlBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == true`, env,
 		`cannot convert nil to type int`,
@@ -6971,7 +6971,7 @@ func TestCheckBinaryExprNilEqlBool(t *testing.T) {
 
 // Test Nil == String
 func TestCheckBinaryExprNilEqlString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == "abc"`, env,
 		`cannot convert nil to type int`,
@@ -6983,7 +6983,7 @@ func TestCheckBinaryExprNilEqlString(t *testing.T) {
 
 // Test Nil == Nil
 func TestCheckBinaryExprNilEqlNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil == nil`, env,
 		`invalid operation: nil == nil (operator == not defined on nil)`,
@@ -6993,7 +6993,7 @@ func TestCheckBinaryExprNilEqlNil(t *testing.T) {
 
 // Test Nil != Int
 func TestCheckBinaryExprNilNeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != 4`, env,
 		`cannot convert nil to type int`,
@@ -7004,7 +7004,7 @@ func TestCheckBinaryExprNilNeqInt(t *testing.T) {
 
 // Test Nil != Rune
 func TestCheckBinaryExprNilNeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != '@'`, env,
 		`cannot convert nil to type rune`,
@@ -7015,7 +7015,7 @@ func TestCheckBinaryExprNilNeqRune(t *testing.T) {
 
 // Test Nil != Float
 func TestCheckBinaryExprNilNeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -7026,7 +7026,7 @@ func TestCheckBinaryExprNilNeqFloat(t *testing.T) {
 
 // Test Nil != Complex
 func TestCheckBinaryExprNilNeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -7037,7 +7037,7 @@ func TestCheckBinaryExprNilNeqComplex(t *testing.T) {
 
 // Test Nil != Bool
 func TestCheckBinaryExprNilNeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != true`, env,
 		`cannot convert nil to type int`,
@@ -7049,7 +7049,7 @@ func TestCheckBinaryExprNilNeqBool(t *testing.T) {
 
 // Test Nil != String
 func TestCheckBinaryExprNilNeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != "abc"`, env,
 		`cannot convert nil to type int`,
@@ -7061,7 +7061,7 @@ func TestCheckBinaryExprNilNeqString(t *testing.T) {
 
 // Test Nil != Nil
 func TestCheckBinaryExprNilNeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil != nil`, env,
 		`invalid operation: nil != nil (operator != not defined on nil)`,
@@ -7071,7 +7071,7 @@ func TestCheckBinaryExprNilNeqNil(t *testing.T) {
 
 // Test Nil <= Int
 func TestCheckBinaryExprNilLeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= 4`, env,
 		`cannot convert nil to type int`,
@@ -7082,7 +7082,7 @@ func TestCheckBinaryExprNilLeqInt(t *testing.T) {
 
 // Test Nil <= Rune
 func TestCheckBinaryExprNilLeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= '@'`, env,
 		`cannot convert nil to type rune`,
@@ -7093,7 +7093,7 @@ func TestCheckBinaryExprNilLeqRune(t *testing.T) {
 
 // Test Nil <= Float
 func TestCheckBinaryExprNilLeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -7104,7 +7104,7 @@ func TestCheckBinaryExprNilLeqFloat(t *testing.T) {
 
 // Test Nil <= Complex
 func TestCheckBinaryExprNilLeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -7115,7 +7115,7 @@ func TestCheckBinaryExprNilLeqComplex(t *testing.T) {
 
 // Test Nil <= Bool
 func TestCheckBinaryExprNilLeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= true`, env,
 		`cannot convert nil to type int`,
@@ -7127,7 +7127,7 @@ func TestCheckBinaryExprNilLeqBool(t *testing.T) {
 
 // Test Nil <= String
 func TestCheckBinaryExprNilLeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= "abc"`, env,
 		`cannot convert nil to type int`,
@@ -7139,7 +7139,7 @@ func TestCheckBinaryExprNilLeqString(t *testing.T) {
 
 // Test Nil <= Nil
 func TestCheckBinaryExprNilLeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil <= nil`, env,
 		`invalid operation: nil <= nil (operator <= not defined on nil)`,
@@ -7149,7 +7149,7 @@ func TestCheckBinaryExprNilLeqNil(t *testing.T) {
 
 // Test Nil >= Int
 func TestCheckBinaryExprNilGeqInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= 4`, env,
 		`cannot convert nil to type int`,
@@ -7160,7 +7160,7 @@ func TestCheckBinaryExprNilGeqInt(t *testing.T) {
 
 // Test Nil >= Rune
 func TestCheckBinaryExprNilGeqRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= '@'`, env,
 		`cannot convert nil to type rune`,
@@ -7171,7 +7171,7 @@ func TestCheckBinaryExprNilGeqRune(t *testing.T) {
 
 // Test Nil >= Float
 func TestCheckBinaryExprNilGeqFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -7182,7 +7182,7 @@ func TestCheckBinaryExprNilGeqFloat(t *testing.T) {
 
 // Test Nil >= Complex
 func TestCheckBinaryExprNilGeqComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -7193,7 +7193,7 @@ func TestCheckBinaryExprNilGeqComplex(t *testing.T) {
 
 // Test Nil >= Bool
 func TestCheckBinaryExprNilGeqBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= true`, env,
 		`cannot convert nil to type int`,
@@ -7205,7 +7205,7 @@ func TestCheckBinaryExprNilGeqBool(t *testing.T) {
 
 // Test Nil >= String
 func TestCheckBinaryExprNilGeqString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= "abc"`, env,
 		`cannot convert nil to type int`,
@@ -7217,7 +7217,7 @@ func TestCheckBinaryExprNilGeqString(t *testing.T) {
 
 // Test Nil >= Nil
 func TestCheckBinaryExprNilGeqNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil >= nil`, env,
 		`invalid operation: nil >= nil (operator >= not defined on nil)`,
@@ -7227,7 +7227,7 @@ func TestCheckBinaryExprNilGeqNil(t *testing.T) {
 
 // Test Nil < Int
 func TestCheckBinaryExprNilLssInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < 4`, env,
 		`cannot convert nil to type int`,
@@ -7238,7 +7238,7 @@ func TestCheckBinaryExprNilLssInt(t *testing.T) {
 
 // Test Nil < Rune
 func TestCheckBinaryExprNilLssRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < '@'`, env,
 		`cannot convert nil to type rune`,
@@ -7249,7 +7249,7 @@ func TestCheckBinaryExprNilLssRune(t *testing.T) {
 
 // Test Nil < Float
 func TestCheckBinaryExprNilLssFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -7260,7 +7260,7 @@ func TestCheckBinaryExprNilLssFloat(t *testing.T) {
 
 // Test Nil < Complex
 func TestCheckBinaryExprNilLssComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -7271,7 +7271,7 @@ func TestCheckBinaryExprNilLssComplex(t *testing.T) {
 
 // Test Nil < Bool
 func TestCheckBinaryExprNilLssBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < true`, env,
 		`cannot convert nil to type int`,
@@ -7283,7 +7283,7 @@ func TestCheckBinaryExprNilLssBool(t *testing.T) {
 
 // Test Nil < String
 func TestCheckBinaryExprNilLssString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < "abc"`, env,
 		`cannot convert nil to type int`,
@@ -7295,7 +7295,7 @@ func TestCheckBinaryExprNilLssString(t *testing.T) {
 
 // Test Nil < Nil
 func TestCheckBinaryExprNilLssNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil < nil`, env,
 		`invalid operation: nil < nil (operator < not defined on nil)`,
@@ -7305,7 +7305,7 @@ func TestCheckBinaryExprNilLssNil(t *testing.T) {
 
 // Test Nil > Int
 func TestCheckBinaryExprNilGtrInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > 4`, env,
 		`cannot convert nil to type int`,
@@ -7316,7 +7316,7 @@ func TestCheckBinaryExprNilGtrInt(t *testing.T) {
 
 // Test Nil > Rune
 func TestCheckBinaryExprNilGtrRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > '@'`, env,
 		`cannot convert nil to type rune`,
@@ -7327,7 +7327,7 @@ func TestCheckBinaryExprNilGtrRune(t *testing.T) {
 
 // Test Nil > Float
 func TestCheckBinaryExprNilGtrFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > 2.0`, env,
 		`cannot convert nil to type float64`,
@@ -7338,7 +7338,7 @@ func TestCheckBinaryExprNilGtrFloat(t *testing.T) {
 
 // Test Nil > Complex
 func TestCheckBinaryExprNilGtrComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > 8.0i`, env,
 		`cannot convert nil to type complex128`,
@@ -7349,7 +7349,7 @@ func TestCheckBinaryExprNilGtrComplex(t *testing.T) {
 
 // Test Nil > Bool
 func TestCheckBinaryExprNilGtrBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > true`, env,
 		`cannot convert nil to type int`,
@@ -7361,7 +7361,7 @@ func TestCheckBinaryExprNilGtrBool(t *testing.T) {
 
 // Test Nil > String
 func TestCheckBinaryExprNilGtrString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > "abc"`, env,
 		`cannot convert nil to type int`,
@@ -7373,7 +7373,7 @@ func TestCheckBinaryExprNilGtrString(t *testing.T) {
 
 // Test Nil > Nil
 func TestCheckBinaryExprNilGtrNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `nil > nil`, env,
 		`invalid operation: nil > nil (operator > not defined on nil)`,

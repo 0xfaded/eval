@@ -38,14 +38,14 @@ func (*SelInt) F() int {
 }
 
 func TestSelectStructField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.A", env, s.A)
 }
 
 func TestSelectStructNestedField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.B", env, s.B)
@@ -53,7 +53,7 @@ func TestSelectStructNestedField(t *testing.T) {
 }
 
 func TestSelectStructAnonField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.D", env, s.D)
@@ -61,42 +61,42 @@ func TestSelectStructAnonField(t *testing.T) {
 }
 
 func TestSelectStructMethod(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.E()", env, s.E())
 }
 
 func TestSelectStructMethodP(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.F()", env, s.F())
 }
 
 func TestSelectIntMethod(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	i := SelInt(0)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.E()", env, i.E())
 }
 
 func TestSelectIntMethodP(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	i := SelInt(0)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.F()", env, i.F())
 }
 
 func TestSelectStructPField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := &SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.A", env, s.A)
 }
 
 func TestSelectStructPNestedField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := &SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.B", env, s.B)
@@ -104,7 +104,7 @@ func TestSelectStructPNestedField(t *testing.T) {
 }
 
 func TestSelectStructPAnonField(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := &SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.D", env, s.D)
@@ -112,50 +112,50 @@ func TestSelectStructPAnonField(t *testing.T) {
 }
 
 func TestSelectStructPMethod(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := &SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.E()", env, s.E())
 }
 
 func TestSelectStructPMethodP(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	s := &SelStruct{}
 	env.Vars["s"] = reflect.ValueOf(&s)
 	expectResult(t, "s.F()", env, s.F())
 }
 
 func TestSelectIntPMethod(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	i := new(SelInt)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.E()", env, i.E())
 }
 
 func TestSelectIntPMethodP(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	i := new(SelInt)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.F()", env, i.F())
 }
 
 func TestSelectInterfaceMethod(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	var i SelInterface = new(SelInt)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.E()", env, i.E())
 }
 
 func TestSelectInterfaceMethodP(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	var i SelInterface = new(SelInt)
 	env.Vars["i"] = reflect.ValueOf(&i)
 	expectResult(t, "i.F()", env, i.F())
 }
 
 func TestSelectPackageFunc(t *testing.T) {
-	env := makeEnv()
-	pkg := makeEnv()
+	env := MakeSimpleEnv()
+	pkg := MakeSimpleEnv()
 	env.Pkgs["fmt"] = pkg
 	pkg.Funcs["Sprintf"] = reflect.ValueOf(fmt.Sprintf)
 

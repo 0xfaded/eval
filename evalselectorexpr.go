@@ -4,10 +4,10 @@ import (
 	"reflect"
 )
 
-func evalSelectorExpr(selector *SelectorExpr, env *Env) (reflect.Value, error) {
+func evalSelectorExpr(selector *SelectorExpr, env Env) (reflect.Value, error) {
 
 	if selector.pkgName != "" {
-		vs, _, err := evalIdentExprCallback(selector.Sel, env.Pkgs[selector.pkgName])
+		vs, _, err := evalIdentExprCallback(selector.Sel, env.Pkg(selector.pkgName))
 		return *vs, err
 	}
 
@@ -31,12 +31,12 @@ func evalSelectorExpr(selector *SelectorExpr, env *Env) (reflect.Value, error) {
 }
 
 // TODO[crc] Everything below here goes with the Env interface{} refactor
-func EvalSelectorExpr(selector *SelectorExpr, env *Env) (*reflect.Value, bool, error) {
+func EvalSelectorExpr(selector *SelectorExpr, env Env) (*reflect.Value, bool, error) {
 	v, err := evalSelectorExpr(selector, env)
 	return &v, true, err
 }
 
-type EvalSelectorExprFunc func(selector *SelectorExpr, env *Env)  (
+type EvalSelectorExprFunc func(selector *SelectorExpr, env Env)  (
 	*reflect.Value, bool, error)
 
 var evalSelectorExprCallback EvalSelectorExprFunc

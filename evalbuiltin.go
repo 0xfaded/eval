@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalCallBuiltinExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalCallBuiltinExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	ident := call.Fun.(*Ident)
 	switch ident.Name {
 	case "complex":
@@ -34,7 +34,7 @@ func evalCallBuiltinExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalBuiltinComplexExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinComplexExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	var err error
 
 	resT := call.KnownType()[0]
@@ -50,7 +50,7 @@ func evalBuiltinComplexExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	return []reflect.Value{cplx}, nil
 }
 
-func evalBuiltinRealExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinRealExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	var err error
 
 	resT := call.KnownType()[0]
@@ -64,7 +64,7 @@ func evalBuiltinRealExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	return []reflect.Value{re}, nil
 }
 
-func evalBuiltinImagExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinImagExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	var err error
 
 	resT := call.KnownType()[0]
@@ -78,13 +78,13 @@ func evalBuiltinImagExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	return []reflect.Value{im}, nil
 }
 
-func evalBuiltinNewExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinNewExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	resT := call.KnownType()[0]
 	ptr := builtinNew(resT.Elem())
 	return []reflect.Value{ptr}, nil
 }
 
-func evalBuiltinMakeExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinMakeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	resT := call.KnownType()[0]
 	length, capacity := 0, 0
 	var err error
@@ -112,7 +112,7 @@ func evalBuiltinMakeExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	return []reflect.Value{res}, nil
 }
 
-func evalBuiltinLenExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinLenExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if arg0, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
 	} else {
@@ -121,7 +121,7 @@ func evalBuiltinLenExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalBuiltinCapExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinCapExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if arg0, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
 	} else {
@@ -130,7 +130,7 @@ func evalBuiltinCapExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalBuiltinAppendExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	sliceT := call.KnownType()
 	head, err := evalTypedExpr(call.Args[0].(Expr), sliceT, env)
 	if err != nil {
@@ -160,7 +160,7 @@ func evalBuiltinAppendExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	return []reflect.Value{res}, nil
 }
 
-func evalBuiltinCopyExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinCopyExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if x, _, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
 		return nil, err
 	} else if y, _, err := EvalExpr(call.Args[1].(Expr), env); err != nil {
@@ -171,7 +171,7 @@ func evalBuiltinCopyExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalBuiltinDeleteExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinDeleteExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	m := call.Args[0].(Expr)
 	mT := m.KnownType()[0]
 	if x, _, err := EvalExpr(m, env); err != nil {
@@ -184,7 +184,7 @@ func evalBuiltinDeleteExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
 	}
 }
 
-func evalBuiltinPanicExpr(call *CallExpr, env *Env) ([]reflect.Value, error) {
+func evalBuiltinPanicExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	if arg0, err := evalTypedExpr(call.Args[0].(Expr), knownType{emptyInterface}, env); err != nil {
 		return nil, err
 	} else {

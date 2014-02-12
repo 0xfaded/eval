@@ -7,7 +7,7 @@ import (
 
 // Test Int32 - Int32
 func TestCheckUnaryTypedExpr(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
         x := int32(1)
         env.Vars["x"] = reflect.ValueOf(&x)
 

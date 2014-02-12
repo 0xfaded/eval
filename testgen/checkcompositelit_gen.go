@@ -20,7 +20,7 @@ var defs =
 	type s2 struct{ a, b int }
 `
 var body = template.Must(template.New("Body").Parse(defs +
-`	env := makeEnv()
+`	env := MakeSimpleEnv()
 	env.Types["a1"] = reflect.TypeOf(a1{})
 	env.Types["a2"] = reflect.TypeOf(a2{})
 	env.Types["s1"] = reflect.TypeOf(s1{})

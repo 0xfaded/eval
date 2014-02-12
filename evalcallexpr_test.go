@@ -6,7 +6,7 @@ import (
 )
 
 func TestFuncCallWithConst(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Consts["X"] = reflect.ValueOf(int(10))
 	env.Funcs["Foo"] = reflect.ValueOf(func (int) int { return 1; })
 
@@ -14,7 +14,7 @@ func TestFuncCallWithConst(t *testing.T) {
 }
 
 func TestFuncCallWithSplatOne(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	f := func() int { return 1 }
 	g := func(a int) int { return a }
@@ -29,7 +29,7 @@ func TestFuncCallWithSplatOne(t *testing.T) {
 }
 
 func TestFuncCallWithSplatTwo(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	f := func() (int, int) { return 1, 2 }
 	g := func(a int, b int) int { return a + b }
@@ -44,7 +44,7 @@ func TestFuncCallWithSplatTwo(t *testing.T) {
 }
 
 func TestTypeConversionWithEmptyInterface(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	expectResult(t, "interface{}(1)", env, interface{}(1))
 	expectResult(t, "interface{}(1.5)", env, interface{}(1.5))
 	expectResult(t, "interface{}(1i)", env, interface{}(1i))

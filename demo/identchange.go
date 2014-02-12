@@ -6,33 +6,12 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"go/parser"
 	"github.com/0xfaded/eval"
 )
 
-// Here's our custom ident lookup.
-func MyEvalIdentExpr(ident *eval.Ident, env *eval.Env) (
-	*reflect.Value, bool, error) {
-	name := ident.Name
-	if name == "nil" {
-		return nil, false, nil
-	} else if name[0] == 'v' {
-		val := reflect.ValueOf(5)
-		return &val, true, nil
-	} else if name[0] == 'c' {
-		val := reflect.ValueOf("constant")
-		return &val, true, nil
-	} else if name[0] == 'c' {
-		val := reflect.ValueOf(true)
-		return &val, true, nil
-	} else {
-		val := reflect.ValueOf('x')
-		return &val, true, nil
-	}
-}
-
-
-func expectResult(expr string, env *eval.Env, expected interface{}) {
+func expectResult(expr string, env eval.Env, expected interface{}) {
 	if e, err := parser.ParseExpr(expr); err != nil {
 		fmt.Printf("Failed to parse expression '%s' (%v)\n", expr, err)
 		return
@@ -47,19 +26,58 @@ func expectResult(expr string, env *eval.Env, expected interface{}) {
 	}
 }
 
-func makeEnv() *eval.Env {
-	return &eval.Env {
-		Vars: make(map[string] reflect.Value),
-		Consts: make(map[string] reflect.Value),
-		Funcs: make(map[string] reflect.Value),
-		Types: make(map[string] reflect.Type),
-		Pkgs: make(map[string] eval.Pkg),
+type CustomEnv struct {
+	// Encapsulate the default functionality
+	eval.Env
+}
+
+// At a minimum, You will probably want to define PushScope and PopScope
+func (env *CustomEnv) PushScope() eval.Env {
+	// The newly created underlying
+	top := env.Env.PushScope()
+
+	// Wrap the env and return it
+	return &CustomEnv{top}
+}
+
+func (env *CustomEnv) PopScope() eval.Env {
+	if top := env.Env.PopScope(); top == nil {
+		return nil
+	} else {
+		return &CustomEnv{top}
+	}
+}
+
+// Our custom Var will add one to any and all ints
+func (env *CustomEnv) Var(ident string) reflect.Value {
+	// Note that variables are always pointer values.
+	if v := env.Env.Var(ident); v.IsValid() && v.Type().Elem().Kind() == reflect.Int {
+		i := v.Elem().Int()
+		plusOne := reflect.New(v.Type().Elem()).Elem()
+		plusOne.Set(reflect.ValueOf(int(i + 1)))
+		return plusOne.Addr()
+	} else {
+		return v
+	}
+}
+
+// Our custom Const will lowercase all strings
+func (env *CustomEnv) Const(ident string) reflect.Value {
+	if v := env.Env.Const(ident); v.IsValid() && v.Type().Kind() == reflect.String {
+		s := v.String()
+		return(reflect.ValueOf(strings.ToLower(s)))
+	} else {
+		return v
 	}
 }
 
 func main() {
-	env := makeEnv()
-	eval.SetEvalIdentExprCallback(MyEvalIdentExpr)
+	simpleEnv := eval.MakeSimpleEnv()
+	v := 4
+	c := "CONSTANT"
+	simpleEnv.Vars["v"] = reflect.ValueOf(&v)
+	simpleEnv.Consts["c"] = reflect.ValueOf(c)
+	env := &CustomEnv{simpleEnv}
 	expectResult("v + 1", env, "6")
 	expectResult("c + \" value\"", env, "constant value")
 

@@ -7,7 +7,7 @@ import (
 	"go/token"
 )
 
-func checkUnaryExpr(unary *ast.UnaryExpr, env *Env) (*UnaryExpr, []error) {
+func checkUnaryExpr(unary *ast.UnaryExpr, env Env) (*UnaryExpr, []error) {
 	aexpr := &UnaryExpr{UnaryExpr: unary}
 
 	x, errs := CheckExpr(unary.X, env)

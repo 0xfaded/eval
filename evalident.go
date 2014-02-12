@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalIdent(ident *Ident, env *Env) (reflect.Value, error) {
+func evalIdent(ident *Ident, env Env) (reflect.Value, error) {
 	if ident.IsConst() {
 		return ident.Const(), nil
 	}
@@ -12,21 +12,28 @@ func evalIdent(ident *Ident, env *Env) (reflect.Value, error) {
 	name := ident.Name
 	switch ident.source {
 	case envVar:
-		return env.Vars[name].Elem(), nil
+		for searchEnv := env; searchEnv != nil; searchEnv = searchEnv.PopScope() {
+			if v := searchEnv.Var(name); v.IsValid() {
+				return v.Elem(), nil
+			}
+		}
 	case envFunc:
-		return env.Funcs[name], nil
-	default:
-                panic(dytc("missing identifier"))
+		for searchEnv := env; searchEnv != nil; searchEnv = searchEnv.PopScope() {
+			if v := searchEnv.Func(name); v.IsValid() {
+				return v, nil
+			}
+		}
 	}
+        panic(dytc("missing identifier"))
 }
 
 // TODO[crc] Everything below goes with Env interface refactor
-func EvalIdentExpr(ident *Ident, env *Env) (*reflect.Value, bool, error) {
+func EvalIdentExpr(ident *Ident, env Env) (*reflect.Value, bool, error) {
 	v, err := evalIdent(ident, env)
 	return &v, true, err
 }
 
-type EvalIdentExprFunc func(ident *Ident, env *Env)  (
+type EvalIdentExprFunc func(ident *Ident, env Env)  (
 	*reflect.Value, bool, error)
 
 func DerefValue(v reflect.Value) reflect.Value {

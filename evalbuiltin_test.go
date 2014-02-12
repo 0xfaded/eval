@@ -7,7 +7,7 @@ import (
 )
 
 func TestBuiltinComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectResult(t, "complex(1, 2)", env, complex(1, 2))
 	expectResult(t, "complex(float64(1), 2)", env, complex(float64(1), 2))
@@ -16,7 +16,7 @@ func TestBuiltinComplex(t *testing.T) {
 }
 
 func TestBuiltinReal(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectResult(t, "real(complex(1, 2))", env, real(complex(1, 2)))
 	expectResult(t, "real(complex(float64(1), 2))", env, real(complex(float64(1), 2)))
@@ -25,7 +25,7 @@ func TestBuiltinReal(t *testing.T) {
 }
 
 func TestBuiltinImag(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectResult(t, "imag(complex(1, 2))", env, imag(complex(1, 2)))
 	expectResult(t, "imag(complex(float64(1), 2))", env, imag(complex(float64(1), 2)))
@@ -34,7 +34,7 @@ func TestBuiltinImag(t *testing.T) {
 }
 
 func TestBuiltinAppend(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	strings := []string {"one", "two"}
 	ints := []int{1, 2}
 	env.Vars["strings"] = reflect.ValueOf(&strings)
@@ -45,7 +45,7 @@ func TestBuiltinAppend(t *testing.T) {
 }
 
 func TestBuiltinAppendSlice(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	a := []string {"one", "two"}
 	b := []string {"three", "four"}
 	env.Vars["a"] = reflect.ValueOf(&a)
@@ -55,7 +55,7 @@ func TestBuiltinAppendSlice(t *testing.T) {
 }
 
 func TestBuiltinCap(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	slice := []int {1, 2}
 	env.Vars["slice"] = reflect.ValueOf(&slice)
 
@@ -63,7 +63,7 @@ func TestBuiltinCap(t *testing.T) {
 }
 
 func TestBuiltinLen(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	slice := []int {1, 2}
 	env.Vars["slice"] = reflect.ValueOf(&slice)
 
@@ -72,7 +72,7 @@ func TestBuiltinLen(t *testing.T) {
 }
 
 func TestBuiltinNew(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	expr := "new(int)"
 	results := getResults(t, expr, env)
 	returnKind := (*results)[0].Kind().String()
@@ -82,7 +82,7 @@ func TestBuiltinNew(t *testing.T) {
 }
 
 func TestBuiltinCopy(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	a := []int{1,2,3}
 	b := []int{4,5}
 	env.Vars["a"] = reflect.ValueOf(&a)
@@ -92,7 +92,7 @@ func TestBuiltinCopy(t *testing.T) {
 }
 
 func TestBuiltinDelete(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	a := map[int]int{1: 2}
 	env.Vars["a"] = reflect.ValueOf(&a)
 	getResults(t, "delete(a, 1)", env)

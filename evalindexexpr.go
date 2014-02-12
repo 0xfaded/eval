@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func evalIndexExpr(index *IndexExpr, env *Env) ([]reflect.Value, error) {
+func evalIndexExpr(index *IndexExpr, env Env) ([]reflect.Value, error) {
 	xs, _, err := EvalExpr(index.X.(Expr), env)
 	if err != nil {
 		return []reflect.Value{}, err

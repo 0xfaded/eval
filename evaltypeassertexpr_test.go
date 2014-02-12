@@ -67,7 +67,7 @@ func TestTypeAssertNilToDynamicPanic(t *testing.T) {
 	expectPanic(t, "a.(X)", env, "interface conversion: nil is not eval.X")
 }
 
-func makeTypeAssertEnv() *Env {
+func makeTypeAssertEnv() *SimpleEnv {
 	// This little pointer dance is required to prevent
 	// reflect.TypeOf(typ interface{}) from interpreting
 	// typ as value which has been promoted to interface{}
@@ -79,7 +79,7 @@ func makeTypeAssertEnv() *Env {
 	// as XI is demoted to interface{} without any change to
 	// the interal interface data.
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	var xi *XI = new(XI)
 	var yi *YI = new(YI)
 	var zi *ZI = new(ZI)

@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func evalCompositeLit(lit *CompositeLit, env *Env) (reflect.Value, error) {
+func evalCompositeLit(lit *CompositeLit, env Env) (reflect.Value, error) {
 	t := lit.KnownType()[0]
 
 	switch t.Kind() {
@@ -21,7 +21,7 @@ func evalCompositeLit(lit *CompositeLit, env *Env) (reflect.Value, error) {
 	}
 }
 
-func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env *Env) (reflect.Value, error) {
+func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env Env) (reflect.Value, error) {
 
 	m := reflect.MakeMap(t)
 
@@ -48,7 +48,7 @@ func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env *Env) (reflect.V
 	return m, nil
 }
 
-func evalCompositeLitArrayOrSlice(t reflect.Type, lit *CompositeLit, env *Env) (reflect.Value, error) {
+func evalCompositeLitArrayOrSlice(t reflect.Type, lit *CompositeLit, env Env) (reflect.Value, error) {
 
 	var v reflect.Value
 	if t.Kind() == reflect.Slice {
@@ -76,7 +76,7 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *CompositeLit, env *Env) (
 	return v, nil
 }
 
-func evalCompositeLitStruct(t reflect.Type, lit *CompositeLit, env *Env) (reflect.Value, error) {
+func evalCompositeLitStruct(t reflect.Type, lit *CompositeLit, env Env) (reflect.Value, error) {
 	v := reflect.New(t).Elem()
 	for i, f := range lit.fields {
 		var elt Expr

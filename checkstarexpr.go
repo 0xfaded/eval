@@ -6,7 +6,7 @@ import (
 	"go/ast"
 )
 
-func checkStarExpr(star *ast.StarExpr, env *Env) (*StarExpr, []error) {
+func checkStarExpr(star *ast.StarExpr, env Env) (*StarExpr, []error) {
 	aexpr := &StarExpr{StarExpr: star}
 	x, errs := CheckExpr(aexpr.X, env)
 

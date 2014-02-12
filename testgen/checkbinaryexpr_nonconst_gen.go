@@ -45,8 +45,8 @@ type structUncompT struct {
 }
 `
 var globals = typeDefs + `
-func makeCheckBinaryNonConstExprEnv() *Env {
-	env := makeEnv()
+func makeCheckBinaryNonConstExprEnv() *SimpleEnv {
+	env := MakeSimpleEnv()
 	env.Types["interfaceX"] = reflect.TypeOf(new(interfaceX)).Elem()
 	env.Types["interfaceY"] = reflect.TypeOf(new(interfaceY)).Elem()
 	env.Types["interfaceZ"] = reflect.TypeOf(new(interfaceZ)).Elem()

@@ -5,14 +5,14 @@ import (
 	"go/ast"
 )
 
-func checkCompositeLit(lit *ast.CompositeLit, env *Env) (*CompositeLit, []error) {
+func checkCompositeLit(lit *ast.CompositeLit, env Env) (*CompositeLit, []error) {
 	return checkCompositeLitR(lit, nil, env)
 }
 
 // Recursively check composite literals, where a child composite lit's type depends the
 // parent's type For example, the expression [][]int{{1,2},{3,4}} contains two
 // slice lits, {1,2} and {3,4}, but their types are inferenced from the parent [][]int{}.
-func checkCompositeLitR(lit *ast.CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitR(lit *ast.CompositeLit, t reflect.Type, env Env) (*CompositeLit, []error) {
 	alit := &CompositeLit{CompositeLit: lit}
 
 	// We won't generate any errors here if the given type does not match lit.Type.
@@ -41,7 +41,7 @@ func checkCompositeLitR(lit *ast.CompositeLit, t reflect.Type, env *Env) (*Compo
 	}
 }
 
-func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env Env) (*CompositeLit, []error) {
 	var errs []error
 	kT := t.Key()
 
@@ -101,7 +101,7 @@ func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env *Env) (*Composi
 	return lit, errs
 }
 
-func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env Env) (*CompositeLit, []error) {
 	var errs, moreErrs []error
 	eltT := t.Elem()
 	maxIndex, curIndex := -1, 0
@@ -184,7 +184,7 @@ func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env *Env) 
 	return lit, errs
 }
 
-func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env *Env) (*CompositeLit, []error) {
+func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env Env) (*CompositeLit, []error) {
 	var errs, moreErrs []error
 
 	// X{} is treated as if it has zero KeyValue'd elements, i.e. unspecified
@@ -270,7 +270,7 @@ func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env *Env) (*Comp
 	return lit, errs
 }
 
-func checkMapValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+func checkMapValue(expr ast.Expr, eltT reflect.Type, env Env) (Expr, []error) {
 	switch eltT.Kind() {
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
 		if lit, ok := expr.(*ast.CompositeLit); ok {
@@ -296,7 +296,7 @@ func checkMapValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
 	return aexpr, errs
 }
 
-func checkArrayValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error) {
+func checkArrayValue(expr ast.Expr, eltT reflect.Type, env Env) (Expr, []error) {
 	switch eltT.Kind() {
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
 		if lit, ok := expr.(*ast.CompositeLit); ok {
@@ -322,7 +322,7 @@ func checkArrayValue(expr ast.Expr, eltT reflect.Type, env *Env) (Expr, []error)
 	return aexpr, errs
 }
 
-func checkStructField(expr ast.Expr, field reflect.StructField, env *Env) (Expr, []error) {
+func checkStructField(expr ast.Expr, field reflect.StructField, env Env) (Expr, []error) {
 	aexpr, ok, errs := checkExprAssignableTo(expr, field.Type, env)
 	if !ok {
 		errs = append([]error{}, ErrBadStructValue{aexpr, field.Type})

@@ -5,7 +5,7 @@ import (
 )
 
 func TestIntUnaryOps(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	// FIXME: find out what's wrong
 	if t == nil {
@@ -15,7 +15,7 @@ func TestIntUnaryOps(t *testing.T) {
 }
 
 func TestUintUnaryOps(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	// FIXME: find out what's wrong
 	if t == nil {
 		expectResult(t, "uint64(+12)",  env, uint64(+12))

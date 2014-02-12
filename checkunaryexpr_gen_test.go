@@ -6,35 +6,35 @@ import (
 
 // Test + Int
 func TestCheckUnaryExprAddInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `+ 4`, env, NewConstInt64(+ 4), ConstInt)
 }
 
 // Test + Rune
 func TestCheckUnaryExprAddRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `+ '@'`, env, NewConstRune(+ '@'), ConstRune)
 }
 
 // Test + Float
 func TestCheckUnaryExprAddFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `+ 2.0`, env, NewConstFloat64(+ 2.0), ConstFloat)
 }
 
 // Test + Complex
 func TestCheckUnaryExprAddComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `+ 8.0i`, env, NewConstComplex128(+ 8.0i), ConstComplex)
 }
 
 // Test + Bool
 func TestCheckUnaryExprAddBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `+ true`, env,
 		`invalid operation: + untyped bool`,
@@ -44,7 +44,7 @@ func TestCheckUnaryExprAddBool(t *testing.T) {
 
 // Test + String
 func TestCheckUnaryExprAddString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `+ "abc"`, env,
 		`invalid operation: + untyped string`,
@@ -54,7 +54,7 @@ func TestCheckUnaryExprAddString(t *testing.T) {
 
 // Test + Nil
 func TestCheckUnaryExprAddNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `+ nil`, env,
 		`invalid operation: + nil`,
@@ -64,35 +64,35 @@ func TestCheckUnaryExprAddNil(t *testing.T) {
 
 // Test - Int
 func TestCheckUnaryExprSubInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `- 4`, env, NewConstInt64(- 4), ConstInt)
 }
 
 // Test - Rune
 func TestCheckUnaryExprSubRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `- '@'`, env, NewConstRune(- '@'), ConstRune)
 }
 
 // Test - Float
 func TestCheckUnaryExprSubFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `- 2.0`, env, NewConstFloat64(- 2.0), ConstFloat)
 }
 
 // Test - Complex
 func TestCheckUnaryExprSubComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `- 8.0i`, env, NewConstComplex128(- 8.0i), ConstComplex)
 }
 
 // Test - Bool
 func TestCheckUnaryExprSubBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `- true`, env,
 		`invalid operation: - untyped bool`,
@@ -102,7 +102,7 @@ func TestCheckUnaryExprSubBool(t *testing.T) {
 
 // Test - String
 func TestCheckUnaryExprSubString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `- "abc"`, env,
 		`invalid operation: - untyped string`,
@@ -112,7 +112,7 @@ func TestCheckUnaryExprSubString(t *testing.T) {
 
 // Test - Nil
 func TestCheckUnaryExprSubNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `- nil`, env,
 		`invalid operation: - nil`,
@@ -122,21 +122,21 @@ func TestCheckUnaryExprSubNil(t *testing.T) {
 
 // Test ^ Int
 func TestCheckUnaryExprXorInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `^ 4`, env, NewConstInt64(^ 4), ConstInt)
 }
 
 // Test ^ Rune
 func TestCheckUnaryExprXorRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `^ '@'`, env, NewConstRune(^ '@'), ConstRune)
 }
 
 // Test ^ Float
 func TestCheckUnaryExprXorFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `^ 2.0`, env,
 		`illegal constant expression ^ untyped number`,
@@ -146,7 +146,7 @@ func TestCheckUnaryExprXorFloat(t *testing.T) {
 
 // Test ^ Complex
 func TestCheckUnaryExprXorComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `^ 8.0i`, env,
 		`illegal constant expression ^ untyped number`,
@@ -156,7 +156,7 @@ func TestCheckUnaryExprXorComplex(t *testing.T) {
 
 // Test ^ Bool
 func TestCheckUnaryExprXorBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `^ true`, env,
 		`invalid operation: ^ untyped bool`,
@@ -166,7 +166,7 @@ func TestCheckUnaryExprXorBool(t *testing.T) {
 
 // Test ^ String
 func TestCheckUnaryExprXorString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `^ "abc"`, env,
 		`invalid operation: ^ untyped string`,
@@ -176,7 +176,7 @@ func TestCheckUnaryExprXorString(t *testing.T) {
 
 // Test ^ Nil
 func TestCheckUnaryExprXorNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `^ nil`, env,
 		`invalid operation: ^ nil`,
@@ -186,7 +186,7 @@ func TestCheckUnaryExprXorNil(t *testing.T) {
 
 // Test ! Int
 func TestCheckUnaryExprNotInt(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! 4`, env,
 		`invalid operation: ! untyped number`,
@@ -196,7 +196,7 @@ func TestCheckUnaryExprNotInt(t *testing.T) {
 
 // Test ! Rune
 func TestCheckUnaryExprNotRune(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! '@'`, env,
 		`invalid operation: ! untyped number`,
@@ -206,7 +206,7 @@ func TestCheckUnaryExprNotRune(t *testing.T) {
 
 // Test ! Float
 func TestCheckUnaryExprNotFloat(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! 2.0`, env,
 		`invalid operation: ! untyped number`,
@@ -216,7 +216,7 @@ func TestCheckUnaryExprNotFloat(t *testing.T) {
 
 // Test ! Complex
 func TestCheckUnaryExprNotComplex(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! 8.0i`, env,
 		`invalid operation: ! untyped number`,
@@ -226,14 +226,14 @@ func TestCheckUnaryExprNotComplex(t *testing.T) {
 
 // Test ! Bool
 func TestCheckUnaryExprNotBool(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectConst(t, `! true`, env, (! true), ConstBool)
 }
 
 // Test ! String
 func TestCheckUnaryExprNotString(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! "abc"`, env,
 		`invalid operation: ! untyped string`,
@@ -243,7 +243,7 @@ func TestCheckUnaryExprNotString(t *testing.T) {
 
 // Test ! Nil
 func TestCheckUnaryExprNotNil(t *testing.T) {
-	env := makeEnv()
+	env := MakeSimpleEnv()
 
 	expectCheckError(t, `! nil`, env,
 		`invalid operation: ! nil`,

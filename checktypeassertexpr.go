@@ -6,7 +6,7 @@ import (
 	"go/ast"
 )
 
-func checkTypeAssertExpr(assert *ast.TypeAssertExpr, env *Env) (*TypeAssertExpr, []error) {
+func checkTypeAssertExpr(assert *ast.TypeAssertExpr, env Env) (*TypeAssertExpr, []error) {
 	aexpr := &TypeAssertExpr{TypeAssertExpr: assert}
 	x, errs := CheckExpr(aexpr.X, env)
 	aexpr.X = x

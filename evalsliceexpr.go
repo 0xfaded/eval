@@ -5,7 +5,7 @@ import (
 )
 
 // TODO[crc] support slice[::] syntax after go1.2 upgrade
-func evalSliceExpr(slice *SliceExpr, env *Env) (reflect.Value, error) {
+func evalSliceExpr(slice *SliceExpr, env Env) (reflect.Value, error) {
 	xs, _, err := EvalExpr(slice.X.(Expr), env)
 	if err != nil {
 		return reflect.Value{}, err

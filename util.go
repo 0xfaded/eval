@@ -36,7 +36,7 @@ func typeAssignableTo(from, to reflect.Type) bool {
 // bool value is returned indicating if the expr is assignable to t.
 // It will also be true expr failed to type check, indicating that the
 // assignability check was never attempted.
-func checkExprAssignableTo(expr ast.Expr, t reflect.Type, env *Env) (Expr, bool, []error) {
+func checkExprAssignableTo(expr ast.Expr, t reflect.Type, env Env) (Expr, bool, []error) {
 	var errs []error
 	aexpr, moreErrs := CheckExpr(expr, env)
 	if moreErrs != nil {
@@ -256,7 +256,7 @@ func comprisingFloatType(complexType reflect.Type) reflect.Type {
 // untyped constant, it is converted to type t. This function assumes
 // the input is successfully type checked, and therefore is undefined
 // incorrectly typed inputs.
-func evalTypedExpr(expr Expr, t knownType, env *Env) (xs []reflect.Value, err error) {
+func evalTypedExpr(expr Expr, t knownType, env Env) (xs []reflect.Value, err error) {
         if expr.IsConst() {
                 x := expr.Const()
                 if ct, ok := expr.KnownType()[0].(ConstType); ok {
@@ -278,7 +278,7 @@ func evalTypedExpr(expr Expr, t knownType, env *Env) (xs []reflect.Value, err er
 // and checkErrs which occur during the type check. It is possible
 // that checkErrs will be non-nil yet ok is still true. In this case
 // the errors are non-fatal, such as integer truncation.
-func checkInteger(expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+func checkInteger(expr ast.Expr, env Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
 	aexpr, checkErrs = CheckExpr(expr, env)
 	if checkErrs != nil && !aexpr.IsConst() {
 		return aexpr, 0, false, checkErrs
@@ -318,7 +318,7 @@ func checkInteger(expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErr
 }
 
 // Eval a node and cast it to an int. expr must be a *ConstNumber or integral type
-func evalInteger(expr Expr, env *Env) (int, error) {
+func evalInteger(expr Expr, env Env) (int, error) {
         if expr.IsConst() {
                 x := expr.Const()
                 if ct, ok := expr.KnownType()[0].(ConstType); ok {
@@ -344,7 +344,7 @@ func evalInteger(expr Expr, env *Env) (int, error) {
         }
 }
 
-func checkArrayIndex(expr ast.Expr, env *Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
+func checkArrayIndex(expr ast.Expr, env Env) (aexpr Expr, i int, ok bool, checkErrs []error) {
 	aexpr, checkErrs = CheckExpr(expr, env)
 	if !aexpr.IsConst() {
 		return aexpr, 0, false, checkErrs

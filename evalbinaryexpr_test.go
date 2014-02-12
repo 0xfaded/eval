@@ -7,7 +7,7 @@ import (
 
 func TestIntBinaryOps(t *testing.T) {
 	x := int32(5)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
 	expectResult(t, "x+2",   env, x+2)
@@ -32,7 +32,7 @@ func TestIntBinaryOps(t *testing.T) {
 
 func TestUintBinaryOps(t *testing.T) {
 	x := uint32(5)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
 	expectResult(t, "x+2",   env, x+2)
@@ -56,7 +56,7 @@ func TestUintBinaryOps(t *testing.T) {
 
 func TestFloatBinaryOps(t *testing.T) {
 	x := float32(2.25)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
 	expectResult(t, "x+2",   env, x+2)
@@ -75,7 +75,7 @@ func TestFloatBinaryOps(t *testing.T) {
 
 func TestComplexBinaryOps(t *testing.T) {
 	x := complex(1, 2)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
 	expectResult(t, "x + complex(3, 4)", env, x + complex(3, 4))
@@ -90,7 +90,7 @@ func TestComplexBinaryOps(t *testing.T) {
 
 func TestStringBinaryOps(t *testing.T) {
 	x := "a"
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
         expectResult(t, `x + "b"`, env, "a" + "b")
@@ -105,7 +105,7 @@ func TestStringBinaryOps(t *testing.T) {
 
 func TestBoolBinaryOps(t *testing.T) {
 	x := true
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&x)
 
         expectResult(t, "x == true", env, x == true)
@@ -124,7 +124,7 @@ func TestArrayStructBinaryOps(t *testing.T) {
 	c := [2]int{1,2}
 	d := [2]int{1,2}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 	env.Vars["c"] = reflect.ValueOf(&c)
@@ -141,7 +141,7 @@ func TestInterfaceBinaryOps(t *testing.T) {
 	var zi0 ZI = Z(0)
 	var zi1 ZI = X(0)
 	var x X = X(0)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["xi"] = reflect.ValueOf(&xi)
 	env.Vars["zi0"] = reflect.ValueOf(&zi0)
 	env.Vars["zi1"] = reflect.ValueOf(&zi1)
@@ -172,7 +172,7 @@ func TestInterfaceUncompBinaryOps(t *testing.T) {
 	var c interface{} = [1]interface{}{b}
 	var d interface{} = []int{}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 	env.Vars["c"] = reflect.ValueOf(&c)
@@ -187,7 +187,7 @@ func TestInterfaceUncompBinaryOps(t *testing.T) {
 func TestPtrBinaryOps(t *testing.T) {
 	a := new(int)
 	b := a
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -201,7 +201,7 @@ func TestMapSliceFuncBinaryOps(t *testing.T) {
 	a := map[int]int{}
 	b := []int(nil)
 	c := (func())(nil)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 	env.Vars["c"] = reflect.ValueOf(&c)
@@ -218,7 +218,7 @@ func TestTypedBinaryOps(t *testing.T) {
 
 	type Foo int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Foo"] = reflect.TypeOf(Foo(0))
 
 	expectResult(t, "Foo(1)+Foo(2)", env, Foo(1)+Foo(2))

@@ -11,7 +11,7 @@ func TestCheckStarExprA(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -27,7 +27,7 @@ func TestCheckStarExprB(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -40,7 +40,7 @@ func TestCheckStarExprAtA(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -53,7 +53,7 @@ func TestCheckStarExprAtB(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -66,7 +66,7 @@ func TestCheckStarExprInt(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -82,7 +82,7 @@ func TestCheckStarExprNumber(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -98,7 +98,7 @@ func TestCheckStarExprRune(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -114,7 +114,7 @@ func TestCheckStarExprBool(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -130,7 +130,7 @@ func TestCheckStarExprString(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -146,7 +146,7 @@ func TestCheckStarExprNil(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 
@@ -162,7 +162,7 @@ func TestCheckStarExprStarB(t *testing.T) {
 	a := 1
 	b := &a
 	_ = b
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 	env.Vars["b"] = reflect.ValueOf(&b)
 

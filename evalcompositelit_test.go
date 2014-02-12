@@ -8,7 +8,7 @@ import (
 func TestCompositeArrayEmpty(t *testing.T) {
 	type Alice [0]int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { }
@@ -20,7 +20,7 @@ func TestCompositeArrayEmpty(t *testing.T) {
 func TestCompositeArrayValues(t *testing.T) {
 	type Alice [3]int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 1, 2, 3 }
@@ -32,7 +32,7 @@ func TestCompositeArrayValues(t *testing.T) {
 func TestCompositeArrayKeyValues(t *testing.T) {
 	type Alice [3]int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 1: 1, 2 }
@@ -44,7 +44,7 @@ func TestCompositeArrayKeyValues(t *testing.T) {
 func TestCompositeArrayIncompleteValues(t *testing.T) {
 	type Alice [3]int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 1, 2 }
@@ -56,7 +56,7 @@ func TestCompositeArrayIncompleteValues(t *testing.T) {
 func TestCompositeSliceEmpty(t *testing.T) {
 	type Alice []int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { }
@@ -68,7 +68,7 @@ func TestCompositeSliceEmpty(t *testing.T) {
 func TestCompositeSliceValues(t *testing.T) {
 	type Alice []int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 1, 2, 3 }
@@ -80,7 +80,7 @@ func TestCompositeSliceValues(t *testing.T) {
 func TestCompositeSliceKeyValues(t *testing.T) {
 	type Alice []int
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 1, 10: 1 }
@@ -94,7 +94,7 @@ func TestCompositeStructValues(t *testing.T) {
 		Bob int
 	}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { 10 }
@@ -108,7 +108,7 @@ func TestCompositeStructKeyValues(t *testing.T) {
 		Bob int
 	}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Types["Alice"] = reflect.TypeOf(Alice{})
 
 	expected := Alice { Bob: 10 }

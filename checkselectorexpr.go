@@ -5,12 +5,12 @@ import (
 	"go/ast"
 )
 
-func checkSelectorExpr(selector *ast.SelectorExpr, env *Env) (*SelectorExpr, []error) {
+func checkSelectorExpr(selector *ast.SelectorExpr, env Env) (*SelectorExpr, []error) {
 	aexpr := &SelectorExpr{SelectorExpr: selector}
 
 	// First check if this is a package identifier
 	if ident, ok := selector.X.(*ast.Ident); ok {
-		if pkg, ok := env.Pkgs[ident.Name]; ok {
+		if pkg := env.Pkg(ident.Name); pkg != nil {
 			// Lookup this ident in the context of the package.
 			sel, errs := checkIdent(aexpr.SelectorExpr.Sel, pkg)
 			if len(errs) == 1 {

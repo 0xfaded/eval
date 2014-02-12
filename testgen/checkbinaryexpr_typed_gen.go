@@ -16,7 +16,7 @@ var comment = template.Must(template.New("Comment").Parse(
 `))
 
 var body = template.Must(template.New("Body").Parse(
-`	env := makeEnv()
+`	env := MakeSimpleEnv()
 {{ if .Errors }}
 	expectCheckError(t, `+"`{{ .Expr }}`"+`, env,{{ range .Errors }}
 		`+"`{{ . }}`"+`,{{ end }}

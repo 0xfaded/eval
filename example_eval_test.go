@@ -9,15 +9,9 @@ import (
 
 const constant1 = "A constant"
 
-//MakeEnv creates an environment to use in eval
-func makeEnv() *eval.Env {
-	env := &eval.Env {
-		Vars: make(map[string] reflect.Value),
-		Consts: make(map[string] reflect.Value),
-		Funcs: make(map[string] reflect.Value),
-		Types: make(map[string] reflect.Type),
-		Pkgs: make(map[string] eval.Pkg),
-	}
+//makeEnv creates an environment to use in eval
+func makeEnv() *eval.SimpleEnv {
+	env := eval.MakeSimpleEnv()
 	env.Consts["constant1"] = reflect.ValueOf(constant1)
 	var1 := 1
 	env.Vars["var1"] = reflect.ValueOf(&var1)

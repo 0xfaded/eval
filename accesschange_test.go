@@ -11,7 +11,7 @@ import (
 )
 
 // Here's our custom ident lookup.
-func MyEvalIdentExpr(ident *Ident, env *Env) (
+func MyEvalIdentExpr(ident *Ident, env Env) (
 	*reflect.Value, bool, error) {
 	name := ident.Name
 	if name == "nil" {
@@ -33,7 +33,7 @@ func MyEvalIdentExpr(ident *Ident, env *Env) (
 
 
 // Here's our custom selector lookup.
-func MyEvalSelectorExpr(selector *SelectorExpr, env *Env) (
+func MyEvalSelectorExpr(selector *SelectorExpr, env Env) (
 	*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
@@ -76,7 +76,7 @@ func MyEvalSelectorExpr(selector *SelectorExpr, env *Env) (
 
 func TestReplaceIdentLookup(t *testing.T) {
 	defer SetEvalIdentExprCallback(EvalIdentExpr)
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	SetEvalIdentExprCallback(MyEvalIdentExpr)
 	expectResult(t, "fdafdsa", env, 'x')
 	expectResult(t, "c + \" value\"", env, "constant value")
@@ -86,8 +86,8 @@ func TestReplaceIdentLookup(t *testing.T) {
 
 func TestReplaceSelectorLookup(t *testing.T) {
 	defer SetEvalSelectorExprCallback(EvalSelectorExpr)
-	env  := makeEnv()
-	pkg := makeEnv()
+	env  := MakeSimpleEnv()
+	pkg := MakeSimpleEnv()
 	env.Pkgs["bogusPackage"] = pkg
 	SetEvalSelectorExprCallback(MyEvalSelectorExpr)
 	expectResult(t, "bogusPackage.something", env, "bogus")

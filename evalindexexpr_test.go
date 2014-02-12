@@ -8,7 +8,7 @@ import (
 func TestIndexArray(t *testing.T) {
 	a := [2]int{1, 2}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1]
@@ -20,7 +20,7 @@ func TestIndexArray(t *testing.T) {
 func TestIndexArrayPtr(t *testing.T) {
 	a := &[2]int{1, 2}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1]
@@ -32,7 +32,7 @@ func TestIndexArrayPtr(t *testing.T) {
 func TestIndexSlice(t *testing.T) {
 	a := []int{1, 2}
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1]
@@ -44,7 +44,7 @@ func TestIndexSlice(t *testing.T) {
 func TestIndexString(t *testing.T) {
 	a := "ab"
 
-	env := makeEnv()
+	env := MakeSimpleEnv()
 	env.Vars["a"] = reflect.ValueOf(&a)
 
 	expected := a[1]
