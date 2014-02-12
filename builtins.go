@@ -124,10 +124,6 @@ func builtinDelete(m, k reflect.Value) reflect.Value {
 	return reflect.Value{}
 }
 
-func builtinPanic(z reflect.Value, zt bool) (reflect.Value, bool, error) {
-	// FIXME: we want results relative to the evaluated environment rather
-	// than a panic inside the evaluator. We might use error, but panic's
-	// parameter isn't the same as error's?
-	panic(z.Interface())
-	return reflect.ValueOf(nil), false, errors.New("Panic")
+func builtinPanic(i reflect.Value) error {
+	return PanicUser(i)
 }

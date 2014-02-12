@@ -28,6 +28,8 @@ func evalCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, e
 		return evalBuiltinCopyExpr(ctx, call, env)
 	case "delete":
 		return evalBuiltinDeleteExpr(ctx, call, env)
+	case "panic":
+		return evalBuiltinPanicExpr(ctx, call, env)
 	default:
 		panic("eval: unimplemented builtin " + ident.Name)
 	}
@@ -182,6 +184,15 @@ func evalBuiltinDeleteExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value,
 	} else {
 		builtinDelete((*x)[0], y[0])
 		return []reflect.Value{}, nil
+	}
+}
+
+func evalBuiltinPanicExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
+	if arg0, err := evalTypedExpr(ctx, call.Args[0].(Expr), knownType{emptyInterface}, env); err != nil {
+		return nil, err
+	} else {
+		err := builtinPanic(arg0[0])
+		return []reflect.Value{}, err
 	}
 }
 

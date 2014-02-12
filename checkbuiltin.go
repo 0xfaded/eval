@@ -34,6 +34,8 @@ func checkCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []erro
 		call, errs = checkBuiltinCopyExpr(ctx, call, env)
 	case "delete":
 		call, errs = checkBuiltinDeleteExpr(ctx, call, env)
+	case "panic":
+		call, errs = checkBuiltinPanicExpr(ctx, call, env)
 	default:
 		return call, nil, false
 	}
@@ -608,6 +610,30 @@ func checkBuiltinDeleteExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []er
 				errs = append(errs, convErrs...)
 			}
 		}
+	}
+	return call, errs
+}
+
+func checkBuiltinPanicExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
+	var errs []error
+	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
+		errs = append(errs, ErrBuiltinInvalidEllipsis{at(ctx, call)})
+	}
+	if len(call.Args) != 1 {
+		fakeCheckRemainingArgs(call, 0, env)
+		return call, append(errs, ErrBuiltinWrongNumberOfArgs{at(ctx, call)})
+	}
+	x, moreErrs := CheckExpr(ctx, call.Args[0], env)
+	if moreErrs != nil {
+		errs = append(errs, moreErrs...)
+	}
+	call.Args[0] = x
+	if moreErrs != nil && !x.IsConst() {
+		return call, errs
+	}
+	_, err := expectSingleType(ctx, x.KnownType(), x)
+	if err != nil {
+		return call, append(errs, err)
 	}
 	return call, errs
 }

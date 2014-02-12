@@ -326,7 +326,7 @@ func (parenExpr *ParenExpr) String() string {
 	if parenExpr.IsConst() {
 		return sprintConstValue(parenExpr.KnownType()[0], parenExpr.Const(), true)
 	}
-	return skipSuperfluousParens(parenExpr).String()
+	return fmt.Sprintf("(%v)", skipSuperfluousParens(parenExpr.X.(Expr)))
 }
 
 func (selectorExpr *SelectorExpr) String() string {

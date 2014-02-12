@@ -5,6 +5,7 @@ import (
 	"reflect"
 )
 
+type PanicUser reflect.Value
 type PanicDivideByZero struct {}
 type PanicInvalidDereference struct {}
 type PanicIndexOutOfBounds struct {}
@@ -24,6 +25,10 @@ type PanicUncomparableType struct {
 }
 type PanicUnhashableType struct {
 	dynamicT reflect.Type
+}
+
+func (p PanicUser) Error() string {
+	return fmt.Sprint(reflect.Value(p).Interface())
 }
 
 func (err PanicDivideByZero) Error() string {
