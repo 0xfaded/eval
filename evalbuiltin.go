@@ -4,7 +4,6 @@ import (
 	"reflect"
 )
 
-// TODO move this stub to builtins.go after rewrite
 func evalCallBuiltinExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
 	ident := call.Fun.(*Ident)
 	switch ident.Name {
@@ -134,8 +133,6 @@ func evalBuiltinCapExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, er
 func evalBuiltinAppendExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error) {
 	sliceT := call.KnownType()
 	head, err := evalTypedExpr(ctx, call.Args[0].(Expr), sliceT, env)
-	// TODO[crc] use KnownType once it is set. In previous call sliceT is actually empty
-	//sliceT = knownType{head[0].Type()}
 	if err != nil {
 		return nil, err
 	}

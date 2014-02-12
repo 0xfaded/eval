@@ -54,7 +54,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"AtA", " &a"},
 		{"StarB", " *a"},
 		{"Slice", "[]int{1}"},
-		// TODO[crc] add &slice[x] and &struct.field
+		{"Slice", "[]int{1}[0]"},
 	}
 	return []testgen.Dimension{
 		stars,

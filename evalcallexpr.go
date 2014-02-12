@@ -45,7 +45,6 @@ func evalCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) ([]reflect.Value, error
 	// Evaluate arguments
 	args := make([]reflect.Value, len(call.Args))
 	if call.arg0MultiValued {
-		// TODO clean this up once EvalExpr type changes
 		if argp, _, err := EvalExpr(ctx, call.Args[0].(Expr), env); err != nil {
 			return nil, err
 		} else {

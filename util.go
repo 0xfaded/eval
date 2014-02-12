@@ -134,17 +134,6 @@ func promoteUntypedNumerals(x, y reflect.Value) (reflect.Value, reflect.Value) {
 	panic(fmt.Sprintf("runtime: bad untyped numeras %v and %v", x, y))
 }
 
-// TODO remove this when type checker is complete
-func expectSingleValue(ctx *Ctx, values []reflect.Value, srcExpr ast.Expr) (reflect.Value, error) {
-	if len(values) == 0 {
-		return reflect.Value{}, ErrMissingValue{at(ctx, srcExpr)}
-	} else if len(values) != 1 {
-		return reflect.Value{}, ErrMultiInSingleContext{at(ctx, srcExpr)}
-	} else {
-		return values[0], nil
-	}
-}
-
 func expectSingleType(ctx *Ctx, types []reflect.Type, srcExpr ast.Expr) (reflect.Type, error) {
 	if len(types) == 0 {
 		return nil, ErrMissingValue{at(ctx, srcExpr)}

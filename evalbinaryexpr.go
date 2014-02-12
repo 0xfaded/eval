@@ -16,9 +16,6 @@ func evalBinaryExpr(ctx *Ctx, binary *BinaryExpr, env *Env) (r reflect.Value, er
         xexpr := binary.X.(Expr)
         yexpr := binary.Y.(Expr)
 
-        // Compute the operand type
-        // TODO[crc] I have decided that const nodes with inferred types
-        // need to be retyped to avoid logic like below.
         var zt []reflect.Type
         if xexpr.IsConst() && xexpr.KnownType()[0].Kind() != reflect.Interface {
                 zt = yexpr.KnownType()

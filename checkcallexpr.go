@@ -96,7 +96,6 @@ func checkCallFunExpr(ctx *Ctx, call *CallExpr, env *Env) (*CallExpr, []error) {
 	}
 	call.Fun = fun
 
-	// TODO check that fun actually returns a function type
 	ftype, err := expectSingleType(ctx, fun.KnownType(), fun)
 	if err != nil {
 		return call, append(errs, err)

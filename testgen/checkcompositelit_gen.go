@@ -146,7 +146,7 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		compileErrs[i] = strings.Replace(compileErrs[i], "s1", "eval.s1", -1)
 		compileErrs[i] = strings.Replace(compileErrs[i], "s2", "eval.s2", -1)
 
-		// TODO[crc] Fix bugs for gc 1.1 bugs. Remove after upgrade to 1.2
+		// TODO[crc] Fix bugs for gc 1.2 bugs. Remove after upgrade to 1.3
 		if n0 == "A2" {
 			compileErrs[i] = strings.Replace(compileErrs[i], "[0:0]", "[0:2]", -1)
 		} else if n0 == "A1" {
