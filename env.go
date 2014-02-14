@@ -64,6 +64,8 @@ func MakeSimpleEnv() *SimpleEnv {
 }
 
 type SimpleEnv struct {
+	// path relative to GOROOT or GOPATH. e.g. github.com/0xfaded/eval
+	Path string
 	Parent *SimpleEnv
 	Vars map[string]reflect.Value
 	Funcs map[string]reflect.Value
