@@ -29,6 +29,7 @@ var (
 	emptyInterface reflect.Type = reflect.TypeOf(new(interface{})).Elem()
 
 	byteSlice reflect.Type = reflect.SliceOf(u8)
+	runeSlice reflect.Type = reflect.SliceOf(i32)
 	untypedNilType reflect.Type = reflect.TypeOf(UntypedNil{})
 )
 

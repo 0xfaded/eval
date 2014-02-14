@@ -273,7 +273,7 @@ func convertConstToTyped(from ConstType, c constValue, to reflect.Type, isTypeCa
 		} else if to == emptyInterface {
 			v.Set(reflect.Value(c).Convert(emptyInterface))
 			return constValue(v), nil
-		} else if isTypeCast && to == byteSlice {
+		} else if isTypeCast && to == byteSlice || to == runeSlice {
 			v = reflect.Value(c).Convert(to)
 			return constValue(v), nil
 		}
