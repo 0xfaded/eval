@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"unicode"
 )
 
 func InspectPtr(val reflect.Value) string {
@@ -48,16 +49,23 @@ func Inspect(val reflect.Value) string {
 		if n == 0 {
 			return "{}"
 		}
-		str := ""
-		sep := "{"
+		str := val.Type().String()
+		sep := " {\n\t"
+		unexported := false
 		for i := 0; i < n; i++ {
-			if i > 0 { str += " " }
 			name  := val.Type().Field(i).Name
+			if unicode.IsLower([]rune(name)[0]) {
+				unexported = true
+				continue
+			}
 			field := val.Field(i)
 			str += fmt.Sprintf("%s%s: %s", sep, name, Inspect(field))
-			sep = ","
+			sep = ",\n\t"
 		}
-		str += "}"
+		if unexported {
+			str += fmt.Sprintf("\n\t// unexported fields")
+		}
+		str += "\n}"
 		return str
 
 	case reflect.Ptr:
