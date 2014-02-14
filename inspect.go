@@ -95,6 +95,12 @@ func Inspect(val reflect.Value) string {
 		} else {
 			return "&" + InspectShort(reflect.Indirect(val))
 		}
+	case reflect.Interface:
+		if val.IsNil() {
+			return "nil"
+		} else {
+			return fmt.Sprintf("%s.(%v)", InspectShort(val.Elem()), val.Elem().Type())
+		}
 	default:
 		// FIXME: add more Kinds as folks are annoyed with the output of
 		// the below:
