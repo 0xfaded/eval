@@ -86,6 +86,22 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		} else {
 			return star, reflect.PtrTo(elemT), isType, nil
 		}
+	case *ast.SelectorExpr:
+		// TODO[crc] remove this comment after ast cleanup
+		// Note that Sel SelectorExpr has its own Sel field, shadowing ast.SelectorExpr.Sel
+		// This is on the cleanup list.
+		sel := &SelectorExpr{SelectorExpr: node, Sel: &Ident{Ident: node.Sel}}
+		if ident, ok := node.X.(*ast.Ident); !ok {
+			return sel, nil, false, nil
+		} else if pkg := env.Pkg(ident.Name); pkg == nil {
+			return sel, nil, false, nil
+		} else if t := pkg.Type(sel.Sel.Name); t == nil {
+			return sel, nil, false, nil
+		} else {
+			// Only set X if the selector is a type, . can be part of an expression or type
+			sel.X = &Ident{Ident: ident}
+			return sel, t, true, nil
+		}
 	case *ast.ArrayType:
 		arrayT := &ArrayType{ArrayType: node}
 		if node.Len != nil {
