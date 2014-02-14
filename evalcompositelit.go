@@ -23,7 +23,8 @@ func evalCompositeLit(lit *CompositeLit, env Env) (reflect.Value, error) {
 
 func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env Env) (reflect.Value, error) {
 
-	m := reflect.MakeMap(t)
+	m := reflect.New(t).Elem()
+	m.Set(reflect.MakeMap(t))
 
 	kT := knownType{t.Key()}
 	vT := knownType{t.Elem()}
@@ -50,11 +51,9 @@ func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env Env) (reflect.Va
 
 func evalCompositeLitArrayOrSlice(t reflect.Type, lit *CompositeLit, env Env) (reflect.Value, error) {
 
-	var v reflect.Value
+	v := reflect.New(t).Elem()
 	if t.Kind() == reflect.Slice {
-		v = reflect.MakeSlice(t, lit.length, lit.length)
-	} else {
-		v = reflect.New(t).Elem()
+		v.Set(reflect.MakeSlice(t, lit.length, lit.length))
 	}
 
 	eT := knownType{t.Elem()}
