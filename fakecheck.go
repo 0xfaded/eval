@@ -34,6 +34,7 @@ func fakeCheckExpr(expr ast.Expr, env Env) Expr {
 	case *ast.SelectorExpr:
 		s := &SelectorExpr{SelectorExpr: expr}
 		s.X = fakeCheckExpr(s.X, env)
+		s.Sel = &Ident{Ident: expr.Sel}
 		return s
 	case *ast.IndexExpr:
 		i := &IndexExpr{IndexExpr: expr}
