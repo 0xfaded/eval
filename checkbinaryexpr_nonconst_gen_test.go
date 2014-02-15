@@ -1197,6 +1197,240 @@ func TestCheckBinaryNonConstExprIntGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test Int << ConstInt
+func TestCheckBinaryNonConstExprIntShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << 4`, env, reflect.TypeOf(a << 4))
+}
+
+// Test Int << ConstRune
+func TestCheckBinaryNonConstExprIntShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << '@'`, env, reflect.TypeOf(a << '@'))
+}
+
+// Test Int << ConstFloat
+func TestCheckBinaryNonConstExprIntShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << 2.0`, env, reflect.TypeOf(a << 2.0))
+}
+
+// Test Int << ConstComplex
+func TestCheckBinaryNonConstExprIntShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int << ConstBool
+func TestCheckBinaryNonConstExprIntShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << ConstString
+func TestCheckBinaryNonConstExprIntShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << ConstNil
+func TestCheckBinaryNonConstExprIntShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Int << Int
+func TestCheckBinaryNonConstExprIntShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Float32
+func TestCheckBinaryNonConstExprIntShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Complex128
+func TestCheckBinaryNonConstExprIntShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << String
+func TestCheckBinaryNonConstExprIntShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << BoolT
+func TestCheckBinaryNonConstExprIntShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Slice
+func TestCheckBinaryNonConstExprIntShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Array
+func TestCheckBinaryNonConstExprIntShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Map
+func TestCheckBinaryNonConstExprIntShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << XinterfaceX
+func TestCheckBinaryNonConstExprIntShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << InterfaceX
+func TestCheckBinaryNonConstExprIntShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << InterfaceY
+func TestCheckBinaryNonConstExprIntShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << InterfaceZ
+func TestCheckBinaryNonConstExprIntShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Ptr
+func TestCheckBinaryNonConstExprIntShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << Struct
+func TestCheckBinaryNonConstExprIntShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int << StructUncomp
+func TestCheckBinaryNonConstExprIntShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := int(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test Float32 + ConstInt
 func TestCheckBinaryNonConstExprFloat32AddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -2379,6 +2613,250 @@ func TestCheckBinaryNonConstExprFloat32GtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types float32 and eval.structUncompT)`,
+	)
+
+}
+
+// Test Float32 << ConstInt
+func TestCheckBinaryNonConstExprFloat32ShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << ConstRune
+func TestCheckBinaryNonConstExprFloat32ShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << ConstFloat
+func TestCheckBinaryNonConstExprFloat32ShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << ConstComplex
+func TestCheckBinaryNonConstExprFloat32ShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << ConstBool
+func TestCheckBinaryNonConstExprFloat32ShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << ConstString
+func TestCheckBinaryNonConstExprFloat32ShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << ConstNil
+func TestCheckBinaryNonConstExprFloat32ShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Float32 << Int
+func TestCheckBinaryNonConstExprFloat32ShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Float32
+func TestCheckBinaryNonConstExprFloat32ShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Complex128
+func TestCheckBinaryNonConstExprFloat32ShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << String
+func TestCheckBinaryNonConstExprFloat32ShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << BoolT
+func TestCheckBinaryNonConstExprFloat32ShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Slice
+func TestCheckBinaryNonConstExprFloat32ShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Array
+func TestCheckBinaryNonConstExprFloat32ShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Map
+func TestCheckBinaryNonConstExprFloat32ShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << XinterfaceX
+func TestCheckBinaryNonConstExprFloat32ShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << InterfaceX
+func TestCheckBinaryNonConstExprFloat32ShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << InterfaceY
+func TestCheckBinaryNonConstExprFloat32ShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << InterfaceZ
+func TestCheckBinaryNonConstExprFloat32ShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Ptr
+func TestCheckBinaryNonConstExprFloat32ShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Struct
+func TestCheckBinaryNonConstExprFloat32ShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << StructUncomp
+func TestCheckBinaryNonConstExprFloat32ShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := float32(1.5); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -3569,6 +4047,250 @@ func TestCheckBinaryNonConstExprComplex128GtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types complex128 and eval.structUncompT)`,
+	)
+
+}
+
+// Test Complex128 << ConstInt
+func TestCheckBinaryNonConstExprComplex128ShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << ConstRune
+func TestCheckBinaryNonConstExprComplex128ShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << ConstFloat
+func TestCheckBinaryNonConstExprComplex128ShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << ConstComplex
+func TestCheckBinaryNonConstExprComplex128ShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << ConstBool
+func TestCheckBinaryNonConstExprComplex128ShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << ConstString
+func TestCheckBinaryNonConstExprComplex128ShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << ConstNil
+func TestCheckBinaryNonConstExprComplex128ShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Complex128 << Int
+func TestCheckBinaryNonConstExprComplex128ShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Float32
+func TestCheckBinaryNonConstExprComplex128ShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Complex128
+func TestCheckBinaryNonConstExprComplex128ShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << String
+func TestCheckBinaryNonConstExprComplex128ShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << BoolT
+func TestCheckBinaryNonConstExprComplex128ShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Slice
+func TestCheckBinaryNonConstExprComplex128ShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Array
+func TestCheckBinaryNonConstExprComplex128ShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Map
+func TestCheckBinaryNonConstExprComplex128ShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << XinterfaceX
+func TestCheckBinaryNonConstExprComplex128ShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << InterfaceX
+func TestCheckBinaryNonConstExprComplex128ShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << InterfaceY
+func TestCheckBinaryNonConstExprComplex128ShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << InterfaceZ
+func TestCheckBinaryNonConstExprComplex128ShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Ptr
+func TestCheckBinaryNonConstExprComplex128ShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Struct
+func TestCheckBinaryNonConstExprComplex128ShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << StructUncomp
+func TestCheckBinaryNonConstExprComplex128ShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := complex128(1i); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -4786,6 +5508,250 @@ func TestCheckBinaryNonConstExprStringGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types string and eval.structUncompT)`,
+	)
+
+}
+
+// Test String << ConstInt
+func TestCheckBinaryNonConstExprStringShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type string)`,
+	)
+
+}
+
+// Test String << ConstRune
+func TestCheckBinaryNonConstExprStringShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type string)`,
+	)
+
+}
+
+// Test String << ConstFloat
+func TestCheckBinaryNonConstExprStringShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type string)`,
+	)
+
+}
+
+// Test String << ConstComplex
+func TestCheckBinaryNonConstExprStringShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type string)`,
+	)
+
+}
+
+// Test String << ConstBool
+func TestCheckBinaryNonConstExprStringShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << ConstString
+func TestCheckBinaryNonConstExprStringShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << ConstNil
+func TestCheckBinaryNonConstExprStringShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test String << Int
+func TestCheckBinaryNonConstExprStringShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Float32
+func TestCheckBinaryNonConstExprStringShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Complex128
+func TestCheckBinaryNonConstExprStringShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << String
+func TestCheckBinaryNonConstExprStringShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << BoolT
+func TestCheckBinaryNonConstExprStringShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Slice
+func TestCheckBinaryNonConstExprStringShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Array
+func TestCheckBinaryNonConstExprStringShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Map
+func TestCheckBinaryNonConstExprStringShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << XinterfaceX
+func TestCheckBinaryNonConstExprStringShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << InterfaceX
+func TestCheckBinaryNonConstExprStringShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << InterfaceY
+func TestCheckBinaryNonConstExprStringShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << InterfaceZ
+func TestCheckBinaryNonConstExprStringShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Ptr
+func TestCheckBinaryNonConstExprStringShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << Struct
+func TestCheckBinaryNonConstExprStringShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test String << StructUncomp
+func TestCheckBinaryNonConstExprStringShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := string("abc"); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -6019,6 +6985,250 @@ func TestCheckBinaryNonConstExprBoolTGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test BoolT << ConstInt
+func TestCheckBinaryNonConstExprBoolTShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << ConstRune
+func TestCheckBinaryNonConstExprBoolTShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << ConstFloat
+func TestCheckBinaryNonConstExprBoolTShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << ConstComplex
+func TestCheckBinaryNonConstExprBoolTShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << ConstBool
+func TestCheckBinaryNonConstExprBoolTShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << ConstString
+func TestCheckBinaryNonConstExprBoolTShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << ConstNil
+func TestCheckBinaryNonConstExprBoolTShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test BoolT << Int
+func TestCheckBinaryNonConstExprBoolTShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Float32
+func TestCheckBinaryNonConstExprBoolTShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Complex128
+func TestCheckBinaryNonConstExprBoolTShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << String
+func TestCheckBinaryNonConstExprBoolTShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << BoolT
+func TestCheckBinaryNonConstExprBoolTShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Slice
+func TestCheckBinaryNonConstExprBoolTShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Array
+func TestCheckBinaryNonConstExprBoolTShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Map
+func TestCheckBinaryNonConstExprBoolTShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << XinterfaceX
+func TestCheckBinaryNonConstExprBoolTShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << InterfaceX
+func TestCheckBinaryNonConstExprBoolTShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << InterfaceY
+func TestCheckBinaryNonConstExprBoolTShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << InterfaceZ
+func TestCheckBinaryNonConstExprBoolTShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Ptr
+func TestCheckBinaryNonConstExprBoolTShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Struct
+func TestCheckBinaryNonConstExprBoolTShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << StructUncomp
+func TestCheckBinaryNonConstExprBoolTShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := bool(true); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test Slice + ConstInt
 func TestCheckBinaryNonConstExprSliceAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -7222,6 +8432,250 @@ func TestCheckBinaryNonConstExprSliceGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types eval.sliceT and eval.structUncompT)`,
+	)
+
+}
+
+// Test Slice << ConstInt
+func TestCheckBinaryNonConstExprSliceShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.sliceT)`,
+	)
+
+}
+
+// Test Slice << ConstRune
+func TestCheckBinaryNonConstExprSliceShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.sliceT)`,
+	)
+
+}
+
+// Test Slice << ConstFloat
+func TestCheckBinaryNonConstExprSliceShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.sliceT)`,
+	)
+
+}
+
+// Test Slice << ConstComplex
+func TestCheckBinaryNonConstExprSliceShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.sliceT)`,
+	)
+
+}
+
+// Test Slice << ConstBool
+func TestCheckBinaryNonConstExprSliceShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << ConstString
+func TestCheckBinaryNonConstExprSliceShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << ConstNil
+func TestCheckBinaryNonConstExprSliceShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Slice << Int
+func TestCheckBinaryNonConstExprSliceShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Float32
+func TestCheckBinaryNonConstExprSliceShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Complex128
+func TestCheckBinaryNonConstExprSliceShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << String
+func TestCheckBinaryNonConstExprSliceShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << BoolT
+func TestCheckBinaryNonConstExprSliceShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Slice
+func TestCheckBinaryNonConstExprSliceShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Array
+func TestCheckBinaryNonConstExprSliceShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Map
+func TestCheckBinaryNonConstExprSliceShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << XinterfaceX
+func TestCheckBinaryNonConstExprSliceShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << InterfaceX
+func TestCheckBinaryNonConstExprSliceShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << InterfaceY
+func TestCheckBinaryNonConstExprSliceShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << InterfaceZ
+func TestCheckBinaryNonConstExprSliceShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Ptr
+func TestCheckBinaryNonConstExprSliceShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << Struct
+func TestCheckBinaryNonConstExprSliceShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Slice << StructUncomp
+func TestCheckBinaryNonConstExprSliceShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := sliceT(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -8438,6 +9892,250 @@ func TestCheckBinaryNonConstExprArrayGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test Array << ConstInt
+func TestCheckBinaryNonConstExprArrayShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.arrayT)`,
+	)
+
+}
+
+// Test Array << ConstRune
+func TestCheckBinaryNonConstExprArrayShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.arrayT)`,
+	)
+
+}
+
+// Test Array << ConstFloat
+func TestCheckBinaryNonConstExprArrayShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.arrayT)`,
+	)
+
+}
+
+// Test Array << ConstComplex
+func TestCheckBinaryNonConstExprArrayShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.arrayT)`,
+	)
+
+}
+
+// Test Array << ConstBool
+func TestCheckBinaryNonConstExprArrayShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << ConstString
+func TestCheckBinaryNonConstExprArrayShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << ConstNil
+func TestCheckBinaryNonConstExprArrayShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Array << Int
+func TestCheckBinaryNonConstExprArrayShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Float32
+func TestCheckBinaryNonConstExprArrayShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Complex128
+func TestCheckBinaryNonConstExprArrayShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << String
+func TestCheckBinaryNonConstExprArrayShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << BoolT
+func TestCheckBinaryNonConstExprArrayShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Slice
+func TestCheckBinaryNonConstExprArrayShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Array
+func TestCheckBinaryNonConstExprArrayShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Map
+func TestCheckBinaryNonConstExprArrayShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << XinterfaceX
+func TestCheckBinaryNonConstExprArrayShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << InterfaceX
+func TestCheckBinaryNonConstExprArrayShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << InterfaceY
+func TestCheckBinaryNonConstExprArrayShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << InterfaceZ
+func TestCheckBinaryNonConstExprArrayShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Ptr
+func TestCheckBinaryNonConstExprArrayShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << Struct
+func TestCheckBinaryNonConstExprArrayShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Array << StructUncomp
+func TestCheckBinaryNonConstExprArrayShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := arrayT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test Map + ConstInt
 func TestCheckBinaryNonConstExprMapAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -9645,6 +11343,250 @@ func TestCheckBinaryNonConstExprMapGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test Map << ConstInt
+func TestCheckBinaryNonConstExprMapShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.mapT)`,
+	)
+
+}
+
+// Test Map << ConstRune
+func TestCheckBinaryNonConstExprMapShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.mapT)`,
+	)
+
+}
+
+// Test Map << ConstFloat
+func TestCheckBinaryNonConstExprMapShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.mapT)`,
+	)
+
+}
+
+// Test Map << ConstComplex
+func TestCheckBinaryNonConstExprMapShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.mapT)`,
+	)
+
+}
+
+// Test Map << ConstBool
+func TestCheckBinaryNonConstExprMapShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << ConstString
+func TestCheckBinaryNonConstExprMapShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << ConstNil
+func TestCheckBinaryNonConstExprMapShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Map << Int
+func TestCheckBinaryNonConstExprMapShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Float32
+func TestCheckBinaryNonConstExprMapShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Complex128
+func TestCheckBinaryNonConstExprMapShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << String
+func TestCheckBinaryNonConstExprMapShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << BoolT
+func TestCheckBinaryNonConstExprMapShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Slice
+func TestCheckBinaryNonConstExprMapShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Array
+func TestCheckBinaryNonConstExprMapShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Map
+func TestCheckBinaryNonConstExprMapShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << XinterfaceX
+func TestCheckBinaryNonConstExprMapShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << InterfaceX
+func TestCheckBinaryNonConstExprMapShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << InterfaceY
+func TestCheckBinaryNonConstExprMapShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << InterfaceZ
+func TestCheckBinaryNonConstExprMapShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Ptr
+func TestCheckBinaryNonConstExprMapShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << Struct
+func TestCheckBinaryNonConstExprMapShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Map << StructUncomp
+func TestCheckBinaryNonConstExprMapShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := mapT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test XinterfaceX + ConstInt
 func TestCheckBinaryNonConstExprXinterfaceXAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -10796,6 +12738,240 @@ func TestCheckBinaryNonConstExprXinterfaceXGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types eval.XinterfaceX and eval.structUncompT)`,
+	)
+
+}
+
+// Test XinterfaceX << ConstInt
+func TestCheckBinaryNonConstExprXinterfaceXShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << 4`, env, reflect.TypeOf(a << 4))
+}
+
+// Test XinterfaceX << ConstRune
+func TestCheckBinaryNonConstExprXinterfaceXShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << '@'`, env, reflect.TypeOf(a << '@'))
+}
+
+// Test XinterfaceX << ConstFloat
+func TestCheckBinaryNonConstExprXinterfaceXShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectType(t, `a << 2.0`, env, reflect.TypeOf(a << 2.0))
+}
+
+// Test XinterfaceX << ConstComplex
+func TestCheckBinaryNonConstExprXinterfaceXShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test XinterfaceX << ConstBool
+func TestCheckBinaryNonConstExprXinterfaceXShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << ConstString
+func TestCheckBinaryNonConstExprXinterfaceXShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << ConstNil
+func TestCheckBinaryNonConstExprXinterfaceXShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test XinterfaceX << Int
+func TestCheckBinaryNonConstExprXinterfaceXShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Float32
+func TestCheckBinaryNonConstExprXinterfaceXShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Complex128
+func TestCheckBinaryNonConstExprXinterfaceXShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << String
+func TestCheckBinaryNonConstExprXinterfaceXShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << BoolT
+func TestCheckBinaryNonConstExprXinterfaceXShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Slice
+func TestCheckBinaryNonConstExprXinterfaceXShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Array
+func TestCheckBinaryNonConstExprXinterfaceXShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Map
+func TestCheckBinaryNonConstExprXinterfaceXShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << XinterfaceX
+func TestCheckBinaryNonConstExprXinterfaceXShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << InterfaceX
+func TestCheckBinaryNonConstExprXinterfaceXShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << InterfaceY
+func TestCheckBinaryNonConstExprXinterfaceXShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << InterfaceZ
+func TestCheckBinaryNonConstExprXinterfaceXShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Ptr
+func TestCheckBinaryNonConstExprXinterfaceXShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << Struct
+func TestCheckBinaryNonConstExprXinterfaceXShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test XinterfaceX << StructUncomp
+func TestCheckBinaryNonConstExprXinterfaceXShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := XinterfaceX(1); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -11998,6 +14174,250 @@ func TestCheckBinaryNonConstExprInterfaceXGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test InterfaceX << ConstInt
+func TestCheckBinaryNonConstExprInterfaceXShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.interfaceX)`,
+	)
+
+}
+
+// Test InterfaceX << ConstRune
+func TestCheckBinaryNonConstExprInterfaceXShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.interfaceX)`,
+	)
+
+}
+
+// Test InterfaceX << ConstFloat
+func TestCheckBinaryNonConstExprInterfaceXShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.interfaceX)`,
+	)
+
+}
+
+// Test InterfaceX << ConstComplex
+func TestCheckBinaryNonConstExprInterfaceXShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.interfaceX)`,
+	)
+
+}
+
+// Test InterfaceX << ConstBool
+func TestCheckBinaryNonConstExprInterfaceXShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << ConstString
+func TestCheckBinaryNonConstExprInterfaceXShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << ConstNil
+func TestCheckBinaryNonConstExprInterfaceXShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test InterfaceX << Int
+func TestCheckBinaryNonConstExprInterfaceXShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Float32
+func TestCheckBinaryNonConstExprInterfaceXShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Complex128
+func TestCheckBinaryNonConstExprInterfaceXShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << String
+func TestCheckBinaryNonConstExprInterfaceXShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << BoolT
+func TestCheckBinaryNonConstExprInterfaceXShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Slice
+func TestCheckBinaryNonConstExprInterfaceXShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Array
+func TestCheckBinaryNonConstExprInterfaceXShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Map
+func TestCheckBinaryNonConstExprInterfaceXShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << XinterfaceX
+func TestCheckBinaryNonConstExprInterfaceXShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << InterfaceX
+func TestCheckBinaryNonConstExprInterfaceXShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << InterfaceY
+func TestCheckBinaryNonConstExprInterfaceXShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << InterfaceZ
+func TestCheckBinaryNonConstExprInterfaceXShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Ptr
+func TestCheckBinaryNonConstExprInterfaceXShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << Struct
+func TestCheckBinaryNonConstExprInterfaceXShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceX << StructUncomp
+func TestCheckBinaryNonConstExprInterfaceXShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceX(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test InterfaceY + ConstInt
 func TestCheckBinaryNonConstExprInterfaceYAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -13192,6 +15612,250 @@ func TestCheckBinaryNonConstExprInterfaceYGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types eval.interfaceY and eval.structUncompT)`,
+	)
+
+}
+
+// Test InterfaceY << ConstInt
+func TestCheckBinaryNonConstExprInterfaceYShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.interfaceY)`,
+	)
+
+}
+
+// Test InterfaceY << ConstRune
+func TestCheckBinaryNonConstExprInterfaceYShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.interfaceY)`,
+	)
+
+}
+
+// Test InterfaceY << ConstFloat
+func TestCheckBinaryNonConstExprInterfaceYShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.interfaceY)`,
+	)
+
+}
+
+// Test InterfaceY << ConstComplex
+func TestCheckBinaryNonConstExprInterfaceYShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.interfaceY)`,
+	)
+
+}
+
+// Test InterfaceY << ConstBool
+func TestCheckBinaryNonConstExprInterfaceYShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << ConstString
+func TestCheckBinaryNonConstExprInterfaceYShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << ConstNil
+func TestCheckBinaryNonConstExprInterfaceYShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test InterfaceY << Int
+func TestCheckBinaryNonConstExprInterfaceYShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Float32
+func TestCheckBinaryNonConstExprInterfaceYShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Complex128
+func TestCheckBinaryNonConstExprInterfaceYShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << String
+func TestCheckBinaryNonConstExprInterfaceYShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << BoolT
+func TestCheckBinaryNonConstExprInterfaceYShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Slice
+func TestCheckBinaryNonConstExprInterfaceYShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Array
+func TestCheckBinaryNonConstExprInterfaceYShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Map
+func TestCheckBinaryNonConstExprInterfaceYShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << XinterfaceX
+func TestCheckBinaryNonConstExprInterfaceYShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << InterfaceX
+func TestCheckBinaryNonConstExprInterfaceYShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << InterfaceY
+func TestCheckBinaryNonConstExprInterfaceYShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << InterfaceZ
+func TestCheckBinaryNonConstExprInterfaceYShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Ptr
+func TestCheckBinaryNonConstExprInterfaceYShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << Struct
+func TestCheckBinaryNonConstExprInterfaceYShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceY << StructUncomp
+func TestCheckBinaryNonConstExprInterfaceYShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceY(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -14400,6 +17064,250 @@ func TestCheckBinaryNonConstExprInterfaceZGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test InterfaceZ << ConstInt
+func TestCheckBinaryNonConstExprInterfaceZShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.interfaceZ)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstRune
+func TestCheckBinaryNonConstExprInterfaceZShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.interfaceZ)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstFloat
+func TestCheckBinaryNonConstExprInterfaceZShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.interfaceZ)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstComplex
+func TestCheckBinaryNonConstExprInterfaceZShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.interfaceZ)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstBool
+func TestCheckBinaryNonConstExprInterfaceZShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstString
+func TestCheckBinaryNonConstExprInterfaceZShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << ConstNil
+func TestCheckBinaryNonConstExprInterfaceZShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test InterfaceZ << Int
+func TestCheckBinaryNonConstExprInterfaceZShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Float32
+func TestCheckBinaryNonConstExprInterfaceZShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Complex128
+func TestCheckBinaryNonConstExprInterfaceZShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << String
+func TestCheckBinaryNonConstExprInterfaceZShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << BoolT
+func TestCheckBinaryNonConstExprInterfaceZShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Slice
+func TestCheckBinaryNonConstExprInterfaceZShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Array
+func TestCheckBinaryNonConstExprInterfaceZShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Map
+func TestCheckBinaryNonConstExprInterfaceZShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << XinterfaceX
+func TestCheckBinaryNonConstExprInterfaceZShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << InterfaceX
+func TestCheckBinaryNonConstExprInterfaceZShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << InterfaceY
+func TestCheckBinaryNonConstExprInterfaceZShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << InterfaceZ
+func TestCheckBinaryNonConstExprInterfaceZShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Ptr
+func TestCheckBinaryNonConstExprInterfaceZShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << Struct
+func TestCheckBinaryNonConstExprInterfaceZShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test InterfaceZ << StructUncomp
+func TestCheckBinaryNonConstExprInterfaceZShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := interfaceZ(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test Ptr + ConstInt
 func TestCheckBinaryNonConstExprPtrAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -15600,6 +18508,250 @@ func TestCheckBinaryNonConstExprPtrGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (mismatched types *int and eval.structUncompT)`,
+	)
+
+}
+
+// Test Ptr << ConstInt
+func TestCheckBinaryNonConstExprPtrShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type *int)`,
+	)
+
+}
+
+// Test Ptr << ConstRune
+func TestCheckBinaryNonConstExprPtrShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type *int)`,
+	)
+
+}
+
+// Test Ptr << ConstFloat
+func TestCheckBinaryNonConstExprPtrShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type *int)`,
+	)
+
+}
+
+// Test Ptr << ConstComplex
+func TestCheckBinaryNonConstExprPtrShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type *int)`,
+	)
+
+}
+
+// Test Ptr << ConstBool
+func TestCheckBinaryNonConstExprPtrShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << ConstString
+func TestCheckBinaryNonConstExprPtrShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << ConstNil
+func TestCheckBinaryNonConstExprPtrShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Ptr << Int
+func TestCheckBinaryNonConstExprPtrShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Float32
+func TestCheckBinaryNonConstExprPtrShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Complex128
+func TestCheckBinaryNonConstExprPtrShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << String
+func TestCheckBinaryNonConstExprPtrShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << BoolT
+func TestCheckBinaryNonConstExprPtrShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Slice
+func TestCheckBinaryNonConstExprPtrShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Array
+func TestCheckBinaryNonConstExprPtrShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Map
+func TestCheckBinaryNonConstExprPtrShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << XinterfaceX
+func TestCheckBinaryNonConstExprPtrShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << InterfaceX
+func TestCheckBinaryNonConstExprPtrShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << InterfaceY
+func TestCheckBinaryNonConstExprPtrShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << InterfaceZ
+func TestCheckBinaryNonConstExprPtrShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Ptr
+func TestCheckBinaryNonConstExprPtrShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << Struct
+func TestCheckBinaryNonConstExprPtrShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Ptr << StructUncomp
+func TestCheckBinaryNonConstExprPtrShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := (*int)(nil); env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }
@@ -16814,6 +19966,250 @@ func TestCheckBinaryNonConstExprStructGtrStructUncomp(t *testing.T) {
 
 }
 
+// Test Struct << ConstInt
+func TestCheckBinaryNonConstExprStructShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.structT)`,
+	)
+
+}
+
+// Test Struct << ConstRune
+func TestCheckBinaryNonConstExprStructShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.structT)`,
+	)
+
+}
+
+// Test Struct << ConstFloat
+func TestCheckBinaryNonConstExprStructShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.structT)`,
+	)
+
+}
+
+// Test Struct << ConstComplex
+func TestCheckBinaryNonConstExprStructShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.structT)`,
+	)
+
+}
+
+// Test Struct << ConstBool
+func TestCheckBinaryNonConstExprStructShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << ConstString
+func TestCheckBinaryNonConstExprStructShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << ConstNil
+func TestCheckBinaryNonConstExprStructShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Struct << Int
+func TestCheckBinaryNonConstExprStructShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Float32
+func TestCheckBinaryNonConstExprStructShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Complex128
+func TestCheckBinaryNonConstExprStructShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << String
+func TestCheckBinaryNonConstExprStructShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << BoolT
+func TestCheckBinaryNonConstExprStructShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Slice
+func TestCheckBinaryNonConstExprStructShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Array
+func TestCheckBinaryNonConstExprStructShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Map
+func TestCheckBinaryNonConstExprStructShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << XinterfaceX
+func TestCheckBinaryNonConstExprStructShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << InterfaceX
+func TestCheckBinaryNonConstExprStructShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << InterfaceY
+func TestCheckBinaryNonConstExprStructShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << InterfaceZ
+func TestCheckBinaryNonConstExprStructShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Ptr
+func TestCheckBinaryNonConstExprStructShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << Struct
+func TestCheckBinaryNonConstExprStructShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test Struct << StructUncomp
+func TestCheckBinaryNonConstExprStructShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
+	)
+
+}
+
 // Test StructUncomp + ConstInt
 func TestCheckBinaryNonConstExprStructUncompAddConstInt(t *testing.T) {
 	env := makeCheckBinaryNonConstExprEnv()
@@ -18020,6 +21416,250 @@ func TestCheckBinaryNonConstExprStructUncompGtrStructUncomp(t *testing.T) {
 	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
 	expectCheckError(t, `a > b`, env,
 		`invalid operation: a > b (operator > not defined on struct)`,
+	)
+
+}
+
+// Test StructUncomp << ConstInt
+func TestCheckBinaryNonConstExprStructUncompShlConstInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 4`, env,
+		`invalid operation: a << 4 (shift of type eval.structUncompT)`,
+	)
+
+}
+
+// Test StructUncomp << ConstRune
+func TestCheckBinaryNonConstExprStructUncompShlConstRune(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << '@'`, env,
+		`invalid operation: a << 64 (shift of type eval.structUncompT)`,
+	)
+
+}
+
+// Test StructUncomp << ConstFloat
+func TestCheckBinaryNonConstExprStructUncompShlConstFloat(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 2.0`, env,
+		`invalid operation: a << 2 (shift of type eval.structUncompT)`,
+	)
+
+}
+
+// Test StructUncomp << ConstComplex
+func TestCheckBinaryNonConstExprStructUncompShlConstComplex(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: a << 0 (shift of type eval.structUncompT)`,
+	)
+
+}
+
+// Test StructUncomp << ConstBool
+func TestCheckBinaryNonConstExprStructUncompShlConstBool(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << true`, env,
+		`invalid operation: a << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << ConstString
+func TestCheckBinaryNonConstExprStructUncompShlConstString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: a << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << ConstNil
+func TestCheckBinaryNonConstExprStructUncompShlConstNil(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	
+	expectCheckError(t, `a << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test StructUncomp << Int
+func TestCheckBinaryNonConstExprStructUncompShlInt(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := int(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type int, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Float32
+func TestCheckBinaryNonConstExprStructUncompShlFloat32(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := float32(1.5); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Complex128
+func TestCheckBinaryNonConstExprStructUncompShlComplex128(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := complex128(1i); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << String
+func TestCheckBinaryNonConstExprStructUncompShlString(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := string("abc"); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << BoolT
+func TestCheckBinaryNonConstExprStructUncompShlBoolT(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := bool(true); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Slice
+func TestCheckBinaryNonConstExprStructUncompShlSlice(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := sliceT(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.sliceT, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Array
+func TestCheckBinaryNonConstExprStructUncompShlArray(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := arrayT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.arrayT, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Map
+func TestCheckBinaryNonConstExprStructUncompShlMap(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := mapT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.mapT, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << XinterfaceX
+func TestCheckBinaryNonConstExprStructUncompShlXinterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := XinterfaceX(1); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.XinterfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << InterfaceX
+func TestCheckBinaryNonConstExprStructUncompShlInterfaceX(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceX(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceX, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << InterfaceY
+func TestCheckBinaryNonConstExprStructUncompShlInterfaceY(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceY(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceY, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << InterfaceZ
+func TestCheckBinaryNonConstExprStructUncompShlInterfaceZ(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := interfaceZ(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.interfaceZ, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Ptr
+func TestCheckBinaryNonConstExprStructUncompShlPtr(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := (*int)(nil); env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type *int, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << Struct
+func TestCheckBinaryNonConstExprStructUncompShlStruct(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structT, must be unsigned integer)`,
+	)
+
+}
+
+// Test StructUncomp << StructUncomp
+func TestCheckBinaryNonConstExprStructUncompShlStructUncomp(t *testing.T) {
+	env := makeCheckBinaryNonConstExprEnv()
+	a := structUncompT{}; env.Vars["a"] = reflect.ValueOf(&a)
+	b := structUncompT{}; env.Vars["b"] = reflect.ValueOf(&b)
+	expectCheckError(t, `a << b`, env,
+		`invalid operation: a << b (shift count type eval.structUncompT, must be unsigned integer)`,
 	)
 
 }

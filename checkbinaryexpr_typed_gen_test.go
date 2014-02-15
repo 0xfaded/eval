@@ -1278,6 +1278,227 @@ func TestCheckBinaryTypedExprInt8GtrBoolT(t *testing.T) {
 
 }
 
+// Test Int8 << Int
+func TestCheckBinaryTypedExprInt8ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << 4`, env,
+		`constant 2032 overflows int8`,
+	)
+
+}
+
+// Test Int8 << Rune
+func TestCheckBinaryTypedExprInt8ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << '@'`, env,
+		`constant 2342736497361113055232 overflows int8`,
+	)
+
+}
+
+// Test Int8 << Float
+func TestCheckBinaryTypedExprInt8ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << 2.0`, env,
+		`constant 508 overflows int8`,
+	)
+
+}
+
+// Test Int8 << Complex
+func TestCheckBinaryTypedExprInt8ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int8 << Bool
+func TestCheckBinaryTypedExprInt8ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << true`, env,
+		`invalid operation: 127 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << String
+func TestCheckBinaryTypedExprInt8ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 127 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Nil
+func TestCheckBinaryTypedExprInt8ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Int8 << Int8
+func TestCheckBinaryTypedExprInt8ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << int8(0x7f)`, env,
+		`invalid operation: 127 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Int16
+func TestCheckBinaryTypedExprInt8ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << int16(0x7fff)`, env,
+		`invalid operation: 127 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Int32
+func TestCheckBinaryTypedExprInt8ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << int32(0x7fffffff)`, env,
+		`invalid operation: 127 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Int64
+func TestCheckBinaryTypedExprInt8ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 127 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Uint8
+func TestCheckBinaryTypedExprInt8ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << uint8(0xff)`, env,
+		`constant 7352797666569578409396757548051682148682644026268175816505556584502483732135936 overflows int8`,
+	)
+
+}
+
+// Test Int8 << Uint16
+func TestCheckBinaryTypedExprInt8ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Int8 << Uint32
+func TestCheckBinaryTypedExprInt8ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Int8 << Uint64
+func TestCheckBinaryTypedExprInt8ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Int8 << Float32
+func TestCheckBinaryTypedExprInt8ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << float32(0xffffffff)`, env,
+		`invalid operation: 127 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Float64
+func TestCheckBinaryTypedExprInt8ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << float64(0xffffffff)`, env,
+		`invalid operation: 127 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Complex64
+func TestCheckBinaryTypedExprInt8ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 127 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Complex128
+func TestCheckBinaryTypedExprInt8ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 127 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << Rune32
+func TestCheckBinaryTypedExprInt8ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << rune(0x7fffffff)`, env,
+		`invalid operation: 127 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << StringT
+func TestCheckBinaryTypedExprInt8ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << string("abc")`, env,
+		`invalid operation: 127 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int8 << BoolT
+func TestCheckBinaryTypedExprInt8ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int8(0x7f) << bool(true)`, env,
+		`invalid operation: 127 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Int16 + Int
 func TestCheckBinaryTypedExprInt16AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -2551,6 +2772,227 @@ func TestCheckBinaryTypedExprInt16GtrBoolT(t *testing.T) {
 
 }
 
+// Test Int16 << Int
+func TestCheckBinaryTypedExprInt16ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << 4`, env,
+		`constant 524272 overflows int16`,
+	)
+
+}
+
+// Test Int16 << Rune
+func TestCheckBinaryTypedExprInt16ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << '@'`, env,
+		`constant 604444463063240877801472 overflows int16`,
+	)
+
+}
+
+// Test Int16 << Float
+func TestCheckBinaryTypedExprInt16ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << 2.0`, env,
+		`constant 131068 overflows int16`,
+	)
+
+}
+
+// Test Int16 << Complex
+func TestCheckBinaryTypedExprInt16ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int16 << Bool
+func TestCheckBinaryTypedExprInt16ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << true`, env,
+		`invalid operation: 32767 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << String
+func TestCheckBinaryTypedExprInt16ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 32767 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Nil
+func TestCheckBinaryTypedExprInt16ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Int16 << Int8
+func TestCheckBinaryTypedExprInt16ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << int8(0x7f)`, env,
+		`invalid operation: 32767 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Int16
+func TestCheckBinaryTypedExprInt16ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << int16(0x7fff)`, env,
+		`invalid operation: 32767 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Int32
+func TestCheckBinaryTypedExprInt16ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << int32(0x7fffffff)`, env,
+		`invalid operation: 32767 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Int64
+func TestCheckBinaryTypedExprInt16ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 32767 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Uint8
+func TestCheckBinaryTypedExprInt16ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << uint8(0xff)`, env,
+		`constant 1897079694019569887722075232889838338314048793769522180940453327593644759455891456 overflows int16`,
+	)
+
+}
+
+// Test Int16 << Uint16
+func TestCheckBinaryTypedExprInt16ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Int16 << Uint32
+func TestCheckBinaryTypedExprInt16ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Int16 << Uint64
+func TestCheckBinaryTypedExprInt16ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Int16 << Float32
+func TestCheckBinaryTypedExprInt16ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << float32(0xffffffff)`, env,
+		`invalid operation: 32767 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Float64
+func TestCheckBinaryTypedExprInt16ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << float64(0xffffffff)`, env,
+		`invalid operation: 32767 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Complex64
+func TestCheckBinaryTypedExprInt16ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 32767 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Complex128
+func TestCheckBinaryTypedExprInt16ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 32767 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << Rune32
+func TestCheckBinaryTypedExprInt16ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << rune(0x7fffffff)`, env,
+		`invalid operation: 32767 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << StringT
+func TestCheckBinaryTypedExprInt16ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << string("abc")`, env,
+		`invalid operation: 32767 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int16 << BoolT
+func TestCheckBinaryTypedExprInt16ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int16(0x7fff) << bool(true)`, env,
+		`invalid operation: 32767 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Int32 + Int
 func TestCheckBinaryTypedExprInt32AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -3805,6 +4247,227 @@ func TestCheckBinaryTypedExprInt32GtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `int32(0x7fffffff) > bool(true)`, env,
 		`invalid operation: 2147483647 > true (mismatched types int32 and bool)`,
+	)
+
+}
+
+// Test Int32 << Int
+func TestCheckBinaryTypedExprInt32ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << 4`, env,
+		`constant 34359738352 overflows int32`,
+	)
+
+}
+
+// Test Int32 << Rune
+func TestCheckBinaryTypedExprInt32ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << '@'`, env,
+		`constant 39614081238685424723062423552 overflows int32`,
+	)
+
+}
+
+// Test Int32 << Float
+func TestCheckBinaryTypedExprInt32ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << 2.0`, env,
+		`constant 8589934588 overflows int32`,
+	)
+
+}
+
+// Test Int32 << Complex
+func TestCheckBinaryTypedExprInt32ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int32 << Bool
+func TestCheckBinaryTypedExprInt32ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << true`, env,
+		`invalid operation: 2147483647 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << String
+func TestCheckBinaryTypedExprInt32ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 2147483647 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Nil
+func TestCheckBinaryTypedExprInt32ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Int32 << Int8
+func TestCheckBinaryTypedExprInt32ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << int8(0x7f)`, env,
+		`invalid operation: 2147483647 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Int16
+func TestCheckBinaryTypedExprInt32ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << int16(0x7fff)`, env,
+		`invalid operation: 2147483647 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Int32
+func TestCheckBinaryTypedExprInt32ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 2147483647 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Int64
+func TestCheckBinaryTypedExprInt32ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 2147483647 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Uint8
+func TestCheckBinaryTypedExprInt32ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << uint8(0xff)`, env,
+		`constant 124330809044550615920187464324919717520770083772701937027295712203561082249176779063296 overflows int32`,
+	)
+
+}
+
+// Test Int32 << Uint16
+func TestCheckBinaryTypedExprInt32ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Int32 << Uint32
+func TestCheckBinaryTypedExprInt32ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Int32 << Uint64
+func TestCheckBinaryTypedExprInt32ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Int32 << Float32
+func TestCheckBinaryTypedExprInt32ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 2147483647 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Float64
+func TestCheckBinaryTypedExprInt32ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 2147483647 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Complex64
+func TestCheckBinaryTypedExprInt32ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 2147483647 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Complex128
+func TestCheckBinaryTypedExprInt32ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 2147483647 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << Rune32
+func TestCheckBinaryTypedExprInt32ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 2147483647 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << StringT
+func TestCheckBinaryTypedExprInt32ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << string("abc")`, env,
+		`invalid operation: 2147483647 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int32 << BoolT
+func TestCheckBinaryTypedExprInt32ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int32(0x7fffffff) << bool(true)`, env,
+		`invalid operation: 2147483647 << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -5082,6 +5745,227 @@ func TestCheckBinaryTypedExprInt64GtrBoolT(t *testing.T) {
 
 }
 
+// Test Int64 << Int
+func TestCheckBinaryTypedExprInt64ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << 4`, env,
+		`constant 147573952589676412912 overflows int64`,
+	)
+
+}
+
+// Test Int64 << Rune
+func TestCheckBinaryTypedExprInt64ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << '@'`, env,
+		`constant 170141183460469231713240559642174554112 overflows int64`,
+	)
+
+}
+
+// Test Int64 << Float
+func TestCheckBinaryTypedExprInt64ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << 2.0`, env,
+		`constant 36893488147419103228 overflows int64`,
+	)
+
+}
+
+// Test Int64 << Complex
+func TestCheckBinaryTypedExprInt64ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int64 << Bool
+func TestCheckBinaryTypedExprInt64ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << true`, env,
+		`invalid operation: 9223372036854775807 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << String
+func TestCheckBinaryTypedExprInt64ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 9223372036854775807 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Nil
+func TestCheckBinaryTypedExprInt64ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Int64 << Int8
+func TestCheckBinaryTypedExprInt64ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << int8(0x7f)`, env,
+		`invalid operation: 9223372036854775807 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Int16
+func TestCheckBinaryTypedExprInt64ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << int16(0x7fff)`, env,
+		`invalid operation: 9223372036854775807 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Int32
+func TestCheckBinaryTypedExprInt64ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 9223372036854775807 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Int64
+func TestCheckBinaryTypedExprInt64ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 9223372036854775807 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Uint8
+func TestCheckBinaryTypedExprInt64ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << uint8(0xff)`, env,
+		`constant 533996758980227520540859381923729930938890638084819238560125409622734649425431345501783956914176 overflows int64`,
+	)
+
+}
+
+// Test Int64 << Uint16
+func TestCheckBinaryTypedExprInt64ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Int64 << Uint32
+func TestCheckBinaryTypedExprInt64ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Int64 << Uint64
+func TestCheckBinaryTypedExprInt64ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Int64 << Float32
+func TestCheckBinaryTypedExprInt64ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 9223372036854775807 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Float64
+func TestCheckBinaryTypedExprInt64ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 9223372036854775807 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Complex64
+func TestCheckBinaryTypedExprInt64ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 9223372036854775807 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Complex128
+func TestCheckBinaryTypedExprInt64ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 9223372036854775807 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << Rune32
+func TestCheckBinaryTypedExprInt64ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 9223372036854775807 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << StringT
+func TestCheckBinaryTypedExprInt64ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << string("abc")`, env,
+		`invalid operation: 9223372036854775807 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int64 << BoolT
+func TestCheckBinaryTypedExprInt64ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `int64(0x7fffffffffffffff) << bool(true)`, env,
+		`invalid operation: 9223372036854775807 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Uint8 + Int
 func TestCheckBinaryTypedExprUint8AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -6351,6 +7235,227 @@ func TestCheckBinaryTypedExprUint8GtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `uint8(0xff) > bool(true)`, env,
 		`invalid operation: 255 > true (mismatched types uint8 and bool)`,
+	)
+
+}
+
+// Test Uint8 << Int
+func TestCheckBinaryTypedExprUint8ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << 4`, env,
+		`constant 4080 overflows uint8`,
+	)
+
+}
+
+// Test Uint8 << Rune
+func TestCheckBinaryTypedExprUint8ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << '@'`, env,
+		`constant 4703919738795935662080 overflows uint8`,
+	)
+
+}
+
+// Test Uint8 << Float
+func TestCheckBinaryTypedExprUint8ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << 2.0`, env,
+		`constant 1020 overflows uint8`,
+	)
+
+}
+
+// Test Uint8 << Complex
+func TestCheckBinaryTypedExprUint8ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Uint8 << Bool
+func TestCheckBinaryTypedExprUint8ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << true`, env,
+		`invalid operation: 255 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << String
+func TestCheckBinaryTypedExprUint8ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 255 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Nil
+func TestCheckBinaryTypedExprUint8ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Uint8 << Int8
+func TestCheckBinaryTypedExprUint8ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << int8(0x7f)`, env,
+		`invalid operation: 255 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Int16
+func TestCheckBinaryTypedExprUint8ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << int16(0x7fff)`, env,
+		`invalid operation: 255 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Int32
+func TestCheckBinaryTypedExprUint8ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << int32(0x7fffffff)`, env,
+		`invalid operation: 255 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Int64
+func TestCheckBinaryTypedExprUint8ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 255 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Uint8
+func TestCheckBinaryTypedExprUint8ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << uint8(0xff)`, env,
+		`constant 14763491377757814916505300588607708251291923044869171915030841961008924029091840 overflows uint8`,
+	)
+
+}
+
+// Test Uint8 << Uint16
+func TestCheckBinaryTypedExprUint8ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Uint8 << Uint32
+func TestCheckBinaryTypedExprUint8ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Uint8 << Uint64
+func TestCheckBinaryTypedExprUint8ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Uint8 << Float32
+func TestCheckBinaryTypedExprUint8ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << float32(0xffffffff)`, env,
+		`invalid operation: 255 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Float64
+func TestCheckBinaryTypedExprUint8ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << float64(0xffffffff)`, env,
+		`invalid operation: 255 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Complex64
+func TestCheckBinaryTypedExprUint8ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 255 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Complex128
+func TestCheckBinaryTypedExprUint8ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 255 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << Rune32
+func TestCheckBinaryTypedExprUint8ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << rune(0x7fffffff)`, env,
+		`invalid operation: 255 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << StringT
+func TestCheckBinaryTypedExprUint8ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << string("abc")`, env,
+		`invalid operation: 255 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint8 << BoolT
+func TestCheckBinaryTypedExprUint8ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint8(0xff) << bool(true)`, env,
+		`invalid operation: 255 << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -7628,6 +8733,227 @@ func TestCheckBinaryTypedExprUint16GtrBoolT(t *testing.T) {
 
 }
 
+// Test Uint16 << Int
+func TestCheckBinaryTypedExprUint16ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << 4`, env,
+		`constant 1048560 overflows uint16`,
+	)
+
+}
+
+// Test Uint16 << Rune
+func TestCheckBinaryTypedExprUint16ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << '@'`, env,
+		`constant 1208907372870555465154560 overflows uint16`,
+	)
+
+}
+
+// Test Uint16 << Float
+func TestCheckBinaryTypedExprUint16ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << 2.0`, env,
+		`constant 262140 overflows uint16`,
+	)
+
+}
+
+// Test Uint16 << Complex
+func TestCheckBinaryTypedExprUint16ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Uint16 << Bool
+func TestCheckBinaryTypedExprUint16ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << true`, env,
+		`invalid operation: 65535 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << String
+func TestCheckBinaryTypedExprUint16ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 65535 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Nil
+func TestCheckBinaryTypedExprUint16ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Uint16 << Int8
+func TestCheckBinaryTypedExprUint16ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << int8(0x7f)`, env,
+		`invalid operation: 65535 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Int16
+func TestCheckBinaryTypedExprUint16ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << int16(0x7fff)`, env,
+		`invalid operation: 65535 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Int32
+func TestCheckBinaryTypedExprUint16ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 65535 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Int64
+func TestCheckBinaryTypedExprUint16ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 65535 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Uint8
+func TestCheckBinaryTypedExprUint16ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << uint8(0xff)`, env,
+		`constant 3794217284083758433541862251272181020582024222531377182162926383979293475476602880 overflows uint16`,
+	)
+
+}
+
+// Test Uint16 << Uint16
+func TestCheckBinaryTypedExprUint16ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Uint16 << Uint32
+func TestCheckBinaryTypedExprUint16ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Uint16 << Uint64
+func TestCheckBinaryTypedExprUint16ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Uint16 << Float32
+func TestCheckBinaryTypedExprUint16ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << float32(0xffffffff)`, env,
+		`invalid operation: 65535 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Float64
+func TestCheckBinaryTypedExprUint16ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << float64(0xffffffff)`, env,
+		`invalid operation: 65535 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Complex64
+func TestCheckBinaryTypedExprUint16ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 65535 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Complex128
+func TestCheckBinaryTypedExprUint16ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 65535 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << Rune32
+func TestCheckBinaryTypedExprUint16ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 65535 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << StringT
+func TestCheckBinaryTypedExprUint16ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << string("abc")`, env,
+		`invalid operation: 65535 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint16 << BoolT
+func TestCheckBinaryTypedExprUint16ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint16(0xffff) << bool(true)`, env,
+		`invalid operation: 65535 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Uint32 + Int
 func TestCheckBinaryTypedExprUint32AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -8901,6 +10227,227 @@ func TestCheckBinaryTypedExprUint32GtrBoolT(t *testing.T) {
 
 }
 
+// Test Uint32 << Int
+func TestCheckBinaryTypedExprUint32ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << 4`, env,
+		`constant 68719476720 overflows uint32`,
+	)
+
+}
+
+// Test Uint32 << Rune
+func TestCheckBinaryTypedExprUint32ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << '@'`, env,
+		`constant 79228162495817593519834398720 overflows uint32`,
+	)
+
+}
+
+// Test Uint32 << Float
+func TestCheckBinaryTypedExprUint32ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << 2.0`, env,
+		`constant 17179869180 overflows uint32`,
+	)
+
+}
+
+// Test Uint32 << Complex
+func TestCheckBinaryTypedExprUint32ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Uint32 << Bool
+func TestCheckBinaryTypedExprUint32ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << true`, env,
+		`invalid operation: 4294967295 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << String
+func TestCheckBinaryTypedExprUint32ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 4294967295 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Nil
+func TestCheckBinaryTypedExprUint32ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Uint32 << Int8
+func TestCheckBinaryTypedExprUint32ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << int8(0x7f)`, env,
+		`invalid operation: 4294967295 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Int16
+func TestCheckBinaryTypedExprUint32ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << int16(0x7fff)`, env,
+		`invalid operation: 4294967295 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Int32
+func TestCheckBinaryTypedExprUint32ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 4294967295 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Int64
+func TestCheckBinaryTypedExprUint32ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 4294967295 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Uint8
+func TestCheckBinaryTypedExprUint32ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << uint8(0xff)`, env,
+		`constant 248661618146997276459033026361624927545884121472038866387411706426850956502310122946560 overflows uint32`,
+	)
+
+}
+
+// Test Uint32 << Uint16
+func TestCheckBinaryTypedExprUint32ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Uint32 << Uint32
+func TestCheckBinaryTypedExprUint32ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Uint32 << Uint64
+func TestCheckBinaryTypedExprUint32ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Uint32 << Float32
+func TestCheckBinaryTypedExprUint32ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 4294967295 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Float64
+func TestCheckBinaryTypedExprUint32ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 4294967295 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Complex64
+func TestCheckBinaryTypedExprUint32ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4294967295 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Complex128
+func TestCheckBinaryTypedExprUint32ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4294967295 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << Rune32
+func TestCheckBinaryTypedExprUint32ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 4294967295 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << StringT
+func TestCheckBinaryTypedExprUint32ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << string("abc")`, env,
+		`invalid operation: 4294967295 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint32 << BoolT
+func TestCheckBinaryTypedExprUint32ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint32(0xffffffff) << bool(true)`, env,
+		`invalid operation: 4294967295 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Uint64 + Int
 func TestCheckBinaryTypedExprUint64AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -10170,6 +11717,227 @@ func TestCheckBinaryTypedExprUint64GtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `uint64(0xffffffffffffffff) > bool(true)`, env,
 		`invalid operation: 18446744073709551615 > true (mismatched types uint64 and bool)`,
+	)
+
+}
+
+// Test Uint64 << Int
+func TestCheckBinaryTypedExprUint64ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << 4`, env,
+		`constant 295147905179352825840 overflows uint64`,
+	)
+
+}
+
+// Test Uint64 << Rune
+func TestCheckBinaryTypedExprUint64ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << '@'`, env,
+		`constant 340282366920938463444927863358058659840 overflows uint64`,
+	)
+
+}
+
+// Test Uint64 << Float
+func TestCheckBinaryTypedExprUint64ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << 2.0`, env,
+		`constant 73786976294838206460 overflows uint64`,
+	)
+
+}
+
+// Test Uint64 << Complex
+func TestCheckBinaryTypedExprUint64ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Uint64 << Bool
+func TestCheckBinaryTypedExprUint64ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << true`, env,
+		`invalid operation: 18446744073709551615 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << String
+func TestCheckBinaryTypedExprUint64ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 18446744073709551615 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Nil
+func TestCheckBinaryTypedExprUint64ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Uint64 << Int8
+func TestCheckBinaryTypedExprUint64ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << int8(0x7f)`, env,
+		`invalid operation: 18446744073709551615 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Int16
+func TestCheckBinaryTypedExprUint64ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << int16(0x7fff)`, env,
+		`invalid operation: 18446744073709551615 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Int32
+func TestCheckBinaryTypedExprUint64ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 18446744073709551615 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Int64
+func TestCheckBinaryTypedExprUint64ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 18446744073709551615 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Uint8
+func TestCheckBinaryTypedExprUint64ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << uint8(0xff)`, env,
+		`constant 1067993517960455041139614808466117959589566768673982431046885811578289580870591483007524478648320 overflows uint64`,
+	)
+
+}
+
+// Test Uint64 << Uint16
+func TestCheckBinaryTypedExprUint64ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Uint64 << Uint32
+func TestCheckBinaryTypedExprUint64ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Uint64 << Uint64
+func TestCheckBinaryTypedExprUint64ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Uint64 << Float32
+func TestCheckBinaryTypedExprUint64ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 18446744073709551615 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Float64
+func TestCheckBinaryTypedExprUint64ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 18446744073709551615 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Complex64
+func TestCheckBinaryTypedExprUint64ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 18446744073709551615 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Complex128
+func TestCheckBinaryTypedExprUint64ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 18446744073709551615 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << Rune32
+func TestCheckBinaryTypedExprUint64ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 18446744073709551615 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << StringT
+func TestCheckBinaryTypedExprUint64ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << string("abc")`, env,
+		`invalid operation: 18446744073709551615 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Uint64 << BoolT
+func TestCheckBinaryTypedExprUint64ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `uint64(0xffffffffffffffff) << bool(true)`, env,
+		`invalid operation: 18446744073709551615 << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -11460,6 +13228,228 @@ func TestCheckBinaryTypedExprFloat32GtrBoolT(t *testing.T) {
 
 }
 
+// Test Float32 << Int
+func TestCheckBinaryTypedExprFloat32ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << 4`, env,
+		`invalid operation: 4.29497e+09 << 4 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Rune
+func TestCheckBinaryTypedExprFloat32ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << '@'`, env,
+		`invalid operation: 4.29497e+09 << 64 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Float
+func TestCheckBinaryTypedExprFloat32ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << 2.0`, env,
+		`invalid operation: 4.29497e+09 << 2 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Complex
+func TestCheckBinaryTypedExprFloat32ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: 4.29497e+09 << 0 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Bool
+func TestCheckBinaryTypedExprFloat32ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << true`, env,
+		`invalid operation: 4.29497e+09 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << String
+func TestCheckBinaryTypedExprFloat32ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 4.29497e+09 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Nil
+func TestCheckBinaryTypedExprFloat32ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Float32 << Int8
+func TestCheckBinaryTypedExprFloat32ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << int8(0x7f)`, env,
+		`invalid operation: 4.29497e+09 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Int16
+func TestCheckBinaryTypedExprFloat32ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << int16(0x7fff)`, env,
+		`invalid operation: 4.29497e+09 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Int32
+func TestCheckBinaryTypedExprFloat32ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 4.29497e+09 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Int64
+func TestCheckBinaryTypedExprFloat32ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Uint8
+func TestCheckBinaryTypedExprFloat32ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << uint8(0xff)`, env,
+		`invalid operation: 4.29497e+09 << 255 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Uint16
+func TestCheckBinaryTypedExprFloat32ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << uint16(0xffff)`, env,
+		`invalid operation: 4.29497e+09 << 65535 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Uint32
+func TestCheckBinaryTypedExprFloat32ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << uint32(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4294967295 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Uint64
+func TestCheckBinaryTypedExprFloat32ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 18446744073709551615 (shift of type float32)`,
+	)
+
+}
+
+// Test Float32 << Float32
+func TestCheckBinaryTypedExprFloat32ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Float64
+func TestCheckBinaryTypedExprFloat32ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Complex64
+func TestCheckBinaryTypedExprFloat32ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4.29497e+09 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Complex128
+func TestCheckBinaryTypedExprFloat32ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4.29497e+09 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << Rune32
+func TestCheckBinaryTypedExprFloat32ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 4.29497e+09 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << StringT
+func TestCheckBinaryTypedExprFloat32ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << string("abc")`, env,
+		`invalid operation: 4.29497e+09 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float32 << BoolT
+func TestCheckBinaryTypedExprFloat32ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float32(0xffffffff) << bool(true)`, env,
+		`invalid operation: 4.29497e+09 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Float64 + Int
 func TestCheckBinaryTypedExprFloat64AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -12742,6 +14732,228 @@ func TestCheckBinaryTypedExprFloat64GtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `float64(0xffffffff) > bool(true)`, env,
 		`invalid operation: 4.29497e+09 > true (mismatched types float64 and bool)`,
+	)
+
+}
+
+// Test Float64 << Int
+func TestCheckBinaryTypedExprFloat64ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << 4`, env,
+		`invalid operation: 4.29497e+09 << 4 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Rune
+func TestCheckBinaryTypedExprFloat64ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << '@'`, env,
+		`invalid operation: 4.29497e+09 << 64 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Float
+func TestCheckBinaryTypedExprFloat64ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << 2.0`, env,
+		`invalid operation: 4.29497e+09 << 2 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Complex
+func TestCheckBinaryTypedExprFloat64ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: 4.29497e+09 << 0 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Bool
+func TestCheckBinaryTypedExprFloat64ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << true`, env,
+		`invalid operation: 4.29497e+09 << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << String
+func TestCheckBinaryTypedExprFloat64ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 4.29497e+09 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Nil
+func TestCheckBinaryTypedExprFloat64ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Float64 << Int8
+func TestCheckBinaryTypedExprFloat64ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << int8(0x7f)`, env,
+		`invalid operation: 4.29497e+09 << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Int16
+func TestCheckBinaryTypedExprFloat64ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << int16(0x7fff)`, env,
+		`invalid operation: 4.29497e+09 << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Int32
+func TestCheckBinaryTypedExprFloat64ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: 4.29497e+09 << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Int64
+func TestCheckBinaryTypedExprFloat64ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Uint8
+func TestCheckBinaryTypedExprFloat64ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << uint8(0xff)`, env,
+		`invalid operation: 4.29497e+09 << 255 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Uint16
+func TestCheckBinaryTypedExprFloat64ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << uint16(0xffff)`, env,
+		`invalid operation: 4.29497e+09 << 65535 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Uint32
+func TestCheckBinaryTypedExprFloat64ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << uint32(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4294967295 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Uint64
+func TestCheckBinaryTypedExprFloat64ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 18446744073709551615 (shift of type float64)`,
+	)
+
+}
+
+// Test Float64 << Float32
+func TestCheckBinaryTypedExprFloat64ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << float32(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Float64
+func TestCheckBinaryTypedExprFloat64ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << float64(0xffffffff)`, env,
+		`invalid operation: 4.29497e+09 << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Complex64
+func TestCheckBinaryTypedExprFloat64ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4.29497e+09 << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Complex128
+func TestCheckBinaryTypedExprFloat64ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: 4.29497e+09 << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << Rune32
+func TestCheckBinaryTypedExprFloat64ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: 4.29497e+09 << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << StringT
+func TestCheckBinaryTypedExprFloat64ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << string("abc")`, env,
+		`invalid operation: 4.29497e+09 << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float64 << BoolT
+func TestCheckBinaryTypedExprFloat64ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `float64(0xffffffff) << bool(true)`, env,
+		`invalid operation: 4.29497e+09 << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -14033,6 +16245,228 @@ func TestCheckBinaryTypedExprComplex64GtrBoolT(t *testing.T) {
 
 }
 
+// Test Complex64 << Int
+func TestCheckBinaryTypedExprComplex64ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << 4`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Rune
+func TestCheckBinaryTypedExprComplex64ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << '@'`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 64 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Float
+func TestCheckBinaryTypedExprComplex64ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << 2.0`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 2 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Complex
+func TestCheckBinaryTypedExprComplex64ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 0 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Bool
+func TestCheckBinaryTypedExprComplex64ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << true`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << String
+func TestCheckBinaryTypedExprComplex64ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Nil
+func TestCheckBinaryTypedExprComplex64ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Complex64 << Int8
+func TestCheckBinaryTypedExprComplex64ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << int8(0x7f)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Int16
+func TestCheckBinaryTypedExprComplex64ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << int16(0x7fff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Int32
+func TestCheckBinaryTypedExprComplex64ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << int32(0x7fffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Int64
+func TestCheckBinaryTypedExprComplex64ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Uint8
+func TestCheckBinaryTypedExprComplex64ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << uint8(0xff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 255 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Uint16
+func TestCheckBinaryTypedExprComplex64ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << uint16(0xffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 65535 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Uint32
+func TestCheckBinaryTypedExprComplex64ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << uint32(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4294967295 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Uint64
+func TestCheckBinaryTypedExprComplex64ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 18446744073709551615 (shift of type complex64)`,
+	)
+
+}
+
+// Test Complex64 << Float32
+func TestCheckBinaryTypedExprComplex64ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << float32(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Float64
+func TestCheckBinaryTypedExprComplex64ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << float64(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Complex64
+func TestCheckBinaryTypedExprComplex64ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Complex128
+func TestCheckBinaryTypedExprComplex64ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << Rune32
+func TestCheckBinaryTypedExprComplex64ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << rune(0x7fffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << StringT
+func TestCheckBinaryTypedExprComplex64ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << string("abc")`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex64 << BoolT
+func TestCheckBinaryTypedExprComplex64ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex64(0xffffffff + 0xffffffff * 1i) << bool(true)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Complex128 + Int
 func TestCheckBinaryTypedExprComplex128AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -15320,6 +17754,228 @@ func TestCheckBinaryTypedExprComplex128GtrBoolT(t *testing.T) {
 
 }
 
+// Test Complex128 << Int
+func TestCheckBinaryTypedExprComplex128ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << 4`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Rune
+func TestCheckBinaryTypedExprComplex128ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << '@'`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 64 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Float
+func TestCheckBinaryTypedExprComplex128ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << 2.0`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 2 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Complex
+func TestCheckBinaryTypedExprComplex128ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 0 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Bool
+func TestCheckBinaryTypedExprComplex128ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << true`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << String
+func TestCheckBinaryTypedExprComplex128ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Nil
+func TestCheckBinaryTypedExprComplex128ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Complex128 << Int8
+func TestCheckBinaryTypedExprComplex128ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << int8(0x7f)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Int16
+func TestCheckBinaryTypedExprComplex128ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << int16(0x7fff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Int32
+func TestCheckBinaryTypedExprComplex128ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << int32(0x7fffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Int64
+func TestCheckBinaryTypedExprComplex128ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Uint8
+func TestCheckBinaryTypedExprComplex128ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << uint8(0xff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 255 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Uint16
+func TestCheckBinaryTypedExprComplex128ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << uint16(0xffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 65535 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Uint32
+func TestCheckBinaryTypedExprComplex128ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << uint32(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4294967295 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Uint64
+func TestCheckBinaryTypedExprComplex128ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 18446744073709551615 (shift of type complex128)`,
+	)
+
+}
+
+// Test Complex128 << Float32
+func TestCheckBinaryTypedExprComplex128ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << float32(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Float64
+func TestCheckBinaryTypedExprComplex128ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << float64(0xffffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Complex64
+func TestCheckBinaryTypedExprComplex128ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Complex128
+func TestCheckBinaryTypedExprComplex128ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << Rune32
+func TestCheckBinaryTypedExprComplex128ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << rune(0x7fffffff)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << StringT
+func TestCheckBinaryTypedExprComplex128ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << string("abc")`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex128 << BoolT
+func TestCheckBinaryTypedExprComplex128ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `complex128(0xffffffff + 0xffffffff * 1i) << bool(true)`, env,
+		`invalid operation: (4.29497e+09+4.29497e+09i) << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
 // Test Rune32 + Int
 func TestCheckBinaryTypedExprRune32AddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -16574,6 +19230,227 @@ func TestCheckBinaryTypedExprRune32GtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `rune(0x7fffffff) > bool(true)`, env,
 		`invalid operation: rune(2147483647) > true (mismatched types rune and bool)`,
+	)
+
+}
+
+// Test Rune32 << Int
+func TestCheckBinaryTypedExprRune32ShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << 4`, env,
+		`constant 34359738352 overflows rune`,
+	)
+
+}
+
+// Test Rune32 << Rune
+func TestCheckBinaryTypedExprRune32ShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << '@'`, env,
+		`constant 39614081238685424723062423552 overflows rune`,
+	)
+
+}
+
+// Test Rune32 << Float
+func TestCheckBinaryTypedExprRune32ShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << 2.0`, env,
+		`constant 8589934588 overflows rune`,
+	)
+
+}
+
+// Test Rune32 << Complex
+func TestCheckBinaryTypedExprRune32ShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Rune32 << Bool
+func TestCheckBinaryTypedExprRune32ShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << true`, env,
+		`invalid operation: rune(2147483647) << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << String
+func TestCheckBinaryTypedExprRune32ShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: rune(2147483647) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Nil
+func TestCheckBinaryTypedExprRune32ShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test Rune32 << Int8
+func TestCheckBinaryTypedExprRune32ShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << int8(0x7f)`, env,
+		`invalid operation: rune(2147483647) << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Int16
+func TestCheckBinaryTypedExprRune32ShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << int16(0x7fff)`, env,
+		`invalid operation: rune(2147483647) << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Int32
+func TestCheckBinaryTypedExprRune32ShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << int32(0x7fffffff)`, env,
+		`invalid operation: rune(2147483647) << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Int64
+func TestCheckBinaryTypedExprRune32ShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: rune(2147483647) << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Uint8
+func TestCheckBinaryTypedExprRune32ShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << uint8(0xff)`, env,
+		`constant 124330809044550615920187464324919717520770083772701937027295712203561082249176779063296 overflows rune`,
+	)
+
+}
+
+// Test Rune32 << Uint16
+func TestCheckBinaryTypedExprRune32ShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << uint16(0xffff)`, env,
+		`stupid shift: 65535`,
+	)
+
+}
+
+// Test Rune32 << Uint32
+func TestCheckBinaryTypedExprRune32ShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << uint32(0xffffffff)`, env,
+		`stupid shift: 4294967295`,
+	)
+
+}
+
+// Test Rune32 << Uint64
+func TestCheckBinaryTypedExprRune32ShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << uint64(0xffffffffffffffff)`, env,
+		`stupid shift: -1`,
+	)
+
+}
+
+// Test Rune32 << Float32
+func TestCheckBinaryTypedExprRune32ShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << float32(0xffffffff)`, env,
+		`invalid operation: rune(2147483647) << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Float64
+func TestCheckBinaryTypedExprRune32ShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << float64(0xffffffff)`, env,
+		`invalid operation: rune(2147483647) << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Complex64
+func TestCheckBinaryTypedExprRune32ShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: rune(2147483647) << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Complex128
+func TestCheckBinaryTypedExprRune32ShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: rune(2147483647) << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << Rune32
+func TestCheckBinaryTypedExprRune32ShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << rune(0x7fffffff)`, env,
+		`invalid operation: rune(2147483647) << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << StringT
+func TestCheckBinaryTypedExprRune32ShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << string("abc")`, env,
+		`invalid operation: rune(2147483647) << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune32 << BoolT
+func TestCheckBinaryTypedExprRune32ShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `rune(0x7fffffff) << bool(true)`, env,
+		`invalid operation: rune(2147483647) << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -17906,6 +20783,228 @@ func TestCheckBinaryTypedExprStringTGtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `string("abc") > bool(true)`, env,
 		`invalid operation: "abc" > true (mismatched types string and bool)`,
+	)
+
+}
+
+// Test StringT << Int
+func TestCheckBinaryTypedExprStringTShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << 4`, env,
+		`invalid operation: "abc" << 4 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Rune
+func TestCheckBinaryTypedExprStringTShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << '@'`, env,
+		`invalid operation: "abc" << 64 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Float
+func TestCheckBinaryTypedExprStringTShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << 2.0`, env,
+		`invalid operation: "abc" << 2 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Complex
+func TestCheckBinaryTypedExprStringTShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: "abc" << 0 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Bool
+func TestCheckBinaryTypedExprStringTShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << true`, env,
+		`invalid operation: "abc" << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << String
+func TestCheckBinaryTypedExprStringTShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: "abc" << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Nil
+func TestCheckBinaryTypedExprStringTShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test StringT << Int8
+func TestCheckBinaryTypedExprStringTShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << int8(0x7f)`, env,
+		`invalid operation: "abc" << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Int16
+func TestCheckBinaryTypedExprStringTShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << int16(0x7fff)`, env,
+		`invalid operation: "abc" << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Int32
+func TestCheckBinaryTypedExprStringTShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << int32(0x7fffffff)`, env,
+		`invalid operation: "abc" << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Int64
+func TestCheckBinaryTypedExprStringTShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: "abc" << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Uint8
+func TestCheckBinaryTypedExprStringTShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << uint8(0xff)`, env,
+		`invalid operation: "abc" << 255 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Uint16
+func TestCheckBinaryTypedExprStringTShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << uint16(0xffff)`, env,
+		`invalid operation: "abc" << 65535 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Uint32
+func TestCheckBinaryTypedExprStringTShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << uint32(0xffffffff)`, env,
+		`invalid operation: "abc" << 4294967295 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Uint64
+func TestCheckBinaryTypedExprStringTShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: "abc" << 18446744073709551615 (shift of type string)`,
+	)
+
+}
+
+// Test StringT << Float32
+func TestCheckBinaryTypedExprStringTShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << float32(0xffffffff)`, env,
+		`invalid operation: "abc" << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Float64
+func TestCheckBinaryTypedExprStringTShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << float64(0xffffffff)`, env,
+		`invalid operation: "abc" << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Complex64
+func TestCheckBinaryTypedExprStringTShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: "abc" << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Complex128
+func TestCheckBinaryTypedExprStringTShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: "abc" << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << Rune32
+func TestCheckBinaryTypedExprStringTShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << rune(0x7fffffff)`, env,
+		`invalid operation: "abc" << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << StringT
+func TestCheckBinaryTypedExprStringTShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << string("abc")`, env,
+		`invalid operation: "abc" << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test StringT << BoolT
+func TestCheckBinaryTypedExprStringTShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `string("abc") << bool(true)`, env,
+		`invalid operation: "abc" << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }
@@ -19250,6 +22349,228 @@ func TestCheckBinaryTypedExprBoolTGtrBoolT(t *testing.T) {
 
 	expectCheckError(t, `bool(true) > bool(true)`, env,
 		`invalid operation: true > true (operator > not defined on bool)`,
+	)
+
+}
+
+// Test BoolT << Int
+func TestCheckBinaryTypedExprBoolTShlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << 4`, env,
+		`invalid operation: true << 4 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Rune
+func TestCheckBinaryTypedExprBoolTShlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << '@'`, env,
+		`invalid operation: true << 64 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Float
+func TestCheckBinaryTypedExprBoolTShlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << 2.0`, env,
+		`invalid operation: true << 2 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Complex
+func TestCheckBinaryTypedExprBoolTShlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: true << 0 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Bool
+func TestCheckBinaryTypedExprBoolTShlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << true`, env,
+		`invalid operation: true << true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << String
+func TestCheckBinaryTypedExprBoolTShlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: true << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Nil
+func TestCheckBinaryTypedExprBoolTShlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
+// Test BoolT << Int8
+func TestCheckBinaryTypedExprBoolTShlInt8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << int8(0x7f)`, env,
+		`invalid operation: true << 127 (shift count type int8, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Int16
+func TestCheckBinaryTypedExprBoolTShlInt16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << int16(0x7fff)`, env,
+		`invalid operation: true << 32767 (shift count type int16, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Int32
+func TestCheckBinaryTypedExprBoolTShlInt32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << int32(0x7fffffff)`, env,
+		`invalid operation: true << 2147483647 (shift count type int32, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Int64
+func TestCheckBinaryTypedExprBoolTShlInt64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << int64(0x7fffffffffffffff)`, env,
+		`invalid operation: true << 9223372036854775807 (shift count type int64, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Uint8
+func TestCheckBinaryTypedExprBoolTShlUint8(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << uint8(0xff)`, env,
+		`invalid operation: true << 255 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Uint16
+func TestCheckBinaryTypedExprBoolTShlUint16(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << uint16(0xffff)`, env,
+		`invalid operation: true << 65535 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Uint32
+func TestCheckBinaryTypedExprBoolTShlUint32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << uint32(0xffffffff)`, env,
+		`invalid operation: true << 4294967295 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Uint64
+func TestCheckBinaryTypedExprBoolTShlUint64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << uint64(0xffffffffffffffff)`, env,
+		`invalid operation: true << 18446744073709551615 (shift of type bool)`,
+	)
+
+}
+
+// Test BoolT << Float32
+func TestCheckBinaryTypedExprBoolTShlFloat32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << float32(0xffffffff)`, env,
+		`invalid operation: true << 4.29497e+09 (shift count type float32, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Float64
+func TestCheckBinaryTypedExprBoolTShlFloat64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << float64(0xffffffff)`, env,
+		`invalid operation: true << 4.29497e+09 (shift count type float64, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Complex64
+func TestCheckBinaryTypedExprBoolTShlComplex64(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << complex64(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: true << (4.29497e+09+4.29497e+09i) (shift count type complex64, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Complex128
+func TestCheckBinaryTypedExprBoolTShlComplex128(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << complex128(0xffffffff + 0xffffffff * 1i)`, env,
+		`invalid operation: true << (4.29497e+09+4.29497e+09i) (shift count type complex128, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << Rune32
+func TestCheckBinaryTypedExprBoolTShlRune32(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << rune(0x7fffffff)`, env,
+		`invalid operation: true << rune(2147483647) (shift count type rune, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << StringT
+func TestCheckBinaryTypedExprBoolTShlStringT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << string("abc")`, env,
+		`invalid operation: true << "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test BoolT << BoolT
+func TestCheckBinaryTypedExprBoolTShlBoolT(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `bool(true) << bool(true)`, env,
+		`invalid operation: true << true (shift count type bool, must be unsigned integer)`,
 	)
 
 }

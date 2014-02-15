@@ -961,6 +961,68 @@ func TestCheckBinaryExprIntGtrNil(t *testing.T) {
 
 }
 
+// Test Int >> Int
+func TestCheckBinaryExprIntRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `4 >> 4`, env, NewConstInt64(4 >> 4), ConstShiftedInt)
+}
+
+// Test Int >> Rune
+func TestCheckBinaryExprIntRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `4 >> '@'`, env, NewConstRune(4 >> '@'), ConstShiftedInt)
+}
+
+// Test Int >> Float
+func TestCheckBinaryExprIntRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `4 >> 2.0`, env, NewConstFloat64(4 >> 2.0), ConstShiftedInt)
+}
+
+// Test Int >> Complex
+func TestCheckBinaryExprIntRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `4 >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Int >> Bool
+func TestCheckBinaryExprIntRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `4 >> true`, env,
+		`invalid operation: 4 >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int >> String
+func TestCheckBinaryExprIntRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `4 >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 4 >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Int >> Nil
+func TestCheckBinaryExprIntRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `4 >> nil`, env,
+		`cannot convert nil to type uint`,
+	)
+
+}
+
 // Test Rune + Int
 func TestCheckBinaryExprRuneAddInt(t *testing.T) {
 	env := MakeSimpleEnv()
@@ -1914,6 +1976,68 @@ func TestCheckBinaryExprRuneGtrNil(t *testing.T) {
 	expectCheckError(t, `'@' > nil`, env,
 		`cannot convert nil to type rune`,
 		`invalid operation: '@' > nil (mismatched types rune and <T>)`,
+	)
+
+}
+
+// Test Rune >> Int
+func TestCheckBinaryExprRuneRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `'@' >> 4`, env, NewConstRune('@' >> 4), ConstShiftedInt)
+}
+
+// Test Rune >> Rune
+func TestCheckBinaryExprRuneRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `'@' >> '@'`, env, NewConstRune('@' >> '@'), ConstShiftedInt)
+}
+
+// Test Rune >> Float
+func TestCheckBinaryExprRuneRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `'@' >> 2.0`, env, NewConstFloat64('@' >> 2.0), ConstShiftedInt)
+}
+
+// Test Rune >> Complex
+func TestCheckBinaryExprRuneRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `'@' >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Rune >> Bool
+func TestCheckBinaryExprRuneRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `'@' >> true`, env,
+		`invalid operation: '@' >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune >> String
+func TestCheckBinaryExprRuneRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `'@' >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: '@' >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Rune >> Nil
+func TestCheckBinaryExprRuneRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `'@' >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
@@ -2901,6 +3025,68 @@ func TestCheckBinaryExprFloatGtrNil(t *testing.T) {
 	expectCheckError(t, `2.0 > nil`, env,
 		`cannot convert nil to type float64`,
 		`invalid operation: 2 > nil (mismatched types float64 and <T>)`,
+	)
+
+}
+
+// Test Float >> Int
+func TestCheckBinaryExprFloatRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `2.0 >> 4`, env, NewConstFloat64(2.0 >> 4), ConstShiftedInt)
+}
+
+// Test Float >> Rune
+func TestCheckBinaryExprFloatRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `2.0 >> '@'`, env, NewConstFloat64(2.0 >> '@'), ConstShiftedInt)
+}
+
+// Test Float >> Float
+func TestCheckBinaryExprFloatRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectConst(t, `2.0 >> 2.0`, env, NewConstFloat64(2.0 >> 2.0), ConstShiftedInt)
+}
+
+// Test Float >> Complex
+func TestCheckBinaryExprFloatRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `2.0 >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Float >> Bool
+func TestCheckBinaryExprFloatRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `2.0 >> true`, env,
+		`invalid operation: 2 >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float >> String
+func TestCheckBinaryExprFloatRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `2.0 >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 2 >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Float >> Nil
+func TestCheckBinaryExprFloatRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `2.0 >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
@@ -3924,6 +4110,78 @@ func TestCheckBinaryExprComplexGtrNil(t *testing.T) {
 	expectCheckError(t, `8.0i > nil`, env,
 		`cannot convert nil to type complex128`,
 		`invalid operation: 8i > nil (mismatched types complex128 and <T>)`,
+	)
+
+}
+
+// Test Complex >> Int
+func TestCheckBinaryExprComplexRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> 4`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Complex >> Rune
+func TestCheckBinaryExprComplexRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> '@'`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Complex >> Float
+func TestCheckBinaryExprComplexRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> 2.0`, env,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Complex >> Complex
+func TestCheckBinaryExprComplexRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`constant 0+8i truncated to real`,
+	)
+
+}
+
+// Test Complex >> Bool
+func TestCheckBinaryExprComplexRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> true`, env,
+		`invalid operation: 8i >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex >> String
+func TestCheckBinaryExprComplexRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: 8i >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Complex >> Nil
+func TestCheckBinaryExprComplexRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `8.0i >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
@@ -5058,6 +5316,78 @@ func TestCheckBinaryExprBoolGtrNil(t *testing.T) {
 	expectCheckError(t, `true > nil`, env,
 		`cannot convert nil to type bool`,
 		`invalid operation: true > nil (mismatched types bool and <T>)`,
+	)
+
+}
+
+// Test Bool >> Int
+func TestCheckBinaryExprBoolRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> 4`, env,
+		`invalid operation: true >> 4 (shift of type untyped bool)`,
+	)
+
+}
+
+// Test Bool >> Rune
+func TestCheckBinaryExprBoolRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> '@'`, env,
+		`invalid operation: true >> 64 (shift of type untyped bool)`,
+	)
+
+}
+
+// Test Bool >> Float
+func TestCheckBinaryExprBoolRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> 2.0`, env,
+		`invalid operation: true >> 2 (shift of type untyped bool)`,
+	)
+
+}
+
+// Test Bool >> Complex
+func TestCheckBinaryExprBoolRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: true >> 0 (shift of type untyped bool)`,
+	)
+
+}
+
+// Test Bool >> Bool
+func TestCheckBinaryExprBoolRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> true`, env,
+		`invalid operation: true >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Bool >> String
+func TestCheckBinaryExprBoolRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: true >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Bool >> Nil
+func TestCheckBinaryExprBoolRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `true >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
@@ -6207,6 +6537,78 @@ func TestCheckBinaryExprStringGtrNil(t *testing.T) {
 		`cannot convert "abc" to type int`,
 		`cannot convert nil to type int`,
 		`invalid operation: "abc" > nil (mismatched types string and <T>)`,
+	)
+
+}
+
+// Test String >> Int
+func TestCheckBinaryExprStringRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> 4`, env,
+		`invalid operation: "abc" >> 4 (shift of type untyped string)`,
+	)
+
+}
+
+// Test String >> Rune
+func TestCheckBinaryExprStringRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> '@'`, env,
+		`invalid operation: "abc" >> 64 (shift of type untyped string)`,
+	)
+
+}
+
+// Test String >> Float
+func TestCheckBinaryExprStringRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> 2.0`, env,
+		`invalid operation: "abc" >> 2 (shift of type untyped string)`,
+	)
+
+}
+
+// Test String >> Complex
+func TestCheckBinaryExprStringRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: "abc" >> 0 (shift of type untyped string)`,
+	)
+
+}
+
+// Test String >> Bool
+func TestCheckBinaryExprStringRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> true`, env,
+		`invalid operation: "abc" >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test String >> String
+func TestCheckBinaryExprStringRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: "abc" >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test String >> Nil
+func TestCheckBinaryExprStringRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `"abc" >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
@@ -7377,6 +7779,78 @@ func TestCheckBinaryExprNilGtrNil(t *testing.T) {
 
 	expectCheckError(t, `nil > nil`, env,
 		`invalid operation: nil > nil (operator > not defined on nil)`,
+	)
+
+}
+
+// Test Nil >> Int
+func TestCheckBinaryExprNilRhlInt(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> 4`, env,
+		`invalid operation: nil >> 4 (shift of type nil)`,
+	)
+
+}
+
+// Test Nil >> Rune
+func TestCheckBinaryExprNilRhlRune(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> '@'`, env,
+		`invalid operation: nil >> 64 (shift of type nil)`,
+	)
+
+}
+
+// Test Nil >> Float
+func TestCheckBinaryExprNilRhlFloat(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> 2.0`, env,
+		`invalid operation: nil >> 2 (shift of type nil)`,
+	)
+
+}
+
+// Test Nil >> Complex
+func TestCheckBinaryExprNilRhlComplex(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> 8.0i`, env,
+		`constant 0+8i truncated to real`,
+		`invalid operation: nil >> 0 (shift of type nil)`,
+	)
+
+}
+
+// Test Nil >> Bool
+func TestCheckBinaryExprNilRhlBool(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> true`, env,
+		`invalid operation: nil >> true (shift count type bool, must be unsigned integer)`,
+	)
+
+}
+
+// Test Nil >> String
+func TestCheckBinaryExprNilRhlString(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> "abc"`, env,
+		`cannot convert "abc" to type uint`,
+		`invalid operation: nil >> "abc" (shift count type string, must be unsigned integer)`,
+	)
+
+}
+
+// Test Nil >> Nil
+func TestCheckBinaryExprNilRhlNil(t *testing.T) {
+	env := MakeSimpleEnv()
+
+	expectCheckError(t, `nil >> nil`, env,
+		`cannot convert nil to type uint`,
 	)
 
 }
