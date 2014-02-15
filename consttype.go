@@ -18,6 +18,7 @@ type ConstType interface {
 }
 
 type ConstIntType struct { reflect.Type }
+type ConstShiftedIntType struct { reflect.Type }
 type ConstRuneType struct { reflect.Type }
 type ConstFloatType struct { reflect.Type }
 type ConstComplexType struct { reflect.Type }
@@ -27,6 +28,7 @@ type ConstBoolType struct { reflect.Type }
 
 var (
 	ConstInt = ConstIntType { reflect.TypeOf(0) }
+	ConstShiftedInt = ConstShiftedIntType { reflect.TypeOf(0) }
 	ConstRune = ConstRuneType { reflect.TypeOf('\000') }
 	ConstFloat = ConstFloatType { reflect.TypeOf(0.0) }
 	ConstComplex = ConstComplexType { reflect.TypeOf(0i) }
@@ -37,6 +39,7 @@ var (
 
 // These are actually the names of the default const promotions
 func (ConstIntType) String() string { return "int" }
+func (ConstShiftedIntType) String() string { return "shifted_int" }
 func (ConstRuneType) String() string { return "rune" }
 func (ConstFloatType) String() string { return "float64" }
 func (ConstComplexType) String() string { return "complex128" }
@@ -45,6 +48,7 @@ func (ConstNilType) String() string { return "<T>" }
 func (ConstBoolType) String() string { return "bool" }
 
 func (ConstIntType) ErrorType() string { return "untyped number" }
+func (ConstShiftedIntType) ErrorType() string { return "untyped number" }
 func (ConstRuneType) ErrorType() string { return "untyped number" }
 func (ConstFloatType) ErrorType() string { return "untyped number" }
 func (ConstComplexType) ErrorType() string { return "untyped number" }
@@ -53,6 +57,7 @@ func (ConstNilType) ErrorType() string { return "nil" }
 func (ConstBoolType) ErrorType() string { return "untyped bool" }
 
 func (c ConstIntType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstShiftedIntType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstRuneType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstFloatType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstComplexType) DefaultPromotion() reflect.Type { return c.Type }
@@ -61,6 +66,7 @@ func (c ConstNilType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstBoolType) DefaultPromotion() reflect.Type { return c.Type }
 
 func (ConstIntType) IsIntegral() bool { return true }
+func (ConstShiftedIntType) IsIntegral() bool { return true }
 func (ConstRuneType) IsIntegral() bool { return true }
 func (ConstFloatType) IsIntegral() bool { return false }
 func (ConstComplexType) IsIntegral() bool { return false }
@@ -69,6 +75,7 @@ func (ConstNilType) IsIntegral() bool { return false }
 func (ConstBoolType) IsIntegral() bool { return false }
 
 func (ConstIntType) IsReal() bool { return true }
+func (ConstShiftedIntType) IsReal() bool { return true }
 func (ConstRuneType) IsReal() bool { return true }
 func (ConstFloatType) IsReal() bool { return true }
 func (ConstComplexType) IsReal() bool { return false }
@@ -77,6 +84,7 @@ func (ConstNilType) IsReal() bool { return false }
 func (ConstBoolType) IsReal() bool { return false }
 
 func (ConstIntType) IsNumeric() bool { return true }
+func (ConstShiftedIntType) IsNumeric() bool { return true }
 func (ConstRuneType) IsNumeric() bool { return true }
 func (ConstFloatType) IsNumeric() bool { return true }
 func (ConstComplexType) IsNumeric() bool { return true }
@@ -89,7 +97,21 @@ func (ConstBoolType) IsNumeric() bool { return false }
 // produced by gc and are as follows:
 func promoteConsts(x, y ConstType, xexpr, yexpr Expr, xval, yval reflect.Value) (ConstType, []error) {
 	switch x.(type) {
-	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+	case ConstShiftedIntType:
+		switch y.(type) {
+		case ConstIntType, ConstRuneType:
+			return ConstShiftedInt, nil
+		}
+		return nil, []error{ErrBadConstConversion{yexpr, y, x}}
+	case ConstIntType, ConstRuneType:
+		switch y.(type) {
+		case ConstShiftedIntType:
+			return ConstShiftedInt, nil
+		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
+			return promoteConstNumbers(x, y), nil
+		}
+		return nil, []error{ErrBadConstConversion{yexpr, y, x}}
+	case ConstFloatType, ConstComplexType:
 		switch y.(type) {
 		case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 			return promoteConstNumbers(x, y), nil
@@ -192,6 +214,13 @@ func convertConstToTyped(from ConstType, c constValue, to reflect.Type, isTypeCa
 	v := hackedNew(to).Elem()
 
 	switch from.(type) {
+	case ConstShiftedIntType:
+		switch to.Kind() {
+			case reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128:
+				// TODO shift used as float
+				return constValue{}, []error{ErrBadConstConversion{expr, from, to}}
+		}
+		return convertConstToTyped(ConstInt, c, to, isTypeCast, expr)
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 		underlying := reflect.Value(c).Interface().(*ConstNumber)
 		switch to.Kind() {

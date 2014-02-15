@@ -175,3 +175,18 @@ func (z *ConstNumber) AndNot(x, y *ConstNumber) *ConstNumber {
 	z.Value.Re.Num().AndNot(x.Value.Re.Num(), y.Value.Re.Num())
 	return z
 }
+
+// z.Shl() shifts x left by count. Type is set to ConstShiftedInt
+func (z *ConstNumber) Lsh(x *ConstNumber, count uint) *ConstNumber {
+	z.Type = ConstShiftedInt
+	z.Value.Lsh(&x.Value, count)
+	return z
+}
+
+// z.Shl() shifts x right by count. Type is set to ConstShiftedInt
+func (z *ConstNumber) Rsh(x *ConstNumber, count uint) *ConstNumber {
+	z.Type = ConstShiftedInt
+	z.Value.Rsh(&x.Value, count)
+	return z
+}
+

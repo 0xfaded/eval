@@ -63,6 +63,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Geq", token.GEQ},
 		{"Lss", token.LSS},
 		{"Gtr", token.GTR},
+		{"Rhl", token.SHR},
 	}
 	return []testgen.Dimension{
 		types,
@@ -154,6 +155,12 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 	case token.EQL, token.NEQ, token.LEQ, token.GEQ, token.LSS, token.GTR, token.LAND, token.LOR:
 		newConstType = ""
 		resultType = "ConstBool"
+	case token.SHR, token.SHL:
+		resultType = "ConstShiftedInt"
+		if lhs == rhs && lhs == "Complex" {
+			// double truncation error lost
+			compileErrs = append(compileErrs, compileErrs[0])
+		}
 	}
 
 	vars := map[string] interface{} {

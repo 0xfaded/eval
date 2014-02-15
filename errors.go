@@ -282,6 +282,11 @@ type ErrDeleteFirstArgNotMap struct {
 	Expr
 }
 
+type ErrStupidShift struct {
+	Expr
+	count uint64
+}
+
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
@@ -475,7 +480,31 @@ func (err ErrInvalidBinaryOperation) Error() string {
 	xct, xcok := xt.(ConstType)
 	yct, ycok := yt.(ConstType)
 
-	if xcok && ycok {
+	// Its just easier to handle shifts separately
+	if op == token.SHL || op == token.SHR {
+		if yt == ConstNil {
+			return "BAZFOO"
+		}
+		if !isUnsignedInt(yt) {
+			return fmt.Sprintf("invalid operation: %v (shift count type %v, must be unsigned integer)",
+				binary, yt)
+		}
+		if !isShiftable(xt) {
+			var operandT, count interface{}
+			if xcok {
+				operandT = xct.ErrorType()
+			} else {
+				operandT = xt
+			}
+			if ycok {
+				c, _ := promoteConstToTyped(yct, constValue(y.Const()), uintType, y)
+				count = reflect.Value(c).Interface()
+			} else {
+				count = binary.Y
+			}
+			return fmt.Sprintf("invalid operation: %v %v %v (shift of type %v)", binary.X, op, count, operandT)
+		}
+	} else if xcok && ycok {
 		xn, xnok := x.Const().Interface().(*ConstNumber)
 		yn, ynok := y.Const().Interface().(*ConstNumber)
 
@@ -937,6 +966,10 @@ func (err ErrDeleteFirstArgNotMap) Error() string {
 		s = t.String()
 	}
 	return fmt.Sprintf("first argument to delete must be map; have %s", s)
+}
+
+func (err ErrStupidShift) Error() string {
+	return fmt.Sprintf("stupid shift: %d", int64(err.count))
 }
 
 // For display purposes only, display untyped const nodes as they would be

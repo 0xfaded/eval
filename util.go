@@ -476,3 +476,33 @@ func isNillable(t reflect.Type) bool {
 	return false
 }
 
+func isUnsignedInt(t reflect.Type) bool {
+	// All const numeric types can be "truncated" to an unsigned int, and
+	// therefore for type checking purposes are valid
+	if ct, ok := t.(ConstType); ok {
+		return ct.IsNumeric()
+	}
+	switch t.Kind() {
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return true
+	}
+	return false
+}
+
+func isShiftable(t reflect.Type) bool {
+	switch t.(type) {
+	case ConstNilType, ConstBoolType, ConstComplexType, ConstStringType:
+		return false
+	case ConstIntType, ConstFloatType, ConstRuneType:
+		return true
+	default:
+		switch t.Kind() {
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr,
+			reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			return true
+		default:
+			return false
+		}
+	}
+}
+

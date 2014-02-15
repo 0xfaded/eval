@@ -59,6 +59,16 @@ func (z *BigComplex) Quo(x, y *BigComplex) *BigComplex {
 	return z
 }
 
+func (z *BigComplex) Lsh(x *BigComplex, count uint) *BigComplex {
+	z.Re.Num().Lsh(x.Re.Num(), count)
+	return z
+}
+
+func (z *BigComplex) Rsh(x *BigComplex, count uint) *BigComplex {
+	z.Re.Num().Rsh(x.Re.Num(), count)
+	return z
+}
+
 func (z *BigComplex) IsZero() bool {
 	return z.Re.Num().BitLen() == 0 && z.Im.Num().BitLen() == 0
 }

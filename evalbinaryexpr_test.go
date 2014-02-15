@@ -20,6 +20,8 @@ func TestIntBinaryOps(t *testing.T) {
 	expectResult(t, "x^1",   env, x^1)
 	expectResult(t, "x&^1",  env, x&^1)
 	expectResult(t, "x+x",  env, x+x)
+	expectResult(t, "x>>1",  env, x>>1)
+	expectResult(t, "x<<1",  env, x<<1)
 
 	expectResult(t, "x<1",   env, bool(x<1))
 	expectResult(t, "-x<=3",  env, bool(-x<=3))
@@ -45,6 +47,8 @@ func TestUintBinaryOps(t *testing.T) {
 	expectResult(t, "x^1",   env, x^1)
 	expectResult(t, "x&^1",  env, x&^1)
 	expectResult(t, "x+x",  env, x+x)
+	expectResult(t, "x>>1",  env, x>>1)
+	expectResult(t, "x<<1",  env, x<<1)
 
 	expectResult(t, "x<1",   env, bool(x<1))
 	expectResult(t, "-x<=3",  env, bool(-x<=3))

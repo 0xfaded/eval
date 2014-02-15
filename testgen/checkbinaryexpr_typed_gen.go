@@ -62,6 +62,7 @@ func (*Test) Dimensions() []testgen.Dimension {
 		{"Rem", token.REM},
 		{"Eql", token.EQL},
 		{"Gtr", token.GTR},
+		{"Shl", token.SHL},
 	}
 	rhs := []testgen.Element{
 		{"Int", "4"},

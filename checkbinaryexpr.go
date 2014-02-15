@@ -7,6 +7,12 @@ import (
 	"go/token"
 )
 
+// from go.h
+const (
+	mpscale uint64 = 29
+	mpprec = 16
+)
+
 func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 	aexpr := &BinaryExpr{BinaryExpr: binary}
 	x, y, ok, errs := checkBinaryOperands(binary.X, binary.Y, env)
@@ -19,7 +25,70 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 	xc, xuntyped := xt.(ConstType)
 	yc, yuntyped := yt.(ConstType)
 	op := binary.Op
-	if x.IsConst() && y.IsConst() {
+	if op == token.SHL || op == token.SHR {
+		var count uint64
+		if yuntyped {
+			if yt == ConstNil {
+				return aexpr, append(errs, ErrBadConstConversion{y, yt, uintType})
+			} else {
+				c, moreErrs := promoteConstToTyped(yc, constValue(y.Const()), uintType, y)
+				yy := reflect.Value(c)
+				if yy.IsValid() || yc == ConstString {
+					if moreErrs != nil {
+						errs = append(errs, moreErrs...)
+					}
+				}
+				if !yy.IsValid() {
+					return aexpr, append(errs, ErrInvalidBinaryOperation{aexpr})
+				}
+				count = yy.Uint()
+			}
+		} else {
+			if !isUnsignedInt(yt) {
+				return aexpr, append(errs, ErrInvalidBinaryOperation{aexpr})
+			}
+			if y.IsConst() {
+				count = y.Const().Uint()
+			}
+
+		}
+		if xuntyped {
+			if xn, ok := x.Const().Interface().(*ConstNumber); ok && !xn.Value.IsInteger() {
+				var to ConstType
+				if xc.IsReal() {
+					to = ConstInt
+				} else {
+					to = ConstFloat
+				}
+				return aexpr, append(errs, ErrTruncatedConstant{x, to, xn})
+			}
+			aexpr.knownType = knownType{ConstShiftedInt}
+		} else {
+			aexpr.knownType = x.KnownType()
+		}
+		if !isShiftable(xt) {
+			return aexpr, append(errs, ErrInvalidBinaryOperation{aexpr})
+		}
+		if y.IsConst() && x.IsConst() {
+			if count > mpscale * mpprec {
+				return aexpr, append(errs, ErrStupidShift{y, count})
+			}
+			xx, _ := convertTypedToConstNumber(x.Const())
+			var r *ConstNumber
+			if op == token.SHL {
+				r = new(ConstNumber).Lsh(xx, uint(count))
+			} else {
+				r = new(ConstNumber).Rsh(xx, uint(count))
+			}
+			if !xuntyped {
+				c, moreErrs := promoteConstToTyped(ConstShiftedInt, constValueOf(r), xt, aexpr)
+				errs = append(errs, moreErrs...)
+				aexpr.constValue = c
+			} else {
+				aexpr.constValue = constValueOf(r)
+			}
+		}
+	} else if x.IsConst() && y.IsConst() {
 		if xuntyped && yuntyped {
 			yv := y.Const()
 			xv := x.Const()
@@ -416,9 +485,9 @@ func evalConstTypedBinaryExpr(binary *BinaryExpr, xexpr, yexpr Expr) (constValue
 	var zt reflect.Type
         if xt == yt {
 		zt = xt
-        } else if xt == RuneType && yt == RuneType.Type {
+        } else if xt == RuneType && yt == RuneType.Type || xt == ByteType && yt == ByteType.Type {
                 zt = RuneType
-        } else if yt == RuneType && xt == RuneType.Type {
+        } else if yt == RuneType && xt == RuneType.Type || yt == ByteType && yt == ByteType.Type {
                 zt = xt
         } else {
 		return constValue{}, []error{ErrInvalidBinaryOperation{binary}}
