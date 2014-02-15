@@ -217,7 +217,6 @@ func convertConstToTyped(from ConstType, c constValue, to reflect.Type, isTypeCa
 	case ConstShiftedIntType:
 		switch to.Kind() {
 			case reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128:
-				// TODO shift used as float
 				return constValue{}, []error{ErrBadConstConversion{expr, from, to}}
 		}
 		return convertConstToTyped(ConstInt, c, to, isTypeCast, expr)
