@@ -402,6 +402,9 @@ func isAddressable(expr Expr) bool {
 			return true
 		}
 	case *SelectorExpr:
+		if n.pkgName != "" {
+			return isAddressable(n.Sel)
+		}
 		x := n.X.(Expr)
 		t := x.KnownType()[0]
 		switch t.Kind() {
