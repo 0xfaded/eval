@@ -333,8 +333,21 @@ func (selectorExpr *SelectorExpr) String() string {
 	return fmt.Sprintf("%s.%v", selectorExpr.X, selectorExpr.Sel)
 }
 
-func (indexExpr *IndexExpr) String() string { return "TODO indexExpr.IndexExpr" }
-func (sliceExpr *SliceExpr) String() string { return "TODO sliceExpr.SliceExpr" }
+func (index *IndexExpr) String() string {
+	return fmt.Sprintf("%v[%v]", index.X, index.Index)
+}
+
+func (slice *SliceExpr) String() string {
+	// TODO update for :: with go 1.2 upgrade
+	var low, high string
+	if slice.Low != nil {
+		low = fmt.Sprint(slice.Low)
+	}
+	if slice.High != nil {
+		high = fmt.Sprint(slice.High)
+	}
+	return fmt.Sprintf("%v[%v:%v]", slice.X, low, high)
+}
 
 func (assert *TypeAssertExpr) String() string {
 	return fmt.Sprintf("%v.(%s)", assert.X, assert.Type)
