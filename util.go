@@ -77,6 +77,8 @@ func exprAssignableTo(from Expr, to reflect.Type) (bool, []error) {
 func expectSingleType(types []reflect.Type, srcExpr Expr) (reflect.Type, error) {
 	if len(types) == 0 {
 		return nil, ErrMissingValue{srcExpr}
+	} else if multivalueOk(srcExpr) {
+		return types[0], nil
 	} else if len(types) != 1 {
 		return nil, ErrMultiInSingleContext{srcExpr}
 	} else {
@@ -509,3 +511,25 @@ func isShiftable(t reflect.Type) bool {
 	}
 }
 
+func isBlankIdentifier(blank ast.Expr) bool {
+	switch x := blank.(type) {
+	case *ParenExpr:
+		return isBlankIdentifier(x.X)
+	case *Ident:
+		return x.Name == "_"
+	}
+	return false
+}
+
+func multivalueOk(expr Expr) bool {
+	switch e := skipSuperfluousParens(expr).(type) {
+	case *TypeAssertExpr:
+		return true
+	case *IndexExpr:
+		return e.X.(Expr).KnownType()[0].Kind() == reflect.Map
+	case *UnaryExpr:
+		return e.Op == token.ARROW
+	default:
+		return false
+	}
+}

@@ -287,6 +287,29 @@ type ErrStupidShift struct {
 	count uint64
 }
 
+type ErrNonNameInDeclaration struct {
+	Expr
+}
+
+type ErrNoNewNamesInDeclaration struct {
+	*AssignStmt
+}
+
+type ErrCannotAssignToUnaddressable struct {
+	Expr
+}
+
+type ErrCannotAssignToType struct {
+	Expr //lhs
+	rhs Expr
+	multiValuePos int
+}
+
+type ErrAssignCountMismatch struct {
+	*AssignStmt
+	lhs, rhs int
+}
+
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
@@ -970,6 +993,40 @@ func (err ErrDeleteFirstArgNotMap) Error() string {
 
 func (err ErrStupidShift) Error() string {
 	return fmt.Sprintf("stupid shift: %d", int64(err.count))
+}
+
+func (err ErrNonNameInDeclaration) Error() string {
+	return fmt.Sprintf("non-name %v on left side of :=", err.Expr)
+}
+
+func (err ErrNoNewNamesInDeclaration) Error() string {
+	return "no new variables on left side of :="
+}
+
+func (err ErrCannotAssignToUnaddressable) Error() string {
+	return fmt.Sprintf("cannot assign to %v", err.Expr)
+}
+
+func (err ErrCannotAssignToType) Error() string {
+	if err.multiValuePos == -1 {
+		from := err.rhs
+		target := err.Expr.KnownType()[0]
+		return fmt.Sprintf("cannot use %v (type %v) as type %v in assignment", from, from.KnownType()[0], target)
+	} else {
+		var targetT string
+		t := err.Expr.KnownType()[0]
+		if ct, ok := t.(ConstType); ok {
+			targetT = ct.ErrorType()
+		} else {
+			targetT = t.String()
+		}
+		fromT := err.rhs.KnownType()[err.multiValuePos]
+		return fmt.Sprintf("cannot assign %v to type %v (%s) in multiple assignment", fromT, err.Expr, targetT)
+	}
+}
+
+func (err ErrAssignCountMismatch) Error() string {
+	return fmt.Sprintf("assignment count mismatch: %d = %d", err.lhs, err.rhs)
 }
 
 // For display purposes only, display untyped const nodes as they would be
