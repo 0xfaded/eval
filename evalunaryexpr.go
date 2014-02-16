@@ -22,12 +22,12 @@ func evalUnaryExpr(unary *UnaryExpr, env Env) ([]reflect.Value, error) {
 		return []reflect.Value{x.Addr()}, nil
 	} else if unary.Op == token.ARROW {
 		// TODO[crc] use x.Recv in contexts where blocking is acceptable
-		v, _ := x.TryRecv()
+		v, ok := x.TryRecv()
 		if !v.IsValid() {
 			v = reflect.New(x.Type().Elem()).Elem()
 		}
 		// TODO[crc] also return ok once assignability context is implemented
-		return []reflect.Value{v}, nil
+		return []reflect.Value{v, reflect.ValueOf(ok)}, nil
 	}
 
 	var r reflect.Value

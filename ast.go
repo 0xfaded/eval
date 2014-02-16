@@ -32,6 +32,11 @@ type Expr interface {
 	setKnownType(t knownType)
 }
 
+// Annotated ast.Stmt nodes
+type Stmt interface {
+	ast.Stmt
+}
+
 type knownType []reflect.Type
 type constValue reflect.Value
 
@@ -191,6 +196,15 @@ type ChanType struct {
 	*ast.ChanType
 	dir reflect.ChanDir
 	knownType
+}
+
+type AssignStmt struct {
+	*ast.AssignStmt
+	Lhs []Expr
+	Rhs []Expr
+
+	newNames map[int]string
+	types []reflect.Type
 }
 
 func (t knownType) KnownType() []reflect.Type {

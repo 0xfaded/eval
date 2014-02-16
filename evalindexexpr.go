@@ -23,8 +23,7 @@ func evalIndexExpr(index *IndexExpr, env Env) ([]reflect.Value, error) {
 		if !ok {
 			v = reflect.New(t.Key()).Elem()
 		}
-		// TODO[crc] return ok as well when assignment support is added
-		return []reflect.Value{v}, nil
+		return []reflect.Value{v, reflect.ValueOf(ok)}, nil
 	case reflect.Ptr:
 		// Short hand for array pointers
 		x = x.Elem()

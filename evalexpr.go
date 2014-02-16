@@ -34,8 +34,7 @@ func EvalExpr(expr Expr, env Env) ([]reflect.Value, error) {
 		v, err := evalSliceExpr(node, env)
 		return []reflect.Value{v}, err
 	case *TypeAssertExpr:
-		v, err := evalTypeAssertExpr(node, env)
-		return []reflect.Value{v}, err
+		return evalTypeAssertExpr(node, env)
 	case *CallExpr:
 		return evalCallExpr(node, env)
 	case *StarExpr:

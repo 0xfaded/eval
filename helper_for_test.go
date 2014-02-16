@@ -7,6 +7,7 @@ import (
 	"testing"
 	"reflect"
 
+	"go/ast"
 	"go/parser"
 )
 
@@ -101,9 +102,15 @@ func expectType(t *testing.T, expr string, env Env, expectedType reflect.Type) {
 	}
 }
 func expectCheckError(t *testing.T, expr string, env Env, errorString ...string) {
-	if e, err := parser.ParseExpr(expr); err != nil {
+	var errs []error
+	if s, err := ParseStmt(expr); err != nil {
 		t.Fatalf("Failed to parse expression '%s' (%v)", expr, err)
-	} else if _, errs := CheckExpr(e, env); errs != nil {
+	} else if e, ok := s.(*ast.ExprStmt); ok {
+		_, errs = CheckExpr(e.X, env)
+	} else {
+		_, errs = CheckStmt(s, env)
+	}
+	if errs != nil {
 		var i int
 		out := "\n"
 		ok := true
@@ -130,6 +137,20 @@ func expectCheckError(t *testing.T, expr string, env Env, errorString ...string)
 			t.Logf("%d. Expected `%v` missing\n", i, s)
 		}
 		t.Fatalf("Missing check errors for expression '%s'", expr )
+	}
+}
+
+func expectInterp(t *testing.T, stmt string, env Env) {
+	if s, err := ParseStmt(stmt); err != nil {
+		t.Fatalf("Failed to parse stmt '%s' (%v)", stmt, err)
+	} else if c, errs := CheckStmt(s, env); errs != nil {
+		t.Logf("Failed to check stmt '%s'", stmt)
+		for _, err := range errs {
+			t.Logf("\t%v", err)
+		}
+		t.FailNow()
+	} else if panik := InterpStmt(c, env); panik != nil {
+		t.Fatalf("Statement '%s' panicked with %v", panik)
 	}
 }
 

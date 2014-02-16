@@ -29,14 +29,14 @@ func TestTypeAssertInterfaceToInterface(t *testing.T) {
 	env := makeTypeAssertEnv()
 	a := XI(X(0))
 	env.Vars["a"] = reflect.ValueOf(&a)
-	expectResult(t, "a.(ZI)", env, a.(ZI))
+	expectResults(t, "a.(ZI)", env, []interface{}{a.(ZI), true})
 }
 
 func TestTypeAssertInterfaceToDynamic(t *testing.T) {
 	env := makeTypeAssertEnv()
 	a := XI(X(0))
 	env.Vars["a"] = reflect.ValueOf(&a)
-	expectResult(t, "a.(X)", env, a.(ZI))
+	expectResults(t, "a.(X)", env, []interface{}{a.(ZI), true})
 }
 
 func TestTypeAssertInterfaceToInterfacePanic(t *testing.T) {
