@@ -8,17 +8,6 @@ import (
 	"unicode"
 )
 
-// TODO[crc] @rocky, what is this used for?
-func InspectPtr(val reflect.Value) string {
-	// fall back to %v when we panic here.
-	defer func() string {
-		recover()
-		return fmt.Sprintf("%v", val)
-	}()
-	return "&" + Inspect(val.Elem())
-}
-
-
 // Inspect prints a reflect.Value the way you would enter it.
 // Some like this should really be part of the reflect package.
 func Inspect(val reflect.Value) string {
