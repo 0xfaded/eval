@@ -30,8 +30,7 @@ func EvalEnv(expr string, env Env) (result []reflect.Value, panik error, compile
 }
 
 func Interpret(stmt string, env Env) (result []reflect.Value, panik error, compileErrors []error) {
-	expr := "func(){" + stmt + "}"
-	if s, err := ParseStmt(expr); err != nil {
+	if s, err := ParseStmt(stmt); err != nil {
 		if errs, ok := err.(scanner.ErrorList); ok {
 			for i := range errs {
 				compileErrors = append(compileErrors, errs[i])
