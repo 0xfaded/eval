@@ -23,8 +23,10 @@ func InspectPtr(val reflect.Value) string {
 // Some like this should really be part of the reflect package.
 func Inspect(val reflect.Value) string {
 
-	if val.CanInterface() && val.Interface() == nil {
-		return "nil"
+	if val.CanInterface() {
+		if s, ok := val.Interface().(fmt.Stringer); ok {
+			return s.String()
+		}
 	}
 	switch val.Kind() {
 	case reflect.String:
