@@ -70,6 +70,7 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 			return aexpr, append(errs, ErrInvalidBinaryOperation{aexpr})
 		}
 		if y.IsConst() && x.IsConst() {
+			aexpr.knownType = knownType{ConstInt}
 			if count > mpscale * mpprec {
 				return aexpr, append(errs, ErrStupidShift{y, count})
 			}
