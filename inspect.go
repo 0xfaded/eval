@@ -101,7 +101,7 @@ func Inspect(val reflect.Value) string {
 		if val.IsNil() {
 			return "nil"
 		} else {
-			return fmt.Sprintf("%s.(%v)", InspectShort(val.Elem()), val.Elem().Type())
+			return fmt.Sprintf("%s.(%v)", InspectShort(val.Elem()), val.Type())
 		}
 	default:
 		// FIXME: add more Kinds as folks are annoyed with the output of
