@@ -19,7 +19,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 					if l, err := evalTypedExpr(lhs, lhs.KnownType(), env); err != nil {
 						return err
 					} else {
-						l[i].Set(rs[i])
+						l[0].Set(rs[i])
 					}
 				} else if name != "_" {
 					v := hackedNew(s.types[i])
