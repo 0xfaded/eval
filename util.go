@@ -229,8 +229,7 @@ func FormatErrorPos(source, errmsg string) (cursored [] string) {
 func skipSuperfluousParens(expr Expr) Expr {
 	if p, ok := expr.(*ParenExpr); ok {
 		// Remove useless parens from (((x))) expressions
-		var tmp *ParenExpr
-		for ; ok; tmp, ok = p.X.(*ParenExpr) {
+		for tmp, ok := p.X.(*ParenExpr); ok; tmp, ok = p.X.(*ParenExpr) {
 			p = tmp
 		}
 

@@ -229,3 +229,12 @@ func TestTypedBinaryOps(t *testing.T) {
 	expectResult(t, "1-Foo(2)", env, 1-Foo(2))
 	expectResult(t, "Foo(1)|2", env, Foo(1)|2)
 }
+
+func TestBinaryParens(t *testing.T) {
+	x := int32(5)
+	env := MakeSimpleEnv()
+	env.Vars["x"] = reflect.ValueOf(&x)
+
+	expectResult(t, "(x)+(2)",   env, (x)+(2))
+}
+
