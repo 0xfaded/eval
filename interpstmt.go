@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"reflect"
 )
 
 func InterpStmt(stmt Stmt, env Env) error {
@@ -16,11 +17,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 			}
 			for i, lhs := range s.Lhs {
 				if name, ok := s.newNames[i]; !ok {
-					if l, err := evalTypedExpr(lhs, lhs.KnownType(), env); err != nil {
-						return err
-					} else {
-						l[0].Set(rs[i])
-					}
+					assign(lhs, rs[i], env)
 				} else if name != "_" {
 					v := hackedNew(s.types[i])
 					v.Elem().Set(rs[i])
@@ -34,11 +31,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 					return err
 				}
 				if name, ok := s.newNames[i]; !ok {
-					if l, err := evalTypedExpr(lhs, lhs.KnownType(), env); err != nil {
-						return err
-					} else {
-						l[0].Set(r[0])
-					}
+					assign(lhs, r[0], env)
 				} else if name != "_" {
 					v := hackedNew(s.types[i])
 					v.Elem().Set(r[0])
@@ -52,3 +45,20 @@ func InterpStmt(stmt Stmt, env Env) error {
 	}
 }
 
+func assign(lhs Expr, rhs reflect.Value, env Env) error {
+	lhs = skipSuperfluousParens(lhs)
+	// Always evaluate even if we are doing a map index assign. There are some nasty
+	// corner cases with map index comparibility that is best left not reimplemented.
+	if l, err := evalTypedExpr(lhs, lhs.KnownType(), env); err != nil {
+		return err
+	} else if index, ok := lhs.(*IndexExpr); ok && index.X.(Expr).KnownType()[0].Kind() == reflect.Map {
+		mT := index.X.(Expr).KnownType()[0]
+		// known to succeed from above
+		m, _ := evalTypedExpr(index.X.(Expr), knownType{mT}, env)
+		k, _ := evalTypedExpr(index.Index.(Expr), knownType{mT.Elem()}, env)
+		m[0].SetMapIndex(k[0], rhs)
+	} else {
+		l[0].Set(rhs)
+	}
+	return nil
+}

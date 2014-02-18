@@ -98,6 +98,15 @@ func TestAssignMapIndexPresent(t *testing.T) {
 	}
 }
 
+func TestAssignToMap(t *testing.T) {
+	env := MakeSimpleEnv()
+	env.Vars["x"] = reflect.ValueOf(&map[int]int{})
+	expectInterp(t, "x[0] = 1", env)
+	expectResults(t, "x[0]", env, []interface{}{1, true})
+	expectInterp(t, "x[0] = 2", env)
+	expectResults(t, "x[0]", env, []interface{}{2, true})
+}
+
 func TestAssignBadTypeAssert(t *testing.T) {
 	env := MakeSimpleEnv()
 	expectInterp(t, "x, ok := interface{}(float32(1)).(int)", env)
