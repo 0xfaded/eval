@@ -80,11 +80,9 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		if isType {
 			// Only set X if X is a type, as * can be part of an expression or type
 			star.X = elem
-		}
-		if errs != nil {
-			return star, nil, isType, errs
-		} else {
 			return star, reflect.PtrTo(elemT), isType, nil
+		} else {
+			return star, nil, isType, errs
 		}
 	case *ast.SelectorExpr:
 		// TODO[crc] remove this comment after ast cleanup
