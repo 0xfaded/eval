@@ -63,14 +63,15 @@ func ParseStmt(stmt string) (ast.Stmt, error) {
 	// However, there is a bug in parser.ParseExpr that it does not detect excess input.
 	// Therefore, the _ of _ = 1 will be parsed as an expression. To avoid this, attempt
 	// to parse the input as a statement first, and fall back to an expression
-	expr := "func(){" + stmt + "}"
+	expr := "func(){" + stmt + ";}"
 	if e, err := parser.ParseExpr(expr); err != nil {
 		if e, err := parser.ParseExpr(stmt); err == nil {
 			return &ast.ExprStmt{X: e}, nil
 		}
 		errs := err.(scanner.ErrorList)
 		for i := range errs {
-			errs[i].Pos.Offset -= 7 // len("func(){")
+			errs[i].Pos.Offset -= 7
+			errs[i].Pos.Column -= 7
 		}
 		return nil, errs
 	} else {
