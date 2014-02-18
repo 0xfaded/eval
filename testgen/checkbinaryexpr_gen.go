@@ -156,7 +156,8 @@ func (*Test) Body(w io.Writer, elts ...testgen.Element) error {
 		newConstType = ""
 		resultType = "ConstBool"
 	case token.SHR, token.SHL:
-		resultType = "ConstShiftedInt"
+		newConstType = "NewConstInt64"
+		resultType= "ConstInt"
 		if lhs == rhs && lhs == "Complex" {
 			// double truncation error lost
 			compileErrs = append(compileErrs, compileErrs[0])
