@@ -7,6 +7,7 @@ import (
 
 func InterpStmt(stmt Stmt, env Env) error {
 	switch s := stmt.(type) {
+	case nil:
 	case *AssignStmt:
 		if len(s.Rhs) == 1 {
 			rs, err := evalTypedExpr(s.Rhs[0], s.types, env)
@@ -39,10 +40,27 @@ func InterpStmt(stmt Stmt, env Env) error {
 				}
 			}
 		}
-		return nil
+	case *BlockStmt:
+		for _, stmt := range s.List {
+			if err := InterpStmt(stmt, env); err != nil {
+				return err
+			}
+		}
+	case *IfStmt:
+		env = env.PushScope()
+		if err := InterpStmt(s.Init, env); err != nil {
+			return err
+		} else if rs, err := EvalExpr(s.Cond, env); err != nil {
+			return err
+		} else if rs[0].Bool() {
+			return InterpStmt(s.Body, env)
+		} else {
+			return InterpStmt(s.Else, env)
+		}
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))
 	}
+	return nil
 }
 
 func assign(lhs Expr, rhs reflect.Value, env Env) error {

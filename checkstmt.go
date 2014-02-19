@@ -10,9 +10,33 @@ import (
 
 // Place holder for something more substantial
 func CheckStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
+	// Create a dummy env where variables can be added without affecting the global env
+	return checkStmt(stmt, env.PushScope())
+}
+
+func checkBlock(block *ast.BlockStmt, env Env) (*BlockStmt, []error) {
+	var errs, moreErrs []error
+	if block == nil {
+		return nil, nil
+	}
+	ablock := &BlockStmt{BlockStmt: block}
+	if block.List != nil {
+		ablock.List = make([]Stmt, len(block.List))
+		for i, stmt := range block.List {
+			ablock.List[i], moreErrs = checkStmt(stmt, env)
+			errs = append(errs, moreErrs...)
+		}
+	}
+	return ablock, errs
+}
+
+func checkStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
+	var errs, moreErrs []error
 	switch s := stmt.(type) {
+	case nil:
+		// AST often has nil nodes for optional elements.
+		return nil, nil
 	case *ast.AssignStmt:
-		var errs, moreErrs []error
 		a := &AssignStmt{
 			AssignStmt: s,
 			Lhs: make([]Expr, len(s.Lhs)),
@@ -153,6 +177,31 @@ done:
 		a.newNames = names
 		a.types = types
 		return a, errs
+	case *ast.BlockStmt:
+		return checkBlock(s, env)
+	case *ast.IfStmt:
+		astmt := &IfStmt{IfStmt: s}
+		env = env.PushScope() // Env for the if block
+
+		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		errs = append(errs, moreErrs...)
+
+		astmt.Cond, moreErrs = CheckExpr(s.Cond, env)
+		errs = append(errs, moreErrs...)
+		if moreErrs == nil || astmt.Cond.IsConst() {
+			if t, err := expectSingleType(astmt.Cond); err != nil {
+				errs = append(errs, err)
+			} else if t.Kind() != reflect.Bool {
+				errs = append(errs, ErrNonBoolCondition{astmt.Cond, astmt})
+			}
+		}
+
+		astmt.Body, moreErrs = checkBlock(s.Body, env)
+		errs = append(errs, moreErrs...)
+
+		astmt.Else, moreErrs = checkStmt(s.Else, env)
+		errs = append(errs, moreErrs...)
+		return astmt, errs
 	default:
 		return nil, []error{errors.New("Only assign statements are currently supported")}
 	}

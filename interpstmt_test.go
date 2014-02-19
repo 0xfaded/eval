@@ -126,6 +126,30 @@ func TestAssignBadTypeAssert(t *testing.T) {
 	}
 }
 
+func TestIfTrue(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 0
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "if true { x = 1 } else { x = 2 }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestIfFalse(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 0
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "if false { x = 1 } else { x = 2 }", env)
+	expectResult(t, "x", env, 2)
+}
+
+func TestIfElseIf(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 0
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "if false { } else if true { x = 2 }", env)
+	expectResult(t, "x", env, 2)
+}
+
 func TestAssignUnderscore(t *testing.T) {
 	env := MakeSimpleEnv()
 	expectInterp(t, "x, _ := map[int]int{1:1}[1]", env)

@@ -220,6 +220,11 @@ type ChanType struct {
 	knownType
 }
 
+type BlockStmt struct {
+	*ast.BlockStmt
+	List []Stmt
+}
+
 type AssignStmt struct {
 	*ast.AssignStmt
 	Lhs []Expr
@@ -227,6 +232,14 @@ type AssignStmt struct {
 
 	newNames map[int]string
 	types []reflect.Type
+}
+
+type IfStmt struct {
+	*ast.IfStmt
+	Init Stmt
+	Cond Expr
+	Body *BlockStmt
+	Else Stmt
 }
 
 func (t knownType) KnownType() []reflect.Type {

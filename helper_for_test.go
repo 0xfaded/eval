@@ -108,7 +108,7 @@ func expectCheckError(t *testing.T, expr string, env Env, errorString ...string)
 	} else if e, ok := s.(*ast.ExprStmt); ok {
 		_, errs = CheckExpr(e.X, env)
 	} else {
-		_, errs = CheckStmt(s, env)
+		_, errs = checkStmt(s, env)
 	}
 	if errs != nil {
 		var i int
@@ -143,7 +143,7 @@ func expectCheckError(t *testing.T, expr string, env Env, errorString ...string)
 func expectInterp(t *testing.T, stmt string, env Env) {
 	if s, err := ParseStmt(stmt); err != nil {
 		t.Fatalf("Failed to parse stmt '%s' (%v)", stmt, err)
-	} else if c, errs := CheckStmt(s, env); errs != nil {
+	} else if c, errs := checkStmt(s, env); errs != nil {
 		t.Logf("Failed to check stmt '%s'", stmt)
 		for _, err := range errs {
 			t.Logf("\t%v", err)

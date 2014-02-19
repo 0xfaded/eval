@@ -310,6 +310,11 @@ type ErrAssignCountMismatch struct {
 	lhs, rhs int
 }
 
+type ErrNonBoolCondition struct {
+	Expr
+	parent Stmt
+}
+
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
@@ -980,6 +985,15 @@ func (err ErrCannotAssignToType) Error() string {
 
 func (err ErrAssignCountMismatch) Error() string {
 	return fmt.Sprintf("assignment count mismatch: %d = %d", err.lhs, err.rhs)
+}
+
+func (err ErrNonBoolCondition) Error() string {
+	var parent string
+	switch err.parent.(type) {
+	case *IfStmt:
+		parent = "if"
+	}
+	return fmt.Sprintf("non-bool %v (type %v) used as %s condition", err.Expr, err.Expr.KnownType()[0], parent)
 }
 
 // For display purposes only, display untyped const nodes as they would be
