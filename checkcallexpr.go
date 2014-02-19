@@ -49,7 +49,7 @@ func checkCallTypeExpr(call *CallExpr, to reflect.Type, env Env) (acall *CallExp
 	}
 
 	arg := call.Args[0]
-	from, err := expectSingleType(arg.KnownType(), arg)
+	from, err := expectSingleType(arg)
 	if err != nil {
 		return call, []error{err}
 	}
@@ -98,7 +98,7 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	}
 	call.Fun = fun
 
-	ftype, err := expectSingleType(fun.KnownType(), fun)
+	ftype, err := expectSingleType(fun)
 	if err != nil {
 		return call, append(errs, err)
 	// catch nil casts, e.g. nil(1)
@@ -183,7 +183,7 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 		skipTypeCheck := make([]bool, len(call.Args))
 		for i, arg := range call.Args {
 			expr := arg
-			if _, err := expectSingleType(expr.KnownType(), expr); err != nil {
+			if _, err := expectSingleType(expr); err != nil {
 				errs = append(errs, err)
 				skipTypeCheck[i] = true
 			}

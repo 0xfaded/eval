@@ -37,7 +37,7 @@ func checkSelectorExpr(selector *ast.SelectorExpr, env Env) (*SelectorExpr, []er
 		return aexpr, errs
 	}
 
-	t, err := expectSingleType(x.KnownType(), x)
+	t, err := expectSingleType(x)
 	if err != nil {
 		return aexpr, append(errs, err)
 	} else if t == ConstNil {

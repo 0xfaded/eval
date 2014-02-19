@@ -12,7 +12,7 @@ func checkUnaryExpr(unary *ast.UnaryExpr, env Env) (*UnaryExpr, []error) {
 
 	x, errs := CheckExpr(unary.X, env)
 	if errs == nil || x.IsConst() {
-		if t, err := expectSingleType(x.KnownType(), x); err != nil {
+		if t, err := expectSingleType(x); err != nil {
 			errs = append(errs, err)
 		} else if unary.Op == token.AND { // address of
 			if !isAddressableOrCompositeLit(x) {

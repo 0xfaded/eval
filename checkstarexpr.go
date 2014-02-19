@@ -12,7 +12,7 @@ func checkStarExpr(star *ast.StarExpr, env Env) (*StarExpr, []error) {
 
 	if errs != nil && !x.IsConst() {
 		return aexpr, errs
-	} else if t, err := expectSingleType(x.KnownType(), x); err != nil {
+	} else if t, err := expectSingleType(x); err != nil {
 		errs = append(errs, err)
 	} else if t == ConstNil {
 		errs = append(errs, ErrInvalidIndirect{x})

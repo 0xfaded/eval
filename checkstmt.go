@@ -63,7 +63,7 @@ func CheckStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 					continue
 				}
 			} else {
-				if _, err := expectSingleType(a.Lhs[i].KnownType(), a.Lhs[i]); err != nil {
+				if _, err := expectSingleType(a.Lhs[i]); err != nil {
 					errs = append(errs, err)
 				}
 			}
@@ -94,7 +94,7 @@ func CheckStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 				if moreErrs != nil && !a.Rhs[i].IsConst() {
 					continue
 				}
-				if t, err := expectSingleType(a.Rhs[i].KnownType(), a.Rhs[i]); err != nil {
+				if t, err := expectSingleType(a.Rhs[i]); err != nil {
 					errs = append(errs, err)
 				} else {
 					types[i] = t

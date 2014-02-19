@@ -201,7 +201,7 @@ func checkBuiltinRealImag(call *CallExpr, env Env, isReal bool) (*CallExpr, []er
 	if moreErrs != nil && !x.IsConst() {
 		return call, errs
 	}
-	xt, err := expectSingleType(x.KnownType(), x)
+	xt, err := expectSingleType(x)
 	if err != nil {
 		return call, append(errs, err)
 	}
@@ -375,7 +375,7 @@ func checkBuiltinLenCap(call *CallExpr, env Env, isLen bool) (*CallExpr, []error
 	if errs != nil && !x.IsConst() {
 		return call, errs
 	}
-	xt, err := expectSingleType(x.KnownType(), x)
+	xt, err := expectSingleType(x)
 	if err != nil {
 		return call, append(errs, err)
 	}
@@ -424,7 +424,7 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 	var isSlice bool
 	if errs == nil || slice.IsConst() {
 		var err error
-		sliceT, err = expectSingleType(slice.KnownType(), slice)
+		sliceT, err = expectSingleType(slice)
 		if err != nil {
 			fakeCheckRemainingArgs(call, 1, env)
 			return call, append(errs, err)
@@ -447,7 +447,7 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 			if moreErrs != nil && !slice.IsConst() {
 				return call, append(errs, moreErrs...)
 			}
-			arg1T, err := expectSingleType(arg1.KnownType(), arg1)
+			arg1T, err := expectSingleType(arg1)
 			if err != nil {
 				errs = append(errs, err)
 			} else if isSlice {
@@ -467,7 +467,7 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 				errs = append(errs, moreErrs...)
 			}
 			if moreErrs == nil || argI.IsConst() {
-				if _, err := expectSingleType(argI.KnownType(), argI); err != nil {
+				if _, err := expectSingleType(argI); err != nil {
 					skipTypeCheck[i] = true
 					errs = append(errs, err)
 				}
@@ -523,7 +523,7 @@ func checkBuiltinCopyExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 		errs = append(errs, xErrs...)
 	}
 	if xErrs == nil || x.IsConst() {
-		xt, err = expectSingleType(x.KnownType(), x)
+		xt, err = expectSingleType(x)
 		if err != nil {
 			errs = append(errs, err)
 		}
@@ -534,7 +534,7 @@ func checkBuiltinCopyExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	}
 	call.Args = []Expr{x, y}
 	if yErrs == nil || y.IsConst() {
-		yt, err = expectSingleType(y.KnownType(), y)
+		yt, err = expectSingleType(y)
 		if err != nil {
 			errs = append(errs, err)
 		}
@@ -581,7 +581,7 @@ func checkBuiltinDeleteExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	}
 	if moreErrs == nil || m.IsConst() {
 		var err error
-		mapT, err = expectSingleType(m.KnownType(), m)
+		mapT, err = expectSingleType(m)
 		if err != nil {
 			errs = append(errs, moreErrs...)
 		}
@@ -594,7 +594,7 @@ func checkBuiltinDeleteExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	call.Args = []Expr{m, key}
 	if moreErrs == nil || key.IsConst() {
 		var err error
-		keyT, err = expectSingleType(key.KnownType(), key)
+		keyT, err = expectSingleType(key)
 		if err != nil {
 			errs = append(errs, err)
 		}
@@ -632,7 +632,7 @@ func checkBuiltinPanicExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	if moreErrs != nil && !x.IsConst() {
 		return call, errs
 	}
-	_, err := expectSingleType(x.KnownType(), x)
+	_, err := expectSingleType(x)
 	if err != nil {
 		return call, append(errs, err)
 	}

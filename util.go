@@ -41,7 +41,7 @@ func checkExprAssignableTo(expr ast.Expr, t reflect.Type, env Env) (Expr, bool, 
 	aexpr, moreErrs := CheckExpr(expr, env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
-	} else if _, err := expectSingleType(aexpr.KnownType(), aexpr); err != nil {
+	} else if _, err := expectSingleType(aexpr); err != nil {
 		errs = append(errs, err)
 	}
 	if errs != nil {
@@ -74,13 +74,14 @@ func exprAssignableTo(from Expr, to reflect.Type) (bool, []error) {
 	return typeAssignableTo(fromType, to), nil
 }
 
-func expectSingleType(types []reflect.Type, srcExpr Expr) (reflect.Type, error) {
+func expectSingleType(expr Expr) (reflect.Type, error) {
+	types := expr.KnownType()
 	if len(types) == 0 {
-		return nil, ErrMissingValue{srcExpr}
-	} else if multivalueOk(srcExpr) {
+		return nil, ErrMissingValue{expr}
+	} else if multivalueOk(expr) {
 		return types[0], nil
 	} else if len(types) != 1 {
-		return nil, ErrMultiInSingleContext{srcExpr}
+		return nil, ErrMultiInSingleContext{expr}
 	} else {
 		return types[0], nil
 	}
@@ -282,7 +283,7 @@ func checkInteger(expr ast.Expr, env Env) (aexpr Expr, i int, ok bool, checkErrs
 	if checkErrs != nil && !aexpr.IsConst() {
 		return aexpr, 0, false, checkErrs
 	}
-	t, err := expectSingleType(aexpr.KnownType(), aexpr)
+	t, err := expectSingleType(aexpr)
 	if err != nil {
 		return aexpr, 0, false, append(checkErrs, err)
 	}

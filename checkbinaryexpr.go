@@ -539,7 +539,7 @@ func checkBinaryOperands(xexpr, yexpr ast.Expr, env Env) (Expr, Expr, bool, []er
 
 	x, errs := CheckExpr(xexpr, env)
 	if errs == nil || x.IsConst() {
-		if _, err = expectSingleType(x.KnownType(), x); err != nil {
+		if _, err = expectSingleType(x); err != nil {
 			errs = append(errs, err)
 		} else {
 			xok = true
@@ -548,7 +548,7 @@ func checkBinaryOperands(xexpr, yexpr ast.Expr, env Env) (Expr, Expr, bool, []er
 
 	y, moreErrs := CheckExpr(yexpr, env)
 	if moreErrs == nil || y.IsConst() {
-		if _, err = expectSingleType(y.KnownType(), y); err != nil {
+		if _, err = expectSingleType(y); err != nil {
 			errs = append(moreErrs, err)
 		} else {
 			yok = true
