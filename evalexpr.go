@@ -24,7 +24,7 @@ func EvalExpr(expr Expr, env Env) ([]reflect.Value, error) {
 		v, err := evalCompositeLit(node, env)
 		return []reflect.Value{v}, err
 	case *ParenExpr:
-		return EvalExpr(node.X.(Expr), env)
+		return EvalExpr(node.X, env)
 	case *SelectorExpr:
 		v, err := evalSelectorExpr(node, env)
 		return []reflect.Value{v}, err

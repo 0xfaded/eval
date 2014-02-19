@@ -5,7 +5,7 @@ import (
 )
 
 func evalTypeAssertExpr(assert *TypeAssertExpr, env Env) ([]reflect.Value, error) {
-	x := assert.X.(Expr)
+	x := assert.X
 	if vs, err := EvalExpr(x, env); err != nil {
 		return []reflect.Value{}, err
 	} else {

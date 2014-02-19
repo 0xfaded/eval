@@ -319,7 +319,7 @@ func (err ErrUndefined) Error() string {
 }
 
 func (err ErrInvalidIndexOperation) Error() string {
-	t := err.IndexExpr.X.(Expr).KnownType()[0]
+	t := err.IndexExpr.X.KnownType()[0]
 	return fmt.Sprintf("invalid operation: %v (index of type %v)", err.IndexExpr, t)
 }
 
@@ -329,7 +329,7 @@ func (err ErrInvalidSliceIndex) Error() string {
 }
 
 func (err ErrInvalidSliceOperation) Error() string {
-	x := err.SliceExpr.X.(Expr)
+	x := err.SliceExpr.X
 	xT := x.KnownType()[0]
 	return fmt.Sprintf("cannot slice %v (type %v)", x, xT)
 }
@@ -353,7 +353,7 @@ func (err ErrInvalidIndirect) Error() string {
 
 func (err ErrUndefinedFieldOrMethod) Error() string {
 	selector := err.Expr.(*SelectorExpr)
-	t := selector.X.(Expr).KnownType()[0]
+	t := selector.X.KnownType()[0]
 	return fmt.Sprintf("%v undefined (type %v has no field or method %v)",
 		selector, t, selector.Sel.Name)
 }
@@ -428,7 +428,7 @@ func (err ErrWrongNumberOfArgs) Error() string {
 			return fmt.Sprintf("too many arguments to conversion to %v", to)
 		}
 	} else {
-		if err.numArgs < call.Fun.(Expr).KnownType()[0].NumIn() {
+		if err.numArgs < call.Fun.KnownType()[0].NumIn() {
 			return fmt.Sprintf("not enough arguments in call to %v", call.Fun)
 		} else {
 			return fmt.Sprintf("too many arguments in call to %v", call.Fun)
@@ -437,7 +437,7 @@ func (err ErrWrongNumberOfArgs) Error() string {
 }
 
 func (err ErrWrongArgType) Error() string {
-	ft := err.call.Fun.(Expr).KnownType()[0]
+	ft := err.call.Fun.KnownType()[0]
 	var expected reflect.Type
 	if ft.IsVariadic() && !err.call.argNEllipsis && err.argPos >= ft.NumIn() - 1 {
 		expected = ft.In(ft.NumIn() - 1).Elem()
@@ -464,7 +464,7 @@ func (err ErrInvalidEllipsisInCall) Error() string {
 
 func (err ErrInvalidUnaryOperation) Error() string {
 	unary := err.UnaryExpr
-	x := unary.X.(Expr)
+	x := unary.X
 	t := x.KnownType()[0]
 	if ct, ok := t.(ConstType); ok {
 		if unary.Op == token.XOR && ct.IsNumeric() {
@@ -494,8 +494,8 @@ func (err ErrInvalidRecvFrom) Error() string {
 func (err ErrInvalidBinaryOperation) Error() string {
 	binary := err.BinaryExpr
 	op := binary.Op
-	x := binary.X.(Expr)
-	y := binary.Y.(Expr)
+	x := binary.X
+	y := binary.Y
 
 	xt := x.KnownType()[0]
 	yt := y.KnownType()[0]
@@ -778,7 +778,7 @@ func (err ErrBadStructValue) Error() string {
 
 func (err ErrInvalidTypeAssert) Error() string {
 	assert := err.TypeAssertExpr
-	xT := assert.X.(Expr).KnownType()[0]
+	xT := assert.X.KnownType()[0]
 	return fmt.Sprintf("invalid type assertion: %v (non-interface type %v on left)",
 		assert, xT)
 }
@@ -786,7 +786,7 @@ func (err ErrInvalidTypeAssert) Error() string {
 func (err ErrImpossibleTypeAssert) Error() string {
 	assert := err.TypeAssertExpr
 	iT := assert.KnownType()[0]
-	xT := assert.X.(Expr).KnownType()[0]
+	xT := assert.X.KnownType()[0]
 
 	var missingMethod string
 	numMethod := iT.NumMethod()
@@ -818,12 +818,12 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 			cause = " - complex(<N>, <N>)"
 		} else {
 			tooMany = len(call.Args) > 2
-			cause = fmt.Sprintf(" - complex(%v, <N>)", uc(call.Args[0].(Expr)))
+			cause = fmt.Sprintf(" - complex(%v, <N>)", uc(call.Args[0]))
 		}
 	case "new":
 		if len(call.Args) != 0 {
 			tooMany = true
-			cause = fmt.Sprintf("(%v)", uc(call.Args[0].(Expr)))
+			cause = fmt.Sprintf("(%v)", uc(call.Args[0]))
 		}
 	case "make":
 		if len(call.Args) == 1 {
@@ -878,13 +878,13 @@ func (err ErrBuiltinWrongArgType) Error() string {
 		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
 			call, t)
 	case "append":
-		expected := err.call.Args[0].(Expr).KnownType()[0].Elem()
+		expected := err.call.Args[0].KnownType()[0].Elem()
 		if kt == ConstNil {
 			return fmt.Sprintf("cannot use nil as type %v in append", expected)
 		}
 		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), kt, expected)
 	case "delete":
-		expected := err.call.Args[0].(Expr).KnownType()[0].Key()
+		expected := err.call.Args[0].KnownType()[0].Key()
 		if kt == ConstNil {
 			return fmt.Sprintf("cannot use nil as type %v in delete", expected)
 		}

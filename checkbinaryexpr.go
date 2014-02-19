@@ -16,7 +16,7 @@ const (
 func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 	aexpr := &BinaryExpr{BinaryExpr: binary}
 	x, y, ok, errs := checkBinaryOperands(binary.X, binary.Y, env)
-	binary.X, binary.Y = x, y
+	aexpr.X, aexpr.Y = x, y
 	if !ok {
 		return aexpr, errs
 	}
@@ -189,7 +189,7 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 					isOpDefinedOn(op, operandT) &&
 					v.Interface() == reflect.Zero(yt).Interface() {
 
-					errs = append(errs, ErrDivideByZero{aexpr})
+					errs = append(errs, ErrDivideByZero{errExpr})
 				}
 			}
 		// An interface is comprable if its paired operand implements it.
@@ -215,14 +215,14 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 
 		if operandT != nil {
 			if !isOpDefinedOn(binary.Op, operandT) {
-				errs = append(errs, ErrInvalidBinaryOperation{aexpr})
+				errs = append(errs, ErrInvalidBinaryOperation{errExpr})
 			} else if isBooleanOp(binary.Op) {
 				aexpr.knownType = knownType{boolType}
 			} else {
 				aexpr.knownType = knownType{operandT}
 			}
                 } else {
-                        errs = append(errs, ErrInvalidBinaryOperation{aexpr})
+                        errs = append(errs, ErrInvalidBinaryOperation{errExpr})
 		}
         }
 	return aexpr, errs
@@ -231,8 +231,8 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 // Evaluates a const binary Expr. May return a sensical constValue
 // even if ErrTruncatedConst errors are present
 func evalConstUntypedBinaryExpr(binary *BinaryExpr, promotedType ConstType) (constValue, []error) {
-	x := binary.X.(Expr).Const()
-	y := binary.Y.(Expr).Const()
+	x := binary.X.Const()
+	y := binary.Y.Const()
 	switch promotedType.(type) {
 	case ConstIntType, ConstRuneType, ConstFloatType, ConstComplexType:
 		xx := x.Interface().(*ConstNumber)
@@ -566,7 +566,7 @@ func wrapConcreteTypeWithInterface(operand Expr, interfaceT reflect.Type) Expr {
 	typeConv.Lparen = operand.Pos()
 	typeConv.Rparen = operand.End() - 1
 	typeConv.knownType = knownType{interfaceT}
-	typeConv.Args = []ast.Expr{operand}
+	typeConv.Args = []Expr{operand}
 	typeConv.isTypeConversion = true
 	return typeConv;
 }

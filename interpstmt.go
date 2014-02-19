@@ -51,11 +51,11 @@ func assign(lhs Expr, rhs reflect.Value, env Env) error {
 	// corner cases with map index comparibility that is best left not reimplemented.
 	if l, err := evalTypedExpr(lhs, lhs.KnownType(), env); err != nil {
 		return err
-	} else if index, ok := lhs.(*IndexExpr); ok && index.X.(Expr).KnownType()[0].Kind() == reflect.Map {
-		mT := index.X.(Expr).KnownType()[0]
+	} else if index, ok := lhs.(*IndexExpr); ok && index.X.KnownType()[0].Kind() == reflect.Map {
+		mT := index.X.KnownType()[0]
 		// known to succeed from above
-		m, _ := evalTypedExpr(index.X.(Expr), knownType{mT}, env)
-		k, _ := evalTypedExpr(index.Index.(Expr), knownType{mT.Elem()}, env)
+		m, _ := evalTypedExpr(index.X, knownType{mT}, env)
+		k, _ := evalTypedExpr(index.Index, knownType{mT.Elem()}, env)
 		m[0].SetMapIndex(k[0], rhs)
 	} else {
 		l[0].Set(rhs)

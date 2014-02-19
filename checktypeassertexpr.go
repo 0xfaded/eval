@@ -8,7 +8,7 @@ import (
 
 func checkTypeAssertExpr(assert *ast.TypeAssertExpr, env Env) (*TypeAssertExpr, []error) {
 	aexpr := &TypeAssertExpr{TypeAssertExpr: assert}
-	x, errs := CheckExpr(aexpr.X, env)
+	x, errs := CheckExpr(assert.X, env)
 	aexpr.X = x
 
 	if errs != nil && !x.IsConst() {

@@ -5,7 +5,7 @@ import (
 )
 
 func evalStarExpr(starExpr *StarExpr, env Env) (reflect.Value, error) {
-	if vs, err := EvalExpr(starExpr.X.(Expr), env); err != nil {
+	if vs, err := EvalExpr(starExpr.X, env); err != nil {
 		return reflect.Value{}, err
 	} else {
 		v := vs[0]

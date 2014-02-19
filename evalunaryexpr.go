@@ -11,7 +11,7 @@ func evalUnaryExpr(unary *UnaryExpr, env Env) ([]reflect.Value, error) {
 		return []reflect.Value{unary.Const()}, nil
 	}
 
-	xx, err := EvalExpr(unary.X.(Expr), env)
+	xx, err := EvalExpr(unary.X, env)
 	if err != nil {
 		return []reflect.Value{}, err
 	}

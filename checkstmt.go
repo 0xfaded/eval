@@ -58,7 +58,7 @@ func CheckStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 			// Must be addressable or map index expr
 			ll := skipSuperfluousParens(a.Lhs[i])
 			if index, ok := ll.(*IndexExpr); ok {
-				k := index.X.(Expr).KnownType()[0].Kind()
+				k := index.X.KnownType()[0].Kind()
 				if k == reflect.Map || k == reflect.Slice {
 					continue
 				}

@@ -13,8 +13,8 @@ func evalBinaryExpr(binary *BinaryExpr, env Env) (r reflect.Value, err error) {
                 return binary.Const(), nil
         }
 
-        xexpr := binary.X.(Expr)
-        yexpr := binary.Y.(Expr)
+        xexpr := binary.X
+        yexpr := binary.Y
 	op := binary.Op
 
         var zt []reflect.Type

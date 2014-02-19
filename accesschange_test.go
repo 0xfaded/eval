@@ -37,7 +37,7 @@ func MyEvalSelectorExpr(selector *SelectorExpr, env Env) (
 	*reflect.Value, bool, error) {
 	var err error
 	var x *[]reflect.Value
-	if x, _, err = EvalExpr(selector.X.(Expr), env); err != nil {
+	if x, _, err = EvalExpr(selector.X, env); err != nil {
 		return nil, true, err
 	}
 	sel   := selector.Sel.Name

@@ -6,8 +6,8 @@ import (
 	"go/token"
 )
 
-func checkCallExpr(callExpr *ast.CallExpr, env Env) (acall *CallExpr, errs []error) {
-	acall = &CallExpr{CallExpr: callExpr}
+func checkCallExpr(call *ast.CallExpr, env Env) (acall *CallExpr, errs []error) {
+	acall = &CallExpr{CallExpr: call}
 
 	// First check for builtin calls. For new and make, the first argument is
 	// a type, not a value. Therefore, allow the builtin checks to recursively
@@ -18,15 +18,18 @@ func checkCallExpr(callExpr *ast.CallExpr, env Env) (acall *CallExpr, errs []err
 
 	// Recursively check arguments
 	var moreErrs []error
-	for i := range callExpr.Args {
-		if acall.Args[i], moreErrs = CheckExpr(callExpr.Args[i], env); moreErrs != nil {
+	if call.Args != nil {
+		acall.Args = make([]Expr, len(call.Args))
+	}
+	for i, arg := range call.Args {
+		if acall.Args[i], moreErrs = CheckExpr(arg, env); moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
 	}
 
 	// First check if this expression is a type cast
 	// Otherwise, assume a function call
-	if typ, to, isType, moreErrs := checkType(acall.Fun, env); isType {
+	if typ, to, isType, moreErrs := checkType(call.Fun, env); isType {
 		if moreErrs != nil {
 			return acall, append(errs, moreErrs...)
 		}
@@ -45,7 +48,7 @@ func checkCallTypeExpr(call *CallExpr, to reflect.Type, env Env) (acall *CallExp
 		return call, []error{ErrWrongNumberOfArgs{call, len(call.Args)}}
 	}
 
-	arg := call.Args[0].(Expr)
+	arg := call.Args[0]
 	from, err := expectSingleType(arg.KnownType(), arg)
 	if err != nil {
 		return call, []error{err}
@@ -89,7 +92,7 @@ func checkCallTypeExpr(call *CallExpr, to reflect.Type, env Env) (acall *CallExp
 }
 
 func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
-	fun, errs := CheckExpr(call.Fun, env)
+	fun, errs := CheckExpr(call.CallExpr.Fun, env)
 	if errs != nil && !fun.IsConst() {
 		return call, errs
 	}
@@ -129,10 +132,10 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	// from function call is to dig through any ParenExpr and see if at
 	// the bottom is another CallExpr
 	arg0MultiValued := false
-	arg0 := call.Args[0].(Expr)
+	arg0 := call.Args[0]
 	arg0T := arg0.KnownType()
 	if len(call.Args) == 1 && len(arg0T) > 1 {
-		arg0 := call.Args[0].(Expr)
+		arg0 := call.Args[0]
 		arg0 = skipSuperfluousParens(arg0)
 		if _, ok := arg0.(*CallExpr); ok {
 			arg0MultiValued = true
@@ -179,7 +182,7 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 		// must be considered last.
 		skipTypeCheck := make([]bool, len(call.Args))
 		for i, arg := range call.Args {
-			expr := arg.(Expr)
+			expr := arg
 			if _, err := expectSingleType(expr.KnownType(), expr); err != nil {
 				errs = append(errs, err)
 				skipTypeCheck[i] = true
@@ -192,7 +195,7 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 			if skipTypeCheck[i] {
 				continue
 			}
-			expr := call.Args[i].(Expr)
+			expr := call.Args[i]
 			if ok, convErrs := exprAssignableTo(expr, ftype.In(i)); ok {
 				errs = append(errs, convErrs...)
 			} else {
@@ -221,7 +224,7 @@ func checkCallFunExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 			if skipTypeCheck[i] {
 				continue
 			}
-			expr := call.Args[i].(Expr)
+			expr := call.Args[i]
 			if ok, convErrs := exprAssignableTo(expr, argNT); ok {
 				errs = append(errs, convErrs...)
 			} else {

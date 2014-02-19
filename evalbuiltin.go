@@ -41,9 +41,9 @@ func evalBuiltinComplexExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	argT := knownType{comprisingFloatType(resT)}
 
 	var re, im []reflect.Value
-	if re, err = evalTypedExpr(call.Args[0].(Expr), argT, env); err != nil {
+	if re, err = evalTypedExpr(call.Args[0], argT, env); err != nil {
 		return nil, err
-	} else if im, err = evalTypedExpr(call.Args[1].(Expr), argT, env); err != nil {
+	} else if im, err = evalTypedExpr(call.Args[1], argT, env); err != nil {
 		return nil, err
 	}
 	cplx := builtinComplex(re[0], im[0])
@@ -57,7 +57,7 @@ func evalBuiltinRealExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	argT := knownType{comprisingFloatType(resT)}
 
 	var cplx []reflect.Value
-	if cplx, err = evalTypedExpr(call.Args[0].(Expr), argT, env); err != nil {
+	if cplx, err = evalTypedExpr(call.Args[0], argT, env); err != nil {
 		return nil, err
 	}
 	re := builtinReal(cplx[0])
@@ -71,7 +71,7 @@ func evalBuiltinImagExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	argT := knownType{comprisingFloatType(resT)}
 
 	var cplx []reflect.Value
-	if cplx, err = evalTypedExpr(call.Args[0].(Expr), argT, env); err != nil {
+	if cplx, err = evalTypedExpr(call.Args[0], argT, env); err != nil {
 		return nil, err
 	}
 	im := builtinImag(cplx[0])
@@ -89,12 +89,12 @@ func evalBuiltinMakeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	length, capacity := 0, 0
 	var err error
 	if len(call.Args) > 1 {
-		if length, err = evalInteger(call.Args[1].(Expr), env); err != nil {
+		if length, err = evalInteger(call.Args[1], env); err != nil {
 			return nil, err
 		}
 	}
 	if len(call.Args) > 2 {
-		if capacity, err = evalInteger(call.Args[2].(Expr), env); err != nil {
+		if capacity, err = evalInteger(call.Args[2], env); err != nil {
 			return nil, err
 		}
 	}
@@ -113,7 +113,7 @@ func evalBuiltinMakeExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinLenExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if arg0, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if arg0, err := EvalExpr(call.Args[0], env); err != nil {
 		return nil, err
 	} else {
 		length := builtinLen(arg0[0])
@@ -122,7 +122,7 @@ func evalBuiltinLenExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinCapExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if arg0, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if arg0, err := EvalExpr(call.Args[0], env); err != nil {
 		return nil, err
 	} else {
 		capacity := builtinCap(arg0[0])
@@ -132,13 +132,13 @@ func evalBuiltinCapExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 
 func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 	sliceT := call.KnownType()
-	head, err := evalTypedExpr(call.Args[0].(Expr), sliceT, env)
+	head, err := evalTypedExpr(call.Args[0], sliceT, env)
 	if err != nil {
 		return nil, err
 	}
 	var tail reflect.Value
 	if call.argNEllipsis {
-		xs, err := EvalExpr(call.Args[1].(Expr), env)
+		xs, err := EvalExpr(call.Args[1], env)
 		if err != nil {
 			return nil, err
 		}
@@ -148,7 +148,7 @@ func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 		tail = reflect.MakeSlice(sliceT[0], numXs, numXs)
 		xT := knownType{sliceT[0].Elem()}
 		for i := 1; i < len(call.Args); i += 1 {
-			if x, err := evalTypedExpr(call.Args[i].(Expr), xT, env); err != nil {
+			if x, err := evalTypedExpr(call.Args[i], xT, env); err != nil {
 				return nil, err
 			} else {
 				tail.Index(i-1).Set(x[0])
@@ -161,9 +161,9 @@ func evalBuiltinAppendExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinCopyExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if x, err := EvalExpr(call.Args[0].(Expr), env); err != nil {
+	if x, err := EvalExpr(call.Args[0], env); err != nil {
 		return nil, err
-	} else if y, err := EvalExpr(call.Args[1].(Expr), env); err != nil {
+	} else if y, err := EvalExpr(call.Args[1], env); err != nil {
 		return nil, err
 	} else {
 		n := builtinCopy(x[0], y[0])
@@ -172,11 +172,11 @@ func evalBuiltinCopyExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinDeleteExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	m := call.Args[0].(Expr)
+	m := call.Args[0]
 	mT := m.KnownType()[0]
 	if x, err := EvalExpr(m, env); err != nil {
 		return nil, err
-	} else if y, err := evalTypedExpr(call.Args[1].(Expr), knownType{mT.Key()}, env); err != nil {
+	} else if y, err := evalTypedExpr(call.Args[1], knownType{mT.Key()}, env); err != nil {
 		return nil, err
 	} else {
 		builtinDelete(x[0], y[0])
@@ -185,7 +185,7 @@ func evalBuiltinDeleteExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
 }
 
 func evalBuiltinPanicExpr(call *CallExpr, env Env) ([]reflect.Value, error) {
-	if arg0, err := evalTypedExpr(call.Args[0].(Expr), knownType{emptyInterface}, env); err != nil {
+	if arg0, err := evalTypedExpr(call.Args[0], knownType{emptyInterface}, env); err != nil {
 		return nil, err
 	} else {
 		err := builtinPanic(arg0[0])

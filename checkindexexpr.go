@@ -52,7 +52,7 @@ func checkIndexExpr(index *ast.IndexExpr, env Env) (*IndexExpr, []error) {
 		aexpr.Index = i
 		return aexpr, errs
 	default:
-		aexpr.Index = fakeCheckExpr(aexpr.Index, env)
+		aexpr.Index = fakeCheckExpr(index.Index, env)
 		return aexpr, append(errs, ErrInvalidIndexOperation{aexpr})
 	}
 }

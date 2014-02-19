@@ -9,7 +9,7 @@ import (
 
 func checkCallBuiltinExpr(call *CallExpr, env Env) (*CallExpr, []error, bool) {
 	var errs []error
-	ident, ok := call.Fun.(*ast.Ident)
+	ident, ok := call.CallExpr.Fun.(*ast.Ident)
 	if !ok {
 		return call, nil, false
 	}
@@ -49,12 +49,12 @@ func checkBuiltinComplex(call *CallExpr, env Env) (*CallExpr, []error) {
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 2 {
+	if len(call.CallExpr.Args) != 2 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
-	x, y, ok, moreErrs := checkBinaryOperands(call.Args[0], call.Args[1], env)
-	call.Args[0], call.Args[1] = x, y
+	x, y, ok, moreErrs := checkBinaryOperands(call.CallExpr.Args[0], call.CallExpr.Args[1], env)
+	call.Args = []Expr{x, y}
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
@@ -189,15 +189,15 @@ func checkBuiltinRealImag(call *CallExpr, env Env, isReal bool) (*CallExpr, []er
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 1 {
+	if len(call.CallExpr.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
-	x, moreErrs := CheckExpr(call.Args[0], env)
+	x, moreErrs := CheckExpr(call.CallExpr.Args[0], env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	call.Args[0] = x
+	call.Args = []Expr{x}
 	if moreErrs != nil && !x.IsConst() {
 		return call, errs
 	}
@@ -259,43 +259,44 @@ func checkBuiltinNew(call *CallExpr, env Env) (*CallExpr, []error) {
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) == 0 {
+	if len(call.CallExpr.Args) == 0 {
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
-	x, of, isType, moreErrs := checkType(call.Args[0], env)
+	x, of, isType, moreErrs := checkType(call.CallExpr.Args[0], env)
 	if !isType {
-		x, moreErrs = CheckExpr(call.Args[0], env)
+		x, moreErrs = CheckExpr(call.CallExpr.Args[0], env)
 		if moreErrs != nil {
 			errs = append(errs, moreErrs...)
 		}
-		call.Args[0] = x
+		call.Args = []Expr{x}
 		fakeCheckRemainingArgs(call, 1, env)
 		if moreErrs == nil {
 			errs = append(errs, ErrBuiltinNonTypeArg{x})
 		}
 		return call, errs
-	} else if len(call.Args) != 1 {
+	} else if len(call.CallExpr.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	} else if moreErrs != nil {
 		return call, append(errs, moreErrs...)
 	} else {
-		call.Args[0] = x
+		call.Args = []Expr{x}
 		call.knownType = knownType{reflect.PtrTo(of)}
 		return call, nil
 	}
 }
 
 func checkBuiltinMake(call *CallExpr, env Env) (*CallExpr, []error) {
-	if len(call.Args) == 0 {
+	if len(call.CallExpr.Args) == 0 {
 		return call, []error{ErrBuiltinWrongNumberOfArgs{call}}
 	}
-	x, of, isType, errs := checkType(call.Args[0], env)
+	x, of, isType, errs := checkType(call.CallExpr.Args[0], env)
 	if !isType {
 		fakeCheckRemainingArgs(call, 0, env)
-		return call, []error{ErrBuiltinNonTypeArg{call.Args[0].(Expr)}}
+		return call, []error{ErrBuiltinNonTypeArg{call.Args[0]}}
 	}
 	call.knownType = knownType{of}
+	call.Args = make([]Expr, len(call.CallExpr.Args))
 	call.Args[0] = x
 	if errs != nil {
 		fakeCheckRemainingArgs(call, 1, env)
@@ -305,7 +306,7 @@ func checkBuiltinMake(call *CallExpr, env Env) (*CallExpr, []error) {
 	skipOrdering := false
 	switch of.Kind() {
 	case reflect.Slice:
-		if len(call.Args) == 1 {
+		if len(call.CallExpr.Args) == 1 {
 			errs = append(errs, ErrBuiltinWrongNumberOfArgs{call})
 		}
 		narg = 3
@@ -316,8 +317,8 @@ func checkBuiltinMake(call *CallExpr, env Env) (*CallExpr, []error) {
 		return call, append(errs, ErrMakeBadType{x, of})
 	}
 	var args [3]int
-	for i := 1; i < narg && i < len(call.Args); i += 1 {
-		arg, iint, ok, moreErrs := checkInteger(call.Args[i], env)
+	for i := 1; i < narg && i < len(call.CallExpr.Args); i += 1 {
+		arg, iint, ok, moreErrs := checkInteger(call.CallExpr.Args[i], env)
 		call.Args[i] = arg
 		args[i] = iint
 		if !ok {
@@ -328,7 +329,7 @@ func checkBuiltinMake(call *CallExpr, env Env) (*CallExpr, []error) {
 			errs = append(errs, moreErrs...)
 		}
 	}
-	if len(call.Args) > narg {
+	if len(call.CallExpr.Args) > narg {
 		fakeCheckRemainingArgs(call, narg, env)
 		errs = append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	} else if !skipOrdering{
@@ -361,16 +362,16 @@ func checkBuiltinLenCap(call *CallExpr, env Env, isLen bool) (*CallExpr, []error
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 1 {
+	if len(call.CallExpr.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
 
-	x, moreErrs := CheckExpr(call.Args[0], env)
+	x, moreErrs := CheckExpr(call.CallExpr.Args[0], env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	call.Args[0] = x
+	call.Args = []Expr{x}
 	if errs != nil && !x.IsConst() {
 		return call, errs
 	}
@@ -412,11 +413,12 @@ func checkBuiltinLenCap(call *CallExpr, env Env, isLen bool) (*CallExpr, []error
 }
 
 func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
-	if len(call.Args) < 1 {
+	if len(call.CallExpr.Args) < 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, []error{ErrBuiltinWrongNumberOfArgs{call}}
 	}
-	slice, errs := CheckExpr(call.Args[0], env)
+	call.Args = make([]Expr, len(call.CallExpr.Args))
+	slice, errs := CheckExpr(call.CallExpr.Args[0], env)
 	call.Args[0] = slice
 	var sliceT reflect.Type
 	var isSlice bool
@@ -434,13 +436,13 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 	}
 	if call.Ellipsis != token.NoPos {
 		call.argNEllipsis = true
-		if len(call.Args) == 1 {
+		if len(call.CallExpr.Args) == 1 {
 			return call, append(errs, ErrAppendFirstArgNotVariadic{slice})
-		} else if len(call.Args) != 2 {
+		} else if len(call.CallExpr.Args) != 2 {
 			fakeCheckRemainingArgs(call, 1, env)
 			return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 		} else {
-			arg1, moreErrs := CheckExpr(call.Args[1], env)
+			arg1, moreErrs := CheckExpr(call.CallExpr.Args[1], env)
 			call.Args[1] = arg1
 			if moreErrs != nil && !slice.IsConst() {
 				return call, append(errs, moreErrs...)
@@ -458,8 +460,8 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 		}
 	} else {
 		skipTypeCheck := make([]bool, len(call.Args))
-		for i := 1; i < len(call.Args); i += 1 {
-			argI, moreErrs := CheckExpr(call.Args[i], env)
+		for i := 1; i < len(call.CallExpr.Args); i += 1 {
+			argI, moreErrs := CheckExpr(call.CallExpr.Args[i], env)
 			call.Args[i] = argI
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
@@ -475,11 +477,11 @@ func checkBuiltinAppend(call *CallExpr, env Env) (*CallExpr, []error) {
 		}
 		if isSlice {
 			eltT := sliceT.Elem()
-			for i := 1; i < len(call.Args); i += 1 {
+			for i := 1; i < len(call.CallExpr.Args); i += 1 {
 				if skipTypeCheck[i] {
 					continue
 				}
-				argI := call.Args[i].(Expr)
+				argI := call.Args[i]
 				ok := false
 				if argI.IsConst() {
 					var ct ConstType
@@ -509,29 +511,28 @@ func checkBuiltinCopyExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 2 {
+	if len(call.CallExpr.Args) != 2 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
 
 	var err error
 	var xt, yt reflect.Type
-	x, xErrs := CheckExpr(call.Args[0], env)
+	x, xErrs := CheckExpr(call.CallExpr.Args[0], env)
 	if xErrs != nil {
 		errs = append(errs, xErrs...)
 	}
-	call.Args[0] = x
 	if xErrs == nil || x.IsConst() {
 		xt, err = expectSingleType(x.KnownType(), x)
 		if err != nil {
 			errs = append(errs, err)
 		}
 	}
-	y, yErrs := CheckExpr(call.Args[1], env)
+	y, yErrs := CheckExpr(call.CallExpr.Args[1], env)
 	if yErrs != nil {
 		errs = append(errs, yErrs...)
 	}
-	call.Args[1] = y
+	call.Args = []Expr{x, y}
 	if yErrs == nil || y.IsConst() {
 		yt, err = expectSingleType(y.KnownType(), y)
 		if err != nil {
@@ -569,12 +570,12 @@ func checkBuiltinDeleteExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 2 {
+	if len(call.CallExpr.Args) != 2 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
 	var mapT, keyT reflect.Type
-	m, moreErrs := CheckExpr(call.Args[0], env)
+	m, moreErrs := CheckExpr(call.CallExpr.Args[0], env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
@@ -585,13 +586,12 @@ func checkBuiltinDeleteExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 			errs = append(errs, moreErrs...)
 		}
 	}
-	call.Args[0] = m
 
-	key, moreErrs := CheckExpr(call.Args[1], env)
+	key, moreErrs := CheckExpr(call.CallExpr.Args[1], env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	call.Args[1] = key
+	call.Args = []Expr{m, key}
 	if moreErrs == nil || key.IsConst() {
 		var err error
 		keyT, err = expectSingleType(key.KnownType(), key)
@@ -620,15 +620,15 @@ func checkBuiltinPanicExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 	if call.argNEllipsis = call.Ellipsis != token.NoPos; call.argNEllipsis {
 		errs = append(errs, ErrBuiltinInvalidEllipsis{call})
 	}
-	if len(call.Args) != 1 {
+	if len(call.CallExpr.Args) != 1 {
 		fakeCheckRemainingArgs(call, 0, env)
 		return call, append(errs, ErrBuiltinWrongNumberOfArgs{call})
 	}
-	x, moreErrs := CheckExpr(call.Args[0], env)
+	x, moreErrs := CheckExpr(call.CallExpr.Args[0], env)
 	if moreErrs != nil {
 		errs = append(errs, moreErrs...)
 	}
-	call.Args[0] = x
+	call.Args = []Expr{x}
 	if moreErrs != nil && !x.IsConst() {
 		return call, errs
 	}
@@ -640,7 +640,8 @@ func checkBuiltinPanicExpr(call *CallExpr, env Env) (*CallExpr, []error) {
 }
 
 func fakeCheckRemainingArgs(call *CallExpr, from int, env Env) {
+	call.Args = append(call.Args[:from], make([]Expr, len(call.CallExpr.Args)-from)...)
 	for i := from; i < len(call.Args); i += 1 {
-		call.Args[i] = fakeCheckExpr(call.Args[i], env)
+		call.Args[i] = fakeCheckExpr(call.CallExpr.Args[i], env)
 	}
 }

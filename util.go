@@ -238,7 +238,7 @@ func skipSuperfluousParens(expr Expr) Expr {
 		case *BinaryExpr:
 			return p
 		default:
-			return p.X.(Expr)
+			return p.X
 		}
 	}
 	return expr
@@ -392,7 +392,7 @@ func isAddressable(expr Expr) bool {
 	case *StarExpr:
 		return true
 	case *IndexExpr:
-		x := n.X.(Expr)
+		x := n.X
 		t := x.KnownType()[0]
 		switch t.Kind() {
 		case reflect.Slice:
@@ -406,7 +406,7 @@ func isAddressable(expr Expr) bool {
 		if n.pkgName != "" {
 			return isAddressable(n.Sel)
 		}
-		x := n.X.(Expr)
+		x := n.X
 		t := x.KnownType()[0]
 		switch t.Kind() {
 		case reflect.Struct:
@@ -525,7 +525,7 @@ func multivalueOk(expr Expr) bool {
 	case *TypeAssertExpr:
 		return true
 	case *IndexExpr:
-		return e.X.(Expr).KnownType()[0].Kind() == reflect.Map
+		return e.X.KnownType()[0].Kind() == reflect.Map
 	case *UnaryExpr:
 		return e.Op == token.ARROW
 	default:

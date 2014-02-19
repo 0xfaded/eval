@@ -11,7 +11,7 @@ func evalSelectorExpr(selector *SelectorExpr, env Env) (reflect.Value, error) {
 		return vs, err
 	}
 
-	vs, err := EvalExpr(selector.X.(Expr), env)
+	vs, err := EvalExpr(selector.X, env)
 	if err != nil {
 		return reflect.Value{}, err
 	}

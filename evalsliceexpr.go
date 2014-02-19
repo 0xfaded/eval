@@ -6,7 +6,7 @@ import (
 
 // TODO[crc] support slice[::] syntax after go1.2 upgrade
 func evalSliceExpr(slice *SliceExpr, env Env) (reflect.Value, error) {
-	xs, err := EvalExpr(slice.X.(Expr), env)
+	xs, err := EvalExpr(slice.X, env)
 	if err != nil {
 		return reflect.Value{}, err
 	}
@@ -14,12 +14,12 @@ func evalSliceExpr(slice *SliceExpr, env Env) (reflect.Value, error) {
 
 	var l, h int
 	if slice.Low != nil {
-		if l, err = evalInteger(slice.Low.(Expr), env); err != nil {
+		if l, err = evalInteger(slice.Low, env); err != nil {
 			return reflect.Value{}, err
 		}
 	}
 	if slice.High != nil {
-		if h, err = evalInteger(slice.High.(Expr), env); err != nil {
+		if h, err = evalInteger(slice.High, env); err != nil {
 			return reflect.Value{}, err
 		}
 	} else {

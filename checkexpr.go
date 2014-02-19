@@ -128,12 +128,12 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		return interfaceT, nil, true, []error{errors.New("interface types not implemented")}
 	case *ast.MapType:
 		mapT := &MapType{MapType: node}
-		keyT, k, _, errs := checkType(mapT.Key, env)
+		keyT, k, _, errs := checkType(node.Key, env)
 		mapT.Key = keyT
 		if k != nil && !isStaticTypeComparable(k) {
 			errs = append(errs, ErrUncomparableMapKey{mapT, k})
 		}
-		valueT, v, _, moreErrs := checkType(mapT.Value, env)
+		valueT, v, _, moreErrs := checkType(node.Value, env)
 		mapT.Value = valueT
 		if moreErrs != nil {
 			errs = append(errs, moreErrs...)

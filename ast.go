@@ -68,6 +68,7 @@ type FuncLit struct {
 
 type CompositeLit struct {
 	*ast.CompositeLit
+	Elts []Expr
 	knownType
 
 	// length of array or slice literal
@@ -83,12 +84,14 @@ type CompositeLit struct {
 
 type ParenExpr struct {
 	*ast.ParenExpr
+	X Expr
 	knownType
 	constValue
 }
 
 type SelectorExpr struct {
 	*ast.SelectorExpr
+	X Expr
 	Sel *Ident
 	knownType
 	constValue
@@ -109,6 +112,8 @@ type SelectorExpr struct {
 
 type IndexExpr struct {
 	*ast.IndexExpr
+	X Expr
+	Index Expr
 	knownType
 
 	// Const value only relevant for strings.
@@ -119,16 +124,22 @@ type IndexExpr struct {
 
 type SliceExpr struct {
 	*ast.SliceExpr
+	X Expr
+	Low Expr
+	High Expr
 	knownType
 }
 
 type TypeAssertExpr struct {
 	*ast.TypeAssertExpr
+	X Expr
 	knownType
 }
 
 type CallExpr struct {
 	*ast.CallExpr
+	Fun Expr
+	Args []Expr
 
 	// Is this a type conversion
 	isTypeConversion bool
@@ -148,27 +159,35 @@ type CallExpr struct {
 
 type StarExpr struct {
 	*ast.StarExpr
+	X Expr
 	knownType
 }
 
 type UnaryExpr struct {
 	*ast.UnaryExpr
+	X Expr
 	knownType
 	constValue
 }
 
 type BinaryExpr struct {
 	*ast.BinaryExpr
+	X Expr
+	Y Expr
 	knownType
 	constValue
 }
 
 type KeyValueExpr struct {
 	*ast.KeyValueExpr
+	Key Expr
+	Value Expr
 }
 
 type ArrayType struct {
 	*ast.ArrayType
+	Len Expr
+	Elt Expr
 	knownType
 }
 
@@ -189,11 +208,14 @@ type InterfaceType struct {
 
 type MapType struct {
 	*ast.MapType
+	Key Expr
+	Value Expr
 	knownType
 }
 
 type ChanType struct {
 	*ast.ChanType
+	Value Expr
 	dir reflect.ChanDir
 	knownType
 }
@@ -340,7 +362,7 @@ func (parenExpr *ParenExpr) String() string {
 	if parenExpr.IsConst() {
 		return sprintConstValue(parenExpr.KnownType()[0], parenExpr.Const(), true)
 	}
-	return fmt.Sprintf("(%v)", skipSuperfluousParens(parenExpr.X.(Expr)))
+	return fmt.Sprintf("(%v)", skipSuperfluousParens(parenExpr.X))
 }
 
 func (selectorExpr *SelectorExpr) String() string {
@@ -400,7 +422,7 @@ func (star *StarExpr) String() string {
 }
 
 func (unary *UnaryExpr) String() string {
-	operand := skipSuperfluousParens(unary.X.(Expr))
+	operand := skipSuperfluousParens(unary.X)
 	if unary.Op == token.AND {
 		if _, ok := unary.X.(*StarExpr); ok {
 			return fmt.Sprintf("&(%v)", operand)
@@ -412,8 +434,8 @@ func (unary *UnaryExpr) String() string {
 }
 
 func (binary *BinaryExpr) String() string {
-	left := simplifyBinaryChildExpr(binary, binary.X.(Expr))
-	right := simplifyBinaryChildExpr(binary, binary.Y.(Expr))
+	left := simplifyBinaryChildExpr(binary, binary.X)
+	right := simplifyBinaryChildExpr(binary, binary.Y)
 
 	return fmt.Sprintf("%v %v %v", left, binary.Op, right)
 }

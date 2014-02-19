@@ -30,7 +30,7 @@ func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env Env) (reflect.Va
 	vT := knownType{t.Elem()}
 	for _, elt := range lit.Elts {
 		kv := elt.(*KeyValueExpr)
-		k, err := evalTypedExpr(kv.Key.(Expr), kT, env)
+		k, err := evalTypedExpr(kv.Key, kT, env)
 		if err != nil {
 			return reflect.Value{}, err
 		}
@@ -40,7 +40,7 @@ func evalCompositeLitMap(t reflect.Type, lit *CompositeLit, env Env) (reflect.Va
 				return reflect.Value{}, PanicUnhashableType{dynamicT}
 			}
 		}
-		v, err := evalTypedExpr(kv.Value.(Expr), vT, env)
+		v, err := evalTypedExpr(kv.Value, vT, env)
 		if err != nil {
 			return reflect.Value{}, err
 		}
@@ -60,11 +60,11 @@ func evalCompositeLitArrayOrSlice(t reflect.Type, lit *CompositeLit, env Env) (r
 	for src, dst, i := 0, 0, 0; src < len(lit.Elts); src, dst = src + 1, dst + 1 {
 		var elt Expr
 		if lit.indices[i].pos == src {
-			elt = lit.Elts[src].(*KeyValueExpr).Value.(Expr)
+			elt = lit.Elts[src].(*KeyValueExpr).Value
 			dst = lit.indices[i].index
 			i += 1
 		} else {
-			elt = lit.Elts[src].(Expr)
+			elt = lit.Elts[src]
 		}
 		if elem, err := evalTypedExpr(elt, eT, env); err != nil {
 			return reflect.Value{}, err
@@ -80,9 +80,9 @@ func evalCompositeLitStruct(t reflect.Type, lit *CompositeLit, env Env) (reflect
 	for i, f := range lit.fields {
 		var elt Expr
 		if kv, ok := lit.Elts[i].(*KeyValueExpr); ok {
-			elt = kv.Value.(Expr)
+			elt = kv.Value
 		} else {
-			elt = lit.Elts[i].(Expr)
+			elt = lit.Elts[i]
 		}
 		field := v.Field(f)
 		if elem, err := evalTypedExpr(elt, knownType{field.Type()}, env); err != nil {

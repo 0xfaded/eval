@@ -28,6 +28,9 @@ func checkCompositeLitR(lit *ast.CompositeLit, t reflect.Type, env Env) (*Compos
 	}
 
 	alit.knownType = knownType{t}
+	if alit.CompositeLit.Elts != nil {
+		alit.Elts = make([]Expr, len(alit.CompositeLit.Elts))
+	}
 
 	switch t.Kind() {
 	case reflect.Map:
@@ -54,15 +57,14 @@ func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env Env) (*Composit
 	eltT := t.Elem()
 
 	for i := range lit.Elts {
-		if kv, ok := lit.Elts[i].(*ast.KeyValueExpr); !ok {
-			elt, moreErrs := CheckExpr(lit.Elts[i], env)
+		if kv, ok := lit.CompositeLit.Elts[i].(*ast.KeyValueExpr); !ok {
+			elt, moreErrs := CheckExpr(lit.CompositeLit.Elts[i], env)
 			lit.Elts[i] = elt
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
 			errs = append(errs, ErrMissingMapKey{elt})
 		} else {
-			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
 			k, ok, moreErrs := checkExprAssignableTo(kv.Key, kT, env)
 			if !ok {
 				if len(k.KnownType()) != 0 {
@@ -73,8 +75,6 @@ func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env Env) (*Composit
 			} else {
 				errs = append(errs, moreErrs...)
 			}
-			kv.Key = k
-
 			if seen != nil && k.IsConst() {
 				var constKey interface{}
 				if k.KnownType()[0] == ConstNil {
@@ -95,7 +95,7 @@ func checkCompositeLitMap(lit *CompositeLit, t reflect.Type, env Env) (*Composit
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
-			kv.Value = v
+			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv, Key: k, Value: v}
 		}
 	}
 	return lit, errs
@@ -116,19 +116,20 @@ func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env Env) (
 	// Elements without are placed in the next position.
 	// For example, []int{1, 2:1, 1} -> [1, 0, 1, 1]
 	for i := range lit.Elts {
-		var value *ast.Expr
+		var value ast.Expr
+		var key Expr
+		var avalue *Expr
 		skipIndexChecks := false
-		kv, ok := lit.Elts[i].(*ast.KeyValueExpr)
+		kv, ok := lit.CompositeLit.Elts[i].(*ast.KeyValueExpr)
 		if !ok {
-			value = &lit.Elts[i]
+			avalue, value = &lit.Elts[i], lit.CompositeLit.Elts[i]
 		} else {
-			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
-			value = &kv.Value
+			akv := &KeyValueExpr{KeyValueExpr: kv}
+			lit.Elts[i] = akv
+			avalue, value = &akv.Value, kv.Value
 			// Check the array key
 			var index int
-			var k Expr
-			k, index, ok, moreErrs = checkArrayIndex(kv.Key, env);
-			kv.Key = k
+			key, index, ok, moreErrs = checkArrayIndex(kv.Key, env);
 			if !ok || moreErrs != nil {
 				// NOTE[crc] Haven't checked the gc implementation, but
 				// from experimentation it seems that only undefined
@@ -139,7 +140,7 @@ func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env Env) (
 						errs = append(errs, err)
 					}
 				}
-				errs = append(errs, ErrBadArrayKey{k})
+				errs = append(errs, ErrBadArrayKey{key})
 				// Don't include this element in index calculations
 				curIndex -= 1
 				skipIndexChecks = true
@@ -149,8 +150,8 @@ func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env Env) (
 			}
 		}
 		// finally check the value
-		v, moreErrs := checkArrayValue(*value, eltT, env)
-		*value = v
+		v, moreErrs := checkArrayValue(value, eltT, env)
+		*avalue = v
 
 		// These errors slide in before the check errors, but we need v
 		if !skipIndexChecks {
@@ -163,7 +164,7 @@ func checkCompositeLitArrayOrSlice(lit *CompositeLit, t reflect.Type, env Env) (
 			}
 			// has this index been used already
 			if used[curIndex] {
-				errs = append(errs, ErrDuplicateArrayKey{fakeCheckExpr(kv.Key, env), curIndex})
+				errs = append(errs, ErrDuplicateArrayKey{key, curIndex})
 			}
 			used[curIndex] = true
 		}
@@ -196,7 +197,7 @@ func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env Env) (*Compo
 	// gc first checks if there are ANY keys present, and then decides how
 	// to process the initialisers.
 	keysPresent := false
-	for _, elt := range lit.Elts {
+	for _, elt := range lit.CompositeLit.Elts {
 		_, ok := elt.(*ast.KeyValueExpr)
 		keysPresent = keysPresent || ok
 	}
@@ -205,9 +206,9 @@ func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env Env) (*Compo
 		seen := make(map[string] bool, len(lit.Elts))
 		mixed := false
 		for i := 0; i < len(lit.Elts); i += 1 {
-			kv, ok := lit.Elts[i].(*ast.KeyValueExpr)
+			kv, ok := lit.CompositeLit.Elts[i].(*ast.KeyValueExpr)
 			if !ok {
-				elt := fakeCheckExpr(lit.Elts[i], env)
+				elt := fakeCheckExpr(lit.CompositeLit.Elts[i], env)
 				lit.Elts[i] = elt
 				if !mixed {
 					// This error only gets reported once
@@ -217,40 +218,37 @@ func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env Env) (*Compo
 				continue
 			}
 
-			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv}
+			key := fakeCheckExpr(kv.Key, env)
+			var value Expr
 			// Check the key is a struct member
-			if ident, ok := kv.Key.(*ast.Ident); !ok {
-				// This check is a hack for making kv.Key printable.
-				// field identifiers should not usually be type checked.
-				k := fakeCheckExpr(kv.Key, env)
-				kv.Key = k
-				errs = append(errs, ErrInvalidStructField{k})
+			if ident, ok := key.(*Ident); !ok {
+				value = fakeCheckExpr(kv.Value, env)
+				errs = append(errs, ErrInvalidStructField{key})
 			} else {
 				name := ident.Name
 				if field, ok := t.FieldByName(name); !ok {
-					k := fakeCheckExpr(kv.Key, env)
-					kv.Key = k
-					errs = append(errs, ErrUnknownStructField{k, t, name})
+					value = fakeCheckExpr(kv.Value, env)
+					errs = append(errs, ErrUnknownStructField{key, t, name})
 				} else {
-					k := &Ident{Ident: ident}
 					if seen[name] {
-						errs = append(errs, ErrDuplicateStructField{k, name})
+						errs = append(errs, ErrDuplicateStructField{ident, name})
 					}
 					seen[name] = true
 					lit.fields = append(lit.fields, field.Index[0])
-					kv.Value, moreErrs = checkStructField(kv.Value, field, env)
+					value, moreErrs = checkStructField(kv.Value, field, env)
 					if moreErrs != nil {
 						errs = append(errs, moreErrs...)
 					}
 				}
 			}
+			lit.Elts[i] = &KeyValueExpr{KeyValueExpr: kv, Key: key, Value: value}
 		}
 	} else {
 		numFields := t.NumField()
 		var i int
 		for i = 0; i < numFields && i < len(lit.Elts); i += 1 {
 			field := t.Field(i)
-			lit.Elts[i], moreErrs = checkStructField(lit.Elts[i], field, env)
+			lit.Elts[i], moreErrs = checkStructField(lit.CompositeLit.Elts[i], field, env)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
@@ -261,7 +259,7 @@ func checkCompositeLitStruct(lit *CompositeLit, t reflect.Type, env Env) (*Compo
 		}
 		// Remaining fields are type checked reguardless of use
 		for ; i < len(lit.Elts); i += 1 {
-			lit.Elts[i], moreErrs = CheckExpr(lit.Elts[i], env)
+			lit.Elts[i], moreErrs = CheckExpr(lit.CompositeLit.Elts[i], env)
 			if moreErrs != nil {
 				errs = append(errs, moreErrs...)
 			}
