@@ -173,6 +173,12 @@ func checkStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 				}
 			}
 		}
+
+		for i, name := range names {
+			if name != "_" {
+				env.AddVar(name, reflect.New(types[i]))
+			}
+		}
 done:
 		a.newNames = names
 		a.types = types
