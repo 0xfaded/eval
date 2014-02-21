@@ -185,6 +185,11 @@ done:
 		return a, errs
 	case *ast.BlockStmt:
 		return checkBlock(s, env)
+
+	case *ast.ExprStmt:
+		x, errs := CheckExpr(s.X, env)
+		return &ExprStmt{ExprStmt: s, X: x}, errs
+
 	case *ast.IfStmt:
 		astmt := &IfStmt{IfStmt: s}
 		env = env.PushScope() // Env for the if block
@@ -192,15 +197,8 @@ done:
 		astmt.Init, moreErrs = checkStmt(s.Init, env)
 		errs = append(errs, moreErrs...)
 
-		astmt.Cond, moreErrs = CheckExpr(s.Cond, env)
+		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env)
 		errs = append(errs, moreErrs...)
-		if moreErrs == nil || astmt.Cond.IsConst() {
-			if t, err := expectSingleType(astmt.Cond); err != nil {
-				errs = append(errs, err)
-			} else if t.Kind() != reflect.Bool {
-				errs = append(errs, ErrNonBoolCondition{astmt.Cond, astmt})
-			}
-		}
 
 		astmt.Body, moreErrs = checkBlock(s.Body, env)
 		errs = append(errs, moreErrs...)
@@ -208,7 +206,36 @@ done:
 		astmt.Else, moreErrs = checkStmt(s.Else, env)
 		errs = append(errs, moreErrs...)
 		return astmt, errs
+
+	case *ast.ForStmt:
+		astmt := &ForStmt{ForStmt: s}
+		env = env.PushScope() // Env for the for block
+
+		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		errs = append(errs, moreErrs...)
+
+		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env)
+		errs = append(errs, moreErrs...)
+
+		astmt.Post, moreErrs = checkStmt(s.Post, env)
+		errs = append(errs, moreErrs...)
+
+		astmt.Body, moreErrs = checkBlock(s.Body, env)
+		errs = append(errs, moreErrs...)
+		return astmt, errs
 	default:
 		return nil, []error{errors.New("Only assign statements are currently supported")}
 	}
+}
+
+func checkCond(cond ast.Expr, parent Stmt, env Env) (Expr, []error) {
+	acond, errs := CheckExpr(cond, env)
+	if errs == nil || acond.IsConst() {
+		if t, err := expectSingleType(acond); err != nil {
+			errs = append(errs, err)
+		} else if t.Kind() != reflect.Bool {
+			errs = append(errs, ErrNonBoolCondition{acond, parent})
+		}
+	}
+	return acond, errs
 }

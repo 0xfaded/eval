@@ -992,6 +992,8 @@ func (err ErrNonBoolCondition) Error() string {
 	switch err.parent.(type) {
 	case *IfStmt:
 		parent = "if"
+	case *ForStmt:
+		parent = "for"
 	}
 	return fmt.Sprintf("non-bool %v (type %v) used as %s condition", err.Expr, err.Expr.KnownType()[0], parent)
 }

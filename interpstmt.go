@@ -46,6 +46,9 @@ func InterpStmt(stmt Stmt, env Env) error {
 				return err
 			}
 		}
+	case *ExprStmt:
+		_, err := EvalExpr(s.X, env)
+		return err
 	case *IfStmt:
 		env = env.PushScope()
 		if err := InterpStmt(s.Init, env); err != nil {
@@ -56,6 +59,22 @@ func InterpStmt(stmt Stmt, env Env) error {
 			return InterpStmt(s.Body, env)
 		} else {
 			return InterpStmt(s.Else, env)
+		}
+	case *ForStmt:
+		env = env.PushScope()
+		if err := InterpStmt(s.Init, env); err != nil {
+			return err
+		}
+		for {
+			if rs, err := EvalExpr(s.Cond, env); err != nil {
+				return err
+			} else if !rs[0].Bool() {
+				break
+			} else if err := InterpStmt(s.Body, env); err != nil {
+				return err
+			} else if err := InterpStmt(s.Post, env); err != nil {
+				return err
+			}
 		}
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))

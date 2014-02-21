@@ -169,3 +169,11 @@ func TestCheckAssignStmtDefNil(t *testing.T) {
 	expectInterp(t, `nil := 1`, env)
 }
 
+func TestFor(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "for i := 1; i < 4; i = i + 1 { x = x * i }", env)
+	expectResult(t, "x", env, 6)
+}
+
