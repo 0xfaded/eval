@@ -10,9 +10,6 @@ type ConstType interface {
 	IsReal() bool
 	IsNumeric() bool
 
-	// Format for "something bad X (type X.ErrorType())"
-	ErrorType() string
-
 	// The go type the ConstType is promoted to by default
 	DefaultPromotion() reflect.Type
 }
@@ -29,7 +26,7 @@ type ConstBoolType struct { reflect.Type }
 var (
 	ConstInt = ConstIntType { reflect.TypeOf(0) }
 	ConstShiftedInt = ConstShiftedIntType { reflect.TypeOf(0) }
-	ConstRune = ConstRuneType { reflect.TypeOf('\000') }
+	ConstRune = ConstRuneType { RuneType }
 	ConstFloat = ConstFloatType { reflect.TypeOf(0.0) }
 	ConstComplex = ConstComplexType { reflect.TypeOf(0i) }
 	ConstString = ConstStringType { reflect.TypeOf("") }
@@ -37,24 +34,14 @@ var (
 	ConstBool = ConstBoolType { reflect.TypeOf(false) }
 )
 
-// These are actually the names of the default const promotions
-func (ConstIntType) String() string { return "int" }
-func (ConstShiftedIntType) String() string { return "shifted_int" }
-func (ConstRuneType) String() string { return "rune" }
-func (ConstFloatType) String() string { return "float64" }
-func (ConstComplexType) String() string { return "complex128" }
-func (ConstStringType) String() string { return "string" }
-func (ConstNilType) String() string { return "<T>" }
-func (ConstBoolType) String() string { return "bool" }
-
-func (ConstIntType) ErrorType() string { return "untyped number" }
-func (ConstShiftedIntType) ErrorType() string { return "untyped number" }
-func (ConstRuneType) ErrorType() string { return "untyped number" }
-func (ConstFloatType) ErrorType() string { return "untyped number" }
-func (ConstComplexType) ErrorType() string { return "untyped number" }
-func (ConstStringType) ErrorType() string { return "untyped string" }
-func (ConstNilType) ErrorType() string { return "nil" }
-func (ConstBoolType) ErrorType() string { return "untyped bool" }
+func (ConstIntType) String() string { return "untyped number" }
+func (ConstShiftedIntType) String() string { return "untyped number" }
+func (ConstRuneType) String() string { return "untyped number" }
+func (ConstFloatType) String() string { return "untyped number" }
+func (ConstComplexType) String() string { return "untyped number" }
+func (ConstStringType) String() string { return "untyped string" }
+func (ConstNilType) String() string { return "nil" }
+func (ConstBoolType) String() string { return "untyped bool" }
 
 func (c ConstIntType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstShiftedIntType) DefaultPromotion() reflect.Type { return c.Type }
@@ -62,7 +49,7 @@ func (c ConstRuneType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstFloatType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstComplexType) DefaultPromotion() reflect.Type { return c.Type }
 func (c ConstStringType) DefaultPromotion() reflect.Type { return c.Type }
-func (c ConstNilType) DefaultPromotion() reflect.Type { return c.Type }
+func (c ConstNilType) DefaultPromotion() reflect.Type { return c }
 func (c ConstBoolType) DefaultPromotion() reflect.Type { return c.Type }
 
 func (ConstIntType) IsIntegral() bool { return true }
@@ -91,6 +78,13 @@ func (ConstComplexType) IsNumeric() bool { return true }
 func (ConstStringType) IsNumeric() bool { return false }
 func (ConstNilType) IsNumeric() bool { return false }
 func (ConstBoolType) IsNumeric() bool { return false }
+
+func defaultPromotion(t reflect.Type) reflect.Type {
+	if ct, ok := t.(ConstType); ok {
+		return ct.DefaultPromotion()
+	}
+	return t
+}
 
 // promoteConsts returns the ConstType of a binary, a non-boolean,
 // expression involving const types of x and y.  Errors match those

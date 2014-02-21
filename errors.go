@@ -341,12 +341,8 @@ func (err ErrUnaddressableSliceOperand) Error() string {
 func (err ErrInvalidIndirect) Error() string {
 	expr := err.Expr
 	t := expr.KnownType()[0]
-	if ct, ok := t.(ConstType); ok {
-		if ct == ConstNil {
-			return "invalid indirect of nil"
-		}
-		return fmt.Sprintf("invalid indirect of %v (type %s)",
-			expr, ct.ErrorType())
+	if t == ConstNil {
+		return "invalid indirect of nil"
 	}
 	return fmt.Sprintf("invalid indirect of %v (type %s)", expr, t)
 }
@@ -446,12 +442,12 @@ func (err ErrWrongArgType) Error() string {
 	}
 
 	if err.call.arg0MultiValued {
-		actual := err.Expr.KnownType()[err.argPos]
+		actual := defaultPromotion(err.Expr.KnownType()[err.argPos])
 		return fmt.Sprintf("cannot use %v as type %v in argument to %v",
 			actual, expected, err.call.Fun)
 	} else {
 		arg := err.Expr
-		actual := arg.KnownType()[0]
+		actual := defaultPromotion(arg.KnownType()[0])
 		return fmt.Sprintf("cannot use %v (type %v) as type %v in function argument",
 			arg, actual, expected)
 	}
@@ -466,11 +462,8 @@ func (err ErrInvalidUnaryOperation) Error() string {
 	unary := err.UnaryExpr
 	x := unary.X
 	t := x.KnownType()[0]
-	if ct, ok := t.(ConstType); ok {
-		if unary.Op == token.XOR && ct.IsNumeric() {
-			return fmt.Sprintf("illegal constant expression ^ %v", ct.ErrorType())
-		}
-		return fmt.Sprintf("invalid operation: %v %v", unary.Op, ct.ErrorType())
+	if ct, ok := t.(ConstType); ok && unary.Op == token.XOR && ct.IsNumeric() {
+		return fmt.Sprintf("illegal constant expression ^ %v", ct)
 	}
 	return fmt.Sprintf("invalid operation: %v %v", unary.Op, t)
 }
@@ -505,27 +498,19 @@ func (err ErrInvalidBinaryOperation) Error() string {
 
 	// Its just easier to handle shifts separately
 	if op == token.SHL || op == token.SHR {
-		if yt == ConstNil {
-			return "BAZFOO"
-		}
 		if !isUnsignedInt(yt) {
 			return fmt.Sprintf("invalid operation: %v (shift count type %v, must be unsigned integer)",
-				binary, yt)
+				binary, defaultPromotion(yt))
 		}
 		if !isShiftable(xt) {
-			var operandT, count interface{}
-			if xcok {
-				operandT = xct.ErrorType()
-			} else {
-				operandT = xt
-			}
+			var count interface{}
 			if ycok {
 				c, _ := promoteConstToTyped(yct, constValue(y.Const()), uintType, y)
 				count = reflect.Value(c).Interface()
 			} else {
 				count = binary.Y
 			}
-			return fmt.Sprintf("invalid operation: %v %v %v (shift of type %v)", binary.X, op, count, operandT)
+			return fmt.Sprintf("invalid operation: %v %v %v (shift of type %v)", binary.X, op, count, xt)
 		}
 	} else if xcok && ycok {
 		xn, xnok := x.Const().Interface().(*ConstNumber)
@@ -538,17 +523,10 @@ func (err ErrInvalidBinaryOperation) Error() string {
 					return "illegal constant expression: floating-point % operation"
 				}
 			}
-			return fmt.Sprintf("illegal constant expression: %s %v %s", xct.ErrorType(), op, yct.ErrorType())
+			return fmt.Sprintf("illegal constant expression: %s %v %s", xct, op, yct)
 		} else if xt == yt {
-			// const nil value prints as <T>, as an operand we should print nil
-			var operandType interface{}
-			if xt == ConstNil {
-				operandType = "nil"
-			} else {
-				operandType = xt
-			}
 			return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
-				x, op, y, op, operandType)
+				x, op, y, op, defaultPromotion(xt))
 		}
 	} else if xcok {
                 // The gc implementation re-types nodes in const expressions, so that both sides
@@ -622,14 +600,12 @@ func (err ErrInvalidBinaryOperation) Error() string {
         if !xcok {
                 yi = sprintUntypedConstAsTyped(y)
         }
-        // One last hack to display nil types as "nil", not the usual "<T>"
-        var xti, yti interface{} = xt, yt
-        if !ycok && xt == ConstNil {
-                xti = "nil"
-        }
-        if !xcok && yt == ConstNil {
-                yti = "nil"
-        }
+	var xti, yti interface{} = defaultPromotion(xt), defaultPromotion(yt)
+	if ycok && xt == ConstNil {
+		xti = "<T>"
+	} else if xcok && yt == ConstNil {
+		yti = "<T>"
+	}
 	return fmt.Sprintf("invalid operation: %v %v %v (mismatched types %v and %v)",
 		xi, op, yi, xti, yti,
 	)
@@ -640,11 +616,11 @@ func (err ErrDivideByZero) Error() string {
 }
 
 func (err ErrBadConversion) Error() string {
-	return fmt.Sprintf("cannot convert %v (type %v) to type %v", err.Expr, err.from, err.to)
+	return fmt.Sprintf("cannot convert %v (type %v) to type %v", err.Expr, defaultPromotion(err.from), err.to)
 }
 
 func (err ErrBadConstConversion) Error() string {
-	return fmt.Sprintf("cannot convert %v to type %v", err.Expr, err.to)
+	return fmt.Sprintf("cannot convert %v to type %v", err.Expr, defaultPromotion(err.to))
 }
 
 func (err ErrTruncatedConstant) Error() string {
@@ -707,7 +683,7 @@ func (err ErrDuplicateMapKey) Error() string {
 
 func (err ErrBadMapValue) Error() string {
 	expr := err.Expr
-	t := expr.KnownType()[0]
+	t := defaultPromotion(expr.KnownType()[0])
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in map value", err.eltT)
 	}
@@ -730,7 +706,7 @@ func (err ErrDuplicateArrayKey) Error() string {
 
 func (err ErrBadArrayValue) Error() string {
 	expr := err.Expr
-	t := expr.KnownType()[0]
+	t := defaultPromotion(expr.KnownType()[0])
 	if t == ConstNil {
 		return fmt.Sprintf("cannot use nil as type %v in array element", err.eltT)
 	}
@@ -773,7 +749,7 @@ func (err ErrBadStructValue) Error() string {
 		return fmt.Sprintf("cannot use nil as type %v in field value", err.eltT)
 	}
 	return fmt.Sprintf("cannot use %v (type %v) as type %v in field value",
-		expr, t, err.eltT)
+		expr, defaultPromotion(t), err.eltT)
 }
 
 func (err ErrInvalidTypeAssert) Error() string {
@@ -863,59 +839,43 @@ func (err ErrBuiltinWrongNumberOfArgs) Error() string {
 func (err ErrBuiltinWrongArgType) Error() string {
 	ident := err.call.Fun.(*Ident)
 	arg := err.Expr
-	var t string
-	kt := arg.KnownType()[0]
-	if ct, ok := kt.(ConstType); ok {
-		t = ct.ErrorType()
-	} else {
-		t = kt.String()
-	}
+	t := arg.KnownType()[0]
 	switch ident.Name {
 	case "complex":
 		call := uc(err.call).(*CallExpr)
 		// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
 		call.argNEllipsis = false
-		return fmt.Sprintf("invalid operation: %v (arguments have type %s, expected floating-point)",
+		return fmt.Sprintf("invalid operation: %v (arguments have type %v, expected floating-point)",
 			call, t)
 	case "append":
 		expected := err.call.Args[0].KnownType()[0].Elem()
-		if kt == ConstNil {
+		if t == ConstNil {
 			return fmt.Sprintf("cannot use nil as type %v in append", expected)
 		}
-		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), kt, expected)
+		return fmt.Sprintf("cannot use %v (type %s) as type %v in append", uc(arg), defaultPromotion(t), expected)
 	case "delete":
 		expected := err.call.Args[0].KnownType()[0].Key()
-		if kt == ConstNil {
+		if t == ConstNil {
 			return fmt.Sprintf("cannot use nil as type %v in delete", expected)
 		}
-		return fmt.Sprintf("cannot use %v (type %s) as type %v in delete", uc(arg), kt, expected)
+		return fmt.Sprintf("cannot use %v (type %s) as type %v in delete", uc(arg), defaultPromotion(t), expected)
 	default:
-		return fmt.Sprintf("invalid argument %v (type %s) for %s", uc(arg), kt, ident.Name)
+		return fmt.Sprintf("invalid argument %v (type %v) for %s", uc(arg), defaultPromotion(t), ident.Name)
 	}
 }
 
 func (err ErrBuiltinMismatchedArgs) Error() string {
 	call := err.CallExpr
-	var x, y string
-	cx, cxok := err.x.(ConstType)
-	cy, cyok := err.y.(ConstType)
-	if cxok && cyok {
-		x = cx.ErrorType()
-		y = cy.ErrorType()
-	} else if cx == ConstNil {
-		x = "nil"
-		y = err.y.String()
-	} else if cy == ConstNil {
-		x = err.x.String()
-		y = "nil"
-	} else {
-		x = err.x.String()
-		y = err.y.String()
-	}
 	call = uc(call).(*CallExpr)
 	// ... doesn't get printed. uc() returns a clone of the root node, so we can safely change argNEllipsis
 	call.argNEllipsis = false
-	return fmt.Sprintf("invalid operation: %v (mismatched types %s and %s)", uc(call), x, y)
+	x, y := defaultPromotion(err.x), defaultPromotion(err.y)
+	if _, ok := err.x.(ConstType); ok {
+		if _, ok := err.y.(ConstType); ok {
+			x, y = err.x, err.y
+		}
+	}
+	return fmt.Sprintf("invalid operation: %v (mismatched types %v and %v)", uc(call), x, y)
 }
 
 func (err ErrBuiltinNonTypeArg) Error() string {
@@ -951,13 +911,7 @@ func (err ErrAppendFirstArgNotSlice) Error() string {
 	if t == ConstNil {
 		return "first argument to append must be typed slice; have untyped nil"
 	} else {
-		var s string
-		if ct, ok := t.(ConstType); ok {
-			s = ct.ErrorType()
-		} else {
-			s = t.String()
-		}
-		return fmt.Sprintf("first argument to append must be slice; have %s", s)
+		return fmt.Sprintf("first argument to append must be slice; have %s", t)
 	}
 }
 
@@ -966,29 +920,34 @@ func (err ErrAppendFirstArgNotVariadic) Error() string {
 }
 
 func (err ErrCopyArgsMustBeSlices) Error() string {
-	if err.yT != ConstNil && err.yT.Kind() == reflect.Slice {
-		return fmt.Sprintf("first argument to copy should be slice; have %v", err.xT)
-	} else if err.xT != ConstNil && err.xT.Kind() == reflect.Slice {
-		return fmt.Sprintf("second argument to copy should be slice or string; have %v", err.yT)
+	var x, y interface{}
+	if err.xT == ConstNil {
+		x = "<T>"
 	} else {
-		return fmt.Sprintf("arguments to copy must be slices; have %v, %v", err.xT, err.yT)
+		x = defaultPromotion(err.xT)
+	}
+	if err.yT == ConstNil {
+		y = "<T>"
+	} else {
+		y = defaultPromotion(err.yT)
+	}
+	if err.yT != ConstNil && err.yT.Kind() == reflect.Slice {
+		return fmt.Sprintf("first argument to copy should be slice; have %v", x)
+	} else if err.xT != ConstNil && err.xT.Kind() == reflect.Slice {
+		return fmt.Sprintf("second argument to copy should be slice or string; have %v", y)
+	} else {
+		return fmt.Sprintf("arguments to copy must be slices; have %v, %v", x, y)
 	}
 }
 
 func (err ErrCopyArgsHaveDifferentEltTypes) Error() string {
-	return fmt.Sprintf("arguments to copy have different element types: %v and %v", err.xT, err.yT)
+	return fmt.Sprintf("arguments to copy have different element types: %v and %v", err.xT, defaultPromotion(err.yT))
 }
 
 func (err ErrDeleteFirstArgNotMap) Error() string {
 	arg := err.Expr
 	t := arg.KnownType()[0]
-	var s string
-	if ct, ok := t.(ConstType); ok {
-		s = ct.ErrorType()
-	} else {
-		s = t.String()
-	}
-	return fmt.Sprintf("first argument to delete must be map; have %s", s)
+	return fmt.Sprintf("first argument to delete must be map; have %s", t)
 }
 
 func (err ErrStupidShift) Error() string {
@@ -1008,19 +967,14 @@ func (err ErrCannotAssignToUnaddressable) Error() string {
 }
 
 func (err ErrCannotAssignToType) Error() string {
-	var targetT string
-	t := err.Expr.KnownType()[0]
-	if ct, ok := t.(ConstType); ok {
-		targetT = ct.ErrorType()
-	} else {
-		targetT = t.String()
-	}
+	toT := err.Expr.KnownType()[0]
 	if err.multiValuePos == -1 {
 		from := err.rhs
-		return fmt.Sprintf("cannot use %v (type %v) as type %v in assignment", from, from.KnownType()[0], targetT)
+		fromT := defaultPromotion(from.KnownType()[0])
+		return fmt.Sprintf("cannot use %v (type %v) as type %v in assignment", from, fromT, toT)
 	} else {
-		fromT := err.rhs.KnownType()[err.multiValuePos]
-		return fmt.Sprintf("cannot assign %v to type %v (%s) in multiple assignment", fromT, err.Expr, targetT)
+		fromT := defaultPromotion(err.rhs.KnownType()[err.multiValuePos])
+		return fmt.Sprintf("cannot assign %v to type %v (%v) in multiple assignment", fromT, err.Expr, toT)
 	}
 }
 
