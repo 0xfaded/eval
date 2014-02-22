@@ -460,8 +460,8 @@ func (unary *UnaryExpr) String() string {
 }
 
 func (binary *BinaryExpr) String() string {
-	left := simplifyBinaryChildExpr(binary, binary.X)
-	right := simplifyBinaryChildExpr(binary, binary.Y)
+	left := simplifyBinaryChildExpr(binary, binary.X, binary.Y)
+	right := simplifyBinaryChildExpr(binary, binary.Y, binary.X)
 
 	return fmt.Sprintf("%v %v %v", left, binary.Op, right)
 }
@@ -497,9 +497,42 @@ func (chanType *ChanType) String() string {
 }
 
 // Returns a printable interface{} which replaces constant expressions with their constants
-func simplifyBinaryChildExpr(parent *BinaryExpr, expr Expr) interface{} {
+func simplifyBinaryChildExpr(parent *BinaryExpr, expr, other Expr) interface{} {
         if expr.IsConst() {
-		return sprintConstValue(expr.KnownType()[0], expr.Const(), true)
+		// This mess is due to automatic type conversions in binary expressions.
+		// It will disappear once the AST is retyped as a first step
+		v := expr.Const()
+		eT := expr.KnownType()[0]
+
+		oT := other.KnownType()
+		if len(oT) == 1 {
+			ct, eok := eT.(ConstType)
+			if eok {
+				// Separate case for shifts
+				if parent.Op == token.SHL || parent.Op == token.SHR {
+					// Don't touch the shifted operand
+					if parent.X == expr {
+						return expr
+					} else if isUnsignedInt(eT) {
+						c, _ := promoteConstToTyped(ct, constValue(expr.Const()), uintType, expr)
+						return reflect.Value(c).Interface()
+					}
+				} else if _, ook := oT[0].(ConstType); !ook {
+					if eT == ConstNil {
+						return "nil"
+					}
+					c, _ := promoteConstToTyped(ct, constValue(expr.Const()), oT[0], expr)
+					if reflect.Value(c).IsValid() {
+						eT = oT[0]
+						v = reflect.Value(c)
+					} else if _, ok := eT.(ConstRuneType); ok {
+						// For mismatched type errors
+						eT = RuneType
+					}
+				}
+			}
+		}
+		return sprintConstValue(eT, v, false)
 	}
 	expr = skipSuperfluousParens(expr)
 	if p, ok := expr.(*ParenExpr); ok {

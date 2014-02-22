@@ -508,14 +508,7 @@ func (err ErrInvalidBinaryOperation) Error() string {
 				binary, defaultPromotion(yt))
 		}
 		if !isShiftable(xt) {
-			var count interface{}
-			if ycok {
-				c, _ := promoteConstToTyped(yct, constValue(y.Const()), uintType, y)
-				count = reflect.Value(c).Interface()
-			} else {
-				count = binary.Y
-			}
-			return fmt.Sprintf("invalid operation: %v %v %v (shift of type %v)", binary.X, op, count, xt)
+			return fmt.Sprintf("invalid operation: %v (shift of type %v)", binary, xt)
 		}
 	} else if xcok && ycok {
 		xn, xnok := x.Const().Interface().(*ConstNumber)
@@ -528,49 +521,39 @@ func (err ErrInvalidBinaryOperation) Error() string {
 					return "illegal constant expression: floating-point % operation"
 				}
 			}
-			return fmt.Sprintf("illegal constant expression: %s %v %s", xct, op, yct)
+			return fmt.Sprintf("illegal constant expression: %v %v %v", xct, op, yct)
 		} else if xt == yt {
-			return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %v)",
-				x, op, y, op, defaultPromotion(xt))
+			return fmt.Sprintf("invalid operation: %v (operator %v not defined on %v)",
+				binary, op, defaultPromotion(xt))
 		}
 	} else if xcok {
-                // The gc implementation re-types nodes in const expressions, so that both sides
-                // have type yt. We don't do this, so we will have to make the conversion again.
-                // Runes get printed out verbatim
-		var xFmt string
+		compatible := false
 		if xt == ConstNil {
-			// strings always produce mismatched types when
-			// used with nil
-			if yt.Kind() != reflect.String {
-				xFmt = "nil"
-			}
+			// strings always produce mismatched types when used with nil
+			compatible = yt.Kind() != reflect.String
 		} else {
 			xx, _ := promoteConstToTyped(xct, constValue(x.Const()), yt, x)
 			if reflect.Value(xx).IsValid() {
-				xFmt = sprintConstValue(xt, reflect.Value(xx), false)
+				compatible = true
 			}
 		}
-		if xFmt != "" && !isOpDefinedOn(op, yt) {
-			ytFmt := sprintOperandType(yt)
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
-                                xFmt, op, y, op, ytFmt)
+		if compatible && !isOpDefinedOn(op, yt) {
+                        return fmt.Sprintf("invalid operation: %v (operator %v not defined on %s)",
+                                binary, op, sprintOperandType(yt))
                 }
 	} else if ycok {
-		var yFmt string
+		compatible := false
 		if yt == ConstNil {
-			if xt.Kind() != reflect.String {
-				yFmt = "nil"
-			}
+			compatible = xt.Kind() != reflect.String
 		} else {
 			yy, _ := promoteConstToTyped(yct, constValue(y.Const()), xt, y)
 			if reflect.Value(yy).IsValid() {
-				yFmt = sprintConstValue(yt, reflect.Value(yy), false)
+				compatible = true
 			}
 		}
-		if yFmt != "" && !isOpDefinedOn(op, xt) {
-			xtFmt := sprintOperandType(xt)
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
-                                x, op, yFmt, op, xtFmt)
+		if compatible && !isOpDefinedOn(op, xt) {
+                        return fmt.Sprintf("invalid operation: %v (operator %v not defined on %s)",
+                                binary, op, sprintOperandType(xt))
 		}
 	} else {
 		// Interfaces produce mismatched type errors unless
@@ -582,37 +565,27 @@ func (err ErrInvalidBinaryOperation) Error() string {
 			mismatch = !areTypesCompatible(xt, yt)
 		}
 		if !mismatch && !isOpDefinedOn(op, xt) {
-			xtFmt := sprintOperandType(xt)
-                        return fmt.Sprintf("invalid operation: %v %v %v (operator %v not defined on %s)",
-                                x, op, y, op, xtFmt)
+                        return fmt.Sprintf("invalid operation: %v (operator %v not defined on %s)",
+                                binary, op, sprintOperandType(xt))
 		} else if !mismatch && xt.Kind() == reflect.Struct {
 			if field, ok := nonComparableField(xt); ok {
-				return fmt.Sprintf("invalid operation: %v %v %v (struct containing %v cannot be compared)",
-					x, op, y, field.Type)
+				return fmt.Sprintf("invalid operation: %v (struct containing %v cannot be compared)",
+					binary, field.Type)
 			}
 		} else if !mismatch && comparableToNilOnly(xt) {
-			return fmt.Sprintf("invalid operation: %v %v %v (%v can only be compared to nil)",
-				x, op, y, sprintOperandType(xt))
+			return fmt.Sprintf("invalid operation: %v (%v can only be compared to nil)",
+				binary, sprintOperandType(xt))
 		}
         }
 
-        // This hack is again to do with the retyping, if half the expression is
-        // typed, then the untyped half of the expression assumes its default type.
-        var xi, yi interface{} = x, y
-        if !ycok {
-                xi = sprintUntypedConstAsTyped(x)
-        }
-        if !xcok {
-                yi = sprintUntypedConstAsTyped(y)
-        }
 	var xti, yti interface{} = defaultPromotion(xt), defaultPromotion(yt)
 	if ycok && xt == ConstNil {
 		xti = "<T>"
 	} else if xcok && yt == ConstNil {
 		yti = "<T>"
 	}
-	return fmt.Sprintf("invalid operation: %v %v %v (mismatched types %v and %v)",
-		xi, op, yi, xti, yti,
+	return fmt.Sprintf("invalid operation: %v (mismatched types %v and %v)",
+		binary, xti, yti,
 	)
 }
 
@@ -996,20 +969,6 @@ func (err ErrNonBoolCondition) Error() string {
 		parent = "for"
 	}
 	return fmt.Sprintf("non-bool %v (type %v) used as %s condition", err.Expr, err.Expr.KnownType()[0], parent)
-}
-
-// For display purposes only, display untyped const nodes as they would be
-// displayed as a typed const node.
-func sprintUntypedConstAsTyped(expr Expr) string {
-        if !expr.IsConst() {
-                return expr.String()
-        }
-        switch expr.KnownType()[0].(type) {
-        case ConstRuneType:
-                return sprintConstValue(RuneType, reflect.Value(expr.Const()), false)
-        default:
-                return expr.String()
-        }
 }
 
 // Determines if two types can be automatically converted between.
