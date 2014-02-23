@@ -545,3 +545,12 @@ func inTopEnv(name string, env Env) bool {
 		return false
 	}
 }
+
+func equal(x, y reflect.Value) (bool, error) {
+	if t := areDynamicTypesComparable(x, y); t != nil {
+		return false, PanicUncomparableType{t}
+	} else {
+		return x.Interface() == y.Interface(), nil
+	}
+}
+

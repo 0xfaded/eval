@@ -185,3 +185,51 @@ func TestBinaryAssign(t *testing.T) {
 	expectResult(t, "x", env, 3)
 }
 
+func TestSwitch(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch 1 { case 0: x = 0; case 1: x = 1; }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestSwitchDefault(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch 1 { case 0: x = 0; default: x = 1; }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestSwitchMulti(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch 1 { case 0, 1, 2: x = 1; }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestSwitchNoMatch(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch 1 { case 0, 2: x = 1; }", env)
+	expectResult(t, "x", env, -1)
+}
+
+func TestSwitchEmpty(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch { case true: x = 1; }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestSwitchInit(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch y := 1; { case true: x = y; }", env)
+	expectResult(t, "x", env, 1)
+}
+

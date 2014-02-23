@@ -237,6 +237,12 @@ type AssignStmt struct {
 	types []reflect.Type
 }
 
+type CaseClause struct {
+	*ast.CaseClause
+	List []Expr
+	Body []Stmt
+}
+
 type BlockStmt struct {
 	*ast.BlockStmt
 	List []Stmt
@@ -261,6 +267,16 @@ type ForStmt struct {
 	Cond Expr
 	Post Stmt
 	Body *BlockStmt
+}
+
+type SwitchStmt struct {
+	*ast.SwitchStmt
+	Init Stmt
+	Tag Expr
+	Body *BlockStmt
+
+	tagT reflect.Type
+	def Stmt // This is a *CaseClause, but we want it to be nil-able
 }
 
 func (t knownType) KnownType() []reflect.Type {

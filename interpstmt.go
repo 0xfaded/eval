@@ -46,6 +46,13 @@ func InterpStmt(stmt Stmt, env Env) error {
 				return err
 			}
 		}
+	case *CaseClause:
+		env = env.PushScope()
+		for _, stmt := range s.Body {
+			if err := InterpStmt(stmt, env); err != nil {
+				return err
+			}
+		}
 	case *ExprStmt:
 		_, err := EvalExpr(s.X, env)
 		return err
@@ -76,6 +83,31 @@ func InterpStmt(stmt Stmt, env Env) error {
 				return err
 			}
 		}
+
+	case *SwitchStmt:
+		env = env.PushScope()
+		t := knownType{s.tagT}
+		if err := InterpStmt(s.Init, env); err != nil {
+			return err
+		}
+		tag, err := evalTypedExpr(s.Tag, t, env)
+		if err != nil {
+			return err
+		}
+		for _, stmt := range s.Body.List {
+			clause := stmt.(*CaseClause)
+			for _, expr := range clause.List {
+				if sw, err := evalTypedExpr(expr, t, env); err != nil {
+					return err
+				} else if eq, err := equal(tag[0], sw[0]); err != nil {
+					return err
+				} else if eq {
+					return InterpStmt(clause, env)
+				}
+			}
+		}
+		return InterpStmt(s.def, env)
+
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))
 	}

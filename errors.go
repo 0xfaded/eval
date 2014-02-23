@@ -315,6 +315,11 @@ type ErrNonBoolCondition struct {
 	parent Stmt
 }
 
+type ErrInvalidCase struct {
+	Expr
+	tag Expr
+}
+
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
@@ -969,6 +974,11 @@ func (err ErrNonBoolCondition) Error() string {
 		parent = "for"
 	}
 	return fmt.Sprintf("non-bool %v (type %v) used as %s condition", err.Expr, err.Expr.KnownType()[0], parent)
+}
+
+func (err ErrInvalidCase) Error() string {
+	return fmt.Sprintf("invalid case %v in switch on %v (mismatched types %v and %v)",
+		err.Expr, err.tag, defaultPromotion(err.tag.KnownType()[0]), defaultPromotion(err.Expr.KnownType()[0]))
 }
 
 // Determines if two types can be automatically converted between.

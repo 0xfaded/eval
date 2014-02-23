@@ -227,6 +227,71 @@ done:
 		astmt.Body, moreErrs = checkBlock(s.Body, env)
 		errs = append(errs, moreErrs...)
 		return astmt, errs
+
+	case *ast.SwitchStmt:
+		body := &BlockStmt{BlockStmt: s.Body, List: make([]Stmt, len(s.Body.List))}
+		astmt := &SwitchStmt{SwitchStmt: s, Body: body}
+		env = env.PushScope() // Env for the switch
+
+		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		errs = append(errs, moreErrs...)
+
+		tag := s.Tag
+		if tag == nil {
+			tag = &ast.Ident{Name: "true", NamePos: s.Body.Lbrace - 1}
+		}
+
+		astmt.Tag, moreErrs = CheckExpr(tag, env)
+		errs = append(errs, moreErrs...)
+
+		if moreErrs == nil || astmt.Tag.IsConst() {
+			if t, err := expectSingleType(astmt.Tag); err != nil {
+				errs = append(errs, err)
+			} else if ct, ok := t.(ConstType); ok {
+				if ct == ConstNil {
+					errs = append(errs, ErrUntypedNil{astmt.Tag})
+				} else {
+					astmt.tagT = ct.DefaultPromotion()
+				}
+			} else {
+				astmt.tagT = t
+			}
+		}
+
+		var ok bool
+		t := astmt.tagT
+		for i, stmt := range s.Body.List {
+			clause := stmt.(*ast.CaseClause)
+			aclause := &CaseClause{CaseClause: clause}
+			if clause.List == nil {
+				astmt.def = aclause
+			} else {
+				aclause.List = make([]Expr, len(clause.List))
+			}
+			for j, expr := range clause.List {
+				if t != nil {
+					aclause.List[j], ok, moreErrs = checkExprAssignableTo(expr, t, env)
+					errs = append(errs, moreErrs...)
+					if !ok {
+						errs = append(errs, ErrInvalidCase{aclause.List[j], astmt.Tag})
+					}
+				} else {
+					aclause.List[j], moreErrs = CheckExpr(expr, env)
+					errs = append(errs, moreErrs...)
+				}
+			}
+			caseEnv := env.PushScope()
+			if clause.Body != nil {
+				aclause.Body = make([]Stmt, len(clause.Body))
+			}
+			for j, stmt := range clause.Body {
+				aclause.Body[j], moreErrs = checkStmt(stmt, caseEnv)
+				errs = append(errs, moreErrs...)
+			}
+			astmt.Body.List[i] = aclause
+		}
+		return astmt, errs
+
 	default:
 		return nil, []error{errors.New("Only assign statements are currently supported")}
 	}
