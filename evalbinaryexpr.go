@@ -15,7 +15,7 @@ func evalBinaryExpr(binary *BinaryExpr, env Env) (r reflect.Value, err error) {
 
         xexpr := binary.X
         yexpr := binary.Y
-	op := binary.Op
+	op := binary.Op()
 
         var zt []reflect.Type
         if xexpr.IsConst() && xexpr.KnownType()[0].Kind() != reflect.Interface {

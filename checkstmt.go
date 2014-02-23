@@ -60,6 +60,10 @@ func checkStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 			if !newName {
 				errs = append(errs, ErrNoNewNamesInDeclaration{a})
 			}
+		} else if s.Tok != token.ASSIGN {
+			// Could probably check and return here as an optimisation, but duplicates some logic
+			binary := &ast.BinaryExpr{X: s.Lhs[0], OpPos: s.TokPos, Op: s.Tok, Y: s.Rhs[0]}
+			s.Rhs[0] = binary
 		}
 
 		// Check lhs

@@ -178,6 +178,14 @@ type BinaryExpr struct {
 	constValue
 }
 
+func (b BinaryExpr) Op() token.Token {
+	if token.ADD_ASSIGN <= b.BinaryExpr.Op && b.BinaryExpr.Op <= token.AND_NOT_ASSIGN {
+		// convert += through &^= to + through &^
+		return b.BinaryExpr.Op - token.ADD_ASSIGN + token.ADD
+	}
+	return b.BinaryExpr.Op
+}
+
 type KeyValueExpr struct {
 	*ast.KeyValueExpr
 	Key Expr
@@ -463,7 +471,7 @@ func (binary *BinaryExpr) String() string {
 	left := simplifyBinaryChildExpr(binary, binary.X, binary.Y)
 	right := simplifyBinaryChildExpr(binary, binary.Y, binary.X)
 
-	return fmt.Sprintf("%v %v %v", left, binary.Op, right)
+	return fmt.Sprintf("%v %v %v", left, binary.BinaryExpr.Op, right)
 }
 
 func (keyValueExpr *KeyValueExpr) String() string { return "TODO  keyValueExpr.KeyValueExpr" }
@@ -498,6 +506,7 @@ func (chanType *ChanType) String() string {
 
 // Returns a printable interface{} which replaces constant expressions with their constants
 func simplifyBinaryChildExpr(parent *BinaryExpr, expr, other Expr) interface{} {
+	op := parent.Op()
         if expr.IsConst() {
 		// This mess is due to automatic type conversions in binary expressions.
 		// It will disappear once the AST is retyped as a first step
@@ -509,7 +518,7 @@ func simplifyBinaryChildExpr(parent *BinaryExpr, expr, other Expr) interface{} {
 			ct, eok := eT.(ConstType)
 			if eok {
 				// Separate case for shifts
-				if parent.Op == token.SHL || parent.Op == token.SHR {
+				if op == token.SHL || op == token.SHR {
 					// Don't touch the shifted operand
 					if parent.X == expr {
 						return expr
@@ -537,8 +546,11 @@ func simplifyBinaryChildExpr(parent *BinaryExpr, expr, other Expr) interface{} {
 	expr = skipSuperfluousParens(expr)
 	if p, ok := expr.(*ParenExpr); ok {
 		// Remove parens all together from 1 + (2 * 3)
-		if b, ok := p.X.(*BinaryExpr); ok && b.Op.Precedence() > parent.Op.Precedence() {
-			return p.X
+		if b, ok := p.X.(*BinaryExpr); ok {
+			op := b.Op()
+			if op.Precedence() > op.Precedence() {
+				return p.X
+			}
 		}
 	}
 	return expr

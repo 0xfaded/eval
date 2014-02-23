@@ -491,7 +491,7 @@ func (err ErrInvalidRecvFrom) Error() string {
 
 func (err ErrInvalidBinaryOperation) Error() string {
 	binary := err.BinaryExpr
-	op := binary.Op
+	op := binary.Op()
 	x := binary.X
 	y := binary.Y
 

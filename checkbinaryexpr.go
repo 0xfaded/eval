@@ -24,7 +24,7 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
 
 	xc, xuntyped := xt.(ConstType)
 	yc, yuntyped := yt.(ConstType)
-	op := binary.Op
+	op := aexpr.Op()
 	if op == token.SHL || op == token.SHR {
 		var count uint64
 		if yuntyped {
@@ -214,9 +214,9 @@ func checkBinaryExpr(binary *ast.BinaryExpr, env Env) (*BinaryExpr, []error) {
                 }
 
 		if operandT != nil {
-			if !isOpDefinedOn(binary.Op, operandT) {
+			if !isOpDefinedOn(op, operandT) {
 				errs = append(errs, ErrInvalidBinaryOperation{errExpr})
-			} else if isBooleanOp(binary.Op) {
+			} else if isBooleanOp(op) {
 				aexpr.knownType = knownType{boolType}
 			} else {
 				aexpr.knownType = knownType{operandT}
@@ -256,7 +256,8 @@ func evalConstUntypedBinaryExpr(binary *BinaryExpr, promotedType ConstType) (con
 func evalConstBinaryNumericExpr(binary *BinaryExpr, x, y *ConstNumber) (constValue, []error) {
 	var errs []error
 
-	switch binary.Op {
+	op := binary.Op()
+	switch op {
 	case token.ADD:
 		return constValueOf(new(ConstNumber).Add(x, y)), nil
 	case token.SUB:
@@ -281,7 +282,7 @@ func evalConstBinaryNumericExpr(binary *BinaryExpr, x, y *ConstNumber) (constVal
 			return constValue{}, []error{ErrInvalidBinaryOperation{binary}}
 		}
 
-		switch binary.Op {
+		switch op {
 		case token.AND:
 			return constValueOf(new(ConstNumber).And(x, y)), nil
 		case token.OR:
@@ -305,7 +306,7 @@ func evalConstBinaryNumericExpr(binary *BinaryExpr, x, y *ConstNumber) (constVal
 			return constValue{}, []error{ErrInvalidBinaryOperation{binary}}
 		}
 		cmp := x.Value.Re.Cmp(&y.Value.Re)
-		switch binary.Op {
+		switch op {
 		case token.NEQ:
 			b = cmp != 0
 		case token.LEQ:
@@ -324,7 +325,7 @@ func evalConstBinaryNumericExpr(binary *BinaryExpr, x, y *ConstNumber) (constVal
 }
 
 func evalConstBinaryStringExpr(binary *BinaryExpr, x, y string) (constValue, []error) {
-	switch binary.Op {
+	switch binary.Op() {
 	case token.ADD:
 		return constValueOf(x + y), nil
 	case token.EQL:
@@ -345,7 +346,7 @@ func evalConstBinaryStringExpr(binary *BinaryExpr, x, y string) (constValue, []e
 }
 
 func evalConstBinaryBoolExpr(binary *BinaryExpr, x, y bool) (constValue, []error) {
-	switch binary.Op {
+	switch binary.Op() {
 	case token.EQL:
 		return constValueOf(x == y), nil
 	case token.NEQ:
@@ -365,6 +366,7 @@ func evalConstTypedUntypedBinaryExpr(binary *BinaryExpr, typedExpr, untypedExpr 
 
 	xt := untypedExpr.KnownType()[0].(ConstType)
 	yt := typedExpr.KnownType()[0]
+	op := binary.Op()
 
 	// x must be convertible to target type
 	xUntyped := untypedExpr.Const()
@@ -378,7 +380,7 @@ func evalConstTypedUntypedBinaryExpr(binary *BinaryExpr, typedExpr, untypedExpr 
                 } else {
 		        return constValue{}, xConvErrs
                 }
-	} else if !isOpDefinedOn(binary.Op, yt) {
+	} else if !isOpDefinedOn(op, yt) {
 		return constValue{}, append(xConvErrs, ErrInvalidBinaryOperation{binary})
 	}
 
@@ -419,7 +421,7 @@ func evalConstTypedUntypedBinaryExpr(binary *BinaryExpr, typedExpr, untypedExpr 
 
 		var zt ConstType
 		var rt reflect.Type
-		if isBooleanOp(binary.Op) {
+		if isBooleanOp(op) {
 			zt = ConstBool
 			rt = reflect.TypeOf(false)
 		} else {
@@ -446,7 +448,7 @@ func evalConstTypedUntypedBinaryExpr(binary *BinaryExpr, typedExpr, untypedExpr 
 
                         var zt ConstType
                         var rt reflect.Type
-                        if isBooleanOp(binary.Op) {
+                        if isBooleanOp(op) {
                                 zt = ConstBool
                                 rt = reflect.TypeOf(false)
                         } else {
@@ -479,6 +481,7 @@ func evalConstTypedBinaryExpr(binary *BinaryExpr, xexpr, yexpr Expr) (constValue
 	// These are known not to be ConstTypes
 	xt := xexpr.KnownType()[0]
 	yt := yexpr.KnownType()[0]
+	op := binary.Op()
 
         // Check that the types are compatible, handling the special alias type for runes
         // For the sake of error messages, for expressions involving int32 and rune, the
@@ -499,7 +502,7 @@ func evalConstTypedBinaryExpr(binary *BinaryExpr, xexpr, yexpr Expr) (constValue
 
 	if xok && yok {
 		z, errs := evalConstBinaryNumericExpr(binary, x, y)
-                if isBooleanOp(binary.Op) {
+                if isBooleanOp(op) {
                         return constValue(z), errs
                 }
                 if errs != nil {
@@ -517,7 +520,7 @@ func evalConstTypedBinaryExpr(binary *BinaryExpr, xexpr, yexpr Expr) (constValue
 			xstring := xexpr.Const().String()
 			ystring := yexpr.Const().String()
 			z, errs := evalConstBinaryStringExpr(binary, xstring, ystring)
-                        if isBooleanOp(binary.Op) {
+                        if isBooleanOp(op) {
                                 return constValue(z), errs
                         }
 			r, moreErrs := promoteConstToTyped(ConstString, z, zt, binary)

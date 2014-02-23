@@ -177,3 +177,11 @@ func TestFor(t *testing.T) {
 	expectResult(t, "x", env, 6)
 }
 
+func TestBinaryAssign(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "x += 2", env)
+	expectResult(t, "x", env, 3)
+}
+
