@@ -214,6 +214,28 @@ done:
 		errs = append(errs, moreErrs...)
 		return astmt, errs
 
+	case *ast.IncDecStmt:
+		var tok token.Token
+		if s.Tok == token.INC {
+			tok = token.ADD_ASSIGN
+		} else {
+			tok = token.SUB_ASSIGN
+		}
+
+		// one.End() is after the ++/--
+		one := &ast.BasicLit{
+			ValuePos: s.TokPos + 1,  // Pos of second +/- in ++/--
+			Kind: token.INT,
+			Value: "1",
+		}
+		assign := &ast.AssignStmt{
+			Lhs: []ast.Expr{s.X},
+			TokPos: s.TokPos,
+			Tok: tok,
+			Rhs: []ast.Expr{one},
+		}
+		return checkStmt(assign, env)
+
 	case *ast.ForStmt:
 		astmt := &ForStmt{ForStmt: s}
 		env = env.PushScope() // Env for the for block

@@ -233,3 +233,11 @@ func TestSwitchInit(t *testing.T) {
 	expectResult(t, "x", env, 1)
 }
 
+func TestInc(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 0
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "x ++", env)
+	expectResult(t, "x", env, 1)
+}
+
