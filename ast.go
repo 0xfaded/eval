@@ -248,6 +248,10 @@ type BlockStmt struct {
 	List []Stmt
 }
 
+type EmptyStmt struct {
+	*ast.EmptyStmt
+}
+
 type ExprStmt struct {
 	*ast.ExprStmt
 	X Expr

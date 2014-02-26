@@ -190,6 +190,9 @@ done:
 	case *ast.BlockStmt:
 		return checkBlock(s, env)
 
+	case *ast.EmptyStmt:
+		return &EmptyStmt{EmptyStmt: s}, nil
+
 	case *ast.ExprStmt:
 		x, errs := CheckExpr(s.X, env)
 		return &ExprStmt{ExprStmt: s, X: x}, errs

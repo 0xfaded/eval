@@ -53,6 +53,8 @@ func InterpStmt(stmt Stmt, env Env) error {
 				return err
 			}
 		}
+	case *EmptyStmt:
+		return nil
 	case *ExprStmt:
 		_, err := EvalExpr(s.X, env)
 		return err
