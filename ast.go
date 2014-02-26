@@ -133,6 +133,7 @@ type SliceExpr struct {
 type TypeAssertExpr struct {
 	*ast.TypeAssertExpr
 	X Expr
+	Type Expr
 	knownType
 }
 
@@ -281,6 +282,34 @@ type SwitchStmt struct {
 
 	tagT reflect.Type
 	def Stmt // This is a *CaseClause, but we want it to be nil-able
+}
+
+type TypeSwitchStmt struct {
+	*ast.TypeSwitchStmt
+	Init Stmt
+	Assign Stmt
+	Body *BlockStmt
+
+	clauses map[reflect.Type] CaseClause
+	def Stmt // This is a *CaseClause, but we want it to be nil-able
+}
+
+func (typeswitch *TypeSwitchStmt) Tag() Expr {
+	switch x := typeswitch.Assign.(type) {
+	case *AssignStmt:
+		return x.Rhs[0]
+	case *ExprStmt:
+		return x.X
+	default:
+		panic("TypeSwitchStmt.Assign is not (Assign|Expr)Stmt ")
+	}
+}
+
+func (typeswitch *TypeSwitchStmt) Name() string {
+	if assign, ok := typeswitch.Assign.(*AssignStmt); ok {
+		return assign.Lhs[0].(*Ident).Name
+	}
+	return ""
 }
 
 func (t knownType) KnownType() []reflect.Type {

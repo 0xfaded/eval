@@ -241,3 +241,27 @@ func TestInc(t *testing.T) {
 	expectResult(t, "x", env, 1)
 }
 
+func TestTypeSwitch(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := -1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch interface{}(1).(type) { case int: x = 1; case float32: x = 2 }", env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestTypeSwitchAssign(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch y := interface{}(1).(type) { case int: x += y; }", env)
+	expectResult(t, "x", env, 2)
+}
+
+func TestTypeSwitchInitAssign(t *testing.T) {
+	env := MakeSimpleEnv()
+	x := 1
+	env.Vars["x"] = reflect.ValueOf(&x)
+	expectInterp(t, "switch y := 2; z := interface{}(3).(type) { case int: x += y + z; }", env)
+	expectResult(t, "x", env, 6)
+}
+

@@ -68,8 +68,10 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 	case *ast.Ident:
 		ident := &Ident{Ident: node}
 		if t := env.Type(node.Name); t != nil {
+			ident.knownType = knownType{t}
 			return ident, t, true, nil
 		} else if t, ok := builtinTypes[node.Name]; ok {
+			ident.knownType = knownType{t}
 			return ident, t, true, nil
 		} else {
 			return ident, nil, false, []error{ErrUndefined{ident}}
@@ -79,8 +81,10 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		elem, elemT, isType, errs := checkType(node.X, env)
 		if isType {
 			// Only set X if X is a type, as * can be part of an expression or type
+			t := reflect.PtrTo(elemT)
 			star.X = elem
-			return star, reflect.PtrTo(elemT), isType, nil
+			star.knownType = knownType{t}
+			return star, t, isType, nil
 		} else {
 			return star, nil, isType, errs
 		}
@@ -98,6 +102,7 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		} else {
 			// Only set X if the selector is a type, . can be part of an expression or type
 			sel.X = &Ident{Ident: ident}
+			sel.knownType = knownType{t}
 			return sel, t, true, nil
 		}
 	case *ast.ArrayType:
@@ -110,7 +115,9 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 			if errs != nil {
 				return arrayT, nil, true, errs
 			} else {
-				return arrayT, reflect.SliceOf(unhackType(eltT)), true, nil
+				t := reflect.SliceOf(unhackType(eltT))
+				arrayT.knownType = knownType{t}
+				return arrayT, t, true, nil
 			}
 		}
 	case *ast.StructType:
@@ -123,6 +130,7 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		interfaceT := &InterfaceType{InterfaceType: node}
 		// Allow interface{}'s
 		if node.Methods.List == nil {
+			interfaceT.knownType = knownType{emptyInterface}
 			return interfaceT, emptyInterface, true, nil
 		}
 		return interfaceT, nil, true, []error{errors.New("interface types not implemented")}
@@ -139,7 +147,9 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 			errs = append(errs, moreErrs...)
 		}
 		if errs == nil {
-			return mapT, reflect.MapOf(unhackType(k), unhackType(v)), true, nil
+			t := reflect.MapOf(unhackType(k), unhackType(v))
+			mapT.knownType = knownType{t}
+			return mapT, t, true, nil
 		}
 		return mapT, nil, true, errs
 	case *ast.ChanType:
@@ -156,10 +166,10 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 			} else {
 				chanT.dir = reflect.BothDir
 			}
-			return chanT, reflect.ChanOf(chanT.dir, unhackType(valueT)), true, nil
+			t := reflect.ChanOf(chanT.dir, unhackType(valueT))
+			chanT.knownType = knownType{t}
+			return chanT, t, true, nil
 		}
 	}
-	// Note this error should never be shown to the user. It is used to detect
-	// when a CallExpr is a type conversion
-	return nil, nil, false, []error{errors.New("Bad type")}
+	return nil, nil, false, nil
 }

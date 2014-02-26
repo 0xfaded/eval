@@ -47,7 +47,6 @@ func InterpStmt(stmt Stmt, env Env) error {
 			}
 		}
 	case *CaseClause:
-		env = env.PushScope()
 		for _, stmt := range s.Body {
 			if err := InterpStmt(stmt, env); err != nil {
 				return err
@@ -96,6 +95,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 		if err != nil {
 			return err
 		}
+		env = env.PushScope()
 		for _, stmt := range s.Body.List {
 			clause := stmt.(*CaseClause)
 			for _, expr := range clause.List {
@@ -109,6 +109,44 @@ func InterpStmt(stmt Stmt, env Env) error {
 			}
 		}
 		return InterpStmt(s.def, env)
+
+	case *TypeSwitchStmt:
+		env = env.PushScope()
+		if err := InterpStmt(s.Init, env); err != nil {
+			return err
+		}
+
+		x, err := EvalExpr(s.Tag(), env)
+		if err != nil {
+			return err
+		}
+		// interface.elem()
+		dynamicX := x[0].Elem()
+		dynamicT := dynamicX.Type()
+
+		env = env.PushScope()
+		if name := s.Name(); name != "" {
+			// dynamicX may not be addressable
+			x := reflect.New(dynamicT)
+			x.Elem().Set(dynamicX)
+			env.AddVar(name, x)
+		}
+
+		for _, stmt := range s.Body.List {
+			clause := stmt.(*CaseClause)
+			for _, expr := range clause.List {
+				t := expr.KnownType()[0]
+				if t.Kind() == reflect.Interface {
+					if dynamicT.Implements(t) {
+						return InterpStmt(clause, env)
+					}
+				} else if t == dynamicT {
+					return InterpStmt(clause, env)
+				}
+			}
+		}
+		return InterpStmt(s.def, env)
+
 
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))

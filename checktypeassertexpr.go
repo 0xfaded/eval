@@ -22,9 +22,8 @@ func checkTypeAssertExpr(assert *ast.TypeAssertExpr, env Env) (*TypeAssertExpr, 
 	} else {
 		typ, t, _, moreErrs := checkType(assert.Type, env)
 		aexpr.Type = typ
-		if moreErrs != nil {
-			errs = append(errs, moreErrs...)
-		} else {
+		errs = append(errs, moreErrs...)
+		if t != nil {
 			aexpr.knownType = knownType{t}
 			if t.Kind() != reflect.Interface && !unhackType(t).Implements(xT) {
 				errs = append(errs, ErrImpossibleTypeAssert{aexpr})

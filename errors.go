@@ -320,6 +320,15 @@ type ErrInvalidCase struct {
 	tag Expr
 }
 
+type ErrNonInterfaceTypeSwitch struct {
+	Expr
+}
+
+type ErrImpossibleTypeCase struct {
+	Expr
+	tag Expr
+}
+
 func (err ErrBadBasicLit) Error() string {
 	return fmt.Sprintf("Bad literal %v", err.BasicLit)
 }
@@ -747,18 +756,9 @@ func (err ErrImpossibleTypeAssert) Error() string {
 	iT := assert.KnownType()[0]
 	xT := assert.X.KnownType()[0]
 
-	var missingMethod string
-	numMethod := iT.NumMethod()
-	for i := 0; i < numMethod; i += 1 {
-		missingMethod = iT.Method(i).Name
-		if _, ok := xT.MethodByName(missingMethod); !ok {
-			break
-		}
-	}
-
 	return fmt.Sprintf("impossible type assertion:\n" +
 		"\t%v does not implement %v (missing %s method)",
-		xT, iT, missingMethod)
+		xT, iT, missingMethod(iT, xT))
 }
 
 func (err ErrMissingCompositeLitType) Error() string {
@@ -981,6 +981,17 @@ func (err ErrInvalidCase) Error() string {
 		err.Expr, err.tag, defaultPromotion(err.tag.KnownType()[0]), defaultPromotion(err.Expr.KnownType()[0]))
 }
 
+func (err ErrNonInterfaceTypeSwitch) Error() string {
+	return fmt.Sprintf("cannot type switch on non-interface value %v\n", err.Expr)
+}
+
+func (err ErrImpossibleTypeCase) Error() string {
+	iT := err.tag.KnownType()[0]
+	xT := err.Expr.KnownType()[0]
+	return fmt.Sprintf("impossible type switch case: %v (%v) cannot have dynamic type %v (missing %s method)",
+		err.tag, iT, err.Expr, missingMethod(iT, xT))
+}
+
 // Determines if two types can be automatically converted between.
 func areTypesCompatible(xt, yt reflect.Type) bool {
 	return xt.AssignableTo(unhackType(yt)) || yt.AssignableTo(unhackType(xt))
@@ -1004,3 +1015,15 @@ func sprintOperandType(t reflect.Type) string {
 		return t.String()
 	}
 }
+
+func missingMethod(iT, xT reflect.Type) (method string) {
+	numMethod := iT.NumMethod()
+	for i := 0; i < numMethod; i += 1 {
+		method = iT.Method(i).Name
+		if _, ok := xT.MethodByName(method); !ok {
+			return
+		}
+	}
+	return ""
+}
+

@@ -305,15 +305,91 @@ done:
 					errs = append(errs, moreErrs...)
 				}
 			}
+			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, env)
+		}
+		return astmt, errs
+
+	case *ast.TypeSwitchStmt:
+		body := &BlockStmt{BlockStmt: s.Body, List: make([]Stmt, len(s.Body.List))}
+		astmt := &TypeSwitchStmt{TypeSwitchStmt: s, Body: body}
+		env = env.PushScope() // Env for the switch
+
+		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		errs = append(errs, moreErrs...)
+
+		// Env for the case clause
+		caseEnv := env.PushScope()
+
+		var t reflect.Type
+		var name string
+		var tag Expr
+
+		if assign, ok := s.Assign.(*ast.AssignStmt); ok {
+			assign.Rhs[0] = assign.Rhs[0].(*ast.TypeAssertExpr).X
+		} else if exprstmt, ok := s.Assign.(*ast.ExprStmt); ok {
+			exprstmt.X = exprstmt.X.(*ast.TypeAssertExpr).X
+		} else {
+			panic("TypeSwitchStmt.Assign is not (Assign|Expr)Stmt ")
+		}
+
+		astmt.Assign, moreErrs = checkStmt(s.Assign, caseEnv)
+		errs = append(errs, moreErrs...)
+
+		if assign, ok := astmt.Assign.(*AssignStmt); ok {
+			name = assign.Lhs[0].(*Ident).Name
+			tag = assign.Rhs[0]
+
+			if moreErrs == nil || tag.IsConst() {
+				t = caseEnv.Var(name).Elem().Type()
+			}
+		} else if exprstmt, ok := astmt.Assign.(*ExprStmt); ok {
+			tag = exprstmt.X
+
+			if moreErrs == nil || tag.IsConst() {
+				var err error
+				if t, err = expectSingleType(tag); err != nil {
+					errs = append(errs, err)
+				}
+			}
+		} else {
+			panic("TypeSwitchStmt.Assign is not (Assign|Expr)Stmt ")
+		}
+
+		if t != nil && (t == ConstNil || t.Kind() != reflect.Interface) {
+			errs = append(errs, ErrNonInterfaceTypeSwitch{tag})
+			t = nil
+		}
+
+		for i, stmt := range s.Body.List {
 			caseEnv := env.PushScope()
-			if clause.Body != nil {
-				aclause.Body = make([]Stmt, len(clause.Body))
+			clause := stmt.(*ast.CaseClause)
+			aclause := &CaseClause{CaseClause: clause}
+			if clause.List == nil {
+				astmt.def = aclause
+			} else {
+				aclause.List = make([]Expr, len(clause.List))
 			}
-			for j, stmt := range clause.Body {
-				aclause.Body[j], moreErrs = checkStmt(stmt, caseEnv)
+			for j, expr := range clause.List {
+				aexpr, tt, isType, moreErrs := checkType(expr, env)
 				errs = append(errs, moreErrs...)
+				if !isType {
+					aexpr, moreErrs = CheckExpr(expr, env)
+					errs = append(errs, moreErrs...)
+					if moreErrs == nil || aexpr.IsConst() {
+						errs = append(errs, ErrBuiltinNonTypeArg{aexpr})
+					}
+				// isType == true && tt == nil for unimplemented types
+				} else if t != nil && tt != nil {
+					if tt.Kind() != reflect.Interface && !tt.Implements(t) {
+						errs = append(errs, ErrImpossibleTypeCase{aexpr, tag})
+					} else if len(clause.List) == 1 {
+						caseEnv.AddVar(name, reflect.New(tt))
+					}
+				}
+				aclause.List[j] = aexpr
 			}
-			astmt.Body.List[i] = aclause
+			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, caseEnv)
+			errs = append(errs, moreErrs...)
 		}
 		return astmt, errs
 
@@ -333,3 +409,16 @@ func checkCond(cond ast.Expr, parent Stmt, env Env) (Expr, []error) {
 	}
 	return acond, errs
 }
+
+func checkCaseClauseBody(clause *CaseClause, env Env) (*CaseClause, []error) {
+	var errs, moreErrs []error
+	if clause.CaseClause.Body != nil {
+		clause.Body = make([]Stmt, len(clause.CaseClause.Body))
+	}
+	for i, stmt := range clause.CaseClause.Body {
+		clause.Body[i], moreErrs = checkStmt(stmt, env)
+		errs = append(errs, moreErrs...)
+	}
+	return clause, errs
+}
+
