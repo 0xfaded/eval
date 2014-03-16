@@ -34,8 +34,8 @@ func typeAssignableTo(from, to reflect.Type) bool {
 
 // exprAssignableTo(CheckExpr(expr), t), but errors are accumulated and a
 // bool value is returned indicating if the expr is assignable to t.
-// It will also be true expr failed to type check, indicating that the
-// assignability check was never attempted.
+// The bool value will be false if and only if the conversion check
+// was reached and failed.
 func checkExprAssignableTo(expr ast.Expr, t reflect.Type, env Env) (Expr, bool, []error) {
 	var errs []error
 	aexpr, moreErrs := CheckExpr(expr, env)

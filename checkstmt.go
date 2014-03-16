@@ -8,13 +8,18 @@ import (
 	"go/token"
 )
 
+type checkCtx struct {
+	outerFunc reflect.Type
+	emptyReturnOk bool
+}
+
 // Place holder for something more substantial
 func CheckStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
 	// Create a dummy env where variables can be added without affecting the global env
-	return checkStmt(stmt, env.PushScope())
+	return checkStmt(stmt, env.PushScope(), checkCtx{})
 }
 
-func checkBlock(block *ast.BlockStmt, env Env) (*BlockStmt, []error) {
+func checkBlock(block *ast.BlockStmt, env Env, ctx checkCtx) (*BlockStmt, []error) {
 	var errs, moreErrs []error
 	if block == nil {
 		return nil, nil
@@ -23,14 +28,14 @@ func checkBlock(block *ast.BlockStmt, env Env) (*BlockStmt, []error) {
 	if block.List != nil {
 		ablock.List = make([]Stmt, len(block.List))
 		for i, stmt := range block.List {
-			ablock.List[i], moreErrs = checkStmt(stmt, env)
+			ablock.List[i], moreErrs = checkStmt(stmt, env, ctx)
 			errs = append(errs, moreErrs...)
 		}
 	}
 	return ablock, errs
 }
 
-func checkStmt(stmt ast.Stmt, env Env) (Stmt, []error) {
+func checkStmt(stmt ast.Stmt, env Env, ctx checkCtx) (Stmt, []error) {
 	var errs, moreErrs []error
 	switch s := stmt.(type) {
 	case nil:
@@ -188,7 +193,7 @@ done:
 		a.types = types
 		return a, errs
 	case *ast.BlockStmt:
-		return checkBlock(s, env)
+		return checkBlock(s, env, ctx)
 
 	case *ast.EmptyStmt:
 		return &EmptyStmt{EmptyStmt: s}, nil
@@ -201,16 +206,16 @@ done:
 		astmt := &IfStmt{IfStmt: s}
 		env = env.PushScope() // Env for the if block
 
-		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		astmt.Init, moreErrs = checkStmt(s.Init, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env)
+		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Body, moreErrs = checkBlock(s.Body, env)
+		astmt.Body, moreErrs = checkBlock(s.Body, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Else, moreErrs = checkStmt(s.Else, env)
+		astmt.Else, moreErrs = checkStmt(s.Else, env, ctx)
 		errs = append(errs, moreErrs...)
 		return astmt, errs
 
@@ -234,23 +239,67 @@ done:
 			Tok: tok,
 			Rhs: []ast.Expr{one},
 		}
-		return checkStmt(assign, env)
+		return checkStmt(assign, env, ctx)
 
 	case *ast.ForStmt:
 		astmt := &ForStmt{ForStmt: s}
 		env = env.PushScope() // Env for the for block
 
-		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		astmt.Init, moreErrs = checkStmt(s.Init, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env)
+		astmt.Cond, moreErrs = checkCond(s.Cond, astmt, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Post, moreErrs = checkStmt(s.Post, env)
+		astmt.Post, moreErrs = checkStmt(s.Post, env, ctx)
 		errs = append(errs, moreErrs...)
 
-		astmt.Body, moreErrs = checkBlock(s.Body, env)
+		astmt.Body, moreErrs = checkBlock(s.Body, env, ctx)
 		errs = append(errs, moreErrs...)
+		return astmt, errs
+
+	case *ast.ReturnStmt:
+		astmt := &ReturnStmt{ReturnStmt: s}
+		if s.Results != nil {
+			astmt.Results = make([]Expr, len(s.Results))
+		}
+		var i, numOut, numResults int
+		var ok bool
+		if ctx.outerFunc != nil {
+			numOut = ctx.outerFunc.NumOut()
+		}
+		if len(s.Results) == 1 {
+			r, _ := CheckExpr(s.Results[0], env)
+			if kt := r.KnownType(); len(kt) > 1 {
+				numResults = len(kt)
+				astmt.Results[0] = r
+				for i = 0; i < numOut && i < numResults ; i += 1 {
+					t := ctx.outerFunc.Out(i)
+					if !typeAssignableTo(kt[i], ctx.outerFunc.Out(1)) {
+						errs = append(errs, ErrBadReturnValue{astmt.Results[0], t, i})
+					}
+				}
+				goto checkcount
+			}
+		}
+		numResults = len(s.Results)
+		for i = 0; i < numResults && i < numOut; i += 1 {
+			t := ctx.outerFunc.Out(i)
+			astmt.Results[i], ok, moreErrs = checkExprAssignableTo(s.Results[i], t, env)
+			if ok {
+				errs = append(errs, moreErrs...)
+			} else {
+				errs = append(errs, ErrBadReturnValue{astmt.Results[i], t, -1})
+			}
+		}
+		for ; i < numResults; i += 1 {
+			astmt.Results[i], moreErrs = CheckExpr(s.Results[i], env)
+			errs = append(errs, moreErrs...)
+		}
+checkcount:
+		if ctx.outerFunc != nil && numResults != numOut && !(numOut == 0 && ctx.emptyReturnOk) {
+			errs = append(errs, ErrWrongNumberOfReturnValues{astmt, ctx.outerFunc})
+		}
 		return astmt, errs
 
 	case *ast.SwitchStmt:
@@ -258,7 +307,7 @@ done:
 		astmt := &SwitchStmt{SwitchStmt: s, Body: body}
 		env = env.PushScope() // Env for the switch
 
-		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		astmt.Init, moreErrs = checkStmt(s.Init, env, ctx)
 		errs = append(errs, moreErrs...)
 
 		tag := s.Tag
@@ -305,7 +354,7 @@ done:
 					errs = append(errs, moreErrs...)
 				}
 			}
-			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, env)
+			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, env, ctx)
 		}
 		return astmt, errs
 
@@ -314,7 +363,7 @@ done:
 		astmt := &TypeSwitchStmt{TypeSwitchStmt: s, Body: body}
 		env = env.PushScope() // Env for the switch
 
-		astmt.Init, moreErrs = checkStmt(s.Init, env)
+		astmt.Init, moreErrs = checkStmt(s.Init, env, ctx)
 		errs = append(errs, moreErrs...)
 
 		// Env for the case clause
@@ -332,7 +381,7 @@ done:
 			panic("TypeSwitchStmt.Assign is not (Assign|Expr)Stmt ")
 		}
 
-		astmt.Assign, moreErrs = checkStmt(s.Assign, caseEnv)
+		astmt.Assign, moreErrs = checkStmt(s.Assign, caseEnv, ctx)
 		errs = append(errs, moreErrs...)
 
 		if assign, ok := astmt.Assign.(*AssignStmt); ok {
@@ -388,7 +437,7 @@ done:
 				}
 				aclause.List[j] = aexpr
 			}
-			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, caseEnv)
+			astmt.Body.List[i], moreErrs = checkCaseClauseBody(aclause, caseEnv, ctx)
 			errs = append(errs, moreErrs...)
 		}
 		return astmt, errs
@@ -398,7 +447,7 @@ done:
 	}
 }
 
-func checkCond(cond ast.Expr, parent Stmt, env Env) (Expr, []error) {
+func checkCond(cond ast.Expr, parent Stmt, env Env, ctx checkCtx) (Expr, []error) {
 	acond, errs := CheckExpr(cond, env)
 	if errs == nil || acond.IsConst() {
 		if t, err := expectSingleType(acond); err != nil {
@@ -410,13 +459,13 @@ func checkCond(cond ast.Expr, parent Stmt, env Env) (Expr, []error) {
 	return acond, errs
 }
 
-func checkCaseClauseBody(clause *CaseClause, env Env) (*CaseClause, []error) {
+func checkCaseClauseBody(clause *CaseClause, env Env, ctx checkCtx) (*CaseClause, []error) {
 	var errs, moreErrs []error
 	if clause.CaseClause.Body != nil {
 		clause.Body = make([]Stmt, len(clause.CaseClause.Body))
 	}
 	for i, stmt := range clause.CaseClause.Body {
-		clause.Body[i], moreErrs = checkStmt(stmt, env)
+		clause.Body[i], moreErrs = checkStmt(stmt, env, ctx)
 		errs = append(errs, moreErrs...)
 	}
 	return clause, errs

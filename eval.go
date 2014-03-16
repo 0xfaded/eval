@@ -48,7 +48,7 @@ func Interpret(stmt string, env Env) (result []reflect.Value, panik error, compi
 		if cstmt, errs := CheckStmt(s, env); errs != nil {
 			compileErrors = errs
 		} else {
-			panik = InterpStmt(cstmt, env)
+			_, panik = InterpStmt(cstmt, env)
 		}
 	}
 	return

@@ -5,7 +5,12 @@ import (
 	"reflect"
 )
 
-func InterpStmt(stmt Stmt, env Env) error {
+type State struct {
+	Last Stmt
+	Env Env
+}
+
+func InterpStmt(stmt Stmt, env Env) (last *State, err error) {
 	switch s := stmt.(type) {
 	case nil:
 	case *AssignStmt:
@@ -13,7 +18,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 			rs, err := evalTypedExpr(s.Rhs[0], s.types, env)
 			if err != nil {
 				if _, ok := err.(PanicInterfaceConversion); !ok || len(s.types) != 2 {
-					return err
+					return nil, err
 				}
 			}
 			for i, lhs := range s.Lhs {
@@ -29,7 +34,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 			for i, lhs := range s.Lhs {
 				r, err := evalTypedExpr(s.Rhs[i], s.types[i:i+1], env)
 				if err != nil {
-					return err
+					return nil, err
 				}
 				if name, ok := s.newNames[i]; !ok {
 					assign(lhs, r[0], env)
@@ -42,27 +47,27 @@ func InterpStmt(stmt Stmt, env Env) error {
 		}
 	case *BlockStmt:
 		for _, stmt := range s.List {
-			if err := InterpStmt(stmt, env); err != nil {
-				return err
+			if last, err = InterpStmt(stmt, env); err != nil || last != nil {
+				return last, err
 			}
 		}
 	case *CaseClause:
 		for _, stmt := range s.Body {
-			if err := InterpStmt(stmt, env); err != nil {
-				return err
+			if last, err = InterpStmt(stmt, env); err != nil || last != nil {
+				return last, err
 			}
 		}
 	case *EmptyStmt:
-		return nil
+		return nil, nil
 	case *ExprStmt:
 		_, err := EvalExpr(s.X, env)
-		return err
+		return nil, err
 	case *IfStmt:
 		env = env.PushScope()
-		if err := InterpStmt(s.Init, env); err != nil {
-			return err
+		if _ , err = InterpStmt(s.Init, env); err != nil {
+			return nil, err
 		} else if rs, err := EvalExpr(s.Cond, env); err != nil {
-			return err
+			return nil, err
 		} else if rs[0].Bool() {
 			return InterpStmt(s.Body, env)
 		} else {
@@ -70,39 +75,40 @@ func InterpStmt(stmt Stmt, env Env) error {
 		}
 	case *ForStmt:
 		env = env.PushScope()
-		if err := InterpStmt(s.Init, env); err != nil {
-			return err
+		if _, err = InterpStmt(s.Init, env); err != nil {
+			return nil, err
 		}
 		for {
 			if rs, err := EvalExpr(s.Cond, env); err != nil {
-				return err
+				return nil, err
 			} else if !rs[0].Bool() {
 				break
-			} else if err := InterpStmt(s.Body, env); err != nil {
-				return err
-			} else if err := InterpStmt(s.Post, env); err != nil {
-				return err
+			} else if last, err = InterpStmt(s.Body, env); err != nil || last != nil {
+				return last, err
+			} else if _, err = InterpStmt(s.Post, env); err != nil {
+				return nil, err
 			}
 		}
-
+	case *ReturnStmt:
+		return &State{s, env}, nil
 	case *SwitchStmt:
 		env = env.PushScope()
 		t := knownType{s.tagT}
-		if err := InterpStmt(s.Init, env); err != nil {
-			return err
+		if _, err := InterpStmt(s.Init, env); err != nil {
+			return nil, err
 		}
 		tag, err := evalTypedExpr(s.Tag, t, env)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		env = env.PushScope()
 		for _, stmt := range s.Body.List {
 			clause := stmt.(*CaseClause)
 			for _, expr := range clause.List {
 				if sw, err := evalTypedExpr(expr, t, env); err != nil {
-					return err
+					return nil, err
 				} else if eq, err := equal(tag[0], sw[0]); err != nil {
-					return err
+					return nil, err
 				} else if eq {
 					return InterpStmt(clause, env)
 				}
@@ -112,13 +118,13 @@ func InterpStmt(stmt Stmt, env Env) error {
 
 	case *TypeSwitchStmt:
 		env = env.PushScope()
-		if err := InterpStmt(s.Init, env); err != nil {
-			return err
+		if _, err = InterpStmt(s.Init, env); err != nil {
+			return nil, err
 		}
 
 		x, err := EvalExpr(s.Tag(), env)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		// interface.elem()
 		dynamicX := x[0].Elem()
@@ -151,7 +157,7 @@ func InterpStmt(stmt Stmt, env Env) error {
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))
 	}
-	return nil
+	return nil, nil
 }
 
 func assign(lhs Expr, rhs reflect.Value, env Env) error {

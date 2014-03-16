@@ -27,6 +27,21 @@ type ErrCallNonFuncType struct {
 	Expr
 }
 
+type ErrDuplicateArg struct {
+	*Ident
+}
+
+type ErrBadReturnValue struct {
+	Expr
+	t reflect.Type
+	index int
+}
+
+type ErrWrongNumberOfReturnValues struct {
+	*ReturnStmt
+	fT reflect.Type
+}
+
 type ErrWrongNumberOfArgs struct {
 	*CallExpr
 	numArgs int
@@ -431,6 +446,29 @@ func (err ErrCallNonFuncType) Error() string {
 	expr := err.Expr
 	return fmt.Sprintf("cannot call non-function %v (type %v)",
 		expr, expr.KnownType()[0])
+}
+
+func (err ErrDuplicateArg) Error() string {
+	return fmt.Sprintf("duplicate argument %v", err.Ident)
+}
+
+func (err ErrBadReturnValue) Error() string {
+	if err.index == -1 {
+		t := defaultPromotion(err.Expr.KnownType()[0])
+		return fmt.Sprintf("cannot use %v (type %v) as type %v in return argument",
+			err.Expr, t, err.t)
+	} else {
+		return fmt.Sprintf("cannot use %v as type %v in return argument",
+			err.Expr.KnownType()[err.index], err.t)
+	}
+}
+
+func (err ErrWrongNumberOfReturnValues) Error() string {
+	if len(err.ReturnStmt.Results) > err.fT.NumOut() {
+		return "too many argments to return"
+	} else {
+		return "too few argments to return"
+	}
 }
 
 func (err ErrWrongNumberOfArgs) Error() string {

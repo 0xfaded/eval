@@ -64,6 +64,9 @@ type BasicLit struct {
 
 type FuncLit struct {
 	*ast.FuncLit
+	Type *FuncType
+	Body *BlockStmt
+	knownType
 }
 
 type CompositeLit struct {
@@ -207,6 +210,8 @@ type StructType struct {
 
 type FuncType struct {
 	*ast.FuncType
+	Params *FieldList
+	Results *FieldList
 	knownType
 }
 
@@ -227,6 +232,19 @@ type ChanType struct {
 	Value Expr
 	dir reflect.ChanDir
 	knownType
+}
+
+type Field struct {
+	*ast.Field
+	Names []*Ident
+	Type Expr
+
+	knownType
+}
+
+type FieldList struct {
+	*ast.FieldList
+	List []*Field
 }
 
 type AssignStmt struct {
@@ -272,6 +290,11 @@ type ForStmt struct {
 	Cond Expr
 	Post Stmt
 	Body *BlockStmt
+}
+
+type ReturnStmt struct {
+	*ast.ReturnStmt
+	Results []Expr
 }
 
 type SwitchStmt struct {
@@ -325,7 +348,6 @@ func (c constValue) Const() reflect.Value {
 }
 
 func (*BadExpr) KnownType() []reflect.Type      { return nil }
-func (*FuncLit) KnownType() []reflect.Type      { return nil }
 func (*KeyValueExpr) KnownType() []reflect.Type { return nil }
 
 func (*BadExpr) IsConst() bool        { return false }

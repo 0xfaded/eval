@@ -25,11 +25,10 @@ func getResults(t *testing.T, expr string, env Env) []reflect.Value {
 }
 
 func expectResult(t *testing.T, expr string, env Env, expected interface{}) {
-	expect2 := []interface{}{expected}
-	expectResults(t, expr, env, expect2)
+	expectResults(t, expr, env, expected)
 }
 
-func expectResults(t *testing.T, expr string, env Env, expected []interface{}) {
+func expectResults(t *testing.T, expr string, env Env, expected ...interface{}) {
 	results := getResults(t, expr, env)
 	if nil == results {
 		if expected != nil {
@@ -108,7 +107,7 @@ func expectCheckError(t *testing.T, expr string, env Env, errorString ...string)
 	} else if e, ok := s.(*ast.ExprStmt); ok {
 		_, errs = CheckExpr(e.X, env)
 	} else {
-		_, errs = checkStmt(s, env)
+		_, errs = checkStmt(s, env, checkCtx{})
 	}
 	if errs != nil {
 		var i int
@@ -143,13 +142,13 @@ func expectCheckError(t *testing.T, expr string, env Env, errorString ...string)
 func expectInterp(t *testing.T, stmt string, env Env) {
 	if s, err := ParseStmt(stmt); err != nil {
 		t.Fatalf("Failed to parse stmt '%s' (%v)", stmt, err)
-	} else if c, errs := checkStmt(s, env); errs != nil {
+	} else if c, errs := checkStmt(s, env, checkCtx{}); errs != nil {
 		t.Logf("Failed to check stmt '%s'", stmt)
 		for _, err := range errs {
 			t.Logf("\t%v", err)
 		}
 		t.FailNow()
-	} else if panik := InterpStmt(c, env); panik != nil {
+	} else if panik, _ := InterpStmt(c, env); panik != nil {
 		t.Fatalf("Statement '%s' panicked with %v", panik)
 	}
 }

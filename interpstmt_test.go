@@ -102,9 +102,9 @@ func TestAssignToMap(t *testing.T) {
 	env := MakeSimpleEnv()
 	env.Vars["x"] = reflect.ValueOf(&map[int]int{})
 	expectInterp(t, "x[0] = 1", env)
-	expectResults(t, "x[0]", env, []interface{}{1, true})
+	expectResults(t, "x[0]", env, 1, true)
 	expectInterp(t, "x[0] = 2", env)
-	expectResults(t, "x[0]", env, []interface{}{2, true})
+	expectResults(t, "x[0]", env, 2, true)
 }
 
 func TestAssignBadTypeAssert(t *testing.T) {

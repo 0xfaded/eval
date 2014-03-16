@@ -19,7 +19,8 @@ func EvalExpr(expr Expr, env Env) ([]reflect.Value, error) {
 		v, err := evalBasicLit(node)
 		return []reflect.Value{v}, err
 	case *FuncLit:
-		panic(dytc("func lits unimplemented"))
+		v, err := evalFuncLit(node, env)
+		return []reflect.Value{v}, err
 	case *CompositeLit:
 		v, err := evalCompositeLit(node, env)
 		return []reflect.Value{v}, err

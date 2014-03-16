@@ -32,7 +32,7 @@ func CheckExpr(expr ast.Expr, env Env) (Expr, []error) {
 	case *ast.BasicLit:
 		return checkBasicLit(expr, env)
 	case *ast.FuncLit:
-		return &FuncLit{FuncLit: expr}, nil
+		return checkFuncLit(expr, env)
 	case *ast.CompositeLit:
 		return checkCompositeLit(expr, env)
 	case *ast.ParenExpr:
@@ -124,8 +124,34 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		structT := &StructType{StructType: node}
 		return structT, nil, true, []error{errors.New("struct types not implemented")}
 	case *ast.FuncType:
+		var errs0, errs1 []error
+		var t reflect.Type
 		funcT := &FuncType{FuncType: node}
-		return funcT, nil, true, []error{errors.New("func types not implemented")}
+		funcT.Params, errs0 = checkFieldList(node.Params, env)
+		funcT.Results, errs1  = checkFieldList(node.Results, env)
+		errs := append(errs0, errs1...)
+		if errs == nil {
+			var in, out []reflect.Type
+			variadic := false
+			last := len(funcT.Params.List) - 1
+			for i, field := range funcT.Params.List {
+				t := field.KnownType()[0]
+				if i == last {
+					_, variadic = field.Type.(*Ellipsis)
+				}
+				for _ = range field.Names {
+					in = append(in, t)
+				}
+			}
+			if funcT.Results != nil {
+				for _, field := range funcT.Results.List {
+					out = append(out, field.KnownType()[0])
+				}
+			}
+			t = reflect.FuncOf(in, out, variadic)
+			funcT.knownType = knownType{t}
+		}
+		return funcT, t, true, errs
 	case *ast.InterfaceType:
 		interfaceT := &InterfaceType{InterfaceType: node}
 		// Allow interface{}'s
@@ -172,4 +198,51 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		}
 	}
 	return nil, nil, false, nil
+}
+
+func checkFieldList(list *ast.FieldList, env Env) (*FieldList, []error) {
+	if list == nil {
+		return nil, nil
+	}
+	var errs, moreErrs []error
+
+	alist := &FieldList{FieldList: list}
+	if list.List == nil {
+		return alist, nil
+	}
+	alist.List = make([]*Field, len(list.List))
+	for i, field := range list.List {
+		alist.List [i], moreErrs = checkField(field, env)
+		errs = append(errs, moreErrs...)
+	}
+	return alist, nil
+}
+
+func checkField(field *ast.Field, env Env) (*Field, []error) {
+	afield := &Field{Field: field}
+	if field.Names != nil {
+		afield.Names = make([]*Ident, len(field.Names))
+		for i, ident := range field.Names {
+			afield.Names[i] = &Ident{Ident: ident}
+		}
+	}
+	// the ellipsis is only relevant for func args
+	var typ Expr
+	var t reflect.Type
+	var errs []error
+	if ellipsis, ok := field.Type.(*ast.Ellipsis); ok {
+		typ, t, _, errs = checkType(ellipsis.Elt, env)
+		if t != nil {
+			t = reflect.SliceOf(t)
+		}
+		ellipsis.Elt = typ
+		typ = &Ellipsis{Ellipsis: ellipsis}
+	} else {
+		typ, t, _, errs = checkType(field.Type, env)
+	}
+	afield.Type = typ
+	if t != nil {
+		afield.knownType = knownType{t}
+	}
+	return afield, errs
 }
