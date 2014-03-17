@@ -4,4 +4,5 @@ go:
   - tip
 
 script:
+  - go get
   - go test
