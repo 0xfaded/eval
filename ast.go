@@ -256,6 +256,11 @@ type AssignStmt struct {
 	types []reflect.Type
 }
 
+type BranchStmt struct {
+	*ast.BranchStmt
+	Label *Ident
+}
+
 type CaseClause struct {
 	*ast.CaseClause
 	List []Expr
@@ -282,6 +287,11 @@ type IfStmt struct {
 	Cond Expr
 	Body *BlockStmt
 	Else Stmt
+}
+
+type LabeledStmt struct {
+	*ast.LabeledStmt
+	Stmt Stmt
 }
 
 type ForStmt struct {

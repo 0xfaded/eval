@@ -11,6 +11,7 @@ import (
 type checkCtx struct {
 	outerFunc reflect.Type
 	emptyReturnOk bool
+	stack []Stmt
 }
 
 // Place holder for something more substantial
@@ -37,6 +38,7 @@ func checkBlock(block *ast.BlockStmt, env Env, ctx checkCtx) (*BlockStmt, []erro
 
 func checkStmt(stmt ast.Stmt, env Env, ctx checkCtx) (Stmt, []error) {
 	var errs, moreErrs []error
+	ctx.stack = append(ctx.stack, stmt)
 	switch s := stmt.(type) {
 	case nil:
 		// AST often has nil nodes for optional elements.
@@ -192,6 +194,10 @@ done:
 		a.newNames = names
 		a.types = types
 		return a, errs
+
+	case *ast.BranchStmt:
+		return &BranchStmt{BranchStmt: s, Label: &Ident{Ident: s.Label}}, nil
+
 	case *ast.BlockStmt:
 		return checkBlock(s, env, ctx)
 
@@ -240,6 +246,11 @@ done:
 			Rhs: []ast.Expr{one},
 		}
 		return checkStmt(assign, env, ctx)
+
+	case *ast.LabeledStmt:
+		astmt := &LabeledStmt{LabeledStmt: s}
+		astmt.Stmt, moreErrs = checkStmt(s.Stmt, env, ctx)
+		return astmt, errs
 
 	case *ast.ForStmt:
 		astmt := &ForStmt{ForStmt: s}
@@ -469,5 +480,83 @@ func checkCaseClauseBody(clause *CaseClause, env Env, ctx checkCtx) (*CaseClause
 		errs = append(errs, moreErrs...)
 	}
 	return clause, errs
+}
+
+// Find labeled stmt referenced by branch. Return jump, which contains
+// the stack of statements from the root of the checkCtx to the
+// found label, or nil if not found. Statements common to both
+// ctx.stack and the found label are filtered.
+func findLabel(branch *BranchStmt, ctx checkCtx) (jump []Stmt) {
+	target := branch.Label.Name
+	// break/continue must refer to a labelled for/range stmt in the stack
+	if branch.Tok == token.BREAK || branch.Tok == token.CONTINUE {
+		for i := len(ctx.stack) - 1; i >= 0; i -= 1 {
+			if l, ok := ctx.stack[i].(*LabeledStmt); ok && l.Label.Name == target {
+				return []Stmt{l}
+			}
+		}
+		return nil
+	}
+
+	// depth first search starting from the branch stmt, backing up the stack
+	closed := map[Stmt]bool{}
+	open := append([]Stmt(nil), ctx.stack...)
+	s := len(open) - 1
+	for s >= 0 {
+		top := open[s]
+		s -= 1
+		if closed[top] {
+			continue
+		}
+		closed[top] = true
+		open = open[:s+2]
+
+		switch s := top.(type) {
+		case *BlockStmt:
+			open = append(open, s.List...)
+		case *CaseClause:
+			open = append(open, s.Body...)
+		case *IfStmt:
+			if s.Else != nil {
+				open = append(open, s.Else)
+			}
+			open = append(open, s.Body)
+		case *LabeledStmt:
+			if s.Label.Name == target {
+				// Currently ctx.stack is a trace to the goto stmt,
+				// and open is a trace to the target label.
+				// In addition to parent nodes, open also contains
+				// unexpanded sibling nodes.
+				//
+				// Compute the portion of open that is not common
+				// to ctx.stack, which is used to detect skipped
+				// declarations and jumps into foreign blocks.
+				//
+				// We always return the LabeledStmt as part of the
+				// jump. Iterating to len(open)-1 removes a corner
+				// case where the labeled stmt is part of the ctx.stack
+				// trace and is hence removed.
+				common := 0
+				for j, k := 0, 0; j < len(open)-1 && k < len(ctx.stack); j += 1 {
+					if open[j] == ctx.stack[k] {
+						common = j+1
+						k += 1
+					}
+				}
+				return open[common:]
+			}
+			if s.Stmt != nil {
+				open = append(open, s.Stmt)
+			}
+		case *ForStmt:
+			open = append(open, s.Body)
+		case *SwitchStmt:
+			open = append(open, s.Body)
+		case *TypeSwitchStmt:
+			open = append(open, s.Body)
+		}
+		s = len(open) - 1
+	}
+	return nil
 }
 
