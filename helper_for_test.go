@@ -148,8 +148,8 @@ func expectInterp(t *testing.T, stmt string, env Env) {
 			t.Logf("\t%v", err)
 		}
 		t.FailNow()
-	} else if panik, _ := InterpStmt(c, env); panik != nil {
-		t.Fatalf("Statement '%s' panicked with %v", panik)
+	} else if _, panik := InterpStmt(c, env); panik != nil {
+		t.Fatalf("Statement '%s' panicked with %v", stmt, panik)
 	}
 }
 

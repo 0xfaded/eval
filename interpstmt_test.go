@@ -265,3 +265,160 @@ func TestTypeSwitchInitAssign(t *testing.T) {
 	expectResult(t, "x", env, 6)
 }
 
+func TestInterpGotoForward(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	block := `{
+		x = 1
+		goto target
+		x = 2
+		target:
+	}`
+	expectInterp(t, block, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestInterpGotoBackwards(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	block := `{
+		target:
+		x += 1
+		if x < 2 {
+			goto target
+		}
+	}`
+	expectInterp(t, block, env)
+	expectResult(t, "x", env, 2)
+}
+
+func TestBreakLoop(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `for {
+		x = 1
+		break
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestBreakDoubleLoop(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `
+	for i := 1; i < 3; i = i + 1 {
+		for {
+			break
+		}
+		x = x + i
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 3)
+}
+
+func TestContinueLoop(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `for i := 1; i < 3; i += 1 {
+		x += i
+		continue
+		x += i
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 3)
+}
+
+func TestBreakSwitch(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `switch 1 {
+	case 1:
+		x = 1
+		break
+		x = 2
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestBreakTypeSwitch(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `switch interface{}(1).(type) {
+	case int:
+		x = 1
+		break
+		x = 2
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestLabeledBreakLoop(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `
+	target:
+	for i := 1; i < 3; i = i + 1 {
+		x = x + i
+		other:
+		for {
+			break target
+			break other
+		}
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestLabeledContinueLoop(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `
+	target:
+	for i := 1; i < 3; i = i + 1 {
+		x = x + i
+		for {
+			continue target
+		}
+		i += 1
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 3)
+}
+
+func TestLabeledBreakSwitch(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `
+	target:
+	switch 1 {
+	case 1:
+		x = 1
+		other:
+		for {
+			break target
+			break other
+		}
+		x = 2
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+
+func TestLabeledBreakLoopFromUnlabeled(t *testing.T) {
+	env := MakeSimpleEnv()
+	expectInterp(t, "x := 0", env)
+	loop := `
+	target:
+	for i := 1; i < 3; i = i + 1 {
+		x = x + i
+		for {
+			break target
+		}
+	}`
+	expectInterp(t, loop, env)
+	expectResult(t, "x", env, 1)
+}
+

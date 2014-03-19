@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"reflect"
+	"go/token"
 )
 
 type State struct {
@@ -45,18 +46,12 @@ func InterpStmt(stmt Stmt, env Env) (last *State, err error) {
 				}
 			}
 		}
+	case *BranchStmt:
+		return &State{s, env}, nil
 	case *BlockStmt:
-		for _, stmt := range s.List {
-			if last, err = InterpStmt(stmt, env); err != nil || last != nil {
-				return last, err
-			}
-		}
+		return interpBlock(s.List, env)
 	case *CaseClause:
-		for _, stmt := range s.Body {
-			if last, err = InterpStmt(stmt, env); err != nil || last != nil {
-				return last, err
-			}
-		}
+		return interpBlock(s.Body, env)
 	case *EmptyStmt:
 		return nil, nil
 	case *ExprStmt:
@@ -79,16 +74,35 @@ func InterpStmt(stmt Stmt, env Env) (last *State, err error) {
 			return nil, err
 		}
 		for {
-			if rs, err := EvalExpr(s.Cond, env); err != nil {
-				return nil, err
-			} else if !rs[0].Bool() {
-				break
-			} else if last, err = InterpStmt(s.Body, env); err != nil || last != nil {
+			if s.Cond != nil {
+				if rs, err := EvalExpr(s.Cond, env); err != nil {
+					return nil, err
+				} else if !rs[0].Bool() {
+					break
+				}
+			}
+			if last, err = InterpStmt(s.Body, env); err != nil {
 				return last, err
-			} else if _, err = InterpStmt(s.Post, env); err != nil {
+			}
+			if last != nil {
+				if branch, ok := last.Last.(*BranchStmt); ok {
+					// Are we the target of this branch?
+					if branch.Label == nil || branch.Label.Name == s.label {
+						last = nil
+						if branch.Tok == token.CONTINUE {
+							goto cont
+						}
+					}
+				}
+				return last, nil
+			}
+cont:
+			if _, err = InterpStmt(s.Post, env); err != nil {
 				return nil, err
 			}
 		}
+	case *LabeledStmt:
+		return InterpStmt(s.Stmt, env)
 	case *ReturnStmt:
 		return &State{s, env}, nil
 	case *SwitchStmt:
@@ -153,7 +167,6 @@ func InterpStmt(stmt Stmt, env Env) (last *State, err error) {
 		}
 		return InterpStmt(s.def, env)
 
-
 	default:
 		panic(dytc(fmt.Sprintf("Unsupported statement %T", s)))
 	}
@@ -176,4 +189,45 @@ func assign(lhs Expr, rhs reflect.Value, env Env) error {
 		l[0].Set(rhs)
 	}
 	return nil
+}
+
+func interpBlock(list []Stmt, env Env) (last *State, err error) {
+	for i := 0; i < len(list); i += 1 {
+		if last, err = InterpStmt(list[i], env); err != nil {
+			return last, err
+		} else if last != nil {
+			if last, i = branch(list, last, env); last != nil {
+				break
+			}
+		}
+	}
+	return last, nil
+}
+
+// Really naive implementation which simply scans block for the branch target
+func branch(list []Stmt, last *State, env Env) (*State, int) {
+	branch, ok := last.Last.(*BranchStmt)
+	if !ok {
+		return last, 0
+	}
+
+	// breaks should go to the next stmt, goto should go to the labeled stmt
+	brk := 0
+	if branch.Tok == token.GOTO {
+		brk = -1
+	}
+	for i, stmt := range list {
+		switch s := stmt.(type) {
+		case *LabeledStmt:
+			if branch.Label != nil && branch.Label.Name == s.Label.Name {
+				return nil, i+brk
+			}
+		// TODO[crc] add SelectStmt and RangeStmt here when implemented
+		case *ForStmt, *SwitchStmt, *TypeSwitchStmt:
+			if branch.Label == nil {
+				return nil, i+brk
+			}
+		}
+	}
+	return last, 0
 }

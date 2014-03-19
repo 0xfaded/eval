@@ -291,6 +291,7 @@ type IfStmt struct {
 
 type LabeledStmt struct {
 	*ast.LabeledStmt
+	Label *Ident
 	Stmt Stmt
 }
 
@@ -300,6 +301,7 @@ type ForStmt struct {
 	Cond Expr
 	Post Stmt
 	Body *BlockStmt
+	label string
 }
 
 type ReturnStmt struct {

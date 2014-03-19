@@ -196,7 +196,11 @@ done:
 		return a, errs
 
 	case *ast.BranchStmt:
-		return &BranchStmt{BranchStmt: s, Label: &Ident{Ident: s.Label}}, nil
+		astmt := &BranchStmt{BranchStmt: s}
+		if s.Label != nil {
+			astmt.Label = &Ident{Ident: s.Label}
+		}
+		return astmt, nil
 
 	case *ast.BlockStmt:
 		return checkBlock(s, env, ctx)
@@ -249,7 +253,12 @@ done:
 
 	case *ast.LabeledStmt:
 		astmt := &LabeledStmt{LabeledStmt: s}
+		astmt.Label = &Ident{Ident: s.Label}
 		astmt.Stmt, moreErrs = checkStmt(s.Stmt, env, ctx)
+		switch loop := astmt.Stmt.(type) {
+		case *ForStmt:
+			loop.label = astmt.Label.Name
+		}
 		return astmt, errs
 
 	case *ast.ForStmt:
@@ -459,6 +468,9 @@ checkcount:
 }
 
 func checkCond(cond ast.Expr, parent Stmt, env Env, ctx checkCtx) (Expr, []error) {
+	if cond == nil {
+		return nil, nil
+	}
 	acond, errs := CheckExpr(cond, env)
 	if errs == nil || acond.IsConst() {
 		if t, err := expectSingleType(acond); err != nil {
