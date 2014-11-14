@@ -4,8 +4,6 @@ import (
 	"errors"
 	"reflect"
 	"go/ast"
-
-	"github.com/0xfaded/reflectext"
 )
 
 // Type check an ast.Expr to produce an Expr. Errors are accumulated and
@@ -126,37 +124,8 @@ func checkType(expr ast.Expr, env Env) (Expr, reflect.Type, bool, []error) {
 		structT := &StructType{StructType: node}
 		return structT, nil, true, []error{errors.New("struct types not implemented")}
 	case *ast.FuncType:
-		var errs0, errs1 []error
-		var t reflect.Type
 		funcT := &FuncType{FuncType: node}
-		if !reflectext.Available {
-			return funcT, nil, true, []error{errors.New("func types not implemented")}
-		}
-		funcT.Params, errs0 = checkFieldList(node.Params, env)
-		funcT.Results, errs1  = checkFieldList(node.Results, env)
-		errs := append(errs0, errs1...)
-		if errs == nil {
-			var in, out []reflect.Type
-			variadic := false
-			last := len(funcT.Params.List) - 1
-			for i, field := range funcT.Params.List {
-				t := field.KnownType()[0]
-				if i == last {
-					_, variadic = field.Type.(*Ellipsis)
-				}
-				for _ = range field.Names {
-					in = append(in, t)
-				}
-			}
-			if funcT.Results != nil {
-				for _, field := range funcT.Results.List {
-					out = append(out, field.KnownType()[0])
-				}
-			}
-			t = reflectext.FuncOf(in, out, variadic)
-			funcT.knownType = knownType{t}
-		}
-		return funcT, t, true, errs
+		return funcT, nil, true, []error{errors.New("func types not implemented")}
 	case *ast.InterfaceType:
 		interfaceT := &InterfaceType{InterfaceType: node}
 		// Allow interface{}'s
